@@ -1,0 +1,36 @@
+trigger:
+  batch: true
+  branches:
+    include:
+      - "*"
+
+variables:
+- name: SolutionBaseName
+  value: __SolutionBaseName__
+- name: BuildConfiguration
+  value: release
+- name: BuildPlatform
+  value: any cpu
+
+pool:
+  name: DAS - Continuous Integration
+  workspace:
+    clean: all
+
+resources:
+  repositories:
+  - repository: self
+  - repository: das-platform-building-blocks
+    type: github
+    name: SkillsFundingAgency/das-platform-building-blocks
+    ref: refs/heads/master
+    endpoint: GitHub (SFA)
+
+stages:
+- stage: Build
+  jobs:
+  - template: pipeline-templates/job/code-build.yml
+    parameters:
+      SolutionBaseName: $(SolutionBaseName)
+      BuildConfiguration: $(BuildConfiguration)
+    

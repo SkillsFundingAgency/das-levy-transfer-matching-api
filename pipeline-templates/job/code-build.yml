@@ -1,0 +1,47 @@
+parameters:
+  SolutionBaseName:
+  BuildConfiguration:
+
+jobs:
+- job: CodeBuild
+  variables:
+  - group: BUILD Management Resources
+  steps:
+    - task: gitversion/setup@0
+      displayName: gitversion/setup
+      inputs:
+        versionSpec: 5.x
+
+    - task: gitversion/execute@0
+      displayName: gitversion/execute
+      inputs:
+        useConfigFile: true
+        configFilePath: GitVersion.yml
+
+    - template: azure-pipelines-templates/build/step/app-build.yml@das-platform-building-blocks
+
+    - template: azure-pipelines-templates/build/step/dependency-check.yml@das-platform-building-blocks
+
+    - task: DotNetCoreCLI@2
+      displayName: Publish - dotnet publish ${{ parameters.SolutionBaseName }}
+      inputs:
+        command: publish
+        publishWebProjects: false #set to false as this setting (which defaults to true) will parse the entire repo for web projects
+        projects: src/${{ parameters.SolutionBaseName }}/${{ parameters.SolutionBaseName }}.csproj
+        arguments: -o $(build.artifactstagingdirectory)/publish -c ${{ parameters.BuildConfiguration }} --no-build
+        modifyOutputPath: true
+        zipAfterPublish: true
+
+    - task: CopyFiles@2
+      displayName: Copy Files to $(build.artifactstagingdirectory)/publish
+      inputs:
+        Contents: |
+          azure/**
+        TargetFolder: $(build.artifactstagingdirectory)/publish
+        OverWrite: true
+
+    - task: PublishPipelineArtifact@1
+      displayName: Publish Artifact drop
+      inputs:
+        targetPath: $(build.artifactstagingdirectory)/publish
+        artifactName: drop
