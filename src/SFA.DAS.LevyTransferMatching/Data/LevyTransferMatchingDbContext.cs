@@ -13,9 +13,4 @@ namespace SFA.DAS.LevyTransferMatching.Data
             base.OnModelCreating(modelBuilder);
         }
     }
-
-    public interface ILevyTransferMatchingDbContext
-    {
-        //DbSet<T> collection signatures go here
-    }
 }
