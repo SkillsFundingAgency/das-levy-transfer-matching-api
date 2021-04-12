@@ -5,15 +5,17 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.LevyTransferMatching.Api.HealthChecks;
 using SFA.DAS.LevyTransferMatching.Api.HttpResponseExtensions;
+using SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
 
 namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
 {
     public static class HealthCheckStartupExtensions
     {
-        public static IServiceCollection AddDasHealthChecks(this IServiceCollection services)
+        public static IServiceCollection AddDasHealthChecks(this IServiceCollection services, LevyTransferMatchingApi config)
         {
             services
                 .AddHealthChecks()
+                .AddSqlServer(config.DatabaseConnectionString, name: "Database Health Check")
                 .AddCheck<DummyHealthCheck>("Dummy health check");
 
             return services;
