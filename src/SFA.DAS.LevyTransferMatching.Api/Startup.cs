@@ -1,18 +1,15 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+using FluentValidation.AspNetCore;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.LevyTransferMatching.Api.StartupExtensions;
+using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
 
 namespace SFA.DAS.LevyTransferMatching.Api
@@ -20,12 +17,12 @@ namespace SFA.DAS.LevyTransferMatching.Api
     public class Startup
     {
         private readonly IWebHostEnvironment _environment;
-        private IConfiguration _configuration { get; }
+        private IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             _environment = environment;
-            _configuration = configuration;
+            Configuration = configuration;
 
             var config = new ConfigurationBuilder()
                 .AddConfiguration(configuration)
@@ -48,16 +45,23 @@ namespace SFA.DAS.LevyTransferMatching.Api
                 );
             }
 
-            _configuration = config.Build();
+            Configuration = config.Build();
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddConfigurationOptions(_configuration);
-            var config = _configuration.GetSection<LevyTransferMatchingApi>();
+            services.AddConfigurationOptions(Configuration);
+            var config = Configuration.GetSection<LevyTransferMatchingApi>();
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddFluentValidation(fv =>
+                {
+                    fv.RegisterValidatorsFromAssemblyContaining<Startup>();
+                    fv.RegisterValidatorsFromAssemblyContaining<DbContextFactory>();
+                });
+
+            services.AddMediatR(typeof(DbContextFactory).Assembly);
             services.AddDasHealthChecks(config);
             services.AddDbConfiguration(config.DatabaseConnectionString, _environment);
         }
