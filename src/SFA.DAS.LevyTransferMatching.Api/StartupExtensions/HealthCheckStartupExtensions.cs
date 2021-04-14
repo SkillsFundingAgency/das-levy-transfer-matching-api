@@ -15,7 +15,6 @@ namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
         {
             services
                 .AddHealthChecks()
-                .AddSqlServer(config.DatabaseConnectionString, name: "Database Health Check")
                 .AddCheck<DummyHealthCheck>("Dummy health check");
 
             return services;

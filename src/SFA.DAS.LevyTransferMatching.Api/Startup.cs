@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NServiceBus.ObjectBuilder.MSDependencyInjection;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.LevyTransferMatching.Api.StartupExtensions;
 using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
+using SFA.DAS.UnitOfWork.NServiceBus.Features.ClientOutbox.DependencyResolution.Microsoft;
 
 namespace SFA.DAS.LevyTransferMatching.Api
 {
@@ -64,6 +66,7 @@ namespace SFA.DAS.LevyTransferMatching.Api
             services.AddMediatR(typeof(DbContextFactory).Assembly);
             services.AddDasHealthChecks(config);
             services.AddDbConfiguration(config.DatabaseConnectionString, _environment);
+            services.AddNServiceBusClientUnitOfWork();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -88,6 +91,12 @@ namespace SFA.DAS.LevyTransferMatching.Api
             {
                 endpoints.MapControllers();
             });
+        }
+
+        public void ConfigureContainer(UpdateableServiceProvider serviceProvider)
+        {
+            var config = Configuration.GetSection<LevyTransferMatchingApi>();
+            serviceProvider.StartNServiceBus(config, _environment);
         }
     }
 }

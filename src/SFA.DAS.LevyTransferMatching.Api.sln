@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.LevyTransferMatchin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.LevyTransferMatching.UnitTests", "SFA.DAS.LevyTransferMatching.UnitTests\SFA.DAS.LevyTransferMatching.UnitTests.csproj", "{CDEA1B7B-BDC8-4648-834E-B9C93274C7BB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.LevyTransferMatching.Messages", "SFA.DAS.LevyTransferMatching.Messages\SFA.DAS.LevyTransferMatching.Messages.csproj", "{BF1851FE-1D49-4E27-A7C1-75E40A36B21B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{CDEA1B7B-BDC8-4648-834E-B9C93274C7BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDEA1B7B-BDC8-4648-834E-B9C93274C7BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDEA1B7B-BDC8-4648-834E-B9C93274C7BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF1851FE-1D49-4E27-A7C1-75E40A36B21B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF1851FE-1D49-4E27-A7C1-75E40A36B21B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF1851FE-1D49-4E27-A7C1-75E40A36B21B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF1851FE-1D49-4E27-A7C1-75E40A36B21B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
