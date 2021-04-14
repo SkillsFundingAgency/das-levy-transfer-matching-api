@@ -14,4 +14,8 @@
     <PackageReference Include="SFA.DAS.UnitOfWork.NServiceBus" Version="9.0.28" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SFA.DAS.LevyTransferMatching.Messages\SFA.DAS.LevyTransferMatching.Messages.csproj" />
+  </ItemGroup>
+
 </Project>

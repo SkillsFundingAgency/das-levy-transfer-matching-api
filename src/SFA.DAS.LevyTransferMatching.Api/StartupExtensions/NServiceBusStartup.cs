@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NServiceBus;
 using NServiceBus.ObjectBuilder.MSDependencyInjection;
+using SFA.DAS.LevyTransferMatching.Extensions;
 using SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
 using SFA.DAS.NServiceBus.Configuration;
 using SFA.DAS.NServiceBus.Configuration.AzureServiceBus;
@@ -33,11 +34,11 @@ namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
 
             if (environment.IsDevelopment())
             {
-                endpointConfiguration.UseLearningTransport();
+                endpointConfiguration.UseLearningTransport(s => s.AddRouting());
             }
             else
             {
-                endpointConfiguration.UseAzureServiceBusTransport(configuration.NServiceBusConnectionString, r => { });
+                endpointConfiguration.UseAzureServiceBusTransport(configuration.NServiceBusConnectionString, r => { r.AddRouting(); });
             }
 
             if (!string.IsNullOrEmpty(configuration.NServiceBusLicense))

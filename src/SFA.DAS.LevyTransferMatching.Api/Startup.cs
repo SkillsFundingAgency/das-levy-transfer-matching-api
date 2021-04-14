@@ -67,6 +67,7 @@ namespace SFA.DAS.LevyTransferMatching.Api
             services.AddDasHealthChecks(config);
             services.AddDbConfiguration(config.DatabaseConnectionString, _environment);
             services.AddNServiceBusClientUnitOfWork();
+            services.AddDistributedMemoryCache();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
