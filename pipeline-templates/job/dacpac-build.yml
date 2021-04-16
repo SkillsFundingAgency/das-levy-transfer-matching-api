@@ -23,7 +23,7 @@ jobs:
       targetFolder: $(build.artifactstagingdirectory)/publish
 
   - task: PublishPipelineArtifact@1
-    displayName: Publish Artifact - LevyTransferMatchingApi
+    displayName: Publish Artifact - LevyTransferMatchingApiDacpac
     inputs:
       targetPath: $(build.artifactstagingdirectory)/publish
       artifactName: LevyTransferMatchingApiDacpac
