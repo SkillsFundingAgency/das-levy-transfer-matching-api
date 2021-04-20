@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoFixture" Version="4.17.0" />
+    <PackageReference Include="AutoFixture.NUnit3" Version="4.17.0" />
+    <PackageReference Include="FluentAssertions" Version="5.10.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.14" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
+    <PackageReference Include="Moq" Version="4.16.1" />
+    <PackageReference Include="NUnit" Version="3.13.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+    <PackageReference Include="NServiceBus.Testing" Version="7.2.0" />
+    <PackageReference Include="SFA.DAS.EmployerAccounts.Messages" Version="1.6.2978" />
+  </ItemGroup>
+
+
+</Project>

@@ -1,0 +1,14 @@
+{
+  "NServiceBus.MessageId": "5dc60b67-c549-439e-9708-ad1000dbd808",
+  "NServiceBus.MessageIntent": "Publish",
+  "NServiceBus.ConversationId": "99332500-18a1-4f17-9682-ad1000dbd809",
+  "NServiceBus.CorrelationId": "5dc60b67-c549-439e-9708-ad1000dbd808",
+  "NServiceBus.OriginatingMachine": "DESKTOP-CEKTJM0",
+  "NServiceBus.OriginatingEndpoint": "SFA.DAS.LevyTransferMatching.Functions",
+  "$.diagnostics.originating.hostid": "85ef692300e6b924d6e9da31f115d87c",
+  "NServiceBus.ReplyToAddress": "SFA.DAS.LevyTransferMatching.Functions",
+  "NServiceBus.ContentType": "application\/json",
+  "NServiceBus.EnclosedMessageTypes": "SFA.DAS.EmployerAccounts.Messages.Events.ChangedAccountNameEvent, SFA.DAS.EmployerAccounts.Messages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null;SFA.DAS.NServiceBus.Event, SFA.DAS.NServiceBus, Version=15.0.25.0, Culture=neutral, PublicKeyToken=null",
+  "NServiceBus.Version": "7.0.1",
+  "NServiceBus.TimeSent": "2021-04-20 13:20:25:625718 Z"
+}
