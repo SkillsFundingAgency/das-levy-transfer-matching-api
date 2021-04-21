@@ -32,7 +32,7 @@ namespace SFA.DAS.LevyTransferMatching.Functions.TestHarness
                     Path.Combine(
                         Directory.GetCurrentDirectory()
                             .Substring(0, Directory.GetCurrentDirectory().IndexOf("src")),
-                        @"src\SFA.DAS.LevyTransferMatching.Functions\.learningtransport"));
+                        @"src\.learningtransport"));
             }
 
             var endpoint = await Endpoint.Start(endpointConfiguration);

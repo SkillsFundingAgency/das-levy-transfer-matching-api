@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿using System.IO;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
-using NServiceBus;
 using SFA.DAS.Configuration.AzureTableStorage;
+using SFA.DAS.LevyTransferMatching.Functions.StartupExtensions;
+using SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
 
 [assembly: FunctionsStartup(typeof(SFA.DAS.LevyTransferMatching.Functions.Startup))]
 namespace SFA.DAS.LevyTransferMatching.Functions
 {
+    // Read before updating packages:
+    // v3 Azure functions are NOT compatible at time of writing with v5 versions of the Microsoft.Extensions.* libraries
+    // https://github.com/Azure/azure-functions-core-tools/issues/2304#issuecomment-735454326
     public class Startup : FunctionsStartup
     {
         public override void Configure(IFunctionsHostBuilder builder)
@@ -20,7 +20,7 @@ namespace SFA.DAS.LevyTransferMatching.Functions
             builder.Services.AddNLog();
 
             var serviceProvider = builder.Services.BuildServiceProvider();
-            var configuration = serviceProvider.GetService<IConfiguration>();
+            var configuration = serviceProvider.GetConfiguration();
 
             var configBuilder = new ConfigurationBuilder()
                 .AddConfiguration(configuration)
@@ -39,30 +39,23 @@ namespace SFA.DAS.LevyTransferMatching.Functions
             });
 
             var config = configBuilder.Build();
+            
             builder.Services.Replace(ServiceDescriptor.Singleton(typeof(IConfiguration), config));
-
             builder.Services.AddOptions();
+            
+            ConfigureServices(builder, config, serviceProvider);
+        }
 
-            var logger = serviceProvider.GetService<ILoggerProvider>().CreateLogger(GetType().AssemblyQualifiedName);
-            if (config["NServiceBusConnectionString"] == "UseDevelopmentStorage=true")
-            {
-                builder.Services.AddNServiceBus(logger, (options) =>
-                {
-                    options.EndpointConfiguration = (endpoint) =>
-                    {
-                        endpoint.UseTransport<LearningTransport>().StorageDirectory(
-                            Path.Combine(
-                                Directory.GetCurrentDirectory()
-                                    .Substring(0, Directory.GetCurrentDirectory().IndexOf("src")),
-                                @"src\SFA.DAS.LevyTransferMatching.Functions\.learningtransport"));
-                        return endpoint;
-                    };
-                });
-            }
-            else
-            {
-                builder.Services.AddNServiceBus(logger);
-            }
+        private void ConfigureServices(IFunctionsHostBuilder builder, IConfiguration configuration, ServiceProvider serviceProvider)
+        {
+            var config = configuration.GetSection("LevyTransferMatchingFunctions").Get<LevyTransferMatchingFunctions>();
+            var logger = serviceProvider.GetLogger(GetType().AssemblyQualifiedName);
+
+            builder.Services
+                .AddNServiceBus(config, logger)
+                .AddCache(config)
+                .AddDasDataProtection(config)
+            ;
         }
     }
 }

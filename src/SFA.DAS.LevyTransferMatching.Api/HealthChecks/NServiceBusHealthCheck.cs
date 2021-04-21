@@ -34,7 +34,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.HealthChecks
 
             sendOptions.SetMessageId(messageId.ToString());
 
-            await _messageSession.Send(new RunHealthCheckCommand(), sendOptions);
+            await _messageSession.Send(new RunHealthCheckCommand() { MessageId = messageId.ToString() }, sendOptions);
 
             while (!cancellationToken.IsCancellationRequested)
             {
@@ -50,7 +50,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.HealthChecks
 
                 await Task.Delay(Interval, cancellationToken);
             }
-
+            
             throw new OperationCanceledException(cancellationToken);
         }
     }

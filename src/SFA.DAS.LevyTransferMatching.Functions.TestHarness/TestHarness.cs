@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using NServiceBus;
 using SFA.DAS.EmployerAccounts.Messages.Events;
+using SFA.DAS.LevyTransferMatching.Messages.Commands;
 
 namespace SFA.DAS.LevyTransferMatching.Functions.TestHarness
 {

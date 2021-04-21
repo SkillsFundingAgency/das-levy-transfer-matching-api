@@ -50,7 +50,6 @@ namespace SFA.DAS.LevyTransferMatching.Api
             Configuration = config.Build();
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddConfigurationOptions(Configuration);
@@ -67,26 +66,22 @@ namespace SFA.DAS.LevyTransferMatching.Api
             services.AddDasHealthChecks(config);
             services.AddDbConfiguration(config.DatabaseConnectionString, _environment);
             services.AddNServiceBusClientUnitOfWork();
-            services.AddDistributedMemoryCache();
+            services.AddCache(config, _environment)
+                    .AddDasDataProtection(config, _environment)
+            ;
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseDasHealthChecks();
-
 
             app.UseEndpoints(endpoints =>
             {

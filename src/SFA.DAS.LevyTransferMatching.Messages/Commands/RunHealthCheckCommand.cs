@@ -2,5 +2,6 @@
 {
     public class RunHealthCheckCommand
     {
+        public string MessageId { get; set; }
     }
 }
