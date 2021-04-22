@@ -7,6 +7,5 @@
         public string NServiceBusLicense { get; set; }
         public string RedisConnectionString { get; set; }
         public string DataProtectionKeysDatabase { get; set; }
-        public string DataCachingDatabase { get; set; }
     }
 }
