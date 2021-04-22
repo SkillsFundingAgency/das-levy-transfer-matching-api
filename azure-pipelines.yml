@@ -25,7 +25,7 @@ resources:
 pr:
   - master
 
-variables:
+# variables:
   # - group: RELEASE Management Resources
   # - group: RELEASE das-levy-transfer-matching-api
 
