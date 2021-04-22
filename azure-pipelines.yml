@@ -73,8 +73,8 @@ stages:
               SqlUsername: $(SharedSQLServerUsername)
               SqlPassword: $(SharedSQLServerPassword)
               DacpacFile: $(Pipeline.Workspace)/LevyTransferMatchingApi/SFA.DAS.LevyTransferMatching.Database.zip
-  - template: pipeline-templates/job/web-deploy.yml
-    parameters:
-      DeploymentApprovals: DEV
-      ServiceConnection: SFA-DAS-DevTest-ARM
-      DeploymentPackagePath: $(Pipeline.Workspace)/LevyTransferMatchingApi/SFA.DAS.LevyTransferMatching.Api.zip
+  # - template: pipeline-templates/job/web-deploy.yml
+  #   parameters:
+  #     DeploymentApprovals: DEV
+  #     ServiceConnection: SFA-DAS-DevTest-ARM
+  #     DeploymentPackagePath: $(Pipeline.Workspace)/LevyTransferMatchingApi/SFA.DAS.LevyTransferMatching.Api.zip
