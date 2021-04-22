@@ -26,8 +26,8 @@ pr:
   - master
 
 variables:
-  - group: RELEASE Management Resources
-  - group: RELEASE das-levy-transfer-matching-api
+  # - group: RELEASE Management Resources
+  # - group: RELEASE das-levy-transfer-matching-api
 
 stages:
 - stage: Build
