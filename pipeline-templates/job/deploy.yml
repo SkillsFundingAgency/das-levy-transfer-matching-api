@@ -7,12 +7,6 @@ jobs:
 - deployment: DeployWebApp
   pool:
     name: DAS - Continuous Deployment
-  dependsOn: 
-  - DeployInfrastructure 
-  variables:
-    ResourceGroupName: $[dependencies.DeployInfrastructure.outputs['DeployInfrastructure.ArmOutputs.ResourceGroupName']]
-    AppServiceName: $[dependencies.DeployInfrastructure.outputs['DeployInfrastructure.ArmOutputs.AppServiceName']]
-    environment: ${{ parameters.DeploymentApprovals }}
   strategy:
     runOnce:
       deploy:
@@ -22,7 +16,7 @@ jobs:
             ServiceConnection: SFA-DAS-DevTest-ARM
             SubscriptionId: $(SubscriptionId)
             Location: $(ResourceGroupLocation)
-            Environment: ${{ parameters.DeploymentApprovals }}
+            Environment: DEV
             TemplatePath: $(Pipeline.Workspace)/LevyTransferMatchingApi/azure/template.json
             ParametersPath: $(Pipeline.Workspace)/LevyTransferMatchingApi/azure/template.parameters.json
             ConfigSchemaPath: $(Pipeline.Workspace)/das-employer-config/Configuration/das-levy-transfer-matching-api
