@@ -32,7 +32,7 @@ pr:
 
 variables:
   - group: RELEASE Management Resources
-  # - group: RELEASE das-levy-transfer-matching-api
+  - group: RELEASE das-levy-transfer-matching-api
 
 stages:
 - stage: Build
@@ -47,7 +47,7 @@ stages:
   variables:
   - group: DevTest Management Resources
   - group: AT DevTest Shared Resources
-  - group: AT das-levy-transfer-matching-api
+  - group: RELEASE das-levy-transfer-matching-api
   jobs:
   - template: azure-pipelines-templates/deploy/job/arm-deploy.yml@das-platform-building-blocks
     parameters:
