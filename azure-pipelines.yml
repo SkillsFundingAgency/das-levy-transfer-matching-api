@@ -72,7 +72,7 @@ stages:
           - task: SqlAzureDacpacDeployment@1
             displayName: Execute Azure SQL DacpacTask
             inputs:
-              azureSubscription: '<Azure service connection>'
+              azureSubscription: $(ARMServiceConnection)
               ServerName: $(SharedSQLServerName)
               DatabaseName: $[dependencies.DeployDACPAC.outputs['DeployDACPAC.ArmOutputs.ResourceGroupName']]
               SqlUsername: $(SharedSQLServerUsername)
