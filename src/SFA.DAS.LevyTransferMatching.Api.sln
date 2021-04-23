@@ -5,11 +5,27 @@ VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.LevyTransferMatching.Api", "SFA.DAS.LevyTransferMatching.Api\SFA.DAS.LevyTransferMatching.Api.csproj", "{B596FC9B-0E6D-4CCE-A88B-A287CEAD38D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.LevyTransferMatching.Infrastructure", "SFA.DAS.LevyTransferMatching.Infrastructure\SFA.DAS.LevyTransferMatching.Infrastructure.csproj", "{C5390FEB-E320-43A4-80DC-4A3F29871A97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.LevyTransferMatching.Infrastructure", "SFA.DAS.LevyTransferMatching.Infrastructure\SFA.DAS.LevyTransferMatching.Infrastructure.csproj", "{C5390FEB-E320-43A4-80DC-4A3F29871A97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.LevyTransferMatching", "SFA.DAS.LevyTransferMatching\SFA.DAS.LevyTransferMatching.csproj", "{0810AB5A-30FA-47E3-A4C2-9570C93F872B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.LevyTransferMatching", "SFA.DAS.LevyTransferMatching\SFA.DAS.LevyTransferMatching.csproj", "{0810AB5A-30FA-47E3-A4C2-9570C93F872B}"
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SFA.DAS.LevyTransferMatching.Database", "SFA.DAS.LevyTransferMatching.Database\SFA.DAS.LevyTransferMatching.Database.sqlproj", "{2B8EF05B-4833-4558-940A-6335170CED47}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D826815D-E9DD-47F5-9534-658DBEE4CA06}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.LevyTransferMatching.Api.UnitTests", "SFA.DAS.LevyTransferMatching.Api.UnitTests\SFA.DAS.LevyTransferMatching.Api.UnitTests.csproj", "{335AA616-0AC7-495E-A387-390AC363DC44}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.LevyTransferMatching.UnitTests", "SFA.DAS.LevyTransferMatching.UnitTests\SFA.DAS.LevyTransferMatching.UnitTests.csproj", "{CDEA1B7B-BDC8-4648-834E-B9C93274C7BB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.LevyTransferMatching.Messages", "SFA.DAS.LevyTransferMatching.Messages\SFA.DAS.LevyTransferMatching.Messages.csproj", "{BF1851FE-1D49-4E27-A7C1-75E40A36B21B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.LevyTransferMatching.Functions", "SFA.DAS.LevyTransferMatching.Functions\SFA.DAS.LevyTransferMatching.Functions.csproj", "{9F248791-D99C-4557-84A3-B352E4C4ED17}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.LevyTransferMatching.Functions.TestHarness", "SFA.DAS.LevyTransferMatching.Functions.TestHarness\SFA.DAS.LevyTransferMatching.Functions.TestHarness.csproj", "{C29135CE-67E4-4647-B6F4-C5BD5C575823}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.LevyTransferMatching.Functions.UnitTests", "SFA.DAS.LevyTransferMatching.Functions.UnitTests\SFA.DAS.LevyTransferMatching.Functions.UnitTests.csproj", "{4BAA0C04-25A3-429B-B6F5-B2B122B9B9D6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Functions", "Functions", "{940C0E59-A124-4D88-9AA1-A8D2013BDC14}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,9 +51,40 @@ Global
 		{2B8EF05B-4833-4558-940A-6335170CED47}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B8EF05B-4833-4558-940A-6335170CED47}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2B8EF05B-4833-4558-940A-6335170CED47}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{335AA616-0AC7-495E-A387-390AC363DC44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{335AA616-0AC7-495E-A387-390AC363DC44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{335AA616-0AC7-495E-A387-390AC363DC44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{335AA616-0AC7-495E-A387-390AC363DC44}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDEA1B7B-BDC8-4648-834E-B9C93274C7BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDEA1B7B-BDC8-4648-834E-B9C93274C7BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDEA1B7B-BDC8-4648-834E-B9C93274C7BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDEA1B7B-BDC8-4648-834E-B9C93274C7BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF1851FE-1D49-4E27-A7C1-75E40A36B21B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF1851FE-1D49-4E27-A7C1-75E40A36B21B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF1851FE-1D49-4E27-A7C1-75E40A36B21B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF1851FE-1D49-4E27-A7C1-75E40A36B21B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F248791-D99C-4557-84A3-B352E4C4ED17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F248791-D99C-4557-84A3-B352E4C4ED17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F248791-D99C-4557-84A3-B352E4C4ED17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F248791-D99C-4557-84A3-B352E4C4ED17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C29135CE-67E4-4647-B6F4-C5BD5C575823}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C29135CE-67E4-4647-B6F4-C5BD5C575823}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C29135CE-67E4-4647-B6F4-C5BD5C575823}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C29135CE-67E4-4647-B6F4-C5BD5C575823}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BAA0C04-25A3-429B-B6F5-B2B122B9B9D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BAA0C04-25A3-429B-B6F5-B2B122B9B9D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BAA0C04-25A3-429B-B6F5-B2B122B9B9D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BAA0C04-25A3-429B-B6F5-B2B122B9B9D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{335AA616-0AC7-495E-A387-390AC363DC44} = {D826815D-E9DD-47F5-9534-658DBEE4CA06}
+		{CDEA1B7B-BDC8-4648-834E-B9C93274C7BB} = {D826815D-E9DD-47F5-9534-658DBEE4CA06}
+		{9F248791-D99C-4557-84A3-B352E4C4ED17} = {940C0E59-A124-4D88-9AA1-A8D2013BDC14}
+		{C29135CE-67E4-4647-B6F4-C5BD5C575823} = {940C0E59-A124-4D88-9AA1-A8D2013BDC14}
+		{4BAA0C04-25A3-429B-B6F5-B2B122B9B9D6} = {940C0E59-A124-4D88-9AA1-A8D2013BDC14}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A1426677-A65D-422F-A21B-3CFBD3A0E56D}
