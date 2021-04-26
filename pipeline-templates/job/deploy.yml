@@ -32,7 +32,7 @@ jobs:
         - task: SqlAzureDacpacDeployment@1
           displayName: Execute Azure SQL DacpacTask
           inputs:
-            azureSubscription: $(ARMServiceConnection)
+            azureSubscription: ${{ parameters.ServiceConnection }}
             ServerName: $(SharedSQLServerName)
             DatabaseName: $(DatabaseName)
             SqlUsername: $(SharedSQLServerUsername)
