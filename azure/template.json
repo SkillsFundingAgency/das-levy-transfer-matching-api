@@ -78,7 +78,8 @@
         "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
         "apiAppServiceName": "[concat(variables('resourceNamePrefix'), 'api-as')]",
         "resourceGroupName": "[concat(variables('resourceNamePrefix'), 'api-rg')]",
-        "databaseName": "[concat(variables('resourceNamePrefix'), '-db')]"
+        "databaseName": "[concat(variables('resourceNamePrefix'), '-db')]",
+        "configNames": "SFA.DAS.LevyTransferMatching.Api"
     },
     "resources": [
         {
@@ -168,7 +169,7 @@
                                 },
                                 {
                                     "name": "ConfigNames",
-                                    "value": "SFA.DAS.ApprenticeCommitments.Api"
+                                    "value": "[variables('configNames')]"
                                 },
                                 {
                                     "name": "LoggingRedisConnectionString",
