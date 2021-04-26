@@ -43,6 +43,6 @@ stages:
   jobs:
   - template: pipeline-templates/job/deploy.yml
     parameters:
-      DeploymentApprovals: DEV
+      DeploymentApprovals: AT
       ServiceConnection: SFA-DAS-DevTest-ARM
       DeploymentPackagePath: $(Pipeline.Workspace)/LevyTransferMatchingApi/SFA.DAS.LevyTransferMatching.Api.zip
