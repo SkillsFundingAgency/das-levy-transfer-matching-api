@@ -33,7 +33,7 @@ jobs:
           displayName: Execute Azure SQL DacpacTask
           inputs:
             azureSubscription: ${{ parameters.ServiceConnection }}
-            ServerName: $(SharedSQLServerName)
+            ServerName: $(SharedSQLServerFQDN)
             DatabaseName: $(DatabaseName)
             SqlUsername: $(SharedSQLServerUsername)
             SqlPassword: $(SharedSQLServerPassword)
