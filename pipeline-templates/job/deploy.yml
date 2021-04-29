@@ -1,7 +1,8 @@
 parameters:  
   Environment:
   ServiceConnection:
-  DeploymentPackagePath:
+  DeploymentPackagePathApi:
+  DeploymentPackagePathSQL:
 
 jobs:
 - deployment: DeployWebApp
@@ -28,7 +29,7 @@ jobs:
           parameters:
             ServiceConnection: ${{ parameters.ServiceConnection }}
             AppServiceName: $(ApiAppServiceName)
-            DeploymentPackagePath: ${{ parameters.DeploymentPackagePath }}
+            DeploymentPackagePath: ${{ parameters.DeploymentPackagePathApi }}
         - task: SqlAzureDacpacDeployment@1
           displayName: Execute Azure SQL DacpacTask
           inputs:
@@ -37,4 +38,4 @@ jobs:
             DatabaseName: $(DatabaseName)
             SqlUsername: $(SharedSQLServerUsername)
             SqlPassword: $(SharedSQLServerPassword)
-            DacpacFile: $(System.DefaultWorkingDirectory)/das-levy-transfer-matching-api/LevyTransferMatchingApiDacpac/src/SFA.DAS.LevyTransferMatching.Database/bin/Output/SFA.DAS.LevyTransferMatching.Database.dacpac
+            DacpacFile:  ${{ parameters.DeploymentPackagePathSQL }}
