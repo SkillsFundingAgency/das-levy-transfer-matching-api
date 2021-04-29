@@ -44,4 +44,4 @@ stages:
   - template: pipeline-templates/job/deploy.yml
     parameters:
       Environment: AT
-      ServiceConnection: SFA-DAS-DevTest-ARM 
+      ServiceConnection: SFA-DAS-DevTest-ARM
