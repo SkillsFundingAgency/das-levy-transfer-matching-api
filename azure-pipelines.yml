@@ -46,4 +46,4 @@ stages:
       Environment: AT
       ServiceConnection: SFA-DAS-DevTest-ARM
       DeploymentPackagePathApi: $(Pipeline.Workspace)/LevyTransferMatchingApi/SFA.DAS.LevyTransferMatching.Api.zip
-      DeploymentPackagePathSQL: $(Pipeline.Workspace)/LevyTransferMatchingApi/src/SFA.DAS.LevyTransferMatching.Database/SFA.DAS.LevyTransferMatching.Database.sqlproj
+      DeploymentPackagePathSQL: $(Pipeline.Workspace)/LevyTransferMatchingApi/SFA.DAS.LevyTransferMatching.Database/SFA.DAS.LevyTransferMatching.Database.sqlproj
