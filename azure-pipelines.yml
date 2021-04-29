@@ -3,6 +3,11 @@ trigger:
   branches:
     include:
       - "*"
+
+variables:
+  - group: RELEASE Management Resources
+  - group: RELEASE das-levy-transfer-matching-api
+      
 resources:
   repositories:
   - repository: self
@@ -21,17 +26,12 @@ resources:
       project: Digital Apprenticeship Service
       source: das-employer-config
       branch: master
-pr:
-  - master
-
-variables:
-  - group: RELEASE Management Resources
-  - group: RELEASE das-levy-transfer-matching-api
 
 stages:
 - stage: Build
   jobs:
   - template: pipeline-templates/job/code-build.yml
+  - template: pipeline-templates/job/dacpac-build.yml
 
 - stage: Deploy_AT
   dependsOn: Build
