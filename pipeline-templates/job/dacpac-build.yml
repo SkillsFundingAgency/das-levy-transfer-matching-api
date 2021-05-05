@@ -12,7 +12,7 @@ jobs:
     clean: all
   steps:
   - task: VSBuild@1
-    displayName: Build DACPAC
+    displayName: Build DACPAC - ${{ parameters.SolutionBaseName }}
     inputs:
       solution: src/${{ parameters.SolutionBaseName }}/${{ parameters.SolutionBaseName }}.sqlproj
       platform: any cpu
