@@ -97,4 +97,4 @@ stages:
   - template: pipeline-templates/job/deploy.yml
     parameters:
       Environment: DEV
-      ServiceConnection: SFA-DAS-DevTest-ARM
+      ServiceConnection: SFA-DIG-PreProd-ARM
