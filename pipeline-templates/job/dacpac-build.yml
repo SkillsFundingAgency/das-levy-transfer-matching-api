@@ -1,3 +1,7 @@
+parameters:
+  SolutionBaseName:
+  BuildConfiguration:
+
 jobs:
 - job: DacpacBuild
   dependsOn: CodeBuild
@@ -10,13 +14,13 @@ jobs:
   - task: VSBuild@1
     displayName: Build DACPAC
     inputs:
-      solution: src/SFA.DAS.LevyTransferMatching.Database/SFA.DAS.LevyTransferMatching.Database.sqlproj
+      solution: src/${{ parameters.SolutionBaseName }}/${{ parameters.SolutionBaseName }}.sqlproj
       platform: any cpu
-      configuration: release
+      configuration: ${{ parameters.BuildConfiguration }}
       msbuildArgs: /p:PackageLocation="$(build.artifactstagingdirectory)/publish"
 
   - task: CopyFiles@2
-    displayName: Copy Files to - $(build.artifactstagingdirectory)
+    displayName: Copy Files to $(build.artifactstagingdirectory)/publish
     inputs:
       contents: |
         src/**/*.dacpac
