@@ -91,7 +91,7 @@ stages:
   displayName: Deploy to PP
   variables:
   - group: PreProd Management Resources
-  - group: PreProd DevTest Shared Resources
+  - group: PreProd Shared Resources
   - group: PP das-levy-transfer-matching-api
   jobs:
   - template: pipeline-templates/job/deploy.yml
