@@ -7,9 +7,7 @@ jobs:
   pool:
     name: DAS - Continuous Integration
   variables:
-  - group: Prod Management Resources
-  - name: buildConfiguration
-    value: release
+  - group: BUILD Management Resources
   workspace:
     clean: all
   steps:

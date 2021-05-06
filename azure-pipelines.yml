@@ -70,7 +70,7 @@ stages:
   jobs:
   - template: pipeline-templates/job/deploy.yml
     parameters:
-      Environment: DEV
+      Environment: TEST
       ServiceConnection: SFA-DAS-DevTest-ARM
 
 - stage: Deploy_TEST2
@@ -83,7 +83,7 @@ stages:
   jobs:
   - template: pipeline-templates/job/deploy.yml
     parameters:
-      Environment: DEV
+      Environment: TEST2
       ServiceConnection: SFA-DAS-DevTest-ARM
 
 - stage: Deploy_PP
@@ -96,5 +96,5 @@ stages:
   jobs:
   - template: pipeline-templates/job/deploy.yml
     parameters:
-      Environment: DEV
+      Environment: PP
       ServiceConnection: SFA-DIG-PreProd-ARM
