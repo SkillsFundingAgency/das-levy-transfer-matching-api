@@ -42,7 +42,7 @@ stages:
     parameters:
       SolutionBaseName: $(SolutionBaseName)
       BuildConfiguration: $(BuildConfiguration)
-  - template: pipeline-templates/job/dacpac-build.yml
+  - template: azure-pipelines-templates/build/job/dacpac-build.yml@das-platform-building-blocks
     parameters:
       SolutionBaseName: $(DACPACSolutionBaseName)
       BuildConfiguration: $(BuildConfiguration)
