@@ -41,11 +41,10 @@ stages:
   - template: pipeline-templates/job/code-build.yml
     parameters:
       SolutionBaseName: $(SolutionBaseName)
-      BuildConfiguration: $(BuildConfiguration)
   - template: azure-pipelines-templates/build/job/dacpac-template.yml@das-platform-building-blocks
     parameters:
       SolutionBaseName: $(DACPACSolutionBaseName)
-      BuildConfiguration: $(BuildConfiguration)
+      SqlProjectPath: src\SFA.DAS.LevyTransferMatching.Database\SFA.DAS.LevyTransferMatching.Database.sqlproj
 
 - stage: Deploy_AT
   dependsOn: Build
