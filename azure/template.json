@@ -261,7 +261,7 @@
                         "value": "[createArray(reference('api-app-service').outputs.managedServiceIdentityId.value, reference('api-app-service').outputs.stagingManagedServiceIdentityId.value)[copyIndex()]]"
                     },
                     "assignmentType": {
-                        "value": "ServiceBusSender"
+                        "value": "ServiceBusOwner"
                     },
                     "resourceName": {
                         "value": "[parameters('sharedServiceBusName')]"
