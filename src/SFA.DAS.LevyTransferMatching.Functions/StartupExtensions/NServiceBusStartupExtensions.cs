@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NServiceBus;
@@ -10,7 +11,7 @@ namespace SFA.DAS.LevyTransferMatching.Functions.StartupExtensions
     {
         public static IServiceCollection AddNServiceBus(this IServiceCollection services, LevyTransferMatchingFunctions config, ILogger logger)
         {
-            if (string.IsNullOrEmpty(config.NServiceBusConnectionString))
+            if (config.NServiceBusConnectionString.Equals("UseDevelopmentStorage=true", StringComparison.CurrentCultureIgnoreCase))
             {
                 services.AddNServiceBus(logger, (options) =>
                 {
