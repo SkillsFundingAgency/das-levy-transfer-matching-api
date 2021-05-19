@@ -1,4 +1,5 @@
-﻿using System.Data.SqlClient;
+﻿using System;
+using System.Data.SqlClient;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -32,7 +33,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
                 .UseSqlServerPersistence(() => new SqlConnection(configuration.DatabaseConnectionString))
                 .UseUnitOfWork();
 
-            if (environment.IsDevelopment())
+            if (configuration.NServiceBusConnectionString.Equals("UseDevelopmentStorage=true", StringComparison.CurrentCultureIgnoreCase))
             {
                 endpointConfiguration.UseLearningTransport(s => s.AddRouting());
             }
