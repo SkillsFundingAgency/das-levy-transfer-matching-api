@@ -1,26 +1,35 @@
-# das-github-template
+# Levy Transfers Matching API
 
-This repo should be used as a template when creating new repos for the Apprenticeship Service
+This repository contains the inner Levy Transfers Matching API
 
-## Contents
+## Getting Started
 
-* .github/CODEOWNERS - Defines required approvals for changes to files specified in the CODEOWNERS file
-* azure/template.json - Azure ARM template should be used to provision resources on the Azure platform
-* .gitignore - Intialised for Visual Studio
-* azure-pipelines.yml - Azure Pipelines definition file
-* GitVersion.yml - GitVersion configuration file
-* LICENSE - License information file
-* README.md - Populate with useful information about the repo, the projects it contains and how to get started.
-# ProjectName
+To get the project running you will need to:
 
-## Introduction
+* Clone this repository
+* Set the start up project to SFA.DAS.LevyTransferMatching.Api
+* Restore packages
+* Deploy the SFA.DAS.LevyTransferMatching.Database project
+* Get the latest config for the project from [das-employer-config](https://github.com/SkillsFundingAgency/das-employer-config) and deploy it to an instance of Azure Table Storage manually or by using the [das-employer-config-updater](https://github.com/SkillsFundingAgency/das-employer-config-updater)
 
-An introduction to the project goes here!
+> Both the [das-employer-config repository](https://github.com/SkillsFundingAgency/das-employer-config) and the [das-employer-config-updater repository](https://github.com/SkillsFundingAgency/das-employer-config-updater) are private and only available to members of the SkillsFundingAgency GitHub Organisation
 
-## Developer Setup
+### Prerequisites
 
-### Requirements
+* An IDE supporting .NetCore 3.1
+* The latest configuration from [das-employer-config repository](https://github.com/SkillsFundingAgency/das-employer-config)
+* Azure Table Storage Emulator
 
-### Setup
+## Usage
 
-### Config
+## Testing
+
+Unit tests are available in tests folder and can be run with any NUnit test runner
+
+## Known Issues
+
+None
+
+## License
+
+[MIT License](https://choosealicense.com/licenses/mit/)
