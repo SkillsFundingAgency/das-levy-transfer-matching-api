@@ -1,5 +1,7 @@
 # Levy Transfers Matching API
 
+[![Build Status](https://dev.azure.com/sfa-gov-uk/Digital%20Apprenticeship%20Service/_apis/build/status/das-levy-transfer-matching-api?repoName=SkillsFundingAgency%2Fdas-levy-transfer-matching-api&branchName=main)](https://dev.azure.com/sfa-gov-uk/Digital%20Apprenticeship%20Service/_build/latest?definitionId=2416&repoName=SkillsFundingAgency%2Fdas-levy-transfer-matching-api&branchName=main)
+
 This repository contains the inner Levy Transfers Matching API
 
 ## Getting Started
