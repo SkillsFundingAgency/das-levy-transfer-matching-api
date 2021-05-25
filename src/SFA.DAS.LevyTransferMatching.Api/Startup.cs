@@ -68,7 +68,7 @@ namespace SFA.DAS.LevyTransferMatching.Api
             services.AddNServiceBusClientUnitOfWork();
             services.AddCache(config, _environment)
                     .AddDasDataProtection(config, _environment)
-            ;
+                    .AddSwaggerGen();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -87,6 +87,8 @@ namespace SFA.DAS.LevyTransferMatching.Api
             {
                 endpoints.MapControllers();
             });
+
+            app.AddSwagger();
         }
 
         public void ConfigureContainer(UpdateableServiceProvider serviceProvider)
