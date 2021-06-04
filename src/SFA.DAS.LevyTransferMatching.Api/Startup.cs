@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Converters;
 using NServiceBus.ObjectBuilder.MSDependencyInjection;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.LevyTransferMatching.Api.StartupExtensions;
@@ -60,6 +61,10 @@ namespace SFA.DAS.LevyTransferMatching.Api
                 {
                     fv.RegisterValidatorsFromAssemblyContaining<Startup>();
                     fv.RegisterValidatorsFromAssemblyContaining<DbContextFactory>();
+                })
+                .AddNewtonsoftJson(x =>
+                {
+                    x.SerializerSettings.Converters.Add(new StringEnumConverter());
                 });
 
             services.AddMediatR(typeof(DbContextFactory).Assembly);
@@ -68,7 +73,8 @@ namespace SFA.DAS.LevyTransferMatching.Api
             services.AddNServiceBusClientUnitOfWork();
             services.AddCache(config, _environment)
                     .AddDasDataProtection(config, _environment)
-                    .AddSwaggerGen();
+                    .AddSwaggerGen()
+                    .AddSwaggerGenNewtonsoftSupport();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
