@@ -9,7 +9,7 @@ namespace SFA.DAS.LevyTransferMatching.Data
         {
         }
 
-        public DbSet<PledgeDataModel> Pledges { get; set; }
+        public DbSet<Pledge> Pledges { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

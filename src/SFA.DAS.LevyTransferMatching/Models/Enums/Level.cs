@@ -2,12 +2,12 @@
 {
     public enum Level
     {
-        None,
-        Level2,
-        Level3,
-        Level4,
-        Level5,
-        Level6,
-        Level7,
+        None = 0,
+        Level2 = 1,
+        Level3 = 2,
+        Level4 = 3,
+        Level5 = 4,
+        Level6 = 5,
+        Level7 = 6,
     }
 }

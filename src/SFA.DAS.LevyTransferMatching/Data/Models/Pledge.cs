@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SFA.DAS.LevyTransferMatching.Data.Models
 {
-    [Table("Pledge")]
-    public class PledgeDataModel
+    [Table(nameof(Pledge))]
+    public class Pledge
     {
-        [Key]
         public int PledgeId { get; set; }
 
         [StringLength(100)]
@@ -21,6 +21,8 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         public bool HideEmployerName { get; set; }
 
         public DateTime CreationDate { get; set; }
+
+        public IEnumerable<PledgeLevel> PledgeLevels { get; set; }
 
     }
 }
