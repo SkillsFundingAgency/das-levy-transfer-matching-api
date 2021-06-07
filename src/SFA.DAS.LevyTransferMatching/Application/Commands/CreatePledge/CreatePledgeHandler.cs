@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SFA.DAS.HashingService;
 using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Models;
 using System.Threading;
@@ -8,10 +9,12 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
 {
     public class CreatePledgeHandler : IRequestHandler<CreatePledgeCommand, CreatePledgeResult>
     {
+        private readonly IHashingService _hashingService;
         private readonly IPledgesDataRepository _pledgesDataRepository;
 
-        public CreatePledgeHandler(IPledgesDataRepository pledgesDataRepository)
+        public CreatePledgeHandler(IHashingService hashingService, IPledgesDataRepository pledgesDataRepository)
         {
+            _hashingService = hashingService;
             _pledgesDataRepository = pledgesDataRepository;
         }
 
@@ -19,8 +22,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
         {
             Pledge pledge = request.Pledge;
 
-            // TODO: Find hashing NuGet package to unpack the id.
-            pledge.AccountId = 0;
+            pledge.AccountId = _hashingService.DecodeValue(pledge.EncodedAccountId);
 
             await _pledgesDataRepository.Add(pledge);
 
