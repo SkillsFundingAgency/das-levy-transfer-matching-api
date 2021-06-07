@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.LevyTransferMatching.Api.Models;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
+using SFA.DAS.LevyTransferMatching.Models;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
@@ -23,12 +24,15 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         {
             var commandResult = await _mediator.Send(new CreatePledgeCommand()
             {
-                EncodedAccountId = encodedAccountId,
-                Amount = request.Amount,
-                IsNamePublic = request.IsNamePublic,
-                JobRoles = request.JobRoles,
-                Levels = request.Levels,
-                Sectors = request.Sectors,
+                Pledge = new Pledge()
+                {
+                    EncodedAccountId = encodedAccountId,
+                    Amount = request.Amount,
+                    IsNamePublic = request.IsNamePublic,
+                    JobRoles = request.JobRoles,
+                    Levels = request.Levels,
+                    Sectors = request.Sectors,
+                }
             });
 
             return new AcceptedResult($"/accounts/{encodedAccountId}/pledges/{commandResult.Id}", null);
