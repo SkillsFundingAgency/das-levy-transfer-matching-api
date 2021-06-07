@@ -24,5 +24,9 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
         public IEnumerable<PledgeLevel> PledgeLevels { get; set; }
 
+        public IEnumerable<PledgeRole> PledgeRoles { get; set; }
+
+        public IEnumerable<PledgeSector> PledgeSectors { get; set; }
+
     }
 }

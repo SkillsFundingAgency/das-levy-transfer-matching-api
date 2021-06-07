@@ -25,6 +25,8 @@ namespace SFA.DAS.LevyTransferMatching.Data
                 EncodedId = pledge.EncodedAccountId,
                 HideEmployerName = !pledge.IsNamePublic,
                 PledgeLevels = pledge.Levels.Select(x => new DataModels.PledgeLevel() { LevelId = (byte)x }).ToList(),
+                PledgeRoles = pledge.JobRoles.Select(x => new DataModels.PledgeRole() { RoleId = (byte)x }).ToList(),
+                PledgeSectors = pledge.Sectors.Select(x => new DataModels.PledgeSector() { SectorId = (byte)x }).ToList(),
             });
 
             await _dbContext.SaveChangesAsync();
