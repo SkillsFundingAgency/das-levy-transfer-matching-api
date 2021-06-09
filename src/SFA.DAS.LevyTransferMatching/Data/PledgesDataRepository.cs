@@ -23,7 +23,7 @@ namespace SFA.DAS.LevyTransferMatching.Data
                 CreationDate = DateTime.UtcNow,
                 EmployerAccountId = pledge.AccountId,
                 EncodedId = pledge.EncodedAccountId,
-                HideEmployerName = !pledge.IsNamePublic,
+                IsNamePublic = pledge.IsNamePublic,
                 PledgeLevels = pledge.Levels.Select(x => new DataModels.PledgeLevel() { LevelId = (byte)x }).ToList(),
                 PledgeRoles = pledge.JobRoles.Select(x => new DataModels.PledgeRole() { RoleId = (byte)x }).ToList(),
                 PledgeSectors = pledge.Sectors.Select(x => new DataModels.PledgeSector() { SectorId = (byte)x }).ToList(),

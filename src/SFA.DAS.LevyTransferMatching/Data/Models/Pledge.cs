@@ -18,7 +18,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         [Column(TypeName = "decimal(18,0)")]
         public decimal Amount { get; set; }
 
-        public bool HideEmployerName { get; set; }
+        public bool IsNamePublic { get; set; }
 
         public DateTime CreationDate { get; set; }
 
