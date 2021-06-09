@@ -18,17 +18,15 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
             _pledgesDataRepository = pledgesDataRepository;
         }
 
-        public async Task<CreatePledgeResult> Handle(CreatePledgeCommand request, CancellationToken cancellationToken)
+        public async Task<CreatePledgeResult> Handle(CreatePledgeCommand command, CancellationToken cancellationToken)
         {
-            Pledge pledge = request.Pledge;
+            command.AccountId = _hashingService.DecodeValue(command.EncodedAccountId);
 
-            pledge.AccountId = _hashingService.DecodeValue(pledge.EncodedAccountId);
-
-            await _pledgesDataRepository.Add(pledge);
+            await _pledgesDataRepository.Add(command);
 
             return new CreatePledgeResult()
             {
-                Id = pledge.Id.Value,
+                Id = command.Id.Value,
             };
         }
     }
