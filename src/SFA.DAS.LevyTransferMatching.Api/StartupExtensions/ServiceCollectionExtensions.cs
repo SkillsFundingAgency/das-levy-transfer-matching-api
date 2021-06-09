@@ -27,7 +27,6 @@ namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
             }
             services.AddTransient<LevyTransferMatchingDbContext>(provider => provider.GetService<IDbContextFactory<LevyTransferMatchingDbContext>>().CreateDbContext());
             services.AddTransient<ILevyTransferMatchingDbContext>(provider => provider.GetService<LevyTransferMatchingDbContext>());
-            services.AddTransient<IPledgesDataRepository, PledgesDataRepository>();
 
             services.AddSingleton<IHashingService>((provider) =>
             {
