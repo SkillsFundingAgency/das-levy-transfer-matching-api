@@ -42,7 +42,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             // Act
             var actionResult = await _pledgesController.Create(encodedAccountId, request);
             var acceptedResult = actionResult as AcceptedResult;
-            var pledgeReference = acceptedResult.Value as PledgeReferenceDto;
+            var pledgeReference = acceptedResult.Value as CreatePledgeResponse;
 
             // Assert
             Assert.IsNotNull(actionResult);

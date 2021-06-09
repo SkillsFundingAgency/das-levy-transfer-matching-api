@@ -31,26 +31,22 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreatePled
         public async Task Handle_Pledge_Created_Id_Returned()
         {
             // Arrange
-            var pledge = _fixture.Create<Pledge>();
-            var command = new CreatePledgeCommand()
-            {
-                Pledge = pledge,
-            };
+            var command = _fixture.Create<CreatePledgeCommand>();
             var decodedAccountId = _fixture.Create<int>();
             var expectedId = _fixture.Create<int>();
 
             _mockHashingService
-                .Setup(x => x.DecodeValue(It.Is<string>(x => x == pledge.EncodedAccountId)))
+                .Setup(x => x.DecodeValue(It.Is<string>(x => x == command.EncodedAccountId)))
                 .Returns(decodedAccountId);
 
             bool addedToDatabase = false;
             _mockPledgesDataRepository
-                .Setup(x => x.Add(It.Is<Pledge>(x => x == pledge)))
+                .Setup(x => x.Add(It.Is<Pledge>(x => x == command)))
                 .Callback(() =>
                 {
                     addedToDatabase = true;
 
-                    pledge.Id = expectedId;
+                    command.Id = expectedId;
                 });
 
             // Act
@@ -58,7 +54,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreatePled
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.AreEqual(pledge.AccountId, decodedAccountId);
+            Assert.AreEqual(command.AccountId, decodedAccountId);
             Assert.IsTrue(addedToDatabase);
             Assert.AreEqual(result.Id, expectedId);
         }

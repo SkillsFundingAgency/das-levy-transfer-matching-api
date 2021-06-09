@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.LevyTransferMatching.Api.Models
 {
-    public class PledgeReferenceDto
+    public class CreatePledgeResponse
     {
         public int Id { get; set; }
     }

@@ -33,7 +33,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 
             return new AcceptedResult(
                 $"/accounts/{encodedAccountId}/pledges/{commandResult.Id}",
-                new PledgeReferenceDto()
+                new CreatePledgeResponse()
                 {
                     Id = commandResult.Id,
                 });
