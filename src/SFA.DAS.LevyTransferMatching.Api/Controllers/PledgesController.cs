@@ -31,7 +31,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 Sectors = request.Sectors,
             });
 
-            return new AcceptedResult(
+            return new CreatedResult(
                 $"/accounts/{encodedAccountId}/pledges/{commandResult.Id}",
                 new CreatePledgeResponse()
                 {

@@ -28,7 +28,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         }
 
         [Test]
-        public async Task POST_Create_Returns_Accepted_With_Correct_Location()
+        public async Task POST_Create_Returns_Created_With_Correct_Location()
         {
             // Arrange 
             var encodedAccountId = _fixture.Create<string>();
@@ -41,15 +41,15 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
 
             // Act
             var actionResult = await _pledgesController.Create(encodedAccountId, request);
-            var acceptedResult = actionResult as AcceptedResult;
-            var pledgeReference = acceptedResult.Value as CreatePledgeResponse;
+            var createdResult = actionResult as CreatedResult;
+            var pledgeReference = createdResult.Value as CreatePledgeResponse;
 
             // Assert
             Assert.IsNotNull(actionResult);
-            Assert.IsNotNull(acceptedResult);
+            Assert.IsNotNull(createdResult);
             Assert.IsNotNull(pledgeReference);
-            Assert.AreEqual(acceptedResult.StatusCode, (int)HttpStatusCode.Accepted);
-            Assert.AreEqual(acceptedResult.Location, $"/accounts/{encodedAccountId}/pledges/{result.Id}");
+            Assert.AreEqual(createdResult.StatusCode, (int)HttpStatusCode.Created);
+            Assert.AreEqual(createdResult.Location, $"/accounts/{encodedAccountId}/pledges/{result.Id}");
             Assert.AreEqual(pledgeReference.Id, result.Id);
         }
     }
