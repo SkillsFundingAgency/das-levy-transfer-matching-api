@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
-    [Route("accounts/{EncodedAccountId}/pledges")]
+    [Route("accounts/{accountId}/pledges")]
     [ApiController]
     public class PledgesController
     {
@@ -19,11 +19,11 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(string encodedAccountId, [FromBody]CreatePledgeRequest request)
+        public async Task<IActionResult> Create(long accountId, [FromBody]CreatePledgeRequest request)
         {
             var commandResult = await _mediator.Send(new CreatePledgeCommand()
             {
-                EncodedAccountId = encodedAccountId,
+                AccountId = accountId,
                 Amount = request.Amount,
                 IsNamePublic = request.IsNamePublic,
                 JobRoles = request.JobRoles,
@@ -32,7 +32,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
             });
 
             return new CreatedResult(
-                $"/accounts/{encodedAccountId}/pledges/{commandResult.Id}",
+                $"/accounts/{accountId}/pledges/{commandResult.Id}",
                 new CreatePledgeResponse()
                 {
                     Id = commandResult.Id,

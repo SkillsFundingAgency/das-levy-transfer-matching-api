@@ -31,7 +31,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         public async Task POST_Create_Returns_Created_With_Correct_Location()
         {
             // Arrange 
-            var encodedAccountId = _fixture.Create<string>();
+            var accountId = _fixture.Create<long>();
             var request = _fixture.Create<CreatePledgeRequest>();
             var result = _fixture.Create<CreatePledgeResult>();
 
@@ -40,7 +40,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
                 .ReturnsAsync(result);
 
             // Act
-            var actionResult = await _pledgesController.Create(encodedAccountId, request);
+            var actionResult = await _pledgesController.Create(accountId, request);
             var createdResult = actionResult as CreatedResult;
             var pledgeReference = createdResult.Value as CreatePledgeResponse;
 
@@ -49,7 +49,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             Assert.IsNotNull(createdResult);
             Assert.IsNotNull(pledgeReference);
             Assert.AreEqual(createdResult.StatusCode, (int)HttpStatusCode.Created);
-            Assert.AreEqual(createdResult.Location, $"/accounts/{encodedAccountId}/pledges/{result.Id}");
+            Assert.AreEqual(createdResult.Location, $"/accounts/{accountId}/pledges/{result.Id}");
             Assert.AreEqual(pledgeReference.Id, result.Id);
         }
     }

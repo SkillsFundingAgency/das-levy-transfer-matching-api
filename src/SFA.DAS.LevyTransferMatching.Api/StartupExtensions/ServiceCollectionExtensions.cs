@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.HashingService;
 using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
 
@@ -27,13 +26,6 @@ namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
             }
             services.AddTransient<LevyTransferMatchingDbContext>(provider => provider.GetService<IDbContextFactory<LevyTransferMatchingDbContext>>().CreateDbContext());
             services.AddTransient<ILevyTransferMatchingDbContext>(provider => provider.GetService<LevyTransferMatchingDbContext>());
-
-            services.AddSingleton<IHashingService>((provider) =>
-            {
-                var accountEncoding = provider.GetService<AccountEncoding>();
-
-                return new HashingService.HashingService(accountEncoding.Characters, accountEncoding.Salt);
-            });
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿CREATE TABLE [dbo].[Pledge] (
     [PledgeId]          INT           IDENTITY (1, 1) NOT NULL,
-    [EncodedId]         VARCHAR (100) NOT NULL,
     [EmployerAccountId] BIGINT        NOT NULL,
     [Amount]            INT           NOT NULL,
     [IsNamePublic]      BIT           NOT NULL,

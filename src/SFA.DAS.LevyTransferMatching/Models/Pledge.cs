@@ -7,7 +7,6 @@ namespace SFA.DAS.LevyTransferMatching.Models
     {
         public int? Id { get; set; }
         public long AccountId { get; set; }
-        public string EncodedAccountId { get; set; }
         public int Amount { get; set; }
         public bool IsNamePublic { get; set; }
         public IEnumerable<Sector> Sectors { get; set; }

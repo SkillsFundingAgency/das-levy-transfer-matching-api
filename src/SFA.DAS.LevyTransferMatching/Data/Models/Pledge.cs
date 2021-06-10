@@ -10,9 +10,6 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
     {
         public int PledgeId { get; set; }
 
-        [StringLength(100)]
-        public string EncodedId { get; set; }
-        
         public long EmployerAccountId { get; set; }
 
         public int Amount { get; set; }
