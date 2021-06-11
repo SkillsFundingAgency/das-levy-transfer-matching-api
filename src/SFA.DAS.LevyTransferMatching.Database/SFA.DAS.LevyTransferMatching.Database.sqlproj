@@ -66,4 +66,7 @@
     <Build Include="Tables\PledgeRole.sql" />
     <Build Include="Tables\PledgeLevel.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="SFA.DAS.LevyTransferMatching.Database.refactorlog" />
+  </ItemGroup>
 </Project>

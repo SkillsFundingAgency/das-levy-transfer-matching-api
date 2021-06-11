@@ -3,7 +3,7 @@
     [RoleId]       TINYINT NOT NULL,
     [PledgeId]     INT     NOT NULL,
     CONSTRAINT [PK_PledgeRole] PRIMARY KEY CLUSTERED ([PledgeRoleId] ASC),
-    CONSTRAINT [FK_PledgeRole__Pledge] FOREIGN KEY ([PledgeId]) REFERENCES [dbo].[Pledge] ([PledgeId])
+    CONSTRAINT [FK_PledgeRole__Pledge] FOREIGN KEY ([PledgeId]) REFERENCES [dbo].[Pledge] ([Id])
 );
 
 
