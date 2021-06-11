@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -51,6 +52,32 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             Assert.AreEqual(createdResult.StatusCode, (int)HttpStatusCode.Created);
             Assert.AreEqual(createdResult.Location, $"/accounts/{accountId}/pledges/{result.Id}");
             Assert.AreEqual(pledgeReference.Id, result.Id);
+        }
+
+        [Test]
+        public async Task POST_Create_Returns_Bad_Request_With_Validation_Error()
+        {
+            // Arrange 
+            var accountId = _fixture.Create<long>();
+            var request = _fixture.Create<CreatePledgeRequest>();
+            var result = _fixture.Create<CreatePledgeResult>();
+            var validationException = _fixture.Create<ValidationException>();
+
+            _mockMediator
+                .Setup(x => x.Send(It.IsAny<CreatePledgeCommand>(), It.IsAny<CancellationToken>()))
+                .Throws(validationException);
+
+            // Act
+            var actionResult = await _pledgesController.Create(accountId, request);
+            var badRequestObjectResult = actionResult as BadRequestObjectResult;
+            var fluentValidationErrorResponse = badRequestObjectResult.Value as FluentValidationErrorResponse;
+
+            // Assert
+            Assert.IsNotNull(actionResult);
+            Assert.IsNotNull(badRequestObjectResult);
+            Assert.IsNotNull(fluentValidationErrorResponse);
+            Assert.AreEqual(badRequestObjectResult.StatusCode, (int)HttpStatusCode.BadRequest);
+            Assert.AreEqual(fluentValidationErrorResponse.Errors, validationException.Errors);
         }
     }
 }
