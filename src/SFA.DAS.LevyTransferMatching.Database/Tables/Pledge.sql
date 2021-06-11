@@ -4,6 +4,7 @@
     [Amount]            INT           NOT NULL,
     [IsNamePublic]      BIT           NOT NULL,
     [CreatedOn]      DATETIME2 (7) CONSTRAINT [DF_Pledge__CreationDate] DEFAULT (getdate()) NOT NULL,
+    [RowVersion] TIMESTAMP NOT NULL, 
     CONSTRAINT [PK_Pledge] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

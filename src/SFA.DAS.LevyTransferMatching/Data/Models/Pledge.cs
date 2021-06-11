@@ -22,6 +22,6 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         public IEnumerable<PledgeRole> PledgeRoles { get; set; }
 
         public IEnumerable<PledgeSector> PledgeSectors { get; set; }
-
+        public byte[] RowVersion { get; set; }
     }
 }
