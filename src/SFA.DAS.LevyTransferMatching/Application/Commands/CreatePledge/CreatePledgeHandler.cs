@@ -19,7 +19,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
 
         public async Task<CreatePledgeResult> Handle(CreatePledgeCommand command, CancellationToken cancellationToken)
         {
-            var result = await _dbContext.AddAsync(new DataModels.Pledge()
+            var result = await _dbContext.AddAsync(new DataModels.Pledge
             {
                 Amount = command.Amount,
                 CreationDate = DateTime.UtcNow,
@@ -28,9 +28,9 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
                 PledgeLevels = command.Levels.Select(x => new DataModels.PledgeLevel() { LevelId = (byte)x }).ToList(),
                 PledgeRoles = command.JobRoles.Select(x => new DataModels.PledgeRole() { RoleId = (byte)x }).ToList(),
                 PledgeSectors = command.Sectors.Select(x => new DataModels.PledgeSector() { SectorId = (byte)x }).ToList(),
-            });
+            }, cancellationToken);
 
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             command.Id = result.Entity.PledgeId;
 

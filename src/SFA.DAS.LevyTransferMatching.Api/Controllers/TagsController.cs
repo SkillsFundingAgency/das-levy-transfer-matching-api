@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.LevyTransferMatching.Extensions;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 
@@ -9,6 +10,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
     public class TagsController : Controller
     {
         [Route("levels")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         [HttpGet]
         public IActionResult Levels()
         {
@@ -16,6 +18,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         }
 
         [Route("sectors")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         [HttpGet]
         public IActionResult Sectors()
         {
@@ -23,6 +26,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         }
 
         [Route("jobRoles")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         [HttpGet]
         public IActionResult JobRoles()
         {

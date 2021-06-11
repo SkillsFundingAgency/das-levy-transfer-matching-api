@@ -1,8 +1,8 @@
-﻿using MediatR;
+﻿using System.Net;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.LevyTransferMatching.Api.Models;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
-using SFA.DAS.LevyTransferMatching.Models;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
@@ -19,9 +19,10 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
         public async Task<IActionResult> Create(long accountId, [FromBody]CreatePledgeRequest request)
         {
-            var commandResult = await _mediator.Send(new CreatePledgeCommand()
+            var commandResult = await _mediator.Send(new CreatePledgeCommand
             {
                 AccountId = accountId,
                 Amount = request.Amount,
