@@ -5,20 +5,25 @@ using System.Threading;
 using System.Threading.Tasks;
 using System;
 using System.Linq;
+using FluentValidation;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
 {
     public class CreatePledgeHandler : IRequestHandler<CreatePledgeCommand, CreatePledgeResult>
     {
+        private readonly IValidator<CreatePledgeCommand> _validator;
         private readonly LevyTransferMatchingDbContext _dbContext;
 
-        public CreatePledgeHandler(LevyTransferMatchingDbContext dbContext)
+        public CreatePledgeHandler(IValidator<CreatePledgeCommand> validator, LevyTransferMatchingDbContext dbContext)
         {
+            _validator = validator;
             _dbContext = dbContext;
         }
 
         public async Task<CreatePledgeResult> Handle(CreatePledgeCommand command, CancellationToken cancellationToken)
         {
+            _validator.ValidateAndThrow(command);
+
             var result = await _dbContext.AddAsync(new DataModels.Pledge
             {
                 Amount = command.Amount,

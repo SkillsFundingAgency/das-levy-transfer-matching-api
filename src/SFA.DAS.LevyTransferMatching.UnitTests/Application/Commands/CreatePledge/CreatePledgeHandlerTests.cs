@@ -1,5 +1,7 @@
 ﻿using AutoFixture;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
 using SFA.DAS.LevyTransferMatching.Data;
@@ -27,8 +29,9 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreatePled
                 .UseInMemoryDatabase("SFA.DAS.LevyTransferMatching.Database")
                 .Options;
 
+            var mockValidator = new Mock<IValidator<CreatePledgeCommand>>();
             var dbContext = new LevyTransferMatchingDbContext(options);
-            var createPledgeHandler = new CreatePledgeHandler(dbContext);
+            var createPledgeHandler = new CreatePledgeHandler(mockValidator.Object, dbContext);
 
             var command = _fixture.Create<CreatePledgeCommand>();
             var expectedId = 1;
