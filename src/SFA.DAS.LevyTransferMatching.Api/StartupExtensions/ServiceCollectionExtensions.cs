@@ -25,7 +25,6 @@ namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
             {
                 services.AddTransient<IDbContextFactory<LevyTransferMatchingDbContext>>(provider => new DbContextFactory(new SqlConnection(connectionString), provider.GetService<ILoggerFactory>(), new AzureServiceTokenProvider()));
             }
-            services.AddTransient<IValidator<CreatePledgeCommand>, CreatePledgeCommandValidator>();
             services.AddTransient<LevyTransferMatchingDbContext>(provider => provider.GetService<IDbContextFactory<LevyTransferMatchingDbContext>>().CreateDbContext());
             services.AddTransient<ILevyTransferMatchingDbContext>(provider => provider.GetService<LevyTransferMatchingDbContext>());
         }

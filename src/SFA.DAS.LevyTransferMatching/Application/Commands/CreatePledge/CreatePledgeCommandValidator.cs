@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
 {
