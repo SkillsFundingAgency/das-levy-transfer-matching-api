@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
-using SFA.DAS.LevyTransferMatching.Application.Validators.CreatePledge;
 using SFA.DAS.LevyTransferMatching.Data;
 
 namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions

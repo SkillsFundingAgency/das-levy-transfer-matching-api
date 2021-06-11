@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
 
-namespace SFA.DAS.LevyTransferMatching.Application.Validators.CreatePledge
+namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
 {
     public class CreatePledgeCommandValidator : AbstractValidator<CreatePledgeCommand>
     {
