@@ -23,5 +23,6 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
         public int Sectors { get; set; }
 
+        public byte[] RowVersion { get; set; }
     }
 }

@@ -7,6 +7,7 @@
     [JobRoles]          INT           NOT NULL,
     [Levels]            INT           NOT NULL,
     [Sectors]           INT           NOT NULL,
+    [RowVersion] TIMESTAMP NOT NULL, 
     CONSTRAINT [PK_Pledge] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

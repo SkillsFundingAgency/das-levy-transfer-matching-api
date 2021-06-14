@@ -13,7 +13,7 @@ namespace SFA.DAS.LevyTransferMatching.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Pledge>().Property(x => x.RowVersion).IsRowVersion();
         }
     }
 }
