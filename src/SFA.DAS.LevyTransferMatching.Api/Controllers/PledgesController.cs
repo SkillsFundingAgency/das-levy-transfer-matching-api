@@ -5,12 +5,12 @@ using SFA.DAS.LevyTransferMatching.Api.Models;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
 using System.Threading.Tasks;
 using FluentValidation;
+using SFA.DAS.LevyTransferMatching.Application.Queries;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
-    [Route("accounts/{accountId}/pledges")]
     [ApiController]
-    public class PledgesController
+    public class PledgesController : Controller
     {
         private readonly IMediator _mediator;
 
@@ -19,7 +19,16 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
             _mediator = mediator;
         }
 
+        [HttpGet]
+        [Route("pledges")]
+        public async Task<IActionResult> Pledges()
+        {
+            var result = await _mediator.Send(new GetAllPledgesQuery());
+            return Ok(result);
+        }
+
         [HttpPost]
+        [Route("accounts/{accountId}/pledges")]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         public async Task<IActionResult> Create(long accountId, [FromBody]CreatePledgeRequest request)
         {
