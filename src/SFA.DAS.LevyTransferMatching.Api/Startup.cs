@@ -54,6 +54,7 @@ namespace SFA.DAS.LevyTransferMatching.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddNLog();
             services.AddConfigurationOptions(Configuration);
             var config = Configuration.GetSection<LevyTransferMatchingApi>();
 
@@ -70,6 +71,8 @@ namespace SFA.DAS.LevyTransferMatching.Api
 
             services.AddMediatR(typeof(DbContextFactory).Assembly);
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RetryBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkBehaviour<,>));
             services.AddDasHealthChecks(config);
             services.AddDbConfiguration(config.DatabaseConnectionString, _environment);
             services.AddNServiceBusClientUnitOfWork();
