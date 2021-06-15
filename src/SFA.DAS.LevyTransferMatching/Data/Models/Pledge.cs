@@ -17,11 +17,12 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
         public DateTime CreatedOn { get; set; }
 
-        public IEnumerable<PledgeLevel> PledgeLevels { get; set; }
+        public int JobRoles { get; set; }
+        
+        public int Levels { get; set; }
 
-        public IEnumerable<PledgeRole> PledgeRoles { get; set; }
+        public int Sectors { get; set; }
 
-        public IEnumerable<PledgeSector> PledgeSectors { get; set; }
         public byte[] RowVersion { get; set; }
     }
 }

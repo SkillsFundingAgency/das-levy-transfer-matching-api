@@ -9,12 +9,12 @@ namespace SFA.DAS.LevyTransferMatching.Models.Enums
         [Display(Name = "Level 3 - A level")]
         Level3 = 2,
         [Display(Name = "Level 4 - higher national cerificate (HNC)")]
-        Level4 = 3,
+        Level4 = 4,
         [Display(Name = "Level 5 - higher national diploma (HND)")]
-        Level5 = 4,
+        Level5 = 8,
         [Display(Name = "Level 6 - degree")]
-        Level6 = 5,
+        Level6 = 16,
         [Display(Name = "Level 7 - master’s degree")]
-        Level7 = 6,
+        Level7 = 32,
     }
 }

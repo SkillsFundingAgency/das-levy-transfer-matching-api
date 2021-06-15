@@ -25,9 +25,9 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
                 CreatedOn = DateTime.UtcNow,
                 EmployerAccountId = command.AccountId,
                 IsNamePublic = command.IsNamePublic,
-                PledgeLevels = command.Levels.Select(x => new DataModels.PledgeLevel { LevelId = (byte)x }).ToList(),
-                PledgeRoles = command.JobRoles.Select(x => new DataModels.PledgeRole { RoleId = (byte)x }).ToList(),
-                PledgeSectors = command.Sectors.Select(x => new DataModels.PledgeSector { SectorId = (byte)x }).ToList(),
+                Levels = command.Levels.Sum(x => (int)x),
+                JobRoles = command.JobRoles.Sum(x => (int)x),
+                Sectors = command.Sectors.Sum(x => (int)x),
             }, cancellationToken);
 
             await _dbContext.SaveChangesAsync(cancellationToken);

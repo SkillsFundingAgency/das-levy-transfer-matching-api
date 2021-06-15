@@ -62,8 +62,5 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\Pledge.sql" />
-    <Build Include="Tables\PledgeSector.sql" />
-    <Build Include="Tables\PledgeRole.sql" />
-    <Build Include="Tables\PledgeLevel.sql" />
   </ItemGroup>
 </Project>
