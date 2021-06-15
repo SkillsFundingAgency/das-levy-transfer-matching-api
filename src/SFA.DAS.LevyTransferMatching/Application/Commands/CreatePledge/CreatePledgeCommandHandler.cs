@@ -5,8 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System;
 using System.Linq;
-using FluentValidation;
-using SFA.DAS.LevyTransferMatching.Behaviours;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
 {
