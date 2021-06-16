@@ -3,8 +3,10 @@ using System.Collections.Generic;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Queries
 {
-    public class GetAllPledgesResult
+    public class GetAllPledgesResult : List<Pledge>
     {
-        public IEnumerable<Pledge> Pledges { get; set; }
+        public GetAllPledgesResult(IEnumerable<Pledge> collection) : base(collection)
+        {
+        }
     }
 }

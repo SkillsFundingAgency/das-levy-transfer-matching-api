@@ -23,20 +23,19 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries
         {
             var pledges = await _dbContext.Pledges.ToListAsync();
 
-            return new GetAllPledgesResult
-            {
-                Pledges = pledges.Select(x => new Pledge()
-                {
-                    Amount = x.Amount,
-                    CreatedOn = x.CreatedOn,
-                    EmployerAccountId = x.EmployerAccountId,
-                    Id = x.Id,
-                    IsNamePublic = x.IsNamePublic,
-                    JobRoles = x.JobRoles.GetFlags<JobRole>(),
-                    Levels = x.Levels.GetFlags<Level>(),
-                    Sectors = x.Sectors.GetFlags<Sector>(),
-                })
-            };
+            return new GetAllPledgesResult(
+                pledges.Select(
+                    x => new Pledge()
+                    {
+                        Amount = x.Amount,
+                        CreatedOn = x.CreatedOn,
+                        EmployerAccountId = x.EmployerAccountId,
+                        Id = x.Id,
+                        IsNamePublic = x.IsNamePublic,
+                        JobRoles = x.JobRoles.GetFlags<JobRole>(),
+                        Levels = x.Levels.GetFlags<Level>(),
+                        Sectors = x.Sectors.GetFlags<Sector>(),
+                    }));
         }
     }
 }
