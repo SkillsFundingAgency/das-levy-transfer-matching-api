@@ -1,10 +1,10 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.LevyTransferMatching.Data;
-using System;
-using System.Collections.Generic;
+using SFA.DAS.LevyTransferMatching.Extensions;
+using SFA.DAS.LevyTransferMatching.Models;
+using SFA.DAS.LevyTransferMatching.Models.Enums;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,7 +25,17 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries
 
             return new GetAllPledgesResult
             {
-                Pledges = pledges
+                Pledges = pledges.Select(x => new Pledge()
+                {
+                    Amount = x.Amount,
+                    CreatedOn = x.CreatedOn,
+                    EmployerAccountId = x.EmployerAccountId,
+                    Id = x.Id,
+                    IsNamePublic = x.IsNamePublic,
+                    JobRoles = x.JobRoles.GetFlags<JobRole>(),
+                    Levels = x.Levels.GetFlags<Level>(),
+                    Sectors = x.Sectors.GetFlags<Sector>(),
+                })
             };
         }
     }
