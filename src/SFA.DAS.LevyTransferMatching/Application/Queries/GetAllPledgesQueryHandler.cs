@@ -29,7 +29,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries
                     {
                         Amount = x.Amount,
                         CreatedOn = x.CreatedOn,
-                        EmployerAccountId = x.EmployerAccountId,
+                        AccountId = x.EmployerAccountId,
                         Id = x.Id,
                         IsNamePublic = x.IsNamePublic,
                         JobRoles = x.JobRoles.GetFlags<JobRole>(),

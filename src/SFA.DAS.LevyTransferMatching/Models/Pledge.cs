@@ -8,7 +8,7 @@ namespace SFA.DAS.LevyTransferMatching.Models
     {
         public int Id { get; set; }
 
-        public long EmployerAccountId { get; set; }
+        public long AccountId { get; set; }
 
         public int Amount { get; set; }
 
