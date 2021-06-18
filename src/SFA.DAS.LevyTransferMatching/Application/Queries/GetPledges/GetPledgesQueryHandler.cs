@@ -8,23 +8,23 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.LevyTransferMatching.Application.Queries
+namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
 {
-    public class GetAllPledgesQueryHandler : IRequestHandler<GetAllPledgesQuery, GetAllPledgesResult>
+    public class GetPledgesQueryHandler : IRequestHandler<GetPledgesQuery, GetPledgesResult>
     {
         private readonly LevyTransferMatchingDbContext _dbContext;
 
-        public GetAllPledgesQueryHandler(LevyTransferMatchingDbContext dbContext)
+        public GetPledgesQueryHandler(LevyTransferMatchingDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public async Task<GetAllPledgesResult> Handle(GetAllPledgesQuery request, CancellationToken cancellationToken)
+        public async Task<GetPledgesResult> Handle(GetPledgesQuery request, CancellationToken cancellationToken)
         {
             var pledges = await _dbContext.Pledges.ToListAsync();
             var accounts = await _dbContext.EmployerAccounts.ToListAsync();
 
-            return new GetAllPledgesResult(
+            return new GetPledgesResult(
                 pledges.Select(
                     x => new Pledge()
                     {
