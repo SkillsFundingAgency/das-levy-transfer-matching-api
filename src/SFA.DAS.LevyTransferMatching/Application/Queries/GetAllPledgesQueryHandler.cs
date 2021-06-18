@@ -22,6 +22,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries
         public async Task<GetAllPledgesResult> Handle(GetAllPledgesQuery request, CancellationToken cancellationToken)
         {
             var pledges = await _dbContext.Pledges.ToListAsync();
+            var accounts = await _dbContext.EmployerAccounts.ToListAsync();
 
             return new GetAllPledgesResult(
                 pledges.Select(
@@ -32,6 +33,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries
                         AccountId = x.EmployerAccountId,
                         Id = x.Id,
                         IsNamePublic = x.IsNamePublic,
+                        DasAccountName = accounts.FirstOrDefault(y => y.Id == x.EmployerAccountId).Name,
                         JobRoles = x.JobRoles.GetFlags<JobRole>(),
                         Levels = x.Levels.GetFlags<Level>(),
                         Sectors = x.Sectors.GetFlags<Sector>(),

@@ -62,5 +62,9 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\Pledge.sql" />
+    <Build Include="Tables\EmployerAccount.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="SFA.DAS.LevyTransferMatching.Database.refactorlog" />
   </ItemGroup>
 </Project>

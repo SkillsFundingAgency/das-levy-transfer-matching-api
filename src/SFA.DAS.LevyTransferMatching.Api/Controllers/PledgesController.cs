@@ -41,6 +41,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                     AccountId = accountId,
                     Amount = request.Amount,
                     IsNamePublic = request.IsNamePublic,
+                    DasAccountName = request.DasAccountName,
                     JobRoles = request.JobRoles,
                     Levels = request.Levels,
                     Sectors = request.Sectors,

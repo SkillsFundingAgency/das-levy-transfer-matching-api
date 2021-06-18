@@ -6,5 +6,6 @@ namespace SFA.DAS.LevyTransferMatching.Data
     public interface ILevyTransferMatchingDbContext
     {
         DbSet<Pledge> Pledges { get; set; }
+        DbSet<EmployerAccount> EmployerAccounts { get; set; }
     }
 }
