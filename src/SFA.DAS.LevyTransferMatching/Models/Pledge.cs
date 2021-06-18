@@ -14,6 +14,8 @@ namespace SFA.DAS.LevyTransferMatching.Models
 
         public bool IsNamePublic { get; set; }
 
+        public string DasAccountName { get; set; }
+
         public DateTime CreatedOn { get; set; }
 
         public IEnumerable<JobRole> JobRoles { get; set; }

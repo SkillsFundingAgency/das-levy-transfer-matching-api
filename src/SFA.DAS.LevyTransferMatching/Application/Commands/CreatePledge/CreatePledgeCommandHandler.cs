@@ -30,6 +30,13 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
                 Sectors = command.Sectors.Cast<int>().Sum(),
             }, cancellationToken);
 
+            if (!_dbContext.EmployerAccounts.Any(x => x.Id == command.AccountId))
+                await _dbContext.AddAsync(new DataModels.EmployerAccount
+                {
+                    Id = command.AccountId,
+                    Name = command.DasAccountName
+                });
+
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             command.Id = result.Entity.Id;
