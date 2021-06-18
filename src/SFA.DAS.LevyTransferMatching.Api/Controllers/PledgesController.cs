@@ -6,6 +6,7 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
 using System.Threading.Tasks;
 using FluentValidation;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
+using System.Linq;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
@@ -21,11 +22,32 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 
         [HttpGet]
         [Route("pledges")]
-        public async Task<IActionResult> Pledges()
+        public async Task<IActionResult> GetPledges()
         {
             var result = await _mediator.Send(new GetPledgesQuery());
 
             return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("pledges/{id}")]
+        public async Task<IActionResult> GetPledge(int id)
+        {
+            var result = await _mediator.Send(new GetPledgesQuery()
+            {
+                Id = id,
+            });
+
+            var pledge = result.SingleOrDefault();
+            
+            if (pledge != null)
+            {
+                return Ok(pledge);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         [HttpPost]
