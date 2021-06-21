@@ -6,6 +6,10 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
 using System.Threading.Tasks;
 using FluentValidation;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
+using System.Linq;
+using SFA.DAS.LevyTransferMatching.Api.Models.CreatePledge;
+using SFA.DAS.LevyTransferMatching.Api.Models.GetPledge;
+using SFA.DAS.LevyTransferMatching.Api.Models.GetPledges;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
@@ -21,17 +25,17 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 
         [HttpGet]
         [Route("pledges")]
-        public async Task<IActionResult> Pledges()
+        public async Task<IActionResult> GetPledges()
         {
             var result = await _mediator.Send(new GetPledgesQuery());
 
-            return Ok(result);
+            return Ok(new GetPledgesResponse(result.Select(x => (GetPledgeResponse)x)));
         }
 
         [HttpPost]
         [Route("accounts/{accountId}/pledges")]
         [ProducesResponseType((int)HttpStatusCode.Created)]
-        public async Task<IActionResult> Create(long accountId, [FromBody]CreatePledgeRequest request)
+        public async Task<IActionResult> CreatePledge(long accountId, [FromBody]CreatePledgeRequest request)
         {
             IActionResult result = null;
 
@@ -50,10 +54,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 
                 result = new CreatedResult(
                     $"/accounts/{accountId}/pledges/{commandResult.Id}",
-                    new CreatePledgeResponse()
-                    {
-                        Id = commandResult.Id,
-                    });
+                    (CreatePledgeResponse)commandResult);
             }
             catch (ValidationException validationException)
             {
