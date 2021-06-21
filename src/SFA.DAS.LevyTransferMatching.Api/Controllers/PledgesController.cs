@@ -42,7 +42,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
             
             if (pledge != null)
             {
-                return Ok(pledge);
+                return Ok((GetPledgeResponse)pledge);
             }
             else
             {
@@ -72,10 +72,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 
                 result = new CreatedResult(
                     $"/accounts/{accountId}/pledges/{commandResult.Id}",
-                    new CreatePledgeResponse()
-                    {
-                        Id = commandResult.Id,
-                    });
+                    (CreatePledgeResponse)commandResult);
             }
             catch (ValidationException validationException)
             {

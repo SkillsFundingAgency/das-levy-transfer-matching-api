@@ -7,6 +7,8 @@ using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Api.Controllers;
 using SFA.DAS.LevyTransferMatching.Api.Models;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
+using SFA.DAS.LevyTransferMatching.Models;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,15 +45,15 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             // Act
             var actionResult = await _pledgesController.Create(accountId, request);
             var createdResult = actionResult as CreatedResult;
-            var pledgeReference = createdResult.Value as CreatePledgeResponse;
+            var createPledgeResponse = createdResult.Value as CreatePledgeResponse;
 
             // Assert
             Assert.IsNotNull(actionResult);
             Assert.IsNotNull(createdResult);
-            Assert.IsNotNull(pledgeReference);
+            Assert.IsNotNull(createPledgeResponse);
             Assert.AreEqual(createdResult.StatusCode, (int)HttpStatusCode.Created);
             Assert.AreEqual(createdResult.Location, $"/accounts/{accountId}/pledges/{result.Id}");
-            Assert.AreEqual(pledgeReference.Id, result.Id);
+            Assert.AreEqual(createPledgeResponse.Id, result.Id);
         }
 
         [Test]
@@ -78,6 +80,34 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             Assert.IsNotNull(fluentValidationErrorResponse);
             Assert.AreEqual(badRequestObjectResult.StatusCode, (int)HttpStatusCode.BadRequest);
             Assert.AreEqual(fluentValidationErrorResponse.Errors, validationException.Errors);
+        }
+
+        [Test]
+        public async Task GET_Pledge_Returns_Requested_Record()
+        {
+            // Arrange
+            var id = _fixture.Create<int>();
+            var pledge = _fixture.Create<Pledge>();
+            var pledges = new Pledge[]
+            {
+                pledge,
+            };
+
+            _mockMediator
+                .Setup(x => x.Send(It.IsAny<GetPledgesQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new GetPledgesResult(pledges));
+
+            // Act
+            var actionResult = await _pledgesController.GetPledge(id);
+            var okObjectResult = actionResult as OkObjectResult;
+            var getPledgeResponse = okObjectResult.Value as GetPledgeResponse;
+
+            // Assert
+            Assert.IsNotNull(actionResult);
+            Assert.IsNotNull(okObjectResult);
+            Assert.IsNotNull(getPledgeResponse);
+            Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.OK);
+            Assert.AreEqual(getPledgeResponse.Id, pledge.Id);
         }
     }
 }
