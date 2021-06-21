@@ -4,7 +4,6 @@ using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
 using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Data.Models;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,15 +31,17 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
 
             var dbContext = new LevyTransferMatchingDbContext(options);
 
-            Pledge[] pledges = _fixture.CreateMany<Pledge>().ToArray();
             EmployerAccount[] employerAccounts = _fixture.CreateMany<EmployerAccount>().ToArray();
+
+            await dbContext.EmployerAccounts.AddRangeAsync(employerAccounts);
+
+            Pledge[] pledges = _fixture.CreateMany<Pledge>().ToArray();
 
             for (int i = 0; i < pledges.Length; i++)
             {
-                pledges[i].EmployerAccountId = employerAccounts[i].Id;
+                pledges[i].EmployerAccount = employerAccounts[i];
             }
-
-            await dbContext.EmployerAccounts.AddRangeAsync(employerAccounts);
+            
             await dbContext.Pledges.AddRangeAsync(pledges);
 
             await dbContext.SaveChangesAsync();

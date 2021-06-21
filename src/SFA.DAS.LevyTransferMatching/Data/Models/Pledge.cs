@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SFA.DAS.LevyTransferMatching.Data.Models
@@ -9,7 +8,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
     {
         public int Id { get; set; }
 
-        public long EmployerAccountId { get; set; }
+        public EmployerAccount EmployerAccount { get; set; }
 
         public int Amount { get; set; }
 
