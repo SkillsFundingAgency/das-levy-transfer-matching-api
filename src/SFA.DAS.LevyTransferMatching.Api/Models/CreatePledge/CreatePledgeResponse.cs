@@ -1,6 +1,6 @@
 ﻿using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
 
-namespace SFA.DAS.LevyTransferMatching.Api.Models
+namespace SFA.DAS.LevyTransferMatching.Api.Models.CreatePledge
 {
     public class CreatePledgeResponse
     {

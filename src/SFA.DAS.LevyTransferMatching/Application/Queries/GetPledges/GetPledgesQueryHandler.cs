@@ -23,9 +23,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
         {
             var pledges = await _dbContext.Pledges
                 .Where(x => (request.Id.HasValue && x.Id == request.Id.Value) || !request.Id.HasValue)
+                .Include(x => x.EmployerAccount)
                 .ToListAsync();
-
-            var accounts = await _dbContext.EmployerAccounts.ToListAsync();
 
             return new GetPledgesResult(
                 pledges.Select(
@@ -33,10 +32,10 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
                     {
                         Amount = x.Amount,
                         CreatedOn = x.CreatedOn,
-                        AccountId = x.EmployerAccountId,
+                        AccountId = x.EmployerAccount.Id,
                         Id = x.Id,
                         IsNamePublic = x.IsNamePublic,
-                        DasAccountName = accounts.FirstOrDefault(y => y.Id == x.EmployerAccountId).Name,
+                        DasAccountName = x.EmployerAccount.Name,
                         JobRoles = x.JobRoles.GetFlags<JobRole>(),
                         Levels = x.Levels.GetFlags<Level>(),
                         Sectors = x.Sectors.GetFlags<Sector>(),

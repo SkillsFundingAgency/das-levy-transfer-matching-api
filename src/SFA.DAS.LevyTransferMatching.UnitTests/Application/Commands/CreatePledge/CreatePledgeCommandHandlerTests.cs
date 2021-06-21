@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
 using SFA.DAS.LevyTransferMatching.Data;
+using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Extensions;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 using System;
@@ -25,7 +26,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreatePled
         }
 
         [Test]
-        public async Task Handle_Pledge_Created_Id_Returned_And_Flags_Stored_Correctly()
+        public async Task Handle_Pledge_Created_Id_Returned_And_Flags_Stored_Correctly_And_EmployerAccount_Inserted()
         {
             // Arrange
             var options = new DbContextOptionsBuilder<LevyTransferMatchingDbContext>()
@@ -55,6 +56,9 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreatePled
             CollectionAssert.AreEqual(command.JobRoles, storedJobRoles);
             CollectionAssert.AreEqual(command.Levels, storedLevels);
             CollectionAssert.AreEqual(command.Sectors, storedSectors);
+
+            var employerAccount = await dbContext.EmployerAccounts.ToListAsync();
+            Assert.AreEqual(employerAccount.Count, 1);
         }
     }
 }

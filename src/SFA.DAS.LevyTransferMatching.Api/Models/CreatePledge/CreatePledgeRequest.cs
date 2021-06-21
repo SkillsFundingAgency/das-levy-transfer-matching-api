@@ -2,7 +2,7 @@
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 using System.Collections.Generic;
 
-namespace SFA.DAS.LevyTransferMatching.Api.Models
+namespace SFA.DAS.LevyTransferMatching.Api.Models.CreatePledge
 {
     public class CreatePledgeRequest
     {

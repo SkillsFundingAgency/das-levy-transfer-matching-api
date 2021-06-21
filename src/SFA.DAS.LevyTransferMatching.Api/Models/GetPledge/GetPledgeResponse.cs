@@ -3,7 +3,7 @@ using SFA.DAS.LevyTransferMatching.Models.Enums;
 using System;
 using System.Collections.Generic;
 
-namespace SFA.DAS.LevyTransferMatching.Api.Models
+namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledge
 {
     public class GetPledgeResponse
     {

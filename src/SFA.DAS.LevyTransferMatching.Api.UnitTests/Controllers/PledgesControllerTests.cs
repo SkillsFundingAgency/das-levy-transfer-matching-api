@@ -6,9 +6,13 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Api.Controllers;
 using SFA.DAS.LevyTransferMatching.Api.Models;
+using SFA.DAS.LevyTransferMatching.Api.Models.CreatePledge;
+using SFA.DAS.LevyTransferMatching.Api.Models.GetPledge;
+using SFA.DAS.LevyTransferMatching.Api.Models.GetPledges;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
 using SFA.DAS.LevyTransferMatching.Models;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,7 +47,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
                 .ReturnsAsync(result);
 
             // Act
-            var actionResult = await _pledgesController.Create(accountId, request);
+            var actionResult = await _pledgesController.CreatePledge(accountId, request);
             var createdResult = actionResult as CreatedResult;
             var createPledgeResponse = createdResult.Value as CreatePledgeResponse;
 
@@ -70,7 +74,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
                 .Throws(validationException);
 
             // Act
-            var actionResult = await _pledgesController.Create(accountId, request);
+            var actionResult = await _pledgesController.CreatePledge(accountId, request);
             var badRequestObjectResult = actionResult as BadRequestObjectResult;
             var fluentValidationErrorResponse = badRequestObjectResult.Value as FluentValidationErrorResponse;
 
@@ -108,6 +112,29 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             Assert.IsNotNull(getPledgeResponse);
             Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.OK);
             Assert.AreEqual(getPledgeResponse.Id, pledge.Id);
+        }
+
+        [Test]
+        public async Task GET_All_Pledges_Returned()
+        {
+            // Arrange
+            var expectedPledges = _fixture.CreateMany<Pledge>();
+
+            _mockMediator
+                .Setup(x => x.Send(It.IsAny<GetPledgesQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new GetPledgesResult(expectedPledges));
+
+            // Act
+            var actionResult = await _pledgesController.GetPledges();
+            var okObjectResult = actionResult as OkObjectResult;
+            var actualPledges = okObjectResult.Value as GetPledgesResponse;
+
+            // Assert
+            Assert.IsNotNull(actionResult);
+            Assert.IsNotNull(okObjectResult);
+            Assert.IsNotNull(actualPledges);
+            Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.OK);
+            Assert.AreEqual(expectedPledges.Count(), actualPledges.Count());
         }
     }
 }

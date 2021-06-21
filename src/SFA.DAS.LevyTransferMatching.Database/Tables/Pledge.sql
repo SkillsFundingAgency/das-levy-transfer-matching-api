@@ -7,14 +7,11 @@
     [JobRoles]          INT           NOT NULL,
     [Levels]            INT           NOT NULL,
     [Sectors]           INT           NOT NULL,
-    [RowVersion] TIMESTAMP NOT NULL, 
-    CONSTRAINT [PK_Pledge] PRIMARY KEY CLUSTERED ([Id] ASC)
+    [RowVersion]        TIMESTAMP     NOT NULL,
+    CONSTRAINT [PK_Pledge] PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [FK_Pledge_EmployerAccount] FOREIGN KEY ([EmployerAccountId]) REFERENCES [dbo].[EmployerAccount] ([Id])
 );
-
-
-
 
 GO
 CREATE NONCLUSTERED INDEX [IX_Pledge_EmployerAccountId]
     ON [dbo].[Pledge]([EmployerAccountId] ASC);
-
