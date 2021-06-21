@@ -31,6 +31,60 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
 
             var dbContext = new LevyTransferMatchingDbContext(options);
 
+            await PopulateDbContext(dbContext);
+
+            var getPledgesQueryHandler = new GetPledgesQueryHandler(dbContext);
+
+            var getPledgesQuery = new GetPledgesQuery();
+
+            // Act
+            var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
+
+            // Assert
+            var pledges = await dbContext.Pledges.ToArrayAsync();
+            var employerAccounts = await dbContext.EmployerAccounts.ToArrayAsync();
+
+            for (int i = 0; i < result.Count(); i++)
+            {
+                Assert.AreEqual(result[i].Id, pledges[i].Id);
+                Assert.AreEqual(result[i].AccountId, employerAccounts[i].Id);
+            }
+        }
+
+        [Test]
+        public async Task Handle_Individual_Pledge_Pulled_And_Stitched_Up_With_Account()
+        {
+            // Arrange
+            var options = new DbContextOptionsBuilder<LevyTransferMatchingDbContext>()
+                .UseInMemoryDatabase("SFA.DAS.LevyTransferMatching.Database")
+                .Options;
+
+            var dbContext = new LevyTransferMatchingDbContext(options);
+
+            await PopulateDbContext(dbContext);
+
+            var expectedPledge = await dbContext.Pledges.FirstAsync();
+
+            var getPledgesQueryHandler = new GetPledgesQueryHandler(dbContext);
+
+            var getPledgesQuery = new GetPledgesQuery()
+            {
+                Id = expectedPledge.Id,
+            };
+
+            // Act
+            var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
+
+            // Assert
+            var actualPledge = result.SingleOrDefault();
+
+            Assert.IsNotNull(actualPledge);
+            Assert.IsNotNull(actualPledge.DasAccountName);
+            Assert.AreEqual(expectedPledge.Id, actualPledge.Id);
+        }
+
+        private async Task PopulateDbContext(LevyTransferMatchingDbContext dbContext)
+        {
             EmployerAccount[] employerAccounts = _fixture.CreateMany<EmployerAccount>().ToArray();
 
             await dbContext.EmployerAccounts.AddRangeAsync(employerAccounts);
@@ -41,27 +95,10 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
             {
                 pledges[i].EmployerAccount = employerAccounts[i];
             }
-            
+
             await dbContext.Pledges.AddRangeAsync(pledges);
 
             await dbContext.SaveChangesAsync();
-
-            var getPledgesQueryHandler = new GetPledgesQueryHandler(dbContext);
-
-            var getPledgesQuery = new GetPledgesQuery();
-
-            // Act
-            var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
-
-            // Assert
-            pledges = await dbContext.Pledges.ToArrayAsync();
-            employerAccounts = await dbContext.EmployerAccounts.ToArrayAsync();
-
-            for (int i = 0; i < result.Count(); i++)
-            {
-                Assert.AreEqual(result[i].Id, pledges[i].Id);
-                Assert.AreEqual(result[i].AccountId, employerAccounts[i].Id);
-            }
         }
     }
 }
