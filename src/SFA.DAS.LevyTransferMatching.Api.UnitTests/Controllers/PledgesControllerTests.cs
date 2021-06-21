@@ -12,6 +12,7 @@ using SFA.DAS.LevyTransferMatching.Api.Models.GetPledges;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
 using SFA.DAS.LevyTransferMatching.Models;
+using System;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -112,6 +113,28 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             Assert.IsNotNull(getPledgeResponse);
             Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.OK);
             Assert.AreEqual(getPledgeResponse.Id, pledge.Id);
+        }
+
+        [Test]
+        public async Task GET_Pledge_Requested_Doesnt_Exist_NotFound_Returned()
+        {
+            // Arrange
+            var id = _fixture.Create<int>();
+            var pledge = _fixture.Create<Pledge>();
+            var pledges = Array.Empty<Pledge>();
+
+            _mockMediator
+                .Setup(x => x.Send(It.IsAny<GetPledgesQuery>(), It.IsAny<CancellationToken>()))
+                    .ReturnsAsync(new GetPledgesResult(pledges));
+
+            // Act
+            var actionResult = await _pledgesController.GetPledge(id);
+            var notFoundResult = actionResult as NotFoundResult;
+
+            // Assert
+            Assert.IsNotNull(actionResult);
+            Assert.IsNotNull(notFoundResult);
+            Assert.AreEqual(notFoundResult.StatusCode, (int) HttpStatusCode.NotFound);
         }
 
         [Test]
