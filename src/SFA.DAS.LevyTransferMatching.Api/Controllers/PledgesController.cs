@@ -29,7 +29,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         {
             var result = await _mediator.Send(new GetPledgesQuery());
 
-            return Ok(new GetPledgesResponse(result.Select(x => (GetPledgeResponse)x)));
+            return Ok(new GetPledgesResponse(result.Select(x => (GetPledgesResponse.Pledge)x)));
         }
 
         [HttpPost]
