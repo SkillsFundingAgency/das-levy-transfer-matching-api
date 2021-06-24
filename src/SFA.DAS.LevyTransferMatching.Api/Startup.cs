@@ -73,6 +73,7 @@ namespace SFA.DAS.LevyTransferMatching.Api
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RetryBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkBehaviour<,>));
+            services.AddApplicationInsightsTelemetry(Configuration.GetValue<string>("APPINSIGHTS_INSTRUMENTATIONKEY"));
             services.AddDasHealthChecks(config);
             services.AddDbConfiguration(config.DatabaseConnectionString, _environment);
             services.AddNServiceBusClientUnitOfWork();
