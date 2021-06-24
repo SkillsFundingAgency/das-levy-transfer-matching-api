@@ -11,6 +11,7 @@ using Newtonsoft.Json.Converters;
 using NServiceBus.ObjectBuilder.MSDependencyInjection;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.LevyTransferMatching.Api.StartupExtensions;
+using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
 using SFA.DAS.LevyTransferMatching.Behaviours;
 using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
@@ -62,14 +63,14 @@ namespace SFA.DAS.LevyTransferMatching.Api
                 .AddFluentValidation(fv =>
                 {
                     fv.RegisterValidatorsFromAssemblyContaining<Startup>();
-                    fv.RegisterValidatorsFromAssemblyContaining<DbContextFactory>();
+                    fv.RegisterValidatorsFromAssemblyContaining<CreatePledgeCommandValidator>();
                 })
                 .AddNewtonsoftJson(x =>
                 {
                     x.SerializerSettings.Converters.Add(new StringEnumConverter());
                 });
 
-            services.AddMediatR(typeof(DbContextFactory).Assembly);
+            services.AddMediatR(typeof(CreatePledgeCommandHandler).Assembly);
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RetryBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkBehaviour<,>));

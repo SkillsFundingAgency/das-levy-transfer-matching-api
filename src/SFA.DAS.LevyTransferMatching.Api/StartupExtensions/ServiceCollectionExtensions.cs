@@ -16,17 +16,38 @@ namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
     {
         public static void AddDbConfiguration(this IServiceCollection services, string connectionString, IWebHostEnvironment hostingEnvironment)
         {
-            services.AddTransient<DbConnection>(provider => new SqlConnection(connectionString));
-            if (hostingEnvironment.IsDevelopment())
+            //services.AddTransient<DbConnection>(provider => new SqlConnection(connectionString));
+            //if (hostingEnvironment.IsDevelopment())
+            //{
+            //    services.AddTransient<IDbContextFactory<LevyTransferMatchingDbContext>>(provider => new DbContextFactory(new SqlConnection(connectionString), provider.GetService<ILoggerFactory>(), null));
+            //}
+            //else
+            //{
+            //    services.AddTransient<IDbContextFactory<LevyTransferMatchingDbContext>>(provider => new DbContextFactory(new SqlConnection(connectionString), provider.GetService<ILoggerFactory>(), new AzureServiceTokenProvider()));
+            //}
+
+            //services.AddTransient<LevyTransferMatchingDbContext>(provider => provider.GetService<IDbContextFactory<LevyTransferMatchingDbContext>>().CreateDbContext());
+
+            services.AddDbContext<LevyTransferMatchingDbContext>(options =>
             {
-                services.AddTransient<IDbContextFactory<LevyTransferMatchingDbContext>>(provider => new DbContextFactory(new SqlConnection(connectionString), provider.GetService<ILoggerFactory>(), null));
-            }
-            else
-            {
-                services.AddTransient<IDbContextFactory<LevyTransferMatchingDbContext>>(provider => new DbContextFactory(new SqlConnection(connectionString), provider.GetService<ILoggerFactory>(), new AzureServiceTokenProvider()));
-            }
-            services.AddTransient<LevyTransferMatchingDbContext>(provider => provider.GetService<IDbContextFactory<LevyTransferMatchingDbContext>>().CreateDbContext());
+                var connection = new SqlConnection(connectionString);
+
+                if (!hostingEnvironment.IsDevelopment())
+                {
+                    var accessTokenProvider = new AzureServiceTokenProvider();
+                    connection.AccessToken = accessTokenProvider.GetAccessTokenAsync("https://database.windows.net/")
+                        .GetAwaiter().GetResult();
+                }
+
+                options.UseSqlServer(connection,
+                    providerOptions =>
+                    {
+                        providerOptions.EnableRetryOnFailure();
+                    });
+            });
+
             services.AddTransient<ILevyTransferMatchingDbContext>(provider => provider.GetService<LevyTransferMatchingDbContext>());
+
         }
     }
 }
