@@ -1,8 +1,11 @@
 using System;
 using System.IO;
+using System.Net;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +13,8 @@ using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Converters;
 using NServiceBus.ObjectBuilder.MSDependencyInjection;
 using SFA.DAS.Configuration.AzureTableStorage;
+using SFA.DAS.LevyTransferMatching.Api.HttpResponseExtensions;
+using SFA.DAS.LevyTransferMatching.Api.Models;
 using SFA.DAS.LevyTransferMatching.Api.StartupExtensions;
 using SFA.DAS.LevyTransferMatching.Behaviours;
 using SFA.DAS.LevyTransferMatching.Data;
@@ -94,6 +99,22 @@ namespace SFA.DAS.LevyTransferMatching.Api
             app.UseRouting();
             app.UseAuthorization();
             app.UseDasHealthChecks();
+
+            app.UseExceptionHandler(c => { c.Run(async context =>
+                {
+                    var exception = context.Features.Get<IExceptionHandlerPathFeature>().Error;
+                    if (exception is ValidationException validationException)
+                    {
+                        var errorResponse = new FluentValidationErrorResponse
+                        {
+                            Errors = validationException.Errors
+                        };
+
+                        context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        await context.Response.WriteJsonAsync(errorResponse);
+                    }
+                });
+            });
 
             app.UseEndpoints(endpoints =>
             {
