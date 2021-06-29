@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Api.Controllers;
-using SFA.DAS.LevyTransferMatching.Api.Models;
 using SFA.DAS.LevyTransferMatching.Api.Models.CreatePledge;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetPledge;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetPledges;
@@ -62,29 +61,23 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         }
 
         [Test]
-        public async Task POST_Create_Returns_Bad_Request_With_Validation_Error()
+        public void POST_Create_Throws_Validation_Error()
         {
             // Arrange 
             var accountId = _fixture.Create<long>();
             var request = _fixture.Create<CreatePledgeRequest>();
-            var result = _fixture.Create<CreatePledgeResult>();
             var validationException = _fixture.Create<ValidationException>();
 
             _mockMediator
                 .Setup(x => x.Send(It.IsAny<CreatePledgeCommand>(), It.IsAny<CancellationToken>()))
                 .Throws(validationException);
 
-            // Act
-            var actionResult = await _pledgesController.CreatePledge(accountId, request);
-            var badRequestObjectResult = actionResult as BadRequestObjectResult;
-            var fluentValidationErrorResponse = badRequestObjectResult.Value as FluentValidationErrorResponse;
-
             // Assert
-            Assert.IsNotNull(actionResult);
-            Assert.IsNotNull(badRequestObjectResult);
-            Assert.IsNotNull(fluentValidationErrorResponse);
-            Assert.AreEqual(badRequestObjectResult.StatusCode, (int)HttpStatusCode.BadRequest);
-            Assert.AreEqual(fluentValidationErrorResponse.Errors, validationException.Errors);
+            Assert.ThrowsAsync<ValidationException>(async () =>
+            {
+                // Act
+                await _pledgesController.CreatePledge(accountId, request);
+            });
         }
 
         [Test]
