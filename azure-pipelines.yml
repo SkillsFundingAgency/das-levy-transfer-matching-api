@@ -15,14 +15,14 @@ variables:
     value: any cpu
   - group: RELEASE Management Resources
   - group: RELEASE das-levy-transfer-matching-api
-      
+
 resources:
   repositories:
   - repository: self
   - repository: das-platform-building-blocks
     type: github
     name: SkillsFundingAgency/das-platform-building-blocks
-    ref: refs/heads/master
+    ref: refs/tags/0.3.18
     endpoint: GitHub (SFA)
   - repository: das-platform-automation
     type: github
