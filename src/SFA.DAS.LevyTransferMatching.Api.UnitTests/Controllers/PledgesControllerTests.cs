@@ -60,7 +60,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         }
 
         [Test]
-        public async Task POST_Create_Returns_Bad_Request_With_Validation_Error()
+        public void POST_Create_Returns_Bad_Request_With_Validation_Error()
         {
             // Arrange 
             var accountId = _fixture.Create<long>();
@@ -72,17 +72,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
                 .Setup(x => x.Send(It.IsAny<CreatePledgeCommand>(), It.IsAny<CancellationToken>()))
                 .Throws(validationException);
 
-            // Act
-            var actionResult = await _pledgesController.CreatePledge(accountId, request);
-            var badRequestObjectResult = actionResult as BadRequestObjectResult;
-            var fluentValidationErrorResponse = badRequestObjectResult.Value as FluentValidationErrorResponse;
-
-            // Assert
-            Assert.IsNotNull(actionResult);
-            Assert.IsNotNull(badRequestObjectResult);
-            Assert.IsNotNull(fluentValidationErrorResponse);
-            Assert.AreEqual(badRequestObjectResult.StatusCode, (int)HttpStatusCode.BadRequest);
-            Assert.AreEqual(fluentValidationErrorResponse.Errors, validationException.Errors);
+            //Act & Assert
+            Assert.ThrowsAsync<ValidationException>(async () => await _pledgesController.CreatePledge(accountId, request));
         }
 
         [Test]
