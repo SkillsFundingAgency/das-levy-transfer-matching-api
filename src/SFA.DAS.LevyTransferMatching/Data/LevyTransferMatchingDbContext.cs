@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SFA.DAS.LevyTransferMatching.Data.Models;
 
 namespace SFA.DAS.LevyTransferMatching.Data
 {
@@ -8,9 +9,11 @@ namespace SFA.DAS.LevyTransferMatching.Data
         {
         }
 
+        public DbSet<Pledge> Pledges { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Pledge>().Property(x => x.RowVersion).IsRowVersion();
         }
     }
 }

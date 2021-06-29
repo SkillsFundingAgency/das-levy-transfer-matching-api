@@ -1,7 +1,10 @@
-﻿namespace SFA.DAS.LevyTransferMatching.Data
+﻿using Microsoft.EntityFrameworkCore;
+using SFA.DAS.LevyTransferMatching.Data.Models;
+
+namespace SFA.DAS.LevyTransferMatching.Data
 {
     public interface ILevyTransferMatchingDbContext
     {
-        //DbSet<T> collection signatures go here
+        DbSet<Pledge> Pledges { get; set; }
     }
 }

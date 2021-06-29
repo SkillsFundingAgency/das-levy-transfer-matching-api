@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Converters;
 using NServiceBus.ObjectBuilder.MSDependencyInjection;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.LevyTransferMatching.Api.StartupExtensions;
+using SFA.DAS.LevyTransferMatching.Behaviours;
 using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
 using SFA.DAS.UnitOfWork.NServiceBus.Features.ClientOutbox.DependencyResolution.Microsoft;
@@ -52,6 +54,7 @@ namespace SFA.DAS.LevyTransferMatching.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddNLog();
             services.AddConfigurationOptions(Configuration);
             var config = Configuration.GetSection<LevyTransferMatchingApi>();
 
@@ -60,15 +63,24 @@ namespace SFA.DAS.LevyTransferMatching.Api
                 {
                     fv.RegisterValidatorsFromAssemblyContaining<Startup>();
                     fv.RegisterValidatorsFromAssemblyContaining<DbContextFactory>();
+                })
+                .AddNewtonsoftJson(x =>
+                {
+                    x.SerializerSettings.Converters.Add(new StringEnumConverter());
                 });
 
             services.AddMediatR(typeof(DbContextFactory).Assembly);
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RetryBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkBehaviour<,>));
+            services.AddApplicationInsightsTelemetry(Configuration.GetValue<string>("APPINSIGHTS_INSTRUMENTATIONKEY"));
             services.AddDasHealthChecks(config);
             services.AddDbConfiguration(config.DatabaseConnectionString, _environment);
             services.AddNServiceBusClientUnitOfWork();
             services.AddCache(config, _environment)
                     .AddDasDataProtection(config, _environment)
-                    .AddSwaggerGen();
+                    .AddSwaggerGen()
+                    .AddSwaggerGenNewtonsoftSupport();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
