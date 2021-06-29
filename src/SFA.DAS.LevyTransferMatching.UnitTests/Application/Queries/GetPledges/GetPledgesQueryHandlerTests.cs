@@ -22,7 +22,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
         }
 
         [Test]
-        public async Task Handle_All_Pledges_Pulled_And_Stitched_Up_With_Accounts()
+        public async Task Handle_Returns_Pledge_Details()
         {
             // Arrange
             var options = new DbContextOptionsBuilder<LevyTransferMatchingDbContext>()
@@ -31,13 +31,13 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
 
             var dbContext = new LevyTransferMatchingDbContext(options);
 
-            EmployerAccount[] employerAccounts = _fixture.CreateMany<EmployerAccount>().ToArray();
+            var employerAccounts = _fixture.CreateMany<EmployerAccount>().ToArray();
 
             await dbContext.EmployerAccounts.AddRangeAsync(employerAccounts);
 
-            Pledge[] pledges = _fixture.CreateMany<Pledge>().ToArray();
+            var pledges = _fixture.CreateMany<Pledge>().ToArray();
 
-            for (int i = 0; i < pledges.Length; i++)
+            for (var i = 0; i < pledges.Length; i++)
             {
                 pledges[i].EmployerAccount = employerAccounts[i];
             }
@@ -57,7 +57,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
             pledges = await dbContext.Pledges.ToArrayAsync();
             employerAccounts = await dbContext.EmployerAccounts.ToArrayAsync();
 
-            for (int i = 0; i < result.Count(); i++)
+            for (var i = 0; i < result.Count(); i++)
             {
                 Assert.AreEqual(result[i].Id, pledges[i].Id);
                 Assert.AreEqual(result[i].AccountId, employerAccounts[i].Id);

@@ -23,11 +23,11 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
 
             if (employerAccount == null)
             {
-                var inserted = await _dbContext.AddAsync(new DataModels.EmployerAccount()
+                var inserted = await _dbContext.AddAsync(new DataModels.EmployerAccount
                 {
                     Id = command.AccountId,
                     Name = command.DasAccountName,
-                });
+                }, cancellationToken);
 
                 employerAccount = inserted.Entity;
             }
@@ -45,11 +45,11 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            command.Id = result.Entity.Id;
+            var pledgeId = result.Entity.Id;
 
             return new CreatePledgeResult
             {
-                Id = command.Id.Value,
+                Id = pledgeId
             };
         }
     }
