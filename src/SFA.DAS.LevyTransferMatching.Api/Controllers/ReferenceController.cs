@@ -6,15 +6,15 @@ using SFA.DAS.LevyTransferMatching.Models.Enums;
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
     [ApiController]
-    [Route("tags")]
-    public class TagsController : Controller
+    [Route("reference")]
+    public class ReferenceController : Controller
     {
         [Route("levels")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [HttpGet]
         public IActionResult Levels()
         {
-            return Ok(EnumExtensions.ConvertToTags<Level>());
+            return Ok(EnumExtensions.ConvertToReferenceData<Level>());
         }
 
         [Route("sectors")]
@@ -22,7 +22,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         [HttpGet]
         public IActionResult Sectors()
         {
-            return Ok(EnumExtensions.ConvertToTags<Sector>());
+            return Ok(EnumExtensions.ConvertToReferenceData<Sector>());
         }
 
         [Route("jobRoles")]
@@ -30,7 +30,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         [HttpGet]
         public IActionResult JobRoles()
         {
-            return Ok(EnumExtensions.ConvertToTags<JobRole>());
+            return Ok(EnumExtensions.ConvertToReferenceData<JobRole>());
         }
     }
 }
