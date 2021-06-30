@@ -2,7 +2,7 @@
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 using System.Collections.Generic;
 
-namespace SFA.DAS.LevyTransferMatching.Api.Models
+namespace SFA.DAS.LevyTransferMatching.Api.Models.CreatePledge
 {
     public class CreatePledgeRequest
     {
@@ -11,6 +11,9 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models
 
         [JsonProperty(Required = Required.Always)]
         public bool IsNamePublic { get; set; }
+
+        [JsonProperty(Required = Required.Always)]
+        public string DasAccountName { get; set; }
 
         [JsonProperty(Required = Required.Always)]
         public IEnumerable<Sector> Sectors { get; set; }

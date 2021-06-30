@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
 using SFA.DAS.LevyTransferMatching.Data;
+using SFA.DAS.LevyTransferMatching.Data.Models;
+using SFA.DAS.LevyTransferMatching.Extensions;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 using System;
 using System.Collections.Generic;
@@ -24,7 +26,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreatePled
         }
 
         [Test]
-        public async Task Handle_Pledge_Created_Id_Returned_And_Flags_Stored_Correctly()
+        public async Task Handle_Pledge_Created_Id_Returned_And_Flags_Stored_Correctly_And_EmployerAccount_Inserted()
         {
             // Arrange
             var options = new DbContextOptionsBuilder<LevyTransferMatchingDbContext>()
@@ -39,29 +41,24 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreatePled
 
             // Act
             var result = await createPledgeHandler.Handle(command, CancellationToken.None);
-            
+
             var insertedPledge = dbContext.Pledges.Find(result.Id);
 
-            var storedJobRoles = GetFlags<JobRole>(insertedPledge.JobRoles);
-            var storedLevels = GetFlags<Level>(insertedPledge.Levels);
-            var storedSectors = GetFlags<Sector>(insertedPledge.Sectors);
+            var storedJobRoles = insertedPledge.JobRoles.GetFlags<JobRole>();
+            var storedLevels = insertedPledge.JobRoles.GetFlags<Level>();
+            var storedSectors = insertedPledge.Sectors.GetFlags<Sector>();
 
             // Assert
             Assert.IsNotNull(result);
-            
+
             Assert.AreEqual(result.Id, expectedId);
 
             CollectionAssert.AreEqual(command.JobRoles, storedJobRoles);
             CollectionAssert.AreEqual(command.Levels, storedLevels);
             CollectionAssert.AreEqual(command.Sectors, storedSectors);
-        }
 
-        private static IEnumerable<TEnum> GetFlags<TEnum>(int value) where TEnum : Enum
-        {
-            var combinedEnum = (TEnum)(object)value;
-
-            return Enum.GetValues(typeof(TEnum)).Cast<TEnum>()
-                .Where(x => combinedEnum.HasFlag(x)); ;
+            var employerAccount = await dbContext.EmployerAccounts.ToListAsync();
+            Assert.AreEqual(employerAccount.Count, 1);
         }
     }
 }
