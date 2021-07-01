@@ -9,6 +9,7 @@ using SFA.DAS.LevyTransferMatching.Api.Models.CreatePledge;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetPledge;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetPledges;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
 using SFA.DAS.LevyTransferMatching.Models;
 using System;
@@ -85,15 +86,11 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         {
             // Arrange
             var id = _fixture.Create<int>();
-            var pledge = _fixture.Create<Pledge>();
-            var pledges = new Pledge[]
-            {
-                pledge,
-            };
+            var pledgeResult = _fixture.Create<GetPledgeResult>();
 
             _mockMediator
-                .Setup(x => x.Send(It.IsAny<GetPledgesQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new GetPledgesResult(pledges));
+                .Setup(x => x.Send(It.Is<GetPledgeQuery>(x => x.Id == id), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(pledgeResult);
 
             // Act
             var actionResult = await _pledgesController.GetPledge(id);
@@ -105,7 +102,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             Assert.IsNotNull(okObjectResult);
             Assert.IsNotNull(getPledgeResponse);
             Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.OK);
-            Assert.AreEqual(getPledgeResponse.Id, pledge.Id);
+            Assert.AreEqual(getPledgeResponse.Id, pledgeResult.Id);
         }
 
         [Test]
@@ -113,12 +110,10 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         {
             // Arrange
             var id = _fixture.Create<int>();
-            var pledge = _fixture.Create<Pledge>();
-            var pledges = Array.Empty<Pledge>();
 
             _mockMediator
-                .Setup(x => x.Send(It.IsAny<GetPledgesQuery>(), It.IsAny<CancellationToken>()))
-                    .ReturnsAsync(new GetPledgesResult(pledges));
+                .Setup(x => x.Send(It.Is<GetPledgeQuery>(x => x.Id == id), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((GetPledgeResult)null);
 
             // Act
             var actionResult = await _pledgesController.GetPledge(id);

@@ -22,7 +22,6 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
         public async Task<GetPledgesResult> Handle(GetPledgesQuery request, CancellationToken cancellationToken)
         {
             var pledges = await _dbContext.Pledges
-                .Where(x => (request.Id.HasValue && x.Id == request.Id.Value) || !request.Id.HasValue)
                 .Include(x => x.EmployerAccount)
                 .ToListAsync();
 
