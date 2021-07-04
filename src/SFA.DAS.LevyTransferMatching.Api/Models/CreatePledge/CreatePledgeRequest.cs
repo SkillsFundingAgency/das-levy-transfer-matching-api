@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SFA.DAS.LevyTransferMatching.Models;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 using System.Collections.Generic;
 
@@ -23,5 +24,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.CreatePledge
 
         [JsonProperty(Required = Required.Always)]
         public IEnumerable<Level> Levels { get; set; }
+
+        [JsonProperty(Required = Required.Always)]
+        public List<LocationInformation> Locations { get; set; }
     }
 }

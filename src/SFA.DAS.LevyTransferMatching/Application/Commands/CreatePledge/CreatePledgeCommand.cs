@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using MediatR;
+using SFA.DAS.LevyTransferMatching.Models;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
@@ -13,5 +14,6 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
         public IEnumerable<Sector> Sectors { get; set; }
         public IEnumerable<JobRole> JobRoles { get; set; }
         public IEnumerable<Level> Levels { get; set; }
+        public List<LocationInformation> Locations { get; set; }
     }
 }

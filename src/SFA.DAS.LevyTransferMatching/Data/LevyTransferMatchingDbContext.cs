@@ -11,6 +11,7 @@ namespace SFA.DAS.LevyTransferMatching.Data
 
         public DbSet<Pledge> Pledges { get; set; }
         public DbSet<EmployerAccount> EmployerAccounts { get; set; }
+        public DbSet<PledgeLocation> PledgeLocations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

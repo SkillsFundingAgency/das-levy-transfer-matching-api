@@ -46,6 +46,16 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             var pledgeId = result.Entity.Id;
+            await _dbContext.AddRangeAsync(command.Locations.Select(x =>
+                new DataModels.PledgeLocation
+                {
+                    PledgeId = pledgeId,
+                    Name = x.Name,
+                    Latitude = x.Geopoint[0],
+                    Longitude = x.Geopoint[1]
+                }));
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             return new CreatePledgeResult
             {

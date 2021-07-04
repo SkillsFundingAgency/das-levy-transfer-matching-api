@@ -7,4 +7,18 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="EmployerAccountId" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="1db4b727-1094-45c3-af79-5f8aa66d32fb" ChangeDateTime="07/04/2021 20:27:50">
+    <Property Name="ElementName" Value="[dbo].[PledgeLocation].[Longti]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[PledgeLocation]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Longtitude" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="5a4fb0ac-7d6a-4bbe-95be-83935f5d7e06" ChangeDateTime="07/04/2021 20:39:00">
+    <Property Name="ElementName" Value="[dbo].[PledgeLocation].[Longtitude]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[PledgeLocation]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Longitude" />
+  </Operation>
 </Operations>
