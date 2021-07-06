@@ -19,31 +19,37 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
 
         public async Task<CreatePledgeResult> Handle(CreatePledgeCommand command, CancellationToken cancellationToken)
         {
+            var employerAccount = await _dbContext.EmployerAccounts.FindAsync(command.AccountId);
+
+            if (employerAccount == null)
+            {
+                var inserted = await _dbContext.AddAsync(new DataModels.EmployerAccount
+                {
+                    Id = command.AccountId,
+                    Name = command.DasAccountName,
+                }, cancellationToken);
+
+                employerAccount = inserted.Entity;
+            }
+
             var result = await _dbContext.AddAsync(new DataModels.Pledge
             {
                 Amount = command.Amount,
                 CreatedOn = DateTime.UtcNow,
-                EmployerAccountId = command.AccountId,
+                EmployerAccount = employerAccount,
                 IsNamePublic = command.IsNamePublic,
                 Levels = command.Levels.Cast<int>().Sum(),
                 JobRoles = command.JobRoles.Cast<int>().Sum(),
                 Sectors = command.Sectors.Cast<int>().Sum(),
             }, cancellationToken);
 
-            if (!_dbContext.EmployerAccounts.Any(x => x.Id == command.AccountId))
-                await _dbContext.AddAsync(new DataModels.EmployerAccount
-                {
-                    Id = command.AccountId,
-                    Name = command.DasAccountName
-                });
-
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            command.Id = result.Entity.Id;
+            var pledgeId = result.Entity.Id;
 
             return new CreatePledgeResult
             {
-                Id = command.Id.Value,
+                Id = pledgeId
             };
         }
     }

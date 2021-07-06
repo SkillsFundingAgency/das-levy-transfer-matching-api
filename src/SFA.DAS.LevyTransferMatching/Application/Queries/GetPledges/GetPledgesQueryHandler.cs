@@ -8,32 +8,33 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.LevyTransferMatching.Application.Queries
+namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
 {
-    public class GetAllPledgesQueryHandler : IRequestHandler<GetAllPledgesQuery, GetAllPledgesResult>
+    public class GetPledgesQueryHandler : IRequestHandler<GetPledgesQuery, GetPledgesResult>
     {
         private readonly LevyTransferMatchingDbContext _dbContext;
 
-        public GetAllPledgesQueryHandler(LevyTransferMatchingDbContext dbContext)
+        public GetPledgesQueryHandler(LevyTransferMatchingDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public async Task<GetAllPledgesResult> Handle(GetAllPledgesQuery request, CancellationToken cancellationToken)
+        public async Task<GetPledgesResult> Handle(GetPledgesQuery request, CancellationToken cancellationToken)
         {
-            var pledges = await _dbContext.Pledges.ToListAsync();
-            var accounts = await _dbContext.EmployerAccounts.ToListAsync();
+            var pledges = await _dbContext.Pledges
+                .Include(x => x.EmployerAccount)
+                .ToListAsync();
 
-            return new GetAllPledgesResult(
+            return new GetPledgesResult(
                 pledges.Select(
                     x => new Pledge()
                     {
                         Amount = x.Amount,
                         CreatedOn = x.CreatedOn,
-                        AccountId = x.EmployerAccountId,
+                        AccountId = x.EmployerAccount.Id,
                         Id = x.Id,
                         IsNamePublic = x.IsNamePublic,
-                        DasAccountName = accounts.FirstOrDefault(y => y.Id == x.EmployerAccountId).Name,
+                        DasAccountName = x.EmployerAccount.Name,
                         JobRoles = x.JobRoles.GetFlags<JobRole>(),
                         Levels = x.Levels.GetFlags<Level>(),
                         Sectors = x.Sectors.GetFlags<Sector>(),
