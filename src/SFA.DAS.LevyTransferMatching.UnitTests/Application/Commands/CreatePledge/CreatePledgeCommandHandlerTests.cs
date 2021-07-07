@@ -60,5 +60,32 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreatePled
             var employerAccount = await dbContext.EmployerAccounts.ToListAsync();
             Assert.AreEqual(employerAccount.Count, 1);
         }
+
+        [Test]
+        public async Task Locations_Inserted_With_Correct_PledgeId()
+        {
+            //Arrange
+            var options = new DbContextOptionsBuilder<LevyTransferMatchingDbContext>()
+                .UseInMemoryDatabase("SFA.DAS.LevyTransferMatching.Database")
+                .Options;
+
+            var dbContext = new LevyTransferMatchingDbContext(options);
+            var createPledgeHandler = new CreatePledgeCommandHandler(dbContext);
+            var command = _fixture.Create<CreatePledgeCommand>();
+
+            //Act
+            var result = await createPledgeHandler.Handle(command, CancellationToken.None);
+
+            var insertedPledge = dbContext.Pledges.Find(result.Id);
+            var insertedLocations = dbContext.PledgeLocations.Where(x => x.PledgeId == insertedPledge.Id);
+
+            //Assert
+            Assert.IsNotNull(insertedLocations);
+
+            foreach(var location in command.Locations)
+            {
+                Assert.AreEqual(insertedLocations.Count(x => x.Name == location.Name && x.Latitude == location.Geopoint[0] && x.Longitude == location.Geopoint[1]), 1);
+            }
+        }
     }
 }
