@@ -21,17 +21,6 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
         {
             var employerAccount = await _dbContext.EmployerAccounts.FindAsync(command.AccountId);
 
-            if (employerAccount == null)
-            {
-                var inserted = await _dbContext.AddAsync(new DataModels.EmployerAccount
-                {
-                    Id = command.AccountId,
-                    Name = command.DasAccountName,
-                }, cancellationToken);
-
-                employerAccount = inserted.Entity;
-            }
-
             var result = await _dbContext.AddAsync(new DataModels.Pledge
             {
                 Amount = command.Amount,

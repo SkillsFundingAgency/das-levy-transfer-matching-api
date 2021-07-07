@@ -3,7 +3,9 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.LevyTransferMatching.Api.Models.CreateAccount;
+using SFA.DAS.LevyTransferMatching.Api.Models.GetAccount;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateAccount;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetAccount;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
@@ -17,6 +19,30 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         {
             _mediator = mediator;
         }
+
+        [HttpGet]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [Route("{accountId}")]
+        public async Task<IActionResult> GetAccount(long accountId)
+        {
+            var queryResult = await _mediator.Send(new GetAccountQuery
+            {
+                AccountId = accountId
+            });
+
+            if(queryResult == null)
+            {
+                return new NotFoundResult();
+            }
+
+            return new ObjectResult(new GetAccountResponse
+            {
+                AccountId = queryResult.AccountId,
+                AccountName = queryResult.AccountName
+            });
+        }
+
 
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
