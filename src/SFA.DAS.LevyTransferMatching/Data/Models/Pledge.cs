@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SFA.DAS.LevyTransferMatching.Data.Models
@@ -23,5 +24,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         public int Sectors { get; set; }
 
         public byte[] RowVersion { get; set; }
+
+        public List<PledgeLocation> PledgeLocations { get; set; }
     }
 }
