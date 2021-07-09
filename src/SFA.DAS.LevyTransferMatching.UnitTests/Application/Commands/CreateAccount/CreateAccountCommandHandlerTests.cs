@@ -1,12 +1,8 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateAccount;
-using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreateAccount
