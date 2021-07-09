@@ -26,7 +26,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreatePled
         }
 
         [Test]
-        public async Task Handle_Pledge_Created_Id_Returned_And_Flags_Stored_Correctly_And_EmployerAccount_Inserted()
+        public async Task Handle_Pledge_Created_Id_Returned_And_Flags_Stored_Correctly()
         {
             // Arrange
             var options = new DbContextOptionsBuilder<LevyTransferMatchingDbContext>()
@@ -56,9 +56,6 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreatePled
             CollectionAssert.AreEqual(command.JobRoles, storedJobRoles);
             CollectionAssert.AreEqual(command.Levels, storedLevels);
             CollectionAssert.AreEqual(command.Sectors, storedSectors);
-
-            var employerAccount = await dbContext.EmployerAccounts.ToListAsync();
-            Assert.AreEqual(employerAccount.Count, 1);
         }
     }
 }
