@@ -31,13 +31,12 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
             var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
 
             // Assert
-            var pledges = await dbContext.Pledges.ToArrayAsync();
-            var employerAccounts = await dbContext.EmployerAccounts.ToArrayAsync();
+            var pledges = await dbContext.Pledges.OrderByDescending(x => x.Amount).ToArrayAsync();
 
             for (int i = 0; i < result.Count(); i++)
             {
                 Assert.AreEqual(result[i].Id, pledges[i].Id);
-                Assert.AreEqual(result[i].AccountId, employerAccounts[i].Id);
+                Assert.AreEqual(result[i].AccountId, pledges[i].EmployerAccount.Id);
             }
         }
     }

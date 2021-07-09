@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge;
 using SFA.DAS.LevyTransferMatching.Data;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,7 +22,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledge
 
             await PopulateDbContext(dbContext);
 
-            var expectedPledge = await dbContext.Pledges.FirstAsync();
+            var expectedPledge = await dbContext.Pledges.OrderByDescending(x => x.Amount).FirstAsync();
 
             var getPledgesQueryHandler = new GetPledgeQueryHandler(dbContext);
 
