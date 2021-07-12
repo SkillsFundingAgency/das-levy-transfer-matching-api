@@ -38,7 +38,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
                         JobRoles = x.JobRoles.GetFlags<JobRole>(),
                         Levels = x.Levels.GetFlags<Level>(),
                         Sectors = x.Sectors.GetFlags<Sector>(),
-                    }));
+                    }).OrderByDescending(x => x.Amount));
         }
     }
 }
