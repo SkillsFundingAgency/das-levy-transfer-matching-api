@@ -1,29 +1,45 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoFixture;
+using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
-using SFA.DAS.LevyTransferMatching.Data;
+using SFA.DAS.LevyTransferMatching.Data.Models;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
 {
     [TestFixture]
-    public class GetPledgesQueryHandlerTests : PledgeQueryTests
+    public class GetPledgesQueryHandlerTests : LevyTransferMatchingDbContextFixture
     {
+        private Fixture _fixture;
+
+        [SetUp]
+        public void Setup()
+        {
+            _fixture = new Fixture();
+        }
+
         [Test]
         public async Task Handle_All_Pledges_Pulled_And_Stitched_Up_With_Accounts()
         {
-            // Arrange
-            var options = new DbContextOptionsBuilder<LevyTransferMatchingDbContext>()
-                .UseInMemoryDatabase("SFA.DAS.LevyTransferMatching.Database")
-                .Options;
+            var employerAccounts = _fixture.CreateMany<EmployerAccount>().ToArray();
 
-            var dbContext = new LevyTransferMatchingDbContext(options);
+            await DbContext.EmployerAccounts.AddRangeAsync(employerAccounts);
 
-            await PopulateDbContext(dbContext);
+            var pledges = _fixture.CreateMany<Pledge>().ToArray();
 
-            var getPledgesQueryHandler = new GetPledgesQueryHandler(dbContext);
+            for (var i = 0; i < pledges.Length; i++)
+            {
+                pledges[i].EmployerAccount = employerAccounts[i];
+            }
+            
+            await DbContext.Pledges.AddRangeAsync(pledges);
+
+            await DbContext.SaveChangesAsync();
+
+            var getPledgesQueryHandler = new GetPledgesQueryHandler(DbContext);
 
             var getPledgesQuery = new GetPledgesQuery();
 
@@ -31,7 +47,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
             var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
 
             // Assert
-            var pledges = await dbContext.Pledges.OrderByDescending(x => x.Amount).ToArrayAsync();
+            pledges = await DbContext.Pledges.OrderByDescending(x => x.Amount).ToArrayAsync();
 
             for (int i = 0; i < result.Count(); i++)
             {
