@@ -23,6 +23,7 @@
     <PackageReference Include="SFA.DAS.UnitOfWork" Version="9.0.28" />
     <PackageReference Include="SFA.DAS.UnitOfWork.EntityFrameworkCore" Version="9.0.28" />
     <PackageReference Include="SFA.DAS.UnitOfWork.NServiceBus" Version="9.0.28" />
+    <PackageReference Include="SFA.DAS.UnitOfWork.SqlServer" Version="9.0.28" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
     <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.1.4" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.1.4" />

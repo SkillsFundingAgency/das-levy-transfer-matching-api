@@ -19,7 +19,9 @@ using SFA.DAS.LevyTransferMatching.Api.StartupExtensions;
 using SFA.DAS.LevyTransferMatching.Behaviours;
 using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
+using SFA.DAS.UnitOfWork.EntityFrameworkCore.DependencyResolution.Microsoft;
 using SFA.DAS.UnitOfWork.NServiceBus.Features.ClientOutbox.DependencyResolution.Microsoft;
+using SFA.DAS.UnitOfWork.SqlServer.DependencyResolution.Microsoft;
 
 namespace SFA.DAS.LevyTransferMatching.Api
 {
@@ -81,6 +83,11 @@ namespace SFA.DAS.LevyTransferMatching.Api
             services.AddApplicationInsightsTelemetry(Configuration.GetValue<string>("APPINSIGHTS_INSTRUMENTATIONKEY"));
             services.AddDasHealthChecks(config);
             services.AddDbConfiguration(config.DatabaseConnectionString, _environment);
+
+            services.AddEntityFrameworkForLevyTransferMatching(config)
+                .AddEntityFrameworkUnitOfWork<LevyTransferMatchingDbContext>()
+                .AddSqlServerUnitOfWork();
+
             services.AddNServiceBusClientUnitOfWork();
             services.AddCache(config, _environment)
                     .AddDasDataProtection(config, _environment)
