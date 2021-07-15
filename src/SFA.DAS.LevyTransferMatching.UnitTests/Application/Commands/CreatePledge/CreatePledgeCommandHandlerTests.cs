@@ -2,9 +2,9 @@
 using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
 using SFA.DAS.LevyTransferMatching.Extensions;
-using SFA.DAS.LevyTransferMatching.Models.Enums;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreatePledge
@@ -26,6 +26,13 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreatePled
             var createPledgeHandler = new CreatePledgeCommandHandler(DbContext);
             var command = _fixture.Create<CreatePledgeCommand>();
 
+            DbContext.EmployerAccounts.Add(new EmployerAccount
+            {
+                Id = command.AccountId,
+                Name = "Test"
+            });
+            await DbContext.SaveChangesAsync();
+
             var expectedId = 1;
 
             // Act
@@ -33,9 +40,9 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreatePled
 
             var insertedPledge = DbContext.Pledges.Find(result.Id);
 
-            var storedJobRoles = insertedPledge.JobRoles.GetFlags<JobRole>();
-            var storedLevels = insertedPledge.JobRoles.GetFlags<Level>();
-            var storedSectors = insertedPledge.Sectors.GetFlags<Sector>();
+            var storedJobRoles = insertedPledge.JobRoles.ToList();
+            var storedLevels = insertedPledge.Levels.ToList();
+            var storedSectors = insertedPledge.Sectors.ToList();
 
             // Assert
             Assert.IsNotNull(result);

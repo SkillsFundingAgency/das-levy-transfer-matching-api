@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using SFA.DAS.LevyTransferMatching.Data;
-using DataModels = SFA.DAS.LevyTransferMatching.Data.Models;
 using System.Threading;
 using System.Threading.Tasks;
 using System;
 using System.Linq;
+using SFA.DAS.LevyTransferMatching.Data.Repositories;
+using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
 {
@@ -19,27 +20,34 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
 
         public async Task<CreatePledgeResult> Handle(CreatePledgeCommand command, CancellationToken cancellationToken)
         {
-            var employerAccount = await _dbContext.EmployerAccounts.FindAsync(command.AccountId);
-
-            var result = await _dbContext.AddAsync(new DataModels.Pledge
+            try
             {
-                Amount = command.Amount,
-                CreatedOn = DateTime.UtcNow,
-                EmployerAccount = employerAccount,
-                IsNamePublic = command.IsNamePublic,
-                Levels = command.Levels.Cast<int>().Sum(),
-                JobRoles = command.JobRoles.Cast<int>().Sum(),
-                Sectors = command.Sectors.Cast<int>().Sum(),
-            }, cancellationToken);
+                var employerAccount = await _dbContext.EmployerAccounts.FindAsync(command.AccountId);
 
-            await _dbContext.SaveChangesAsync(cancellationToken);
+                var pledge = employerAccount.CreatePledge(command.Amount,
+                    command.IsNamePublic,
+                    (Level)command.Levels.Cast<int>().Sum(),
+                    (JobRole)command.JobRoles.Cast<int>().Sum(),
+                    (Sector)command.Sectors.Cast<int>().Sum()
+                );
 
-            var pledgeId = result.Entity.Id;
+                var result = await _dbContext.AddAsync(pledge, cancellationToken);
 
-            return new CreatePledgeResult
+                await _dbContext.SaveChangesAsync(cancellationToken);
+
+                var pledgeId = result.Entity.Id;
+
+                return new CreatePledgeResult
+                {
+                    Id = pledgeId
+                };
+            }
+            catch (Exception e)
             {
-                Id = pledgeId
-            };
+                
+                throw;
+            }
+            
         }
     }
 }
