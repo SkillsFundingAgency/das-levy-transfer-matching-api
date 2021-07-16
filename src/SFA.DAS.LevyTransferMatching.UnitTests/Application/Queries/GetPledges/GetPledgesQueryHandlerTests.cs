@@ -24,7 +24,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
         }
 
         [Test]
-        public async Task Handle_Returns_Pledge_Details()
+        public async Task Handle_All_Pledges_Pulled_And_Stitched_Up_With_Accounts()
         {
             var employerAccounts = _fixture.CreateMany<EmployerAccount>().ToArray();
 
@@ -58,7 +58,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
             // Assert
             var dbPledges = await DbContext.Pledges.OrderByDescending(x => x.Amount).ToArrayAsync();
 
-            for (var i = 0; i < result.Count(); i++)
+            for (int i = 0; i < result.Count(); i++)
             {
                 Assert.AreEqual(result[i].Id, dbPledges[i].Id);
                 Assert.AreEqual(result[i].AccountId, dbPledges[i].EmployerAccount.Id);
