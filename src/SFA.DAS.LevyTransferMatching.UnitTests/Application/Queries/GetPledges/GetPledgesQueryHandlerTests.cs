@@ -40,7 +40,8 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
                         _fixture.Create<bool>(),
                         _fixture.Create<Level>(),
                         _fixture.Create<JobRole>(),
-                        _fixture.Create<Sector>()
+                        _fixture.Create<Sector>(),
+                        _fixture.Create<List<PledgeLocation>>()
                     ));
             }
             

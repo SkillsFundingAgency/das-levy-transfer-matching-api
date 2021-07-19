@@ -10,9 +10,9 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         public long Id { get; set; }
         public string Name { get; set; }
 
-        public Pledge CreatePledge(int amount, bool isNamePublic, Level levels, JobRole jobRoles, Sector sectors)
+        public Pledge CreatePledge(int amount, bool isNamePublic, Level levels, JobRole jobRoles, Sector sectors, List<PledgeLocation> locations)
         {
-            return new Pledge(this, amount, isNamePublic, levels, jobRoles, sectors);
+            return new Pledge(this, amount, isNamePublic, levels, jobRoles, sectors, locations);
         }
     }
 }

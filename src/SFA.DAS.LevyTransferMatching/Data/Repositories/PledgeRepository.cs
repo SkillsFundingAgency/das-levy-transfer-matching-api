@@ -17,7 +17,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Repositories
             await _dbContext.AddAsync(pledge);
         }
 
-        public async Task<Pledge> Get(long pledgeId)
+        public async Task<Pledge> Get(int pledgeId)
         {
             return await _dbContext.Pledges.FindAsync(pledgeId);
         }
@@ -26,6 +26,6 @@ namespace SFA.DAS.LevyTransferMatching.Data.Repositories
     public interface IPledgeRepository
     {
         Task Add(Pledge pledge);
-        Task<Pledge> Get(long pledgeId);
+        Task<Pledge> Get(int pledgeId);
     }
 }

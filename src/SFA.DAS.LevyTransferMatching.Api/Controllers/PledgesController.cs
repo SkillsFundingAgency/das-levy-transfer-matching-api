@@ -68,6 +68,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 JobRoles = request.JobRoles,
                 Levels = request.Levels,
                 Sectors = request.Sectors,
+                Locations = request.Locations
             });
 
             var result = new CreatedResult(

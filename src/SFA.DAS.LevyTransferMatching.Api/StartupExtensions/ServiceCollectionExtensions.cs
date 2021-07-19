@@ -28,6 +28,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
             services.AddScoped<ILevyTransferMatchingDbContext>(provider => provider.GetService<LevyTransferMatchingDbContext>());
 
             services.AddTransient<IEmployerAccountRepository, EmployerAccountRepository>();
+            services.AddTransient<IPledgeRepository, PledgeRepository>();
         }
     }
 }

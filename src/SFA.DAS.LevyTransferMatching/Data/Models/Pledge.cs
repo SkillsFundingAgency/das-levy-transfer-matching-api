@@ -1,5 +1,6 @@
 ﻿using SFA.DAS.LevyTransferMatching.Models.Enums;
 using System;
+using System.Collections.Generic;
 
 namespace SFA.DAS.LevyTransferMatching.Data.Models
 {
@@ -7,7 +8,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
     {
         protected Pledge() {}
 
-        public Pledge(EmployerAccount employerAccount, int amount, bool isNamePublic, Level levels, JobRole jobRoles, Sector sectors)
+        public Pledge(EmployerAccount employerAccount, int amount, bool isNamePublic, Level levels, JobRole jobRoles, Sector sectors, List<PledgeLocation> locations)
         {
             EmployerAccount = employerAccount;
             Amount = amount;
@@ -15,6 +16,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             Levels = levels;
             JobRoles = jobRoles;
             Sectors = sectors;
+            Locations = locations;
         }
 
         public int Id { get; private set; }
@@ -32,6 +34,8 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         public Level Levels { get; private set; }
 
         public Sector Sectors { get; private set; }
+
+        public List<PledgeLocation> Locations { get; set; }
 
         public byte[] RowVersion { get; private set; }
     }
