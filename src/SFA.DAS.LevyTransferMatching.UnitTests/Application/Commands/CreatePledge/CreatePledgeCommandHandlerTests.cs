@@ -6,6 +6,9 @@ using SFA.DAS.LevyTransferMatching.Models.Enums;
 using System.Threading;
 using System.Threading.Tasks;
 using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;
+using Microsoft.EntityFrameworkCore;
+using SFA.DAS.LevyTransferMatching.Data;
+using System.Linq;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreatePledge
 {
