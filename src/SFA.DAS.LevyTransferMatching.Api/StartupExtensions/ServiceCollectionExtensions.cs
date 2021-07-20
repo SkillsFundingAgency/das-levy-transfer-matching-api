@@ -27,6 +27,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
             //services.AddScoped<LevyTransferMatchingDbContext>(provider => provider.GetService<IDbContextFactory<LevyTransferMatchingDbContext>>().CreateDbContext());
             //services.AddScoped<ILevyTransferMatchingDbContext>(provider => provider.GetService<LevyTransferMatchingDbContext>());
 
+            services.AddSingleton(new AzureServiceTokenProvider());
+
             services.AddTransient<IEmployerAccountRepository, EmployerAccountRepository>();
             services.AddTransient<IPledgeRepository, PledgeRepository>();
         }
