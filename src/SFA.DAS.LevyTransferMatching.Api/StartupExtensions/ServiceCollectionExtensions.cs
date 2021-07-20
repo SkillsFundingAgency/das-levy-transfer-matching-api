@@ -15,17 +15,17 @@ namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
     {
         public static void AddDbConfiguration(this IServiceCollection services, string connectionString, IWebHostEnvironment hostingEnvironment)
         {
-            services.AddTransient<DbConnection>(provider => new SqlConnection(connectionString));
-            if (hostingEnvironment.IsDevelopment())
-            {
-                services.AddTransient<IDbContextFactory<LevyTransferMatchingDbContext>>(provider => new DbContextFactory(new SqlConnection(connectionString), provider.GetService<ILoggerFactory>(), null));
-            }
-            else
-            {
-                services.AddTransient<IDbContextFactory<LevyTransferMatchingDbContext>>(provider => new DbContextFactory(new SqlConnection(connectionString), provider.GetService<ILoggerFactory>(), new AzureServiceTokenProvider()));
-            }
-            services.AddScoped<LevyTransferMatchingDbContext>(provider => provider.GetService<IDbContextFactory<LevyTransferMatchingDbContext>>().CreateDbContext());
-            services.AddScoped<ILevyTransferMatchingDbContext>(provider => provider.GetService<LevyTransferMatchingDbContext>());
+            //services.AddTransient<DbConnection>(provider => new SqlConnection(connectionString));
+            //if (hostingEnvironment.IsDevelopment())
+            //{
+            //    services.AddTransient<IDbContextFactory<LevyTransferMatchingDbContext>>(provider => new DbContextFactory(new SqlConnection(connectionString), provider.GetService<ILoggerFactory>(), null));
+            //}
+            //else
+            //{
+            //    services.AddTransient<IDbContextFactory<LevyTransferMatchingDbContext>>(provider => new DbContextFactory(new SqlConnection(connectionString), provider.GetService<ILoggerFactory>(), new AzureServiceTokenProvider()));
+            //}
+            //services.AddScoped<LevyTransferMatchingDbContext>(provider => provider.GetService<IDbContextFactory<LevyTransferMatchingDbContext>>().CreateDbContext());
+            //services.AddScoped<ILevyTransferMatchingDbContext>(provider => provider.GetService<LevyTransferMatchingDbContext>());
 
             services.AddTransient<IEmployerAccountRepository, EmployerAccountRepository>();
             services.AddTransient<IPledgeRepository, PledgeRepository>();

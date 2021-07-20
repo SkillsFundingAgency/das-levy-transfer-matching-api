@@ -86,9 +86,9 @@ namespace SFA.DAS.LevyTransferMatching.Api
 
             services.AddEntityFrameworkForLevyTransferMatching(config)
                 .AddEntityFrameworkUnitOfWork<LevyTransferMatchingDbContext>()
-                .AddSqlServerUnitOfWork();
+                //.AddSqlServerUnitOfWork();
+                .AddNServiceBusClientUnitOfWork();
 
-            services.AddNServiceBusClientUnitOfWork();
             services.AddCache(config, _environment)
                     .AddDasDataProtection(config, _environment)
                     .AddSwaggerGen()
