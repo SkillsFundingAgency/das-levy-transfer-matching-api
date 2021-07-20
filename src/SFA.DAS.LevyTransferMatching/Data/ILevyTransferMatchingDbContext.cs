@@ -7,5 +7,6 @@ namespace SFA.DAS.LevyTransferMatching.Data
     {
         DbSet<Pledge> Pledges { get; set; }
         DbSet<EmployerAccount> EmployerAccounts { get; set; }
+        DbSet<PledgeLocation> PledgeLocations { get; set; }
     }
 }
