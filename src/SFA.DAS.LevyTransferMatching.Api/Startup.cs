@@ -79,13 +79,9 @@ namespace SFA.DAS.LevyTransferMatching.Api
                     x.SerializerSettings.Converters.Add(new StringEnumConverter());
                 });
 
-            services.AddMediatR(typeof(DbContextFactory).Assembly);
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RetryBehaviour<,>));
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkBehaviour<,>));
             services.AddApplicationInsightsTelemetry(Configuration.GetValue<string>("APPINSIGHTS_INSTRUMENTATIONKEY"));
             services.AddDasHealthChecks(config);
-            services.AddDbConfiguration(config.DatabaseConnectionString, _environment);
+            services.AddServicesForLevyTransferMatching(_environment, config);
 
             services.AddEntityFrameworkForLevyTransferMatching(config)
                 .AddEntityFrameworkUnitOfWork<LevyTransferMatchingDbContext>()

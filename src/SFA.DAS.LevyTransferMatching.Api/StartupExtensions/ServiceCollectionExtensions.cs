@@ -1,23 +1,26 @@
-﻿using System.Data.Common;
+﻿using MediatR;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Azure.Services.AppAuthentication;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using SFA.DAS.LevyTransferMatching.Behaviours;
 using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
 using SFA.DAS.LevyTransferMatching.Infrastructure;
+using SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
 using SFA.DAS.LevyTransferMatching.Infrastructure.ConnectionFactory;
 
 namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static void AddDbConfiguration(this IServiceCollection services, string connectionString, IWebHostEnvironment hostingEnvironment)
+        public static void AddServicesForLevyTransferMatching(this IServiceCollection services, IWebHostEnvironment hostingEnvironment, LevyTransferMatchingApi config)
         {
-            if(hostingEnvironment.IsDevelopment())
+            services.AddMediatR(typeof(DbContextFactory).Assembly);
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RetryBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkBehaviour<,>));
+
+            if (hostingEnvironment.IsDevelopment())
             {
                 services.AddSingleton<IManagedIdentityTokenProvider, LocalDbTokenProvider>();
             }
@@ -27,7 +30,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
             }
 
             services.AddTransient<IConnectionFactory, SqlServerConnectionFactory>();
-
+            
             services.AddTransient<IEmployerAccountRepository, EmployerAccountRepository>();
             services.AddTransient<IPledgeRepository, PledgeRepository>();
         }
