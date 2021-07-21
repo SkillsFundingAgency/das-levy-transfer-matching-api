@@ -22,10 +22,4 @@ namespace SFA.DAS.LevyTransferMatching.Data.Repositories
             return await _dbContext.Pledges.FindAsync(pledgeId);
         }
     }
-
-    public interface IPledgeRepository
-    {
-        Task Add(Pledge pledge);
-        Task<Pledge> Get(int pledgeId);
-    }
 }

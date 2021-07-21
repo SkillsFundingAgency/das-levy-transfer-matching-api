@@ -22,10 +22,4 @@ namespace SFA.DAS.LevyTransferMatching.Data.Repositories
             return await _dbContext.EmployerAccounts.FindAsync(accountId);
         }
     }
-
-    public interface IEmployerAccountRepository
-    {
-        Task Add(EmployerAccount account);
-        Task<EmployerAccount> Get(long accountId);
-    }
 }

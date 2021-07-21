@@ -11,7 +11,7 @@ namespace SFA.DAS.LevyTransferMatching.Data
 
         public DbSet<Pledge> Pledges { get; set; }
         public DbSet<EmployerAccount> EmployerAccounts { get; set; }
-        public DbSet<PledgeLocation> PledgeLocations { get; set; }
+        public DbSet<Models.Application> Applications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -21,6 +21,12 @@ namespace SFA.DAS.LevyTransferMatching.Data
             modelBuilder.Entity<Pledge>().Property(x => x.RowVersion).IsRowVersion();
 
             modelBuilder.Entity<PledgeLocation>().ToTable("PledgeLocation");
+
+            modelBuilder.Entity<Models.Application>().ToTable("Application");
+            modelBuilder.Entity<Models.Application>().HasKey(x => x.Id);
+            modelBuilder.Entity<Models.Application>().HasOne(x => x.EmployerAccount).WithMany();
+            modelBuilder.Entity<Models.Application>().HasOne(x => x.Pledge).WithMany();
+            modelBuilder.Entity<Models.Application>().Property(x => x.RowVersion).IsRowVersion();
         }
     }
 }
