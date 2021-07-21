@@ -6,9 +6,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
     {
         public CreateApplicationCommandValidator()
         {
-
+            RuleFor(x => x.EmployerAccountId).NotEmpty();
+            RuleFor(x => x.PledgeId).NotEmpty();
         }
-
-
     }
 }
