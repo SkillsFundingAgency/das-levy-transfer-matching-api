@@ -38,5 +38,10 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         public List<PledgeLocation> Locations { get; set; }
 
         public byte[] RowVersion { get; private set; }
+
+        public Application CreateApplication(EmployerAccount account)
+        {
+            return new Application(this, account);
+        }
     }
 }

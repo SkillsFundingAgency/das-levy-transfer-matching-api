@@ -33,6 +33,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
             
             services.AddTransient<IEmployerAccountRepository, EmployerAccountRepository>();
             services.AddTransient<IPledgeRepository, PledgeRepository>();
+            services.AddTransient<IApplicationRepository, ApplicationRepository>();
         }
     }
 }
