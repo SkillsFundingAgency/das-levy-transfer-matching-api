@@ -19,6 +19,7 @@ using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.LevyTransferMatching.Api.HttpResponseExtensions;
 using SFA.DAS.LevyTransferMatching.Api.Models;
 using SFA.DAS.LevyTransferMatching.Api.StartupExtensions;
+using SFA.DAS.LevyTransferMatching.Application.Commands.CreateAccount;
 using SFA.DAS.LevyTransferMatching.Behaviours;
 using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
@@ -72,7 +73,7 @@ namespace SFA.DAS.LevyTransferMatching.Api
                 .AddFluentValidation(fv =>
                 {
                     fv.RegisterValidatorsFromAssemblyContaining<Startup>();
-                    fv.RegisterValidatorsFromAssemblyContaining<DbContextFactory>();
+                    fv.RegisterValidatorsFromAssemblyContaining<CreateAccountCommandValidator>();
                 })
                 .AddNewtonsoftJson(x =>
                 {

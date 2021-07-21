@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SFA.DAS.LevyTransferMatching.Application.Commands.CreateAccount;
 using SFA.DAS.LevyTransferMatching.Behaviours;
-using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
 using SFA.DAS.LevyTransferMatching.Infrastructure;
 using SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
@@ -15,7 +15,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
     {
         public static void AddServicesForLevyTransferMatching(this IServiceCollection services, IWebHostEnvironment hostingEnvironment, LevyTransferMatchingApi config)
         {
-            services.AddMediatR(typeof(DbContextFactory).Assembly);
+            services.AddMediatR(typeof(CreateAccountCommand).Assembly);
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RetryBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkBehaviour<,>));

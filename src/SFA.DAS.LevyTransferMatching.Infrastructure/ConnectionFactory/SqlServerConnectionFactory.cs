@@ -1,19 +1,16 @@
 ﻿using System.Data.Common;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
 using SFA.DAS.LevyTransferMatching.Infrastructure.ConnectionFactory;
 
 namespace SFA.DAS.LevyTransferMatching.Infrastructure
 {
     public class SqlServerConnectionFactory : IConnectionFactory
     {
-        private readonly LevyTransferMatchingApi _configuration;
         private readonly IManagedIdentityTokenProvider _managedIdentityTokenProvider;
 
-        public SqlServerConnectionFactory(LevyTransferMatchingApi configuration, IManagedIdentityTokenProvider managedIdentityTokenProvider)
+        public SqlServerConnectionFactory(IManagedIdentityTokenProvider managedIdentityTokenProvider)
         {
-            _configuration = configuration;
             _managedIdentityTokenProvider = managedIdentityTokenProvider;
         }
 
