@@ -8,6 +8,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
+using SFA.DAS.LevyTransferMatching.Infrastructure;
+using SFA.DAS.LevyTransferMatching.Infrastructure.ConnectionFactory;
 
 namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
 {
@@ -15,19 +17,16 @@ namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
     {
         public static void AddDbConfiguration(this IServiceCollection services, string connectionString, IWebHostEnvironment hostingEnvironment)
         {
-            //services.AddTransient<DbConnection>(provider => new SqlConnection(connectionString));
-            //if (hostingEnvironment.IsDevelopment())
-            //{
-            //    services.AddTransient<IDbContextFactory<LevyTransferMatchingDbContext>>(provider => new DbContextFactory(new SqlConnection(connectionString), provider.GetService<ILoggerFactory>(), null));
-            //}
-            //else
-            //{
-            //    services.AddTransient<IDbContextFactory<LevyTransferMatchingDbContext>>(provider => new DbContextFactory(new SqlConnection(connectionString), provider.GetService<ILoggerFactory>(), new AzureServiceTokenProvider()));
-            //}
-            //services.AddScoped<LevyTransferMatchingDbContext>(provider => provider.GetService<IDbContextFactory<LevyTransferMatchingDbContext>>().CreateDbContext());
-            //services.AddScoped<ILevyTransferMatchingDbContext>(provider => provider.GetService<LevyTransferMatchingDbContext>());
+            if(hostingEnvironment.IsDevelopment())
+            {
+                services.AddSingleton<IManagedIdentityTokenProvider, LocalDbTokenProvider>();
+            }
+            else
+            {
+                services.AddSingleton<IManagedIdentityTokenProvider, ManagedIdentityTokenProvider>();
+            }
 
-            services.AddSingleton(new AzureServiceTokenProvider());
+            services.AddTransient<IConnectionFactory, SqlServerConnectionFactory>();
 
             services.AddTransient<IEmployerAccountRepository, EmployerAccountRepository>();
             services.AddTransient<IPledgeRepository, PledgeRepository>();

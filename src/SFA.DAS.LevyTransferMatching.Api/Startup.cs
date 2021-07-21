@@ -1,4 +1,5 @@
 using System;
+using System.Data.Common;
 using System.IO;
 using System.Net;
 using FluentValidation;
@@ -7,9 +8,11 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Converters;
 using NServiceBus.ObjectBuilder.MSDependencyInjection;
 using SFA.DAS.Configuration.AzureTableStorage;
@@ -86,7 +89,6 @@ namespace SFA.DAS.LevyTransferMatching.Api
 
             services.AddEntityFrameworkForLevyTransferMatching(config)
                 .AddEntityFrameworkUnitOfWork<LevyTransferMatchingDbContext>()
-                //.AddSqlServerUnitOfWork();
                 .AddNServiceBusClientUnitOfWork();
 
             services.AddCache(config, _environment)

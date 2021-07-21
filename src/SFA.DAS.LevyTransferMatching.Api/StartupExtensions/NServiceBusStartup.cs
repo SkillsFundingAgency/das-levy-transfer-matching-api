@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using NServiceBus;
 using NServiceBus.ObjectBuilder.MSDependencyInjection;
 using SFA.DAS.LevyTransferMatching.Extensions;
+using SFA.DAS.LevyTransferMatching.Infrastructure;
 using SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
 using SFA.DAS.NServiceBus.Configuration;
 using SFA.DAS.NServiceBus.Configuration.AzureServiceBus;
@@ -21,18 +22,10 @@ namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
     public static class NServiceBusStartup
     {
         private const string EndpointName = "SFA.DAS.LevyTransferMatching.Api";
-        private const string AzureDbResource = "https://database.windows.net/";
 
         public static void StartNServiceBus(this UpdateableServiceProvider serviceProvider, LevyTransferMatchingApi configuration, IWebHostEnvironment environment)
         {
-            var tokenProvider = serviceProvider.GetService<AzureServiceTokenProvider>();
-
-            var connection = new Microsoft.Data.SqlClient.SqlConnection(configuration.DatabaseConnectionString);
-
-            if (!environment.IsDevelopment())
-            {
-                connection.AccessToken = tokenProvider.GetAccessTokenAsync(AzureDbResource).GetAwaiter().GetResult();
-            }
+            var connectionFactory = serviceProvider.GetService<IConnectionFactory>();
 
             var endpointConfiguration = new EndpointConfiguration(EndpointName)
                 .UseErrorQueue($"{EndpointName}-errors")
@@ -41,7 +34,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
                 .UseNewtonsoftJsonSerializer()
                 .UseOutbox(true)
                 .UseServicesBuilder(serviceProvider)
-                .UseSqlServerPersistence(() => connection)
+                .UseSqlServerPersistence(() => connectionFactory.CreateConnection(configuration.DatabaseConnectionString))
                 .UseUnitOfWork();
 
             if (configuration.NServiceBusConnectionString.Equals("UseDevelopmentStorage=true", StringComparison.CurrentCultureIgnoreCase))
