@@ -18,7 +18,6 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         private Mock<IMediator> _mediator;
         private ApplicationsController _applicationsController;
 
-        private long _accountId;
         private int _pledgeId;
         private CreateApplicationRequest _request;
         private CreateApplicationCommandResult _result;
