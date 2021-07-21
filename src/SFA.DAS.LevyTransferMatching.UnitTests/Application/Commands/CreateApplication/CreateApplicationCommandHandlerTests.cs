@@ -23,7 +23,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreateAppl
         private EmployerAccount _employerAccount;
         private Pledge _pledge;
 
-        private LevyTransferMatching.Data.Models.Application inserted;
+        private LevyTransferMatching.Data.Models.Application _inserted;
 
         [SetUp]
         public void Setup()
@@ -41,7 +41,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreateAppl
             _pledgeRepository.Setup(x => x.Get(_pledge.Id)).ReturnsAsync(_pledge);
 
             _applicationRepository.Setup(x => x.Add(It.IsAny<LevyTransferMatching.Data.Models.Application>()))
-                .Callback<LevyTransferMatching.Data.Models.Application>(r => inserted = r);
+                .Callback<LevyTransferMatching.Data.Models.Application>(r => _inserted = r);
 
             _handler = new CreateApplicationCommandHandler(_pledgeRepository.Object, _applicationRepository.Object, _employerAccountRepository.Object, DbContext);
         }
@@ -50,16 +50,14 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreateAppl
         public async Task Handle_Application_Is_Created()
         {
             var command = _fixture.Create<CreateApplicationCommand>();
-            command.ReceiverEmployerAccountId = _employerAccount.Id;
+            command.EmployerAccountId = _employerAccount.Id;
             command.PledgeId = _pledge.Id;
-            command.EmployerAccountId = _pledge.EmployerAccount.Id;
 
             await _handler.Handle(command, CancellationToken.None);
 
-            Assert.IsNotNull(inserted);
-            Assert.AreEqual(command.EmployerAccountId, inserted.Pledge.EmployerAccount.Id);
-            Assert.AreEqual(command.PledgeId, inserted.Pledge.Id);
-            Assert.AreEqual(command.ReceiverEmployerAccountId, inserted.EmployerAccount.Id);
+            Assert.IsNotNull(_inserted);
+            Assert.AreEqual(command.PledgeId, _inserted.Pledge.Id);
+            Assert.AreEqual(command.EmployerAccountId, _inserted.EmployerAccount.Id);
         }
     }
 }

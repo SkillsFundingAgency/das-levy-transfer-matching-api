@@ -27,8 +27,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
 
         public async Task<CreateApplicationCommandResult> Handle(CreateApplicationCommand request, CancellationToken cancellationToken)
         {
-            var account = await _employerAccountRepository.Get(request.ReceiverEmployerAccountId);
-            var pledge = await _pledgeRepository.Get(request.PledgeId); //todo: add sender account Id too
+            var account = await _employerAccountRepository.Get(request.EmployerAccountId);
+            var pledge = await _pledgeRepository.Get(request.PledgeId);
 
             var application = pledge.CreateApplication(account);
 

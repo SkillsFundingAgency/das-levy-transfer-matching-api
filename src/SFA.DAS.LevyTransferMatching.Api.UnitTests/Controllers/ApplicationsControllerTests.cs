@@ -26,7 +26,6 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         [SetUp]
         public void Setup()
         {
-            _accountId = _fixture.Create<long>();
             _pledgeId = _fixture.Create<int>();
             _request = _fixture.Create<CreateApplicationRequest>();
             _result = _fixture.Create<CreateApplicationCommandResult>();
@@ -35,15 +34,16 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             _applicationsController = new ApplicationsController(_mediator.Object);
 
             _mediator.Setup(x => x.Send(It.Is<CreateApplicationCommand>(command =>
-                    command.PledgeId == _pledgeId && command.EmployerAccountId == _accountId &&
-                    command.ReceiverEmployerAccountId == _request.ReceiverEmployerAccountId), It.IsAny<CancellationToken>()))
+                    command.PledgeId == _pledgeId &&
+                    command.EmployerAccountId == _request.EmployerAccountId
+                    ), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_result);
         }
 
         [Test]
         public async Task Post_Returns_ApplicationId()
         {
-            var actionResult = await _applicationsController.CreateApplication(_accountId, _pledgeId, _request);
+            var actionResult = await _applicationsController.CreateApplication(_pledgeId, _request);
             var createdResult = actionResult as CreatedResult;
             Assert.IsNotNull(createdResult);
             var response = createdResult.Value as CreateApplicationResponse;

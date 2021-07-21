@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 
 namespace SFA.DAS.LevyTransferMatching.Data.Repositories
@@ -19,7 +20,10 @@ namespace SFA.DAS.LevyTransferMatching.Data.Repositories
 
         public async Task<Pledge> Get(int pledgeId)
         {
-            return await _dbContext.Pledges.FindAsync(pledgeId);
+            return await _dbContext
+                .Pledges
+                .Include(p => p.Locations)
+                .SingleOrDefaultAsync(x => x.Id == pledgeId);
         }
     }
 }

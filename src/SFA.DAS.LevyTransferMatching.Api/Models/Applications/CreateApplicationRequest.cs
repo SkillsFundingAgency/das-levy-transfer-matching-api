@@ -2,6 +2,6 @@
 {
     public class CreateApplicationRequest
     {
-        public long ReceiverEmployerAccountId { get; set; }
+        public long EmployerAccountId { get; set; }
     }
 }
