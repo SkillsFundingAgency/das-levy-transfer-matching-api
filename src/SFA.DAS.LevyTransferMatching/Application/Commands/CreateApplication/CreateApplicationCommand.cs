@@ -1,4 +1,7 @@
-﻿using MediatR;
+﻿using System;
+using System.Collections.Generic;
+using MediatR;
+using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
 {
@@ -6,5 +9,20 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
     {
         public int PledgeId { get; set; }
         public long EmployerAccountId { get; set; }
+
+        public string Details { get; set; }
+
+        public string StandardId { get; set; }
+        public int NumberOfApprentices { get; set; }
+        public DateTime StartDate { get; set; }
+        public bool HasTrainingProvider { get; set; }
+
+        public IEnumerable<Sector> Sectors { get; set; }
+        public string Postcode { get; set; }
+
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public IEnumerable<string> EmailAddresses { get; set; }
+        public string BusinessWebsite { get; set; }
     }
 }

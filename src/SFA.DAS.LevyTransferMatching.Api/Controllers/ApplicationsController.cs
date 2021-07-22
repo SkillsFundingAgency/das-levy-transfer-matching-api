@@ -26,7 +26,18 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
             var commandResult = await _mediator.Send(new CreateApplicationCommand
             {
                 PledgeId = pledgeId,
-                EmployerAccountId = request.EmployerAccountId
+                EmployerAccountId = request.EmployerAccountId,
+                Details = request.Details,
+                StandardId = request.StandardId,
+                NumberOfApprentices = request.NumberOfApprentices,
+                StartDate = request.StartDate,
+                HasTrainingProvider = request.HasTrainingProvider,
+                Sectors = request.Sectors,
+                Postcode = request.Postcode,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                EmailAddresses = request.EmailAddresses,
+                BusinessWebsite = request.BusinessWebsite
             });
 
             var result = new CreatedResult(
