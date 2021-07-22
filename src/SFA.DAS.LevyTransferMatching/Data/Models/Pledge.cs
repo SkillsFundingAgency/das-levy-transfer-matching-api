@@ -16,7 +16,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             Levels = levels;
             JobRoles = jobRoles;
             Sectors = sectors;
-            Locations = locations;
+            _locations = locations;
         }
 
         public int Id { get; private set; }
@@ -35,7 +35,8 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
         public Sector Sectors { get; private set; }
 
-        public List<PledgeLocation> Locations { get; set; }
+        private readonly List<PledgeLocation> _locations;
+        public IReadOnlyCollection<PledgeLocation> Locations => _locations;
 
         public byte[] RowVersion { get; private set; }
 

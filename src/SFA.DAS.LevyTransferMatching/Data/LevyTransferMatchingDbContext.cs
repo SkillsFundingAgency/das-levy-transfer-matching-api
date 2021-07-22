@@ -19,6 +19,9 @@ namespace SFA.DAS.LevyTransferMatching.Data
             modelBuilder.Entity<Pledge>().HasKey(x => x.Id);
             modelBuilder.Entity<Pledge>().HasOne(x => x.EmployerAccount).WithMany();
             modelBuilder.Entity<Pledge>().Property(x => x.RowVersion).IsRowVersion();
+            modelBuilder.Entity<Pledge>().HasMany(x => x.Locations).WithOne();
+            modelBuilder.Entity<Pledge>().Metadata.FindNavigation(nameof(Pledge.Locations))
+                .SetPropertyAccessMode(PropertyAccessMode.Field);
 
             modelBuilder.Entity<PledgeLocation>().ToTable("PledgeLocation");
 

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.LevyTransferMatching.Data;
-using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 
@@ -53,14 +51,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
 
             await _applicationRepository.Add(application);
 
-            try
-            {
-                await _dbContext.SaveChangesAsync(cancellationToken);
-            }
-            catch (Exception ex)
-            {
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
-            }
             return new CreateApplicationCommandResult
             {
                 ApplicationId = application.Id
