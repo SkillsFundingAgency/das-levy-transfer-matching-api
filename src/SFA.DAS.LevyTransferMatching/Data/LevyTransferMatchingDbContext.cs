@@ -28,6 +28,8 @@ namespace SFA.DAS.LevyTransferMatching.Data
             modelBuilder.Entity<Models.Application>().HasOne(x => x.Pledge).WithMany();
             modelBuilder.Entity<Models.Application>().Property(x => x.RowVersion).IsRowVersion();
             modelBuilder.Entity<Models.Application>().HasMany(x => x.EmailAddresses).WithOne();
+            modelBuilder.Entity<Models.Application>().Metadata.FindNavigation(nameof(Models.Application.EmailAddresses))
+                .SetPropertyAccessMode(PropertyAccessMode.Field);
 
             modelBuilder.Entity<Models.ApplicationEmailAddress>().ToTable("ApplicationEmailAddress");
             modelBuilder.Entity<Models.ApplicationEmailAddress>().HasKey(x => x.Id);

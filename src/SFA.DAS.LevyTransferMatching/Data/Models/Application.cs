@@ -36,7 +36,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             LastName = lastName;
             BusinessWebsite = businessWebsite;
             CreatedOn = DateTime.UtcNow;
-            EmailAddresses = emailAddresses.Select(x => new ApplicationEmailAddress(x)).ToList();
+            _emailAddresses = emailAddresses.Select(x => new ApplicationEmailAddress(x)).ToList();
         }
 
         public int Id { get; private set; }
@@ -57,8 +57,10 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
-        public List<ApplicationEmailAddress> EmailAddresses { get; private set; }
         public string BusinessWebsite { get; private set; }
+
+        private readonly List<ApplicationEmailAddress> _emailAddresses;
+        public IReadOnlyCollection<ApplicationEmailAddress> EmailAddresses => _emailAddresses;
 
         public DateTime CreatedOn { get; private set; }
 
