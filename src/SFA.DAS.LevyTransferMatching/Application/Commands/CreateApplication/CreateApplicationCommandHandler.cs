@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.LevyTransferMatching.Data;
+using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
+using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
 {
@@ -27,15 +30,37 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
 
         public async Task<CreateApplicationCommandResult> Handle(CreateApplicationCommand request, CancellationToken cancellationToken)
         {
-            var account = await _employerAccountRepository.Get(request.EmployerAccountId);
-            var pledge = await _pledgeRepository.Get(request.PledgeId);
+            var accountTask = _employerAccountRepository.Get(request.EmployerAccountId);
+            var pledgeTask = _pledgeRepository.Get(request.PledgeId);
 
-            var application = pledge.CreateApplication(account);
+            await Task.WhenAll(accountTask, pledgeTask);
+
+            var account = accountTask.Result;
+            var pledge = pledgeTask.Result;
+
+            var application = pledge.CreateApplication(account,
+                request.Details,
+                request.StandardId,
+                request.NumberOfApprentices,
+                request.StartDate,
+                request.HasTrainingProvider,
+                (Sector) request.Sectors.Cast<int>().Sum(),
+                request.Postcode,
+                request.FirstName,
+                request.LastName,
+                request.BusinessWebsite,
+                request.EmailAddresses);
 
             await _applicationRepository.Add(application);
 
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            try
+            {
+                await _dbContext.SaveChangesAsync(cancellationToken);
+            }
+            catch (Exception ex)
+            {
 
+            }
             return new CreateApplicationCommandResult
             {
                 ApplicationId = application.Id

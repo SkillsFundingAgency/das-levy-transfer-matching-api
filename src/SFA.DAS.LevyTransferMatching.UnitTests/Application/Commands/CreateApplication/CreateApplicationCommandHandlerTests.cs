@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
 using Moq;
@@ -6,6 +7,7 @@ using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
+using SFA.DAS.LevyTransferMatching.Models.Enums;
 using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreateApplication
@@ -58,6 +60,17 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreateAppl
             Assert.IsNotNull(_inserted);
             Assert.AreEqual(command.PledgeId, _inserted.Pledge.Id);
             Assert.AreEqual(command.EmployerAccountId, _inserted.EmployerAccount.Id);
+            Assert.AreEqual(command.Details, _inserted.Details);
+            Assert.AreEqual(command.StandardId, _inserted.StandardId);
+            Assert.AreEqual(command.NumberOfApprentices, _inserted.NumberOfApprentices);
+            Assert.AreEqual(command.StartDate, _inserted.StartDate);
+            Assert.AreEqual(command.HasTrainingProvider, _inserted.HasTrainingProvider);
+            Assert.AreEqual((Sector)command.Sectors.Cast<int>().Sum(), _inserted.Sectors);
+            Assert.AreEqual(command.Postcode, _inserted.Postcode);
+            Assert.AreEqual(command.FirstName, _inserted.FirstName);
+            Assert.AreEqual(command.LastName, _inserted.LastName);
+            Assert.AreEqual(command.BusinessWebsite, _inserted.BusinessWebsite);
+            CollectionAssert.AreEqual(command.EmailAddresses, _inserted.EmailAddresses.Select(x=> x.EmailAddress));
         }
     }
 }

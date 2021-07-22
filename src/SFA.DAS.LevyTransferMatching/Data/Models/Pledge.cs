@@ -39,9 +39,31 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
         public byte[] RowVersion { get; private set; }
 
-        public Application CreateApplication(EmployerAccount account)
+        public Application CreateApplication(EmployerAccount account, string details,
+            string standardId,
+            int numberOfApprentices,
+            DateTime startDate,
+            bool hasTrainingProvider,
+            Sector sectors,
+            string postcode,
+            string firstName,
+            string lastName,
+            string businessWebsite,
+            IEnumerable<string> emailAddresses)
         {
-            return new Application(this, account);
+            return new Application(this,
+                account,
+                details,
+                standardId,
+                numberOfApprentices,
+                startDate,
+                hasTrainingProvider,
+                sectors,
+                postcode,
+                firstName,
+                lastName,
+                businessWebsite,
+                emailAddresses);
         }
     }
 }
