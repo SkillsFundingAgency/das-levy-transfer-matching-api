@@ -1,10 +1,11 @@
 ﻿using SFA.DAS.LevyTransferMatching.Models.Enums;
 using System;
 using System.Collections.Generic;
+using SFA.DAS.LevyTransferMatching.Abstractions;
 
 namespace SFA.DAS.LevyTransferMatching.Data.Models
 {
-    public class Pledge
+    public class Pledge : AggregateRoot
     {
         protected Pledge() {}
 
@@ -41,30 +42,13 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         public byte[] RowVersion { get; private set; }
 
         public Application CreateApplication(EmployerAccount account, string details,
-            string standardId,
-            int numberOfApprentices,
-            DateTime startDate,
-            bool hasTrainingProvider,
-            Sector sectors,
-            string postcode,
-            string firstName,
-            string lastName,
-            string businessWebsite,
+            string standardId, int numberOfApprentices, DateTime startDate, bool hasTrainingProvider,
+            Sector sectors, string postcode, string firstName, string lastName, string businessWebsite,
             IEnumerable<string> emailAddresses)
         {
-            return new Application(this,
-                account,
-                details,
-                standardId,
-                numberOfApprentices,
-                startDate,
-                hasTrainingProvider,
-                sectors,
-                postcode,
-                firstName,
-                lastName,
-                businessWebsite,
-                emailAddresses);
+            return new Application(this, account, details, standardId, numberOfApprentices, 
+                startDate, hasTrainingProvider, sectors, postcode, firstName, lastName,
+                businessWebsite, emailAddresses);
         }
     }
 }

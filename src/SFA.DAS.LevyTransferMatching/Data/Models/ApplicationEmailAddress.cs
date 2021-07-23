@@ -1,6 +1,8 @@
-﻿namespace SFA.DAS.LevyTransferMatching.Data.Models
+﻿using SFA.DAS.LevyTransferMatching.Abstractions;
+
+namespace SFA.DAS.LevyTransferMatching.Data.Models
 {
-    public class ApplicationEmailAddress
+    public class ApplicationEmailAddress : Entity
     {
         public ApplicationEmailAddress() {}
 

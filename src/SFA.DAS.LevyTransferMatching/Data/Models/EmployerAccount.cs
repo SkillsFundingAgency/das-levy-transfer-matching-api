@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+using SFA.DAS.LevyTransferMatching.Abstractions;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Data.Models
 {
-    [Table(nameof(EmployerAccount))]
-    public class EmployerAccount
+    public class EmployerAccount : AggregateRoot
     {
         public long Id { get; set; }
         public string Name { get; set; }

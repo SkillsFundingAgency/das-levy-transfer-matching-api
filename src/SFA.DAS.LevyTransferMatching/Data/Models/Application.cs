@@ -1,26 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SFA.DAS.LevyTransferMatching.Abstractions;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Data.Models
 {
-    public class Application
+    public class Application : AggregateRoot
     {
         public Application() {}
 
-        public Application(Pledge pledge,
-            EmployerAccount account,
-            string details,
-            string standardId,
-            int numberOfApprentices,
-            DateTime startDate,
-            bool hasTrainingProvider,
-            Sector sectors,
-            string postcode,
-            string firstName,
-            string lastName,
-            string businessWebsite,
+        public Application(Pledge pledge, EmployerAccount account, string details, string standardId,
+            int numberOfApprentices, DateTime startDate, bool hasTrainingProvider, Sector sectors,
+            string postcode, string firstName, string lastName, string businessWebsite,
             IEnumerable<string> emailAddresses)
         {
             Pledge = pledge;
