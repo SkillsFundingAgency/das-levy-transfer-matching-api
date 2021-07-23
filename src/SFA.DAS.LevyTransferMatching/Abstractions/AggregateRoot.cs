@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.LevyTransferMatching.Abstractions
 {
-    public class AggregateRoot : Entity
+    public class AggregateRoot<T> : Entity<T>
     {
     }
 }

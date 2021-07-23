@@ -23,11 +23,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateAccount
 
             if (employerAccount == null)
             {
-                await _accountRepository.Add(new EmployerAccount
-                {
-                    Id = request.AccountId,
-                    Name = request.AccountName,
-                });
+                employerAccount = EmployerAccount.New(request.AccountId, request.AccountName);
+                await _accountRepository.Add(employerAccount);
 
                 created = true;
             }

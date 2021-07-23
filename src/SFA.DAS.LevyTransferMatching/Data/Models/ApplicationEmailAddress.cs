@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.LevyTransferMatching.Data.Models
 {
-    public class ApplicationEmailAddress : Entity
+    public class ApplicationEmailAddress : Entity<int>
     {
         public ApplicationEmailAddress() {}
 
@@ -10,8 +10,6 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         {
             EmailAddress = emailAddress;
         }
-
-        public int Id { get; protected set; }
 
         public int ApplicationId { get; protected set; }
 

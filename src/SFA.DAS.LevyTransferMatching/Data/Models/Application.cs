@@ -6,7 +6,7 @@ using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Data.Models
 {
-    public class Application : AggregateRoot
+    public class Application : AggregateRoot<int>
     {
         public Application() {}
 
@@ -30,8 +30,6 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             CreatedOn = DateTime.UtcNow;
             _emailAddresses = emailAddresses.Select(x => new ApplicationEmailAddress(x)).ToList();
         }
-
-        public int Id { get; private set; }
 
         public EmployerAccount EmployerAccount { get; private set; }
 

@@ -5,7 +5,7 @@ using SFA.DAS.LevyTransferMatching.Abstractions;
 
 namespace SFA.DAS.LevyTransferMatching.Data.Models
 {
-    public class Pledge : AggregateRoot
+    public class Pledge : AggregateRoot<int>
     {
         protected Pledge() {}
 
@@ -19,8 +19,6 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             Sectors = sectors;
             _locations = locations;
         }
-
-        public int Id { get; private set; }
 
         public EmployerAccount EmployerAccount { get; private set; }
 
