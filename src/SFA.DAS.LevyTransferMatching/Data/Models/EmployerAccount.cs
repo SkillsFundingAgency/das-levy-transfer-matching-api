@@ -13,7 +13,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             return new EmployerAccount(id, name);
         }
 
-        public EmployerAccount(long id, string name)
+        private EmployerAccount(long id, string name)
         {
             Id = id;
             Name = name;
