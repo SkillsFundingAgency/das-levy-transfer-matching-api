@@ -13,11 +13,5 @@
             return Enum.GetValues(typeof(TEnum)).Cast<TEnum>()
                 .Where(x => combinedEnum.HasFlag(x)); ;
         }
-
-        public static IEnumerable<TEnum> ToList<TEnum>(this TEnum value) where TEnum : Enum
-        {
-            return Enum.GetValues(typeof(TEnum)).Cast<TEnum>()
-                .Where(x => value.HasFlag(x)); ;
-        }
     }
 }

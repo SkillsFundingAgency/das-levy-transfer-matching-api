@@ -29,7 +29,6 @@ namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
 
             var endpointConfiguration = new EndpointConfiguration(EndpointName)
                 .UseErrorQueue($"{EndpointName}-errors")
-                //.UseInstallers()
                 .UseMessageConventions()
                 .UseNewtonsoftJsonSerializer()
                 .UseOutbox(true)
