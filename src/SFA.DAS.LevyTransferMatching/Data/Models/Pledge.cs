@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using SFA.DAS.LevyTransferMatching.Abstractions;
+using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 
 namespace SFA.DAS.LevyTransferMatching.Data.Models
 {
@@ -39,14 +40,9 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
         public byte[] RowVersion { get; private set; }
 
-        public Application CreateApplication(EmployerAccount account, string details,
-            string standardId, int numberOfApprentices, DateTime startDate, bool hasTrainingProvider,
-            Sector sectors, string postcode, string firstName, string lastName, string businessWebsite,
-            IEnumerable<string> emailAddresses)
+        public Application CreateApplication(EmployerAccount account, CreateApplicationProperties properties)
         {
-            return new Application(this, account, details, standardId, numberOfApprentices, 
-                startDate, hasTrainingProvider, sectors, postcode, firstName, lastName,
-                businessWebsite, emailAddresses);
+            return new Application(this, account, properties);
         }
     }
 }

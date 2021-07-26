@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
+using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
@@ -36,18 +37,22 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
             var account = accountTask.Result;
             var pledge = pledgeTask.Result;
 
-            var application = pledge.CreateApplication(account,
-                request.Details,
-                request.StandardId,
-                request.NumberOfApprentices,
-                request.StartDate,
-                request.HasTrainingProvider,
-                (Sector) request.Sectors.Cast<int>().Sum(),
-                request.Postcode,
-                request.FirstName,
-                request.LastName,
-                request.BusinessWebsite,
-                request.EmailAddresses);
+            var settings = new CreateApplicationProperties
+            {
+                Details = request.Details,
+                StandardId = request.StandardId,
+                NumberOfApprentices = request.NumberOfApprentices,
+                StartDate = request.StartDate,
+                HasTrainingProvider = request.HasTrainingProvider,
+                Sectors = (Sector) request.Sectors.Cast<int>().Sum(),
+                PostCode = request.Postcode,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                BusinessWebsite = request.BusinessWebsite,
+                EmailAddresses = request.EmailAddresses
+            };
+
+            var application = pledge.CreateApplication(account, settings);
 
             await _applicationRepository.Add(application);
 

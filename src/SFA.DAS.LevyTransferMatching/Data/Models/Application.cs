@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.LevyTransferMatching.Abstractions;
+using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Data.Models
@@ -10,25 +11,22 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
     {
         public Application() {}
 
-        public Application(Pledge pledge, EmployerAccount account, string details, string standardId,
-            int numberOfApprentices, DateTime startDate, bool hasTrainingProvider, Sector sectors,
-            string postcode, string firstName, string lastName, string businessWebsite,
-            IEnumerable<string> emailAddresses)
+        public Application(Pledge pledge, EmployerAccount account, CreateApplicationProperties properties)
         {
             Pledge = pledge;
             EmployerAccount = account;
-            Details = details;
-            StandardId = standardId;
-            NumberOfApprentices = numberOfApprentices;
-            StartDate = startDate;
-            HasTrainingProvider = hasTrainingProvider;
-            Sectors = sectors;
-            Postcode = postcode;
-            FirstName = firstName;
-            LastName = lastName;
-            BusinessWebsite = businessWebsite;
+            Details = properties.Details;
+            StandardId = properties.StandardId;
+            NumberOfApprentices = properties.NumberOfApprentices;
+            StartDate = properties.StartDate;
+            HasTrainingProvider = properties.HasTrainingProvider;
+            Sectors = properties.Sectors;
+            Postcode = properties.PostCode;
+            FirstName = properties.FirstName;
+            LastName = properties.LastName;
+            BusinessWebsite = properties.BusinessWebsite;
             CreatedOn = DateTime.UtcNow;
-            _emailAddresses = emailAddresses.Select(x => new ApplicationEmailAddress(x)).ToList();
+            _emailAddresses = properties.EmailAddresses.Select(x => new ApplicationEmailAddress(x)).ToList();
         }
 
         public EmployerAccount EmployerAccount { get; private set; }
