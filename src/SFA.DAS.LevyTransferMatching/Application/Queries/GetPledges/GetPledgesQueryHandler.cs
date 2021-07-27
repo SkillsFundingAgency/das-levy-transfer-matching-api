@@ -21,9 +21,14 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
 
         public async Task<GetPledgesResult> Handle(GetPledgesQuery request, CancellationToken cancellationToken)
         {
-            var pledgeEntries = await _dbContext.Pledges
-                .Include(x => x.EmployerAccount)
-                .ToListAsync();
+            var pledgeEntriesQuery = _dbContext.Pledges.AsQueryable();
+
+            if (request.AccountId.HasValue)
+            {
+                pledgeEntriesQuery = pledgeEntriesQuery.Where(x => x.EmployerAccount.Id == request.AccountId.Value);
+            }
+
+            var pledgeEntries = await pledgeEntriesQuery.Include(x => x.EmployerAccount).ToListAsync();
 
             var pledges = pledgeEntries
                 .Select(

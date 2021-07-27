@@ -137,7 +137,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             };
 
             _mockMediator
-                .Setup(x => x.Send(It.IsAny<GetPledgesQuery>(), It.IsAny<CancellationToken>()))
+                .Setup(x => x.Send(It.Is<GetPledgesQuery>(x => x.AccountId == null), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(result);
 
             // Act
@@ -151,6 +151,38 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             Assert.IsNotNull(response);
             Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.OK);
             
+            Assert.AreEqual(expectedPledges.Count(), response.Items.Count());
+            Assert.AreEqual(expectedPledges.Count(), response.TotalItems);
+        }
+
+        [Test]
+        public async Task GET_Account_Pledges_Returned()
+        {
+            // Arrange
+            var accountId = _fixture.Create<long>();
+            var expectedPledges = _fixture.CreateMany<Pledge>();
+
+            var result = new GetPledgesResult()
+            {
+                Pledges = expectedPledges,
+                TotalPledges = expectedPledges.Count(),
+            };
+
+            _mockMediator
+                .Setup(x => x.Send(It.Is<GetPledgesQuery>(x => x.AccountId == accountId), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(result);
+
+            // Act
+            var actionResult = await _pledgesController.GetPledges(accountId: accountId);
+            var okObjectResult = actionResult as OkObjectResult;
+            var response = okObjectResult.Value as GetPledgesResponse;
+
+            // Assert
+            Assert.IsNotNull(actionResult);
+            Assert.IsNotNull(okObjectResult);
+            Assert.IsNotNull(response);
+            Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.OK);
+
             Assert.AreEqual(expectedPledges.Count(), response.Items.Count());
             Assert.AreEqual(expectedPledges.Count(), response.TotalItems);
         }
