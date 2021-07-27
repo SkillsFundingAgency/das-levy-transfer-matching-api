@@ -56,6 +56,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreatePled
             Assert.IsNotNull(inserted);
             Assert.AreEqual(command.AccountId, inserted.EmployerAccount.Id);
             Assert.AreEqual(command.Amount, inserted.Amount);
+            Assert.AreEqual(command.Amount, inserted.RemainingAmount);
             Assert.AreEqual(command.IsNamePublic, inserted.IsNamePublic);
             Assert.AreEqual((Level)command.Levels.Cast<int>().Sum(), inserted.Levels);
             Assert.AreEqual((Sector)command.Sectors.Cast<int>().Sum(), inserted.Sectors);
