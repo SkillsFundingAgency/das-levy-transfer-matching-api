@@ -12,7 +12,6 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
 using SFA.DAS.LevyTransferMatching.Models;
-using System;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -131,21 +130,29 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             // Arrange
             var expectedPledges = _fixture.CreateMany<Pledge>();
 
+            var result = new GetPledgesResult()
+            {
+                Pledges = expectedPledges,
+                TotalPledges = expectedPledges.Count(),
+            };
+
             _mockMediator
                 .Setup(x => x.Send(It.IsAny<GetPledgesQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new GetPledgesResult(expectedPledges));
+                .ReturnsAsync(result);
 
             // Act
             var actionResult = await _pledgesController.GetPledges();
             var okObjectResult = actionResult as OkObjectResult;
-            var actualPledges = okObjectResult.Value as GetPledgesResponse;
+            var response = okObjectResult.Value as GetPledgesResponse;
 
             // Assert
             Assert.IsNotNull(actionResult);
             Assert.IsNotNull(okObjectResult);
-            Assert.IsNotNull(actualPledges);
+            Assert.IsNotNull(response);
             Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.OK);
-            Assert.AreEqual(expectedPledges.Count(), actualPledges.Count());
+            
+            Assert.AreEqual(expectedPledges.Count(), response.Items.Count());
+            Assert.AreEqual(expectedPledges.Count(), response.TotalItems);
         }
     }
 }

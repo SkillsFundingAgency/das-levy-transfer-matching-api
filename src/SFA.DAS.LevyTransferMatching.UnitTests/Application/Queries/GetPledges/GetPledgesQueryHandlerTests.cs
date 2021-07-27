@@ -28,14 +28,14 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
 
             await DbContext.EmployerAccounts.AddRangeAsync(employerAccounts);
 
-            var pledges = _fixture.CreateMany<Pledge>().ToArray();
+            var pledgeRecords = _fixture.CreateMany<Pledge>().ToArray();
 
-            for (var i = 0; i < pledges.Length; i++)
+            for (var i = 0; i < pledgeRecords.Length; i++)
             {
-                pledges[i].EmployerAccount = employerAccounts[i];
+                pledgeRecords[i].EmployerAccount = employerAccounts[i];
             }
             
-            await DbContext.Pledges.AddRangeAsync(pledges);
+            await DbContext.Pledges.AddRangeAsync(pledgeRecords);
 
             await DbContext.SaveChangesAsync();
 
@@ -46,13 +46,15 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
             // Act
             var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
 
-            // Assert
-            pledges = await DbContext.Pledges.OrderByDescending(x => x.Amount).ToArrayAsync();
+            var pledges = result.Pledges.ToArray();
 
-            for (int i = 0; i < result.Count(); i++)
+            // Assert
+            pledgeRecords = await DbContext.Pledges.OrderByDescending(x => x.Amount).ToArrayAsync();
+
+            for (int i = 0; i < pledges.Length; i++)
             {
-                Assert.AreEqual(result[i].Id, pledges[i].Id);
-                Assert.AreEqual(result[i].AccountId, pledges[i].EmployerAccount.Id);
+                Assert.AreEqual(pledges[i].Id, pledgeRecords[i].Id);
+                Assert.AreEqual(pledges[i].AccountId, pledgeRecords[i].EmployerAccount.Id);
             }
         }
     }

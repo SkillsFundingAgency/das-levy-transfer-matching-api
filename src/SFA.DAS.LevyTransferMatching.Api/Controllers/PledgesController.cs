@@ -29,7 +29,13 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         {
             var result = await _mediator.Send(new GetPledgesQuery());
 
-            return Ok(new GetPledgesResponse(result.Select(x => (GetPledgesResponse.Pledge)x)));
+            var response = new GetPledgesResponse()
+            {
+                Items = result.Pledges.Select(x => (GetPledgesResponse.Pledge)x),
+                TotalItems = result.TotalPledges,
+            };
+
+            return Ok(response);
         }
 
         [HttpGet]
