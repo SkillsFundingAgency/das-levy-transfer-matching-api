@@ -15,6 +15,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
         public string StandardId { get; set; }
         public int NumberOfApprentices { get; set; }
         public DateTime StartDate { get; set; }
+        public int Amount { get; set; }
         public bool HasTrainingProvider { get; set; }
 
         public IEnumerable<Sector> Sectors { get; set; }

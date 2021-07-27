@@ -29,13 +29,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
 
         public async Task<CreateApplicationCommandResult> Handle(CreateApplicationCommand request, CancellationToken cancellationToken)
         {
-            var accountTask = _employerAccountRepository.Get(request.EmployerAccountId);
-            var pledgeTask = _pledgeRepository.Get(request.PledgeId);
-
-            await Task.WhenAll(accountTask, pledgeTask);
-
-            var account = accountTask.Result;
-            var pledge = pledgeTask.Result;
+            var account = await _employerAccountRepository.Get(request.EmployerAccountId);
+            var pledge = await _pledgeRepository.Get(request.PledgeId);
 
             var settings = new CreateApplicationProperties
             {
@@ -44,6 +39,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
                 NumberOfApprentices = request.NumberOfApprentices,
                 StartDate = request.StartDate,
                 HasTrainingProvider = request.HasTrainingProvider,
+                Amount = request.Amount,
                 Sectors = (Sector) request.Sectors.Cast<int>().Sum(),
                 PostCode = request.Postcode,
                 FirstName = request.FirstName,
@@ -57,7 +53,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
             await _applicationRepository.Add(application);
 
             await _dbContext.SaveChangesAsync(cancellationToken);
-
+            
             return new CreateApplicationCommandResult
             {
                 ApplicationId = application.Id
