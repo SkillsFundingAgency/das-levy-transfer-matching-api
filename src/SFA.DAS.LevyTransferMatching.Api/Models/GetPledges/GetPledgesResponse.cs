@@ -14,6 +14,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledges
 
             public int Amount { get; set; }
 
+            public int RemainingAmount { get; set; }
+
             public bool IsNamePublic { get; set; }
 
             public string DasAccountName { get; set; }
@@ -26,12 +28,15 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledges
 
             public IEnumerable<Sector> Sectors { get; set; }
 
+            public int ApplicationCount { get; set; }
+
             public static implicit operator Pledge(LevyTransferMatching.Models.Pledge pledge)
             {
                 return new Pledge()
                 {
                     AccountId = pledge.AccountId,
                     Amount = pledge.Amount,
+                    RemainingAmount = pledge.RemainingAmount,
                     CreatedOn = pledge.CreatedOn,
                     DasAccountName = pledge.DasAccountName,
                     Id = pledge.Id,
@@ -39,6 +44,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledges
                     JobRoles = pledge.JobRoles,
                     Levels = pledge.Levels,
                     Sectors = pledge.Sectors,
+                    ApplicationCount = pledge.ApplicationCount
                 };
             }
         }
