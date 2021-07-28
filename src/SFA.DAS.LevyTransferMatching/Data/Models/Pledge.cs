@@ -14,6 +14,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         {
             EmployerAccount = employerAccount;
             Amount = amount;
+            RemainingAmount = amount;
             IsNamePublic = isNamePublic;
             Levels = levels;
             JobRoles = jobRoles;
@@ -24,6 +25,8 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         public EmployerAccount EmployerAccount { get; private set; }
 
         public int Amount { get; private set; }
+
+        public int RemainingAmount { get; private set; }
 
         public bool IsNamePublic { get; private set; }
 

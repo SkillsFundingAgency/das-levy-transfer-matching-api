@@ -2,6 +2,7 @@
     [Id]                INT           IDENTITY (1, 1) NOT NULL,
     [EmployerAccountId] BIGINT        NOT NULL,
     [Amount]            INT           NOT NULL,
+    [RemainingAmount]   INT           NOT NULL DEFAULT 0,
     [IsNamePublic]      BIT           NOT NULL,
     [CreatedOn]         DATETIME2 (7) CONSTRAINT [DF_Pledge__CreationDate] DEFAULT (getdate()) NOT NULL,
     [JobRoles]          INT           NOT NULL,

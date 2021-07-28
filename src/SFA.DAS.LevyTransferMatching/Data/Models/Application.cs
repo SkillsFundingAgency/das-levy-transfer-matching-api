@@ -20,6 +20,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             NumberOfApprentices = properties.NumberOfApprentices;
             StartDate = properties.StartDate;
             HasTrainingProvider = properties.HasTrainingProvider;
+            Amount = properties.Amount;
             Sectors = properties.Sectors;
             Postcode = properties.PostCode;
             FirstName = properties.FirstName;
@@ -38,6 +39,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         public string StandardId { get; private set; }
         public int NumberOfApprentices { get; private set; }
         public DateTime StartDate { get; private set; }
+        public int Amount { get; private set; }
         public bool HasTrainingProvider { get; private set; }
 
         public Sector Sectors { get; private set; }

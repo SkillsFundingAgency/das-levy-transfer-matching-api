@@ -11,6 +11,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.ValueObjects
         public int NumberOfApprentices { get; set; }
         public DateTime StartDate { get; set; }
         public bool HasTrainingProvider { get; set; }
+        public int Amount { get; set; }
         public Sector Sectors { get; set; }
         public string PostCode { get; set; }
         public string FirstName { get; set; }

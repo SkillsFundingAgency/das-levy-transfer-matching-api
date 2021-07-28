@@ -32,6 +32,8 @@ namespace SFA.DAS.LevyTransferMatching.Behaviours
             }
             catch (Exception ex)
             {
+                _logger.LogInformation("Exception handled by UnitOfWorkBehaviour", ex);
+
                 await _unitOfWorkManager.EndAsync(ex);
                 throw;
             }

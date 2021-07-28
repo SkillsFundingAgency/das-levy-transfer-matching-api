@@ -24,16 +24,16 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
             _dbContext = dbContext;
         }
 
-        public async Task<CreatePledgeResult> Handle(CreatePledgeCommand command, CancellationToken cancellationToken)
+        public async Task<CreatePledgeResult> Handle(CreatePledgeCommand request, CancellationToken cancellationToken)
         {
-            var employerAccount = await _employerAccountRepository.Get(command.AccountId);
+            var employerAccount = await _employerAccountRepository.Get(request.AccountId);
 
-            var pledge = employerAccount.CreatePledge(command.Amount,
-                command.IsNamePublic,
-                (Level)command.Levels.Cast<int>().Sum(),
-                (JobRole)command.JobRoles.Cast<int>().Sum(),
-                (Sector)command.Sectors.Cast<int>().Sum(),
-                command.Locations.Select(x =>
+            var pledge = employerAccount.CreatePledge(request.Amount,
+                request.IsNamePublic,
+                (Level)request.Levels.Cast<int>().Sum(),
+                (JobRole)request.JobRoles.Cast<int>().Sum(),
+                (Sector)request.Sectors.Cast<int>().Sum(),
+                request.Locations.Select(x =>
                 new PledgeLocation
                 {
                     Name = x.Name,

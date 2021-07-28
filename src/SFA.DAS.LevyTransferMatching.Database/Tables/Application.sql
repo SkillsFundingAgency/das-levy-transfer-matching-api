@@ -7,6 +7,7 @@
 	[NumberOfApprentices]	INT				NOT NULL,
 	[StandardId]			VARCHAR(20)		NOT NULL,
 	[StartDate]				DATETIME2		NOT NULL,
+	[Amount]				INT				NOT NULL,
 	[HasTrainingProvider]	BIT				NOT NULL,
 	[Sectors]				INT		        NOT NULL,
 	[PostCode]				VARCHAR(8)		NOT NULL,
