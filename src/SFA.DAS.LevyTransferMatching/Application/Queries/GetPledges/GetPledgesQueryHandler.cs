@@ -21,12 +21,17 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
 
         public async Task<GetPledgesResult> Handle(GetPledgesQuery request, CancellationToken cancellationToken)
         {
-            var pledges = await _dbContext.Pledges
-                .Include(x => x.EmployerAccount)
-                .ToListAsync();
+            var pledgeEntriesQuery = _dbContext.Pledges.AsQueryable();
 
-            return new GetPledgesResult(
-                pledges.Select(
+            if (request.AccountId.HasValue)
+            {
+                pledgeEntriesQuery = pledgeEntriesQuery.Where(x => x.EmployerAccount.Id == request.AccountId.Value);
+            }
+
+            var pledgeEntries = await pledgeEntriesQuery.Include(x => x.EmployerAccount).ToListAsync();
+
+            var pledges = pledgeEntries
+                .Select(
                     x => new Pledge()
                     {
                         Amount = x.Amount,
@@ -37,8 +42,15 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
                         DasAccountName = x.EmployerAccount.Name,
                         JobRoles = x.JobRoles.ToList(),
                         Levels = x.Levels.ToList(),
-                        Sectors = x.Sectors.ToList(),
-                    }).OrderByDescending(x => x.Amount));
+                        Sectors = x.Sectors.ToList()
+                    })
+                .OrderByDescending(x => x.Amount);
+
+            return new GetPledgesResult()
+            {
+                Pledges = pledges,
+                TotalPledges = pledges.Count(),
+            };
         }
     }
 }

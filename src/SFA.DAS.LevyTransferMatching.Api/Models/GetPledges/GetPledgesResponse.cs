@@ -4,12 +4,8 @@ using System.Collections.Generic;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledges
 {
-    public class GetPledgesResponse : List<GetPledgesResponse.Pledge>
+    public class GetPledgesResponse : ItemListResponse<GetPledgesResponse.Pledge>
     {
-        public GetPledgesResponse(IEnumerable<Pledge> collection) : base(collection)
-        {
-        }
-
         public class Pledge
         {
             public int Id { get; set; }
