@@ -19,6 +19,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             Levels = levels;
             JobRoles = jobRoles;
             Sectors = sectors;
+            CreatedOn = DateTime.UtcNow;
             _locations = locations;
         }
 
