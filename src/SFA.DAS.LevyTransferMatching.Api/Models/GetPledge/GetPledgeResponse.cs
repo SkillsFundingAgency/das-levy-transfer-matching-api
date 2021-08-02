@@ -12,6 +12,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledge
         public long AccountId { get; set; }
 
         public int Amount { get; set; }
+        public int RemainingAmount { get; set; }
 
         public bool IsNamePublic { get; set; }
 
@@ -31,6 +32,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledge
             {
                 AccountId = pledge.AccountId,
                 Amount = pledge.Amount,
+                RemainingAmount = pledge.RemainingAmount,
                 CreatedOn = pledge.CreatedOn,
                 DasAccountName = pledge.DasAccountName,
                 Id = pledge.Id,
