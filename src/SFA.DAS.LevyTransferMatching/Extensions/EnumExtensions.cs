@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using SFA.DAS.LevyTransferMatching.Attributes;
 using SFA.DAS.LevyTransferMatching.Models.ReferenceData;
 
@@ -60,6 +61,12 @@ namespace SFA.DAS.LevyTransferMatching.Extensions
             }
 
             return result;
+        }
+
+        public static IEnumerable<TEnum> ToList<TEnum>(this TEnum value) where TEnum : Enum
+        {
+            return Enum.GetValues(typeof(TEnum)).Cast<TEnum>()
+                .Where(x => value.HasFlag(x)); ;
         }
     }
 }

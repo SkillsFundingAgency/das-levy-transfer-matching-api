@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NServiceBus;
 using NServiceBus.ObjectBuilder.MSDependencyInjection;
 using SFA.DAS.LevyTransferMatching.Extensions;
+using SFA.DAS.LevyTransferMatching.Infrastructure;
 using SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
 using SFA.DAS.NServiceBus.Configuration;
 using SFA.DAS.NServiceBus.Configuration.AzureServiceBus;
@@ -23,14 +25,15 @@ namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
 
         public static void StartNServiceBus(this UpdateableServiceProvider serviceProvider, LevyTransferMatchingApi configuration, IWebHostEnvironment environment)
         {
+            var connectionFactory = serviceProvider.GetService<IConnectionFactory>();
+
             var endpointConfiguration = new EndpointConfiguration(EndpointName)
                 .UseErrorQueue($"{EndpointName}-errors")
-                .UseInstallers()
                 .UseMessageConventions()
                 .UseNewtonsoftJsonSerializer()
                 .UseOutbox(true)
                 .UseServicesBuilder(serviceProvider)
-                .UseSqlServerPersistence(() => new SqlConnection(configuration.DatabaseConnectionString))
+                .UseSqlServerPersistence(() => connectionFactory.CreateConnection(configuration.DatabaseConnectionString))
                 .UseUnitOfWork();
 
             if (configuration.NServiceBusConnectionString.Equals("UseDevelopmentStorage=true", StringComparison.CurrentCultureIgnoreCase))
