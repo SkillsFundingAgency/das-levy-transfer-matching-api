@@ -19,6 +19,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Repositories
         public async Task Add(Pledge pledge)
         {
             await _dbContext.AddAsync(pledge);
+            await _dbContext.SaveChangesAsync();
 
             foreach (dynamic domainEvent in pledge.FlushEvents())
             {

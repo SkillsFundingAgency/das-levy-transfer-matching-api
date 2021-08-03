@@ -24,6 +24,9 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             _locations = locations;
 
             AddEvent(new PledgeCreated(this));
+
+            StartTrackingSession(UserAction.CreatePledge, employerAccount.Id, "userId", "userDisplayName");
+            ChangeTrackingSession.TrackInsert(this);
         }
 
         public EmployerAccount EmployerAccount { get; private set; }

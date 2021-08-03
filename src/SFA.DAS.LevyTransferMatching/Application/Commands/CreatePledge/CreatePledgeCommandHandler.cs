@@ -44,13 +44,9 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
 
             await _pledgeRepository.Add(pledge);
 
-            await _dbContext.SaveChangesAsync(cancellationToken);
-
-            var pledgeId = pledge.Id;
-
             return new CreatePledgeResult
             {
-                Id = pledgeId
+                Id = pledge.Id
             };
         }
     }
