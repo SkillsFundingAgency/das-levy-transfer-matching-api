@@ -1,8 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using AutoFixture;
+using Moq;
 using NUnit.Framework;
+using SFA.DAS.LevyTransferMatching.Abstractions.Events;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
+using SFA.DAS.LevyTransferMatching.Services.Events;
 using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Data.Repositories
@@ -12,11 +16,15 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Data.Repositories
     {
         private readonly Fixture _fixture = new Fixture();
         private PledgeRepository _repository;
+        private Mock<IDomainEventDispatcher> _domainEventDispatcher;
 
         [SetUp]
         public void SetUp()
         {
-            _repository = new PledgeRepository(DbContext);
+            _domainEventDispatcher = new Mock<IDomainEventDispatcher>();
+            _domainEventDispatcher.Setup(x => x.Send(It.IsAny<IDomainEvent>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+
+            _repository = new PledgeRepository(DbContext, _domainEventDispatcher.Object);
         }
 
         [Test]
