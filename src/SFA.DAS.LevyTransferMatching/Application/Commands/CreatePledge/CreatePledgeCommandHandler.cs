@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
+using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
@@ -39,7 +40,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
                     Name = x.Name,
                     Latitude = x.Geopoint[0],
                     Longitude = x.Geopoint[1]
-                }).ToList()
+                }).ToList(),
+                new UserInfo(request.UserId, request.UserDisplayName)
             );
 
             await _pledgeRepository.Add(pledge);

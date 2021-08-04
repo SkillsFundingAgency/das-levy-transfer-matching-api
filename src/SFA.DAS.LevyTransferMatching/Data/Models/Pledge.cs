@@ -11,7 +11,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
     {
         protected Pledge() {}
 
-        public Pledge(EmployerAccount employerAccount, int amount, bool isNamePublic, Level levels, JobRole jobRoles, Sector sectors, List<PledgeLocation> locations)
+        public Pledge(EmployerAccount employerAccount, int amount, bool isNamePublic, Level levels, JobRole jobRoles, Sector sectors, List<PledgeLocation> locations, UserInfo userInfo)
         {
             EmployerAccount = employerAccount;
             Amount = amount;
@@ -25,7 +25,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
             AddEvent(new PledgeCreated(this));
 
-            StartTrackingSession(UserAction.CreatePledge, employerAccount.Id, "userId", "userDisplayName");
+            StartTrackingSession(UserAction.CreatePledge, employerAccount.Id, userInfo);
             ChangeTrackingSession.TrackInsert(this);
         }
 
