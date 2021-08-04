@@ -96,7 +96,7 @@ stages:
 
 - stage: Deploy_PROD
   dependsOn: Build
-  displayName: Deploy to PRD
+  displayName: Deploy to PROD
   variables:
   - group: Prod Management Resources
   - group: Prod Shared Resources
