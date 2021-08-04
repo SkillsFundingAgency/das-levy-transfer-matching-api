@@ -50,7 +50,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
             // Act
             var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
 
-            var pledges = result.Pledges.ToArray();
+            var pledges = result.Items.ToArray();
 
             // Assert
             var pledgeRecords = await DbContext.Pledges.OrderByDescending(x => x.Amount).ToArrayAsync();
@@ -60,6 +60,8 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
                 Assert.AreEqual(pledges[i].Id, pledgeRecords[i].Id);
                 Assert.AreEqual(pledges[i].AccountId, pledgeRecords[i].EmployerAccount.Id);
             }
+
+            Assert.AreEqual(result.TotalItems, pledges.Length);
         }
 
         [Test]
@@ -77,12 +79,12 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
             // Act
             var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
 
-            var pledges = result.Pledges.ToArray();
+            var pledges = result.Items.ToArray();
 
             // Assert
             var pledgeRecords = await DbContext.Pledges.Where(x => x.EmployerAccount.Id == firstAccount.Id).ToListAsync();
 
-            Assert.AreEqual(result.Pledges.Count(), pledgeRecords.Count());
+            Assert.AreEqual(result.Items.Count(), pledgeRecords.Count());
         }
     }
 }

@@ -34,8 +34,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 
             var response = new GetPledgesResponse()
             {
-                Items = result.Pledges.Select(x => (GetPledgesResponse.Pledge)x),
-                TotalItems = result.TotalPledges,
+                Pledges = result.Items.Select(x => (GetPledgesResponse.Pledge)x),
+                TotalPledges = result.TotalItems,
             };
 
             return Ok(response);
