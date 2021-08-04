@@ -23,10 +23,12 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             CreatedOn = DateTime.UtcNow;
             _locations = locations;
 
-            AddEvent(new PledgeCreated(this));
-
             StartTrackingSession(UserAction.CreatePledge, employerAccount.Id, userInfo);
             ChangeTrackingSession.TrackInsert(this);
+            foreach (var location in _locations)
+            {
+                ChangeTrackingSession.TrackInsert(location);
+            }
         }
 
         public EmployerAccount EmployerAccount { get; private set; }
@@ -50,9 +52,9 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
         public byte[] RowVersion { get; private set; }
 
-        public Application CreateApplication(EmployerAccount account, CreateApplicationProperties properties)
+        public Application CreateApplication(EmployerAccount account, CreateApplicationProperties properties, UserInfo userInfo)
         {
-            return new Application(this, account, properties);
+            return new Application(this, account, properties, userInfo);
         }
     }
 }

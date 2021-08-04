@@ -48,12 +48,10 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
                 EmailAddresses = request.EmailAddresses
             };
 
-            var application = pledge.CreateApplication(account, settings);
+            var application = pledge.CreateApplication(account, settings, new UserInfo(request.UserId, request.UserDisplayName));
 
             await _applicationRepository.Add(application);
-
-            await _dbContext.SaveChangesAsync(cancellationToken);
-            
+           
             return new CreateApplicationCommandResult
             {
                 ApplicationId = application.Id

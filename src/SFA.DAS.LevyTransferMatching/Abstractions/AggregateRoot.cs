@@ -31,7 +31,12 @@ namespace SFA.DAS.LevyTransferMatching.Abstractions
             {
                 var result = new List<IDomainEvent>(_events);
                 _events.Clear();
-                result.AddRange(ChangeTrackingSession.FlushEvents());
+
+                if(ChangeTrackingSession != null)
+                {
+                    result.AddRange(ChangeTrackingSession.FlushEvents());
+                }
+
                 return result;
             }
         }

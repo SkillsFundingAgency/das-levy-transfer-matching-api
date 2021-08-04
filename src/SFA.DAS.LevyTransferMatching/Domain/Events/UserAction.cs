@@ -2,6 +2,7 @@
 {
     public enum UserAction
     {
-        CreatePledge
+        CreatePledge,
+        CreateApplication
     }
 }
