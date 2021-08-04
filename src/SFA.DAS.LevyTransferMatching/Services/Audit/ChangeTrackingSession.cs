@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using SFA.DAS.LevyTransferMatching.Abstractions.Audit;
 using SFA.DAS.LevyTransferMatching.Abstractions.Events;
 using SFA.DAS.LevyTransferMatching.Domain.Events;
-using SFA.DAS.UnitOfWork.Context;
+using System;
+using System.Collections.Generic;
 
 namespace SFA.DAS.LevyTransferMatching.Services.Audit
 {
@@ -59,7 +58,7 @@ namespace SFA.DAS.LevyTransferMatching.Services.Audit
                 result.Add(new EntityStateChanged
                     {
                         CorrelationId = _correlationId,
-                        StateChangeType = _userAction,
+                        UserAction = _userAction,
                         EntityType = item.TrackedEntity.GetType().Name,
                         EntityId = item.TrackedEntity.GetTrackedEntityId(),
                         EmployerAccountId = _employerAccountId,
@@ -67,7 +66,7 @@ namespace SFA.DAS.LevyTransferMatching.Services.Audit
                         UpdatedState = updated == null ? null : JsonConvert.SerializeObject(updated),
                         UpdatedOn = DateTime.UtcNow,
                         UserId = _userId ?? "Unknown",
-                        UserName = _userDisplayName ?? "Unknown"
+                        UserDisplayName = _userDisplayName ?? "Unknown"
                 });
             }
 

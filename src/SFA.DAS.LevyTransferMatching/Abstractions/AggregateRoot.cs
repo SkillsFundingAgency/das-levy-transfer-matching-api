@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using SFA.DAS.LevyTransferMatching.Abstractions.Audit;
 using SFA.DAS.LevyTransferMatching.Abstractions.Events;
 using SFA.DAS.LevyTransferMatching.Domain.Events;
@@ -12,7 +11,7 @@ namespace SFA.DAS.LevyTransferMatching.Abstractions
         protected IChangeTrackingSession ChangeTrackingSession { get; private set; }
         private readonly List<IDomainEvent> _events = new List<IDomainEvent>();
 
-        protected void StartTrackingSession(UserAction userAction, long employerAccountId, string userId, string userDisplayName  )
+        protected void StartTrackingSession(UserAction userAction, long employerAccountId, string userId, string userDisplayName)
         {
             ChangeTrackingSession = new ChangeTrackingSession(new StateService(), userAction, employerAccountId, userId, userDisplayName);
         }
