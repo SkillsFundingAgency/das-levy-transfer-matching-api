@@ -42,7 +42,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
 
             services.Scan(scan =>
                 {
-                    scan.FromAssembliesOf(typeof(PledgeCreatedHandler))
+                    scan.FromAssembliesOf(typeof(EntityStateChangedHandler))
                         .AddClasses(classes => classes.AssignableTo(typeof(IDomainEventHandler<>)))
                         .AsImplementedInterfaces()
                         .WithTransientLifetime();
