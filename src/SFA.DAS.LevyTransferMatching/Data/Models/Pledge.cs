@@ -11,17 +11,17 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
     {
         protected Pledge() {}
 
-        public Pledge(EmployerAccount employerAccount, int amount, bool isNamePublic, Level levels, JobRole jobRoles, Sector sectors, List<PledgeLocation> locations, UserInfo userInfo)
+        public Pledge(EmployerAccount employerAccount, CreatePledgeProperties properties, UserInfo userInfo)
         {
             EmployerAccount = employerAccount;
-            Amount = amount;
-            RemainingAmount = amount;
-            IsNamePublic = isNamePublic;
-            Levels = levels;
-            JobRoles = jobRoles;
-            Sectors = sectors;
+            Amount = properties.Amount;
+            RemainingAmount = properties.Amount;
+            IsNamePublic = properties.IsNamePublic;
+            Levels = properties.Levels;
+            JobRoles = properties.JobRoles;
+            Sectors = properties.Sectors;
             CreatedOn = DateTime.UtcNow;
-            _locations = locations;
+            _locations = properties.Locations;
 
             StartTrackingSession(UserAction.CreatePledge, employerAccount.Id, userInfo);
             ChangeTrackingSession.TrackInsert(this);

@@ -25,20 +25,25 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
         {
             var employerAccount = await _employerAccountRepository.Get(request.AccountId);
 
-            var pledge = employerAccount.CreatePledge(request.Amount,
-                request.IsNamePublic,
-                (Level)request.Levels.Cast<int>().Sum(),
-                (JobRole)request.JobRoles.Cast<int>().Sum(),
-                (Sector)request.Sectors.Cast<int>().Sum(),
-                request.Locations.Select(x =>
-                new PledgeLocation
-                {
-                    Name = x.Name,
-                    Latitude = x.Geopoint[0],
-                    Longitude = x.Geopoint[1]
-                }).ToList(),
-                new UserInfo(request.UserId, request.UserDisplayName)
-            );
+            var properties = new CreatePledgeProperties
+            {
+                Amount = request.Amount,
+                IsNamePublic = request.IsNamePublic,
+                Levels = (Level)request.Levels.Cast<int>().Sum(),
+                JobRoles = (JobRole)request.JobRoles.Cast<int>().Sum(),
+                Sectors = (Sector)request.Sectors.Cast<int>().Sum(),
+                Locations = request.Locations.Select(x =>
+                    new PledgeLocation
+                    {
+                        Name = x.Name,
+                        Latitude = x.Geopoint[0],
+                        Longitude = x.Geopoint[1]
+                    }).ToList(),
+            };
+
+            var userInfo = new UserInfo(request.UserId, request.UserDisplayName);
+
+            var pledge = employerAccount.CreatePledge(properties, userInfo);
 
             await _pledgeRepository.Add(pledge);
 

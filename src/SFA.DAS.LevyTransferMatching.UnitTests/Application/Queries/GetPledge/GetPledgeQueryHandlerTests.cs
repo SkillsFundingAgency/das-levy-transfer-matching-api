@@ -71,12 +71,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledge
             {
                 pledges.Add(
                     employerAccounts[i].CreatePledge(
-                        _fixture.Create<int>(),
-                        _fixture.Create<bool>(),
-                        _fixture.Create<Level>(),
-                        _fixture.Create<JobRole>(),
-                        _fixture.Create<Sector>(),
-                        _fixture.Create<List<PledgeLocation>>(),
+                        _fixture.Create<CreatePledgeProperties>(),
                         _fixture.Create<UserInfo>()
                     ));
             }
