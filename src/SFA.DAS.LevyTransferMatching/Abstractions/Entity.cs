@@ -1,6 +1,5 @@
 ﻿using System;
 using SFA.DAS.LevyTransferMatching.Abstractions.Audit;
-using SFA.DAS.LevyTransferMatching.Services.Audit;
 
 namespace SFA.DAS.LevyTransferMatching.Abstractions
 {

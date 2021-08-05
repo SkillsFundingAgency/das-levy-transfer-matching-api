@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using SFA.DAS.LevyTransferMatching.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
@@ -14,15 +13,12 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
     {
         private readonly IEmployerAccountRepository _employerAccountRepository;
         private readonly IPledgeRepository _pledgeRepository;
-        private readonly LevyTransferMatchingDbContext _dbContext;
 
         public CreatePledgeCommandHandler(IEmployerAccountRepository employerAccountRepository,
-            IPledgeRepository pledgeRepository,
-            LevyTransferMatchingDbContext dbContext)
+            IPledgeRepository pledgeRepository)
         {
             _employerAccountRepository = employerAccountRepository;
             _pledgeRepository = pledgeRepository;
-            _dbContext = dbContext;
         }
 
         public async Task<CreatePledgeResult> Handle(CreatePledgeCommand request, CancellationToken cancellationToken)

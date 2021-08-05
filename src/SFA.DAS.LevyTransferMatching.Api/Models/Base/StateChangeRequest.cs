@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace SFA.DAS.LevyTransferMatching.Api.Models.Base
+﻿namespace SFA.DAS.LevyTransferMatching.Api.Models.Base
 {
     public abstract class StateChangeRequest
     {

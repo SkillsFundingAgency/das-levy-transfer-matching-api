@@ -1,5 +1,4 @@
 ﻿using System;
-using SFA.DAS.LevyTransferMatching.Domain.Events;
 
 namespace SFA.DAS.LevyTransferMatching.Data.Models
 {

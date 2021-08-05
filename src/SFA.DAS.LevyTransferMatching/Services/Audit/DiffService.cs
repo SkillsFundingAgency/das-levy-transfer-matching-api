@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using SFA.DAS.LevyTransferMatching.Abstractions.Audit;
 
 namespace SFA.DAS.LevyTransferMatching.Services.Audit
