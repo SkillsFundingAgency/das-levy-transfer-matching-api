@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using SFA.DAS.LevyTransferMatching.Attributes;
+﻿using SFA.DAS.LevyTransferMatching.Attributes;
 
 namespace SFA.DAS.LevyTransferMatching.Models.Enums
 {

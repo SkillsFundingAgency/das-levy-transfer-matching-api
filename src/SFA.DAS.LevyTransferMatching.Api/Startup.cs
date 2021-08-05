@@ -1,18 +1,14 @@
 using System;
-using System.Data.Common;
 using System.IO;
 using System.Net;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Converters;
 using NServiceBus.ObjectBuilder.MSDependencyInjection;
 using SFA.DAS.Configuration.AzureTableStorage;
@@ -20,12 +16,10 @@ using SFA.DAS.LevyTransferMatching.Api.HttpResponseExtensions;
 using SFA.DAS.LevyTransferMatching.Api.Models;
 using SFA.DAS.LevyTransferMatching.Api.StartupExtensions;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateAccount;
-using SFA.DAS.LevyTransferMatching.Behaviours;
 using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
 using SFA.DAS.UnitOfWork.EntityFrameworkCore.DependencyResolution.Microsoft;
 using SFA.DAS.UnitOfWork.NServiceBus.Features.ClientOutbox.DependencyResolution.Microsoft;
-using SFA.DAS.UnitOfWork.SqlServer.DependencyResolution.Microsoft;
 
 namespace SFA.DAS.LevyTransferMatching.Api
 {
