@@ -94,13 +94,13 @@ stages:
       Environment: PP
       ServiceConnection: SFA-DIG-PreProd-ARM
 
-- stage: Deploy_PRD
+- stage: Deploy_PROD
   dependsOn: Build
-  displayName: Deploy to PRD
+  displayName: Deploy to PROD
   variables:
   - group: Prod Management Resources
   - group: Prod Shared Resources
-  - group: PRD das-levy-transfer-matching-api
+  - group: PROD das-levy-transfer-matching-api
   jobs:
   - template: pipeline-templates/job/deploy.yml
     parameters:
