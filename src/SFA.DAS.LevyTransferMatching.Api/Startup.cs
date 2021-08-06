@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using FluentValidation;
@@ -6,11 +7,14 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using NServiceBus.ObjectBuilder.MSDependencyInjection;
+using SFA.DAS.Api.Common.Infrastructure;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.LevyTransferMatching.Api.HttpResponseExtensions;
 using SFA.DAS.LevyTransferMatching.Api.Models;
@@ -63,6 +67,18 @@ namespace SFA.DAS.LevyTransferMatching.Api
             services.AddConfigurationOptions(Configuration);
             var config = Configuration.GetSection<LevyTransferMatchingApi>();
 
+            services
+                .AddMvc(o =>
+                {
+                    if (!_environment.IsDevelopment())
+                    {
+                        o.Conventions.Add(new AuthorizeControllerModelConvention(new List<string>()));
+                    }
+                    o.Conventions.Add(new ApiExplorerGroupPerVersionConvention());
+                })
+                .AddNewtonsoftJson()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+
             services.AddControllers()
                 .AddFluentValidation(fv =>
                 {
@@ -84,7 +100,11 @@ namespace SFA.DAS.LevyTransferMatching.Api
 
             services.AddCache(config, _environment)
                     .AddDasDataProtection(config, _environment)
-                    .AddSwaggerGen()
+                    .AddSwaggerGen(c =>
+                    {
+                        c.SwaggerDoc("v1", new OpenApiInfo { Title = "LevyTransferMatchingApi", Version = "v1" });
+                        c.OperationFilter<SwaggerVersionHeaderFilter>();
+                    })
                     .AddSwaggerGenNewtonsoftSupport();
         }
 

@@ -8,6 +8,7 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
     [Route("pledges/{pledgeId}/applications")]
+    [ApiVersion("1.0")]
     [ApiController]
     public class ApplicationsController : ControllerBase
     {

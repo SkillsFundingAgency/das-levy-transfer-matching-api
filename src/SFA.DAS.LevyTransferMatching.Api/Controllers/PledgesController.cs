@@ -13,6 +13,7 @@ using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge;
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
     [ApiController]
+    [ApiVersion("1.0")]
     public class PledgesController : Controller
     {
         private readonly IMediator _mediator;
