@@ -14,6 +14,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using NServiceBus.ObjectBuilder.MSDependencyInjection;
+using SFA.DAS.Api.Common.AppStart;
+using SFA.DAS.Api.Common.Configuration;
 using SFA.DAS.Api.Common.Infrastructure;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.LevyTransferMatching.Api.HttpResponseExtensions;
@@ -21,6 +23,7 @@ using SFA.DAS.LevyTransferMatching.Api.Models;
 using SFA.DAS.LevyTransferMatching.Api.StartupExtensions;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateAccount;
 using SFA.DAS.LevyTransferMatching.Data;
+using SFA.DAS.LevyTransferMatching.Infrastructure;
 using SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
 using SFA.DAS.UnitOfWork.EntityFrameworkCore.DependencyResolution.Microsoft;
 using SFA.DAS.UnitOfWork.NServiceBus.Features.ClientOutbox.DependencyResolution.Microsoft;
@@ -67,14 +70,28 @@ namespace SFA.DAS.LevyTransferMatching.Api
             services.AddConfigurationOptions(Configuration);
             var config = Configuration.GetSection<LevyTransferMatchingApi>();
 
+            if (!_environment.IsDevelopment())
+            {
+                var azureAdConfiguration = Configuration
+                    .GetSection("AzureAd")
+                    .Get<AzureActiveDirectoryConfiguration>();
+
+                var policies = new Dictionary<string, string>
+                {
+                    {PolicyNames.Default, RoleNames.Default}
+                };
+
+                services.AddAuthentication(azureAdConfiguration, policies);
+            }
+
             services
                 .AddMvc(o =>
                 {
-                    //if (!_environment.IsDevelopment())
-                    //{
-                    //    o.Conventions.Add(new AuthorizeControllerModelConvention(new List<string>()));
-                    //}
-                    //o.Conventions.Add(new ApiExplorerGroupPerVersionConvention());
+                    if (!_environment.IsDevelopment())
+                    {
+                        o.Conventions.Add(new AuthorizeControllerModelConvention(new List<string>()));
+                    }
+                    o.Conventions.Add(new ApiExplorerGroupPerVersionConvention());
                 })
                 .AddNewtonsoftJson()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
