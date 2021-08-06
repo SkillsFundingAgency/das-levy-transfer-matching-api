@@ -50,18 +50,18 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
             // Act
             var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
 
-            var pledges = result.Items.ToArray();
+            var actualPledges = result.Items.ToArray();
 
             // Assert
-            var pledgeRecords = await DbContext.Pledges.OrderByDescending(x => x.Amount).ToArrayAsync();
+            var expectedPledgeRecords = await DbContext.Pledges.OrderByDescending(x => x.Amount).ToArrayAsync();
 
-            for (int i = 0; i < pledges.Length; i++)
+            for (int i = 0; i < actualPledges.Length; i++)
             {
-                Assert.AreEqual(pledges[i].Id, pledgeRecords[i].Id);
-                Assert.AreEqual(pledges[i].AccountId, pledgeRecords[i].EmployerAccount.Id);
+                Assert.AreEqual(expectedPledgeRecords[i].Id, actualPledges[i].Id);
+                Assert.AreEqual(expectedPledgeRecords[i].EmployerAccount.Id, actualPledges[i].AccountId);
             }
 
-            Assert.AreEqual(result.TotalItems, pledges.Length);
+            Assert.AreEqual(result.TotalItems, actualPledges.Length);
         }
 
         [Test]
@@ -79,12 +79,12 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
             // Act
             var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
 
-            var pledges = result.Items.ToArray();
+            var actualPledges = result.Items.ToArray();
 
             // Assert
-            var pledgeRecords = await DbContext.Pledges.Where(x => x.EmployerAccount.Id == firstAccount.Id).ToListAsync();
+            var expectedPledgeRecords = await DbContext.Pledges.Where(x => x.EmployerAccount.Id == firstAccount.Id).ToListAsync();
 
-            Assert.AreEqual(result.Items.Count(), pledgeRecords.Count());
+            Assert.AreEqual(expectedPledgeRecords.Count(), actualPledges.Count());
         }
     }
 }
