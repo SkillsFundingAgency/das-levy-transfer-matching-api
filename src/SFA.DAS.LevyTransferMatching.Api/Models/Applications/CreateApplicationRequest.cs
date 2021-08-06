@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using SFA.DAS.LevyTransferMatching.Api.Models.Base;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications
 {
-    public class CreateApplicationRequest
+    public class CreateApplicationRequest : StateChangeRequest
     {
         public long EmployerAccountId { get; set; }
 
@@ -23,6 +24,5 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications
         public string LastName { get; set; }
         public IEnumerable<string> EmailAddresses { get; set; }
         public string BusinessWebsite { get; set; }
-
     }
 }

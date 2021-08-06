@@ -2,10 +2,11 @@
 using SFA.DAS.LevyTransferMatching.Models;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 using System.Collections.Generic;
+using SFA.DAS.LevyTransferMatching.Api.Models.Base;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Models.CreatePledge
 {
-    public class CreatePledgeRequest
+    public class CreatePledgeRequest: StateChangeRequest
     {
         [JsonProperty(Required = Required.Always)]
         public int Amount { get; set; }

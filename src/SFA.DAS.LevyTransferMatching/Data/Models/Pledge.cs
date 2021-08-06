@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using SFA.DAS.LevyTransferMatching.Abstractions;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
+using SFA.DAS.LevyTransferMatching.Domain.Events;
 
 namespace SFA.DAS.LevyTransferMatching.Data.Models
 {
@@ -10,17 +11,24 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
     {
         protected Pledge() {}
 
-        public Pledge(EmployerAccount employerAccount, int amount, bool isNamePublic, Level levels, JobRole jobRoles, Sector sectors, List<PledgeLocation> locations)
+        public Pledge(EmployerAccount employerAccount, CreatePledgeProperties properties, UserInfo userInfo)
         {
             EmployerAccount = employerAccount;
-            Amount = amount;
-            RemainingAmount = amount;
-            IsNamePublic = isNamePublic;
-            Levels = levels;
-            JobRoles = jobRoles;
-            Sectors = sectors;
+            Amount = properties.Amount;
+            RemainingAmount = properties.Amount;
+            IsNamePublic = properties.IsNamePublic;
+            Levels = properties.Levels;
+            JobRoles = properties.JobRoles;
+            Sectors = properties.Sectors;
             CreatedOn = DateTime.UtcNow;
-            _locations = locations;
+            _locations = properties.Locations;
+
+            StartTrackingSession(UserAction.CreatePledge, employerAccount.Id, userInfo);
+            ChangeTrackingSession.TrackInsert(this);
+            foreach (var location in _locations)
+            {
+                ChangeTrackingSession.TrackInsert(location);
+            }
         }
 
         public EmployerAccount EmployerAccount { get; private set; }
@@ -44,9 +52,9 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
         public byte[] RowVersion { get; private set; }
 
-        public Application CreateApplication(EmployerAccount account, CreateApplicationProperties properties)
+        public Application CreateApplication(EmployerAccount account, CreateApplicationProperties properties, UserInfo userInfo)
         {
-            return new Application(this, account, properties);
+            return new Application(this, account, properties, userInfo);
         }
     }
 }

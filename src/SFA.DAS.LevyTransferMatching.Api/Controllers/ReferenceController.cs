@@ -6,6 +6,7 @@ using SFA.DAS.LevyTransferMatching.Models.Enums;
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
     [ApiController]
+    [ApiVersion("1.0")]
     [Route("reference")]
     public class ReferenceController : Controller
     {
