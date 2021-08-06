@@ -35,9 +35,10 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge
                     Id = pledge.Id,
                     IsNamePublic = pledge.IsNamePublic,
                     DasAccountName = pledge.EmployerAccount.Name,
-                    JobRoles = pledge.JobRoles.GetFlags<JobRole>(),
-                    Levels = pledge.Levels.GetFlags<Level>(),
-                    Sectors = pledge.Sectors.GetFlags<Sector>(),
+                    JobRoles = pledge.JobRoles.ToList(),
+                    Levels = pledge.Levels.ToList(),
+                    Sectors = pledge.Sectors.ToList(),
+                    RemainingAmount = pledge.RemainingAmount
                 };
             }
             else

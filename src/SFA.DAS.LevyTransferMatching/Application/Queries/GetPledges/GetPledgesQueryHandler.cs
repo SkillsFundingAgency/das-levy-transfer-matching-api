@@ -40,9 +40,9 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
                         Id = x.Id,
                         IsNamePublic = x.IsNamePublic,
                         DasAccountName = x.EmployerAccount.Name,
-                        JobRoles = x.JobRoles.GetFlags<JobRole>(),
-                        Levels = x.Levels.GetFlags<Level>(),
-                        Sectors = x.Sectors.GetFlags<Sector>(),
+                        JobRoles = x.JobRoles.ToList(),
+                        Levels = x.Levels.ToList(),
+                        Sectors = x.Sectors.ToList(),
                     })
                 .OrderByDescending(x => x.Amount);
 

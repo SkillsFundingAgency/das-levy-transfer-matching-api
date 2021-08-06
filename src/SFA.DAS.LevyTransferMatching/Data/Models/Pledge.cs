@@ -1,30 +1,52 @@
-﻿using System;
+﻿using SFA.DAS.LevyTransferMatching.Models.Enums;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+using SFA.DAS.LevyTransferMatching.Abstractions;
+using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 
 namespace SFA.DAS.LevyTransferMatching.Data.Models
 {
-    [Table(nameof(Pledge))]
-    public class Pledge
+    public class Pledge : AggregateRoot<int>
     {
-        public int Id { get; set; }
+        protected Pledge() {}
 
-        public EmployerAccount EmployerAccount { get; set; }
+        public Pledge(EmployerAccount employerAccount, int amount, bool isNamePublic, Level levels, JobRole jobRoles, Sector sectors, List<PledgeLocation> locations)
+        {
+            EmployerAccount = employerAccount;
+            Amount = amount;
+            RemainingAmount = amount;
+            IsNamePublic = isNamePublic;
+            Levels = levels;
+            JobRoles = jobRoles;
+            Sectors = sectors;
+            CreatedOn = DateTime.UtcNow;
+            _locations = locations;
+        }
 
-        public int Amount { get; set; }
+        public EmployerAccount EmployerAccount { get; private set; }
 
-        public bool IsNamePublic { get; set; }
+        public int Amount { get; private set; }
 
-        public DateTime CreatedOn { get; set; }
+        public int RemainingAmount { get; private set; }
 
-        public int JobRoles { get; set; }
+        public bool IsNamePublic { get; private set; }
+
+        public DateTime CreatedOn { get; private set; }
+
+        public JobRole JobRoles { get; private set; }
         
-        public int Levels { get; set; }
+        public Level Levels { get; private set; }
 
-        public int Sectors { get; set; }
+        public Sector Sectors { get; private set; }
 
-        public byte[] RowVersion { get; set; }
+        private readonly List<PledgeLocation> _locations;
+        public IReadOnlyCollection<PledgeLocation> Locations => _locations;
 
-        public List<PledgeLocation> PledgeLocations { get; set; }
+        public byte[] RowVersion { get; private set; }
+
+        public Application CreateApplication(EmployerAccount account, CreateApplicationProperties properties)
+        {
+            return new Application(this, account, properties);
+        }
     }
 }

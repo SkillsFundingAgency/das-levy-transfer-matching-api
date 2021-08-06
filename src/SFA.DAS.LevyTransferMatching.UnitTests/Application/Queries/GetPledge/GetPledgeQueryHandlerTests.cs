@@ -1,12 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge;
-using SFA.DAS.LevyTransferMatching.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
 using SFA.DAS.LevyTransferMatching.Data.Models;
+using SFA.DAS.LevyTransferMatching.Models.Enums;
 using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledge
@@ -59,20 +60,29 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledge
 
         protected async Task PopulateDbContext()
         {
-            EmployerAccount[] employerAccounts = _fixture.CreateMany<EmployerAccount>().ToArray();
+            var employerAccounts = _fixture.CreateMany<EmployerAccount>().ToArray();
 
             await DbContext.EmployerAccounts.AddRangeAsync(employerAccounts);
 
-            Pledge[] pledges = _fixture.CreateMany<Pledge>().ToArray();
+            var pledges = new List<Pledge>();
 
-            for (int i = 0; i < pledges.Length; i++)
+            for (var i = 0; i < employerAccounts.Count(); i++)
             {
-                pledges[i].EmployerAccount = employerAccounts[i];
+                pledges.Add(
+                    employerAccounts[i].CreatePledge(
+                        _fixture.Create<int>(),
+                        _fixture.Create<bool>(),
+                        _fixture.Create<Level>(),
+                        _fixture.Create<JobRole>(),
+                        _fixture.Create<Sector>(),
+                        _fixture.Create<List<PledgeLocation>>()
+                    ));
             }
 
             await DbContext.Pledges.AddRangeAsync(pledges);
 
             await DbContext.SaveChangesAsync();
+
         }
     }
 }

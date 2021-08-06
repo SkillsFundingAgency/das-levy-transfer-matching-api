@@ -1,11 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using SFA.DAS.LevyTransferMatching.Abstractions;
 
 namespace SFA.DAS.LevyTransferMatching.Data.Models
 {
-    [Table(nameof(PledgeLocation))]
-    public class PledgeLocation
+    public class PledgeLocation : Entity<int>
     {
-        public int Id { get; set; }
         public int PledgeId { get; set; }
         public string Name { get; set; }
         public double Latitude { get; set; }

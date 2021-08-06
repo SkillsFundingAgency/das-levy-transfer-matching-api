@@ -22,7 +22,7 @@ resources:
   - repository: das-platform-building-blocks
     type: github
     name: SkillsFundingAgency/das-platform-building-blocks
-    ref: refs/tags/0.3.18
+    ref: refs/tags/0.3.31
     endpoint: GitHub (SFA)
   - repository: das-platform-automation
     type: github
@@ -52,7 +52,6 @@ stages:
   variables:
   - group: DevTest Management Resources
   - group: AT DevTest Shared Resources
-  - group: AT das-levy-transfer-matching-api
   jobs:
   - template: pipeline-templates/job/deploy.yml
     parameters:
@@ -65,7 +64,6 @@ stages:
   variables:
   - group: DevTest Management Resources
   - group: TEST DevTest Shared Resources
-  - group: TEST das-levy-transfer-matching-api
   jobs:
   - template: pipeline-templates/job/deploy.yml
     parameters:
@@ -78,7 +76,6 @@ stages:
   variables:
   - group: DevTest Management Resources
   - group: TEST2 DevTest Shared Resources
-  - group: TEST2 das-levy-transfer-matching-api
   jobs:
   - template: pipeline-templates/job/deploy.yml
     parameters:
@@ -91,9 +88,45 @@ stages:
   variables:
   - group: PreProd Management Resources
   - group: PreProd Shared Resources
-  - group: PP das-levy-transfer-matching-api
   jobs:
   - template: pipeline-templates/job/deploy.yml
     parameters:
       Environment: PP
       ServiceConnection: SFA-DIG-PreProd-ARM
+
+- stage: Deploy_PROD
+  dependsOn: Build
+  displayName: Deploy to PROD
+  variables:
+  - group: Prod Management Resources
+  - group: Prod Shared Resources
+  - group: PROD das-levy-transfer-matching-api
+  jobs:
+  - template: pipeline-templates/job/deploy.yml
+    parameters:
+      Environment: PROD
+      ServiceConnection: SFA-DIG-Prod-ARM
+
+- stage: Deploy_MO
+  dependsOn: Build
+  displayName: Deploy to MO
+  variables:
+  - group: MO Management Resources
+  - group: MO Shared Resources
+  jobs:
+  - template: pipeline-templates/job/deploy.yml
+    parameters:
+      Environment: MO
+      ServiceConnection: SFA-ASM-ModelOffice-ARM
+
+- stage: Deploy_DEMO
+  dependsOn: Build
+  displayName: Deploy to DEMO
+  variables:
+  - group: DevTest Management Resources
+  - group: DEMO DevTest Shared Resources
+  jobs:
+  - template: pipeline-templates/job/deploy.yml
+    parameters:
+      Environment: DEMO
+      ServiceConnection: SFA-DAS-DevTest-ARM

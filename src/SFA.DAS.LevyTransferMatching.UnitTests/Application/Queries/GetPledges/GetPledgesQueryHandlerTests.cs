@@ -6,7 +6,9 @@ using SFA.DAS.LevyTransferMatching.Data.Models;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.LevyTransferMatching.Models.Enums;
 using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;
+using System.Collections.Generic;
 using SFA.DAS.LevyTransferMatching.Data;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
@@ -25,11 +27,19 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
 
             await DbContext.EmployerAccounts.AddRangeAsync(employerAccounts);
 
-            var pledgeRecords = _fixture.CreateMany<Pledge>().ToArray();
+            var pledgeRecords = new List<Pledge>();
 
-            for (var i = 0; i < pledgeRecords.Length; i++)
+            for (var i = 0; i < employerAccounts.Count(); i++)
             {
-                pledgeRecords[i].EmployerAccount = employerAccounts[i];
+                pledgeRecords.Add(
+                    employerAccounts[i].CreatePledge(
+                        _fixture.Create<int>(),
+                        _fixture.Create<bool>(),
+                        _fixture.Create<Level>(),
+                        _fixture.Create<JobRole>(),
+                        _fixture.Create<Sector>(),
+                        _fixture.Create<List<PledgeLocation>>()
+                    ));
             }
 
             await DbContext.Pledges.AddRangeAsync(pledgeRecords);
@@ -53,15 +63,13 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
             var actualPledges = result.Items.ToArray();
 
             // Assert
-            var expectedPledgeRecords = await DbContext.Pledges.OrderByDescending(x => x.Amount).ToArrayAsync();
+            var dbPledges = await DbContext.Pledges.OrderByDescending(x => x.Amount).ToArrayAsync();
 
             for (int i = 0; i < actualPledges.Length; i++)
             {
-                Assert.AreEqual(expectedPledgeRecords[i].Id, actualPledges[i].Id);
-                Assert.AreEqual(expectedPledgeRecords[i].EmployerAccount.Id, actualPledges[i].AccountId);
+                Assert.AreEqual(dbPledges[i].Id, actualPledges[i].Id);
+                Assert.AreEqual(dbPledges[i].EmployerAccount.Id, actualPledges[i].AccountId);
             }
-
-            Assert.AreEqual(result.TotalItems, actualPledges.Length);
         }
 
         [Test]
