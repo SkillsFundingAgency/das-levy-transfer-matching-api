@@ -70,11 +70,11 @@ namespace SFA.DAS.LevyTransferMatching.Api
             services
                 .AddMvc(o =>
                 {
-                    if (!_environment.IsDevelopment())
-                    {
-                        o.Conventions.Add(new AuthorizeControllerModelConvention(new List<string>()));
-                    }
-                    o.Conventions.Add(new ApiExplorerGroupPerVersionConvention());
+                    //if (!_environment.IsDevelopment())
+                    //{
+                    //    o.Conventions.Add(new AuthorizeControllerModelConvention(new List<string>()));
+                    //}
+                    //o.Conventions.Add(new ApiExplorerGroupPerVersionConvention());
                 })
                 .AddNewtonsoftJson()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
