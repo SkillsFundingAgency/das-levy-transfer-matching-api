@@ -70,28 +70,28 @@ namespace SFA.DAS.LevyTransferMatching.Api
             services.AddConfigurationOptions(Configuration);
             var config = Configuration.GetSection<LevyTransferMatchingApi>();
 
-            if (!_environment.IsDevelopment())
-            {
-                var azureAdConfiguration = Configuration
-                    .GetSection("AzureAd")
-                    .Get<AzureActiveDirectoryConfiguration>();
+            //if (!_environment.IsDevelopment())
+            //{
+            //    var azureAdConfiguration = Configuration
+            //        .GetSection("AzureAd")
+            //        .Get<AzureActiveDirectoryConfiguration>();
 
-                var policies = new Dictionary<string, string>
-                {
-                    {PolicyNames.Default, RoleNames.Default}
-                };
+            //    var policies = new Dictionary<string, string>
+            //    {
+            //        {PolicyNames.Default, RoleNames.Default}
+            //    };
 
-                services.AddAuthentication(azureAdConfiguration, policies);
-            }
+            //    services.AddAuthentication(azureAdConfiguration, policies);
+            //}
 
             services
                 .AddMvc(o =>
                 {
-                    if (!_environment.IsDevelopment())
-                    {
-                        o.Conventions.Add(new AuthorizeControllerModelConvention(new List<string>()));
-                    }
-                    o.Conventions.Add(new ApiExplorerGroupPerVersionConvention());
+                    //if (!_environment.IsDevelopment())
+                    //{
+                    //    o.Conventions.Add(new AuthorizeControllerModelConvention(new List<string>()));
+                    //}
+                    //o.Conventions.Add(new ApiExplorerGroupPerVersionConvention());
                 })
                 .AddNewtonsoftJson()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
