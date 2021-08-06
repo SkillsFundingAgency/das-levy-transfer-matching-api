@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using SFA.DAS.LevyTransferMatching.Abstractions;
+﻿using SFA.DAS.LevyTransferMatching.Abstractions;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
-using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Data.Models
 {
