@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -116,13 +117,17 @@ namespace SFA.DAS.LevyTransferMatching.Api
                 .AddNServiceBusClientUnitOfWork();
 
             services.AddCache(config, _environment)
-                    .AddDasDataProtection(config, _environment)
-                    .AddSwaggerGen(c =>
-                    {
-                        c.SwaggerDoc("v1", new OpenApiInfo { Title = "LevyTransferMatchingApi", Version = "v1" });
-                        c.OperationFilter<SwaggerVersionHeaderFilter>();
-                    })
-                    .AddSwaggerGenNewtonsoftSupport();
+                .AddDasDataProtection(config, _environment)
+                .AddSwaggerGen(c =>
+                {
+                    c.SwaggerDoc("v1", new OpenApiInfo {Title = "LevyTransferMatchingApi", Version = "v1"});
+                    c.OperationFilter<SwaggerVersionHeaderFilter>();
+                })
+                .AddSwaggerGenNewtonsoftSupport();
+
+            services.AddApiVersioning(opt => {
+                opt.ApiVersionReader = new HeaderApiVersionReader("X-Version");
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
