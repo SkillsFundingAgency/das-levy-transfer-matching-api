@@ -76,11 +76,6 @@ namespace SFA.DAS.LevyTransferMatching.Api
                     .GetSection("AzureAd")
                     .Get<AzureActiveDirectoryConfiguration>();
 
-                if (azureAdConfiguration == null)
-                {
-                    throw new InvalidOperationException("Unable to find Azure Ad config");
-                }
-
                 var policies = new Dictionary<string, string>
                 {
                     {PolicyNames.Default, RoleNames.Default}
