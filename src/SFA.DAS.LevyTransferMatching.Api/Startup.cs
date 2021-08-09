@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using NServiceBus.ObjectBuilder.MSDependencyInjection;
@@ -35,13 +34,11 @@ namespace SFA.DAS.LevyTransferMatching.Api
     public class Startup
     {
         private readonly IWebHostEnvironment _environment;
-        private readonly ILogger<Startup> _logger;
         private IConfiguration Configuration { get; }
 
-        public Startup(IConfiguration configuration, IWebHostEnvironment environment, ILogger<Startup> logger)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             _environment = environment;
-            _logger = logger;
             Configuration = configuration;
 
             var config = new ConfigurationBuilder()
@@ -75,23 +72,11 @@ namespace SFA.DAS.LevyTransferMatching.Api
             services.AddConfigurationOptions(Configuration);
             var config = Configuration.GetSection<LevyTransferMatchingApi>();
 
-            _logger.LogInformation("Configuring Services");
-
             if (!_environment.IsDevelopment())
             {
                 var azureAdConfiguration = Configuration
                     .GetSection("AzureAd")
                     .Get<AzureActiveDirectoryConfiguration>();
-
-                if (azureAdConfiguration == null || string.IsNullOrEmpty(azureAdConfiguration.Identifier) || string.IsNullOrEmpty(azureAdConfiguration.Tenant))
-                {
-                    _logger.LogError("AzureAd config missing");
-                }
-                else
-                {
-                    _logger.LogInformation($"Identifier: {azureAdConfiguration.Identifier.Length}");
-                    _logger.LogInformation($"Tenant: {azureAdConfiguration.Tenant.Length}");
-                }
 
                 var policies = new Dictionary<string, string>
                 {
