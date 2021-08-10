@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.LevyTransferMatching.Abstractions;
+using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Domain.Events;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
@@ -61,6 +62,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         public IReadOnlyCollection<ApplicationEmailAddress> EmailAddresses => _emailAddresses;
 
         public DateTime CreatedOn { get; private set; }
+        public ApplicationStatus Status { get; private set; }
 
         public byte[] RowVersion { get; private set; }
     }
