@@ -164,7 +164,13 @@ namespace SFA.DAS.LevyTransferMatching.Api
                 endpoints.MapControllers();
             });
 
-            app.AddSwagger();
+            
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "LevyTransferMatching v1");
+                c.RoutePrefix = string.Empty;
+            });
         }
 
         public void ConfigureContainer(UpdateableServiceProvider serviceProvider)
