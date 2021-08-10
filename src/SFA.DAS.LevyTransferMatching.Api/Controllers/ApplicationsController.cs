@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.LevyTransferMatching.Api.Models.Applications;
+using SFA.DAS.LevyTransferMatching.Application.Commands.ApproveApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
@@ -17,6 +18,22 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         public ApplicationsController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+
+        [HttpPost]
+        [ProducesResponseType((int) HttpStatusCode.OK)]
+        [Route("{applicationId}/approve")]
+        public async Task<IActionResult> ApproveApplication(int pledgeId, int applicationId, [FromBody] ApproveApplicationRequest request)
+        {
+            await _mediator.Send(new ApproveApplicationCommand
+            {
+                PledgeId = pledgeId,
+                ApplicationId = applicationId,
+                UserId = request.UserId,
+                UserDisplayName = request.UserDisplayName
+            });
+
+            return Ok();
         }
 
         [HttpPost]
