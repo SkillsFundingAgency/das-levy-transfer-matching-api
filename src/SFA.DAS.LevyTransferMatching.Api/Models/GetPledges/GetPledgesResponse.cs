@@ -15,8 +15,6 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledges
             public int Amount { get; set; }
             public int RemainingAmount { get; set; }
 
-            public int RemainingAmount { get; set; }
-
             public bool IsNamePublic { get; set; }
 
             public string DasAccountName { get; set; }
