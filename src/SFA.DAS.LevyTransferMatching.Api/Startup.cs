@@ -140,7 +140,7 @@ namespace SFA.DAS.LevyTransferMatching.Api
 
             app.UseHttpsRedirection();
             app.UseRouting();
-            app.UseAuthorization();
+            app.UseAuthentication();
             app.UseDasHealthChecks();
 
             app.UseExceptionHandler(c => { c.Run(async context =>
