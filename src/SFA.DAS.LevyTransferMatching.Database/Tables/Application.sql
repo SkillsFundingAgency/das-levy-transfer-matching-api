@@ -14,8 +14,10 @@
 	[FirstName]				NVARCHAR(25)	NOT NULL,
 	[LastName]				NVARCHAR(25)	NOT NULL,
 	[BusinessWebsite]		NVARCHAR(75)	NOT NULL,
-	[CreatedOn]				DATETIME2 (7) CONSTRAINT [DF_Application__CreationDate] DEFAULT (getdate()) NOT NULL,
-	[RowVersion]			TIMESTAMP     NOT NULL,
+	[CreatedOn]				DATETIME2 (7)	CONSTRAINT [DF_Application__CreationDate] DEFAULT (getdate()) NOT NULL,
+	[Status]				TINYINT			CONSTRAINT [DF_Application__Status] DEFAULT (0)  NOT NULL,
+	[UpdatedOn]				DATETIME2		NULL,
+	[RowVersion]			TIMESTAMP		NOT NULL,
     CONSTRAINT [PK_Application] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_Application_EmployerAccount] FOREIGN KEY ([EmployerAccountId]) REFERENCES [dbo].[EmployerAccount] ([Id]),
 	CONSTRAINT [FK_Application_Pledge] FOREIGN KEY ([PledgeId]) REFERENCES [dbo].[Pledge] ([Id])

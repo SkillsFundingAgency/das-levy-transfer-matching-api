@@ -8,7 +8,6 @@ namespace SFA.DAS.LevyTransferMatching.Domain.Events
         public Guid CorrelationId { get; set; }
         public UserAction UserAction { get; set; }
         public string EntityType { get; set; }
-        public long EmployerAccountId { get; set; }
         public long EntityId { get; set; }
         public string InitialState { get; set; }
         public string UpdatedState { get; set; }

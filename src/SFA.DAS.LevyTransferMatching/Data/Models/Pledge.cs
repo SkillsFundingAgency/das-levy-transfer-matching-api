@@ -23,7 +23,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             CreatedOn = DateTime.UtcNow;
             _locations = properties.Locations;
 
-            StartTrackingSession(UserAction.CreatePledge, employerAccount.Id, userInfo);
+            StartTrackingSession(UserAction.CreatePledge, userInfo);
             ChangeTrackingSession.TrackInsert(this);
             foreach (var location in _locations)
             {

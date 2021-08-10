@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using SFA.DAS.LevyTransferMatching.Abstractions.Events;
 
 namespace SFA.DAS.LevyTransferMatching.Data.Repositories
@@ -23,6 +24,19 @@ namespace SFA.DAS.LevyTransferMatching.Data.Repositories
             {
                 await _domainEventDispatcher.Send(domainEvent);
             }
+        }
+
+        public async Task Update(Models.Application application)
+        {
+            foreach (dynamic domainEvent in application.FlushEvents())
+            {
+                await _domainEventDispatcher.Send(domainEvent);
+            }
+        }
+
+        public async Task<Models.Application> Get(int pledgeId, int applicationId)
+        {
+            return await _dbContext.Applications.SingleAsync(x => x.Id == applicationId && x.Pledge.Id == pledgeId);
         }
     }
 }

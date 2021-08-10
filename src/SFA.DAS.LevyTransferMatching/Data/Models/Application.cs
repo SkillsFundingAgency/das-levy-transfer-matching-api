@@ -11,7 +11,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 {
     public class Application : AggregateRoot<int>
     {
-        public Application() {}
+        protected Application() {}
 
         public Application(Pledge pledge, EmployerAccount account, CreateApplicationProperties properties, UserInfo userInfo)
         {
@@ -31,7 +31,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             CreatedOn = DateTime.UtcNow;
             _emailAddresses = properties.EmailAddresses.Select(x => new ApplicationEmailAddress(x)).ToList();
 
-            StartTrackingSession(UserAction.CreateApplication, account.Id, userInfo);
+            StartTrackingSession(UserAction.CreateApplication, userInfo);
             ChangeTrackingSession.TrackInsert(this);
             foreach(var emailAddress in _emailAddresses)
             {
@@ -63,7 +63,16 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
         public DateTime CreatedOn { get; private set; }
         public ApplicationStatus Status { get; private set; }
+        public DateTime? UpdatedOn { get; private set; }
 
         public byte[] RowVersion { get; private set; }
+
+        public void Approve(UserInfo userInfo)
+        {
+            StartTrackingSession(UserAction.ApproveApplication, userInfo);
+            ChangeTrackingSession.TrackUpdate(this);
+            Status = ApplicationStatus.Approved;
+            UpdatedOn = DateTime.UtcNow;
+        }
     }
 }

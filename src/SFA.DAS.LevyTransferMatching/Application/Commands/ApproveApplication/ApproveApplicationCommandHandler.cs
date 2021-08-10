@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
+using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Commands.ApproveApplication
 {
@@ -14,9 +15,15 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.ApproveApplication
             _applicationRepository = applicationRepository;
         }
 
-        public Task<Unit> Handle(ApproveApplicationCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(ApproveApplicationCommand request, CancellationToken cancellationToken)
         {
-            return Task.FromResult(Unit.Value);
+            var application = await _applicationRepository.Get(request.PledgeId, request.ApplicationId);
+
+            application.Approve(new UserInfo(request.UserId, request.UserDisplayName));
+
+            await _applicationRepository.Update(application);
+
+            return Unit.Value;
         }
     }
 }
