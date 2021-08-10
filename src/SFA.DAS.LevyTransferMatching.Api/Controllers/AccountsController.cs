@@ -10,6 +10,7 @@ using SFA.DAS.LevyTransferMatching.Application.Queries.GetAccount;
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
     [Route("accounts")]
+    [ApiVersion("1.0")]
     [ApiController]
     public class AccountsController : ControllerBase
     {

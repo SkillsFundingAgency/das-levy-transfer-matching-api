@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.LevyTransferMatching.Abstractions;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
+using SFA.DAS.LevyTransferMatching.Domain.Events;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Data.Models
@@ -11,7 +12,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
     {
         public Application() {}
 
-        public Application(Pledge pledge, EmployerAccount account, CreateApplicationProperties properties)
+        public Application(Pledge pledge, EmployerAccount account, CreateApplicationProperties properties, UserInfo userInfo)
         {
             Pledge = pledge;
             EmployerAccount = account;
@@ -28,6 +29,13 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             BusinessWebsite = properties.BusinessWebsite;
             CreatedOn = DateTime.UtcNow;
             _emailAddresses = properties.EmailAddresses.Select(x => new ApplicationEmailAddress(x)).ToList();
+
+            StartTrackingSession(UserAction.CreateApplication, account.Id, userInfo);
+            ChangeTrackingSession.TrackInsert(this);
+            foreach(var emailAddress in _emailAddresses)
+            {
+                ChangeTrackingSession.TrackInsert(emailAddress);
+            }
         }
 
         public EmployerAccount EmployerAccount { get; private set; }

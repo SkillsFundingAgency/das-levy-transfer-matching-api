@@ -13,6 +13,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledges
             public long AccountId { get; set; }
 
             public int Amount { get; set; }
+            public int RemainingAmount { get; set; }
 
             public int RemainingAmount { get; set; }
 

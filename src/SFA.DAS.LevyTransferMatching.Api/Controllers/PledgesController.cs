@@ -13,6 +13,7 @@ using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge;
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
     [ApiController]
+    [ApiVersion("1.0")]
     public class PledgesController : Controller
     {
         private readonly IMediator _mediator;
@@ -77,7 +78,9 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 JobRoles = request.JobRoles,
                 Levels = request.Levels,
                 Sectors = request.Sectors,
-                Locations = request.Locations
+                Locations = request.Locations,
+                UserId = request.UserId,
+                UserDisplayName = request.UserDisplayName
             });
 
             var result = new CreatedResult(
