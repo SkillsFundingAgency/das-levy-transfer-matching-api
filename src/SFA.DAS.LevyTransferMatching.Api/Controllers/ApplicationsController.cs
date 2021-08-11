@@ -8,6 +8,7 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
     [Route("pledges/{pledgeId}/applications")]
+    [ApiVersion("1.0")]
     [ApiController]
     public class ApplicationsController : ControllerBase
     {
@@ -38,7 +39,9 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 EmailAddresses = request.EmailAddresses,
-                BusinessWebsite = request.BusinessWebsite
+                BusinessWebsite = request.BusinessWebsite,
+                UserId = request.UserId,
+                UserDisplayName = request.UserDisplayName
             });
 
             var result = new CreatedResult(

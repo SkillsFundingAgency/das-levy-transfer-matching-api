@@ -45,7 +45,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreateAppl
             _applicationRepository.Setup(x => x.Add(It.IsAny<LevyTransferMatching.Data.Models.Application>()))
                 .Callback<LevyTransferMatching.Data.Models.Application>(r => _inserted = r);
 
-            _handler = new CreateApplicationCommandHandler(_pledgeRepository.Object, _applicationRepository.Object, _employerAccountRepository.Object, DbContext);
+            _handler = new CreateApplicationCommandHandler(_pledgeRepository.Object, _applicationRepository.Object, _employerAccountRepository.Object);
         }
 
         [Test]

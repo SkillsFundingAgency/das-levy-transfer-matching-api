@@ -15,5 +15,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
         public IEnumerable<JobRole> JobRoles { get; set; }
         public IEnumerable<Level> Levels { get; set; }
         public List<LocationInformation> Locations { get; set; }
+        public string UserId { get; set; }
+        public string UserDisplayName { get; set; }
     }
 }

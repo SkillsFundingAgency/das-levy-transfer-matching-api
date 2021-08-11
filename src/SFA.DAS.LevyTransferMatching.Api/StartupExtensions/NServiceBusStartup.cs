@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Data.SqlClient;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using NServiceBus;
 using NServiceBus.ObjectBuilder.MSDependencyInjection;
 using SFA.DAS.LevyTransferMatching.Extensions;

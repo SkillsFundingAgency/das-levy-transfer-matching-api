@@ -36,7 +36,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreatePled
 
             _employerAccountRepository.Setup(x => x.Get(_employerAccount.Id)).ReturnsAsync(_employerAccount);
 
-            _handler = new CreatePledgeCommandHandler(_employerAccountRepository.Object, _pledgeRepository.Object, DbContext);
+            _handler = new CreatePledgeCommandHandler(_employerAccountRepository.Object, _pledgeRepository.Object);
             
         }
 

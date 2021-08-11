@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;
 using System.Collections.Generic;
+using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Data;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
@@ -33,12 +34,8 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
             {
                 pledgeRecords.Add(
                     employerAccounts[i].CreatePledge(
-                        _fixture.Create<int>(),
-                        _fixture.Create<bool>(),
-                        _fixture.Create<Level>(),
-                        _fixture.Create<JobRole>(),
-                        _fixture.Create<Sector>(),
-                        _fixture.Create<List<PledgeLocation>>()
+                        _fixture.Create<CreatePledgeProperties>(),
+                        _fixture.Create<UserInfo>()
                     ));
             }
 

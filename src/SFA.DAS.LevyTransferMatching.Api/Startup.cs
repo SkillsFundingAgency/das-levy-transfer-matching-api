@@ -1,31 +1,33 @@
 using System;
-using System.Data.Common;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using NServiceBus.ObjectBuilder.MSDependencyInjection;
+using SFA.DAS.Api.Common.AppStart;
+using SFA.DAS.Api.Common.Configuration;
+using SFA.DAS.Api.Common.Infrastructure;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.LevyTransferMatching.Api.HttpResponseExtensions;
 using SFA.DAS.LevyTransferMatching.Api.Models;
 using SFA.DAS.LevyTransferMatching.Api.StartupExtensions;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateAccount;
-using SFA.DAS.LevyTransferMatching.Behaviours;
 using SFA.DAS.LevyTransferMatching.Data;
+using SFA.DAS.LevyTransferMatching.Infrastructure;
 using SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
 using SFA.DAS.UnitOfWork.EntityFrameworkCore.DependencyResolution.Microsoft;
 using SFA.DAS.UnitOfWork.NServiceBus.Features.ClientOutbox.DependencyResolution.Microsoft;
-using SFA.DAS.UnitOfWork.SqlServer.DependencyResolution.Microsoft;
 
 namespace SFA.DAS.LevyTransferMatching.Api
 {
@@ -65,9 +67,36 @@ namespace SFA.DAS.LevyTransferMatching.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddNLog();
+            services.AddNLog().AddLogging();
+
             services.AddConfigurationOptions(Configuration);
             var config = Configuration.GetSection<LevyTransferMatchingApi>();
+
+            if (!_environment.IsDevelopment())
+            {
+                var azureAdConfiguration = Configuration
+                    .GetSection("AzureAd")
+                    .Get<AzureActiveDirectoryConfiguration>();
+
+                var policies = new Dictionary<string, string>
+                {
+                    {PolicyNames.Default, RoleNames.Default}
+                };
+
+                services.AddAuthentication(azureAdConfiguration, policies);
+            }
+
+            services
+                .AddMvc(o =>
+                {
+                    if (!_environment.IsDevelopment())
+                    {
+                        o.Conventions.Add(new AuthorizeControllerModelConvention(new List<string>()));
+                    }
+                    o.Conventions.Add(new ApiExplorerGroupPerVersionConvention());
+                })
+                .AddNewtonsoftJson()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             services.AddControllers()
                 .AddFluentValidation(fv =>
@@ -89,9 +118,17 @@ namespace SFA.DAS.LevyTransferMatching.Api
                 .AddNServiceBusClientUnitOfWork();
 
             services.AddCache(config, _environment)
-                    .AddDasDataProtection(config, _environment)
-                    .AddSwaggerGen()
-                    .AddSwaggerGenNewtonsoftSupport();
+                .AddDasDataProtection(config, _environment)
+                .AddSwaggerGen(c =>
+                {
+                    c.SwaggerDoc("v1", new OpenApiInfo {Title = "LevyTransferMatchingApi", Version = "v1"});
+                    c.OperationFilter<SwaggerVersionHeaderFilter>();
+                })
+                .AddSwaggerGenNewtonsoftSupport();
+
+            services.AddApiVersioning(opt => {
+                opt.ApiVersionReader = new HeaderApiVersionReader("X-Version");
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -103,7 +140,7 @@ namespace SFA.DAS.LevyTransferMatching.Api
 
             app.UseHttpsRedirection();
             app.UseRouting();
-            app.UseAuthorization();
+            app.UseAuthentication();
             app.UseDasHealthChecks();
 
             app.UseExceptionHandler(c => { c.Run(async context =>
@@ -127,7 +164,13 @@ namespace SFA.DAS.LevyTransferMatching.Api
                 endpoints.MapControllers();
             });
 
-            app.AddSwagger();
+            
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "LevyTransferMatching v1");
+                c.RoutePrefix = string.Empty;
+            });
         }
 
         public void ConfigureContainer(UpdateableServiceProvider serviceProvider)

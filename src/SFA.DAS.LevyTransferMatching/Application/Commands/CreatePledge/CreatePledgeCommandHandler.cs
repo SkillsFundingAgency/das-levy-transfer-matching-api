@@ -1,10 +1,10 @@
 ﻿using MediatR;
-using SFA.DAS.LevyTransferMatching.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
+using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
@@ -13,44 +13,43 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
     {
         private readonly IEmployerAccountRepository _employerAccountRepository;
         private readonly IPledgeRepository _pledgeRepository;
-        private readonly LevyTransferMatchingDbContext _dbContext;
 
         public CreatePledgeCommandHandler(IEmployerAccountRepository employerAccountRepository,
-            IPledgeRepository pledgeRepository,
-            LevyTransferMatchingDbContext dbContext)
+            IPledgeRepository pledgeRepository)
         {
             _employerAccountRepository = employerAccountRepository;
             _pledgeRepository = pledgeRepository;
-            _dbContext = dbContext;
         }
 
         public async Task<CreatePledgeResult> Handle(CreatePledgeCommand request, CancellationToken cancellationToken)
         {
             var employerAccount = await _employerAccountRepository.Get(request.AccountId);
 
-            var pledge = employerAccount.CreatePledge(request.Amount,
-                request.IsNamePublic,
-                (Level)request.Levels.Cast<int>().Sum(),
-                (JobRole)request.JobRoles.Cast<int>().Sum(),
-                (Sector)request.Sectors.Cast<int>().Sum(),
-                request.Locations.Select(x =>
-                new PledgeLocation
-                {
-                    Name = x.Name,
-                    Latitude = x.Geopoint[0],
-                    Longitude = x.Geopoint[1]
-                }).ToList()
-            );
+            var properties = new CreatePledgeProperties
+            {
+                Amount = request.Amount,
+                IsNamePublic = request.IsNamePublic,
+                Levels = (Level)request.Levels.Cast<int>().Sum(),
+                JobRoles = (JobRole)request.JobRoles.Cast<int>().Sum(),
+                Sectors = (Sector)request.Sectors.Cast<int>().Sum(),
+                Locations = request.Locations.Select(x =>
+                    new PledgeLocation
+                    {
+                        Name = x.Name,
+                        Latitude = x.Geopoint[0],
+                        Longitude = x.Geopoint[1]
+                    }).ToList(),
+            };
+
+            var userInfo = new UserInfo(request.UserId, request.UserDisplayName);
+
+            var pledge = employerAccount.CreatePledge(properties, userInfo);
 
             await _pledgeRepository.Add(pledge);
 
-            await _dbContext.SaveChangesAsync(cancellationToken);
-
-            var pledgeId = pledge.Id;
-
             return new CreatePledgeResult
             {
-                Id = pledgeId
+                Id = pledge.Id
             };
         }
     }

@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using SFA.DAS.LevyTransferMatching.Abstractions;
-using SFA.DAS.LevyTransferMatching.Models.Enums;
+﻿using SFA.DAS.LevyTransferMatching.Abstractions;
+using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 
 namespace SFA.DAS.LevyTransferMatching.Data.Models
 {
@@ -19,9 +18,9 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             Name = name;
         }
 
-        public Pledge CreatePledge(int amount, bool isNamePublic, Level levels, JobRole jobRoles, Sector sectors, List<PledgeLocation> locations)
+        public Pledge CreatePledge(CreatePledgeProperties properties, UserInfo userInfo)
         {
-            return new Pledge(this, amount, isNamePublic, levels, jobRoles, sectors, locations);
+            return new Pledge(this, properties, userInfo);
         }
     }
 }

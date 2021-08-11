@@ -12,6 +12,7 @@ namespace SFA.DAS.LevyTransferMatching.Data
         public DbSet<Pledge> Pledges { get; set; }
         public DbSet<EmployerAccount> EmployerAccounts { get; set; }
         public DbSet<Models.Application> Applications { get; set; }
+        public DbSet<Audit> Audits { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,6 +40,9 @@ namespace SFA.DAS.LevyTransferMatching.Data
 
             modelBuilder.Entity<EmployerAccount>().ToTable("EmployerAccount");
             modelBuilder.Entity<EmployerAccount>().HasKey(x => x.Id);
+
+            modelBuilder.Entity<Audit>().ToTable("Audit");
+            modelBuilder.Entity<Audit>().HasKey(x => x.Id);
         }
     }
 }

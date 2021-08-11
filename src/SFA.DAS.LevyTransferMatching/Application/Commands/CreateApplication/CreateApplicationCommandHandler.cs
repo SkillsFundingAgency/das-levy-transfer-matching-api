@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
@@ -14,17 +13,14 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
         private readonly IPledgeRepository _pledgeRepository;
         private readonly IEmployerAccountRepository _employerAccountRepository;
         private readonly IApplicationRepository _applicationRepository;
-        private readonly LevyTransferMatchingDbContext _dbContext;
 
         public CreateApplicationCommandHandler(IPledgeRepository pledgeRepository,
             IApplicationRepository applicationRepository,
-            IEmployerAccountRepository employerAccountRepository,
-            LevyTransferMatchingDbContext dbContext)
+            IEmployerAccountRepository employerAccountRepository)
         {
             _pledgeRepository = pledgeRepository;
             _applicationRepository = applicationRepository;
             _employerAccountRepository = employerAccountRepository;
-            _dbContext = dbContext;
         }
 
         public async Task<CreateApplicationCommandResult> Handle(CreateApplicationCommand request, CancellationToken cancellationToken)
@@ -48,12 +44,10 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
                 EmailAddresses = request.EmailAddresses
             };
 
-            var application = pledge.CreateApplication(account, settings);
+            var application = pledge.CreateApplication(account, settings, new UserInfo(request.UserId, request.UserDisplayName));
 
             await _applicationRepository.Add(application);
-
-            await _dbContext.SaveChangesAsync(cancellationToken);
-            
+           
             return new CreateApplicationCommandResult
             {
                 ApplicationId = application.Id
