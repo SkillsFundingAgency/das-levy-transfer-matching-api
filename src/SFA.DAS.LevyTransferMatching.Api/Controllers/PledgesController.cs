@@ -8,6 +8,8 @@ using System.Linq;
 using SFA.DAS.LevyTransferMatching.Api.Models.CreatePledge;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetPledges;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetPledge;
+using SFA.DAS.LevyTransferMatching.Api.Models.Pledges;
+using SFA.DAS.LevyTransferMatching.Application.Commands.DebitPledge;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
@@ -52,6 +54,21 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
             {
                 return NotFound();
             }
+        }
+
+        [HttpPost]
+        [Route("pledges/{pledgeId}/debit")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> DebitPledge(int pledgeId, [FromBody] DebitPledgeRequest request)
+        {
+            await _mediator.Send(new DebitPledgeCommand
+            {
+                PledgeId = pledgeId,
+                Amount = request.Amount
+            });
+            
+            return Ok();
         }
 
         [HttpPost]

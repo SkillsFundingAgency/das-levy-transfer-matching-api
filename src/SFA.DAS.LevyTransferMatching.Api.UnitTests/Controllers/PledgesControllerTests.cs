@@ -17,6 +17,8 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.LevyTransferMatching.Api.Models.Pledges;
+using SFA.DAS.LevyTransferMatching.Application.Commands.DebitPledge;
 
 namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
 {
@@ -123,6 +125,24 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             Assert.IsNotNull(actionResult);
             Assert.IsNotNull(notFoundResult);
             Assert.AreEqual(notFoundResult.StatusCode, (int) HttpStatusCode.NotFound);
+        }
+
+        [Test]
+        public async Task POST_Debit_Debits_Pledge_By_Requested_Amount()
+        {
+            var pledgeId = _fixture.Create<int>();
+            var request = _fixture.Create<DebitPledgeRequest>();
+
+            _mockMediator
+                .Setup(x => x.Send(It.IsAny<DebitPledgeCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(() => Unit.Value);
+
+            await _pledgesController.DebitPledge(pledgeId, request);
+
+            _mockMediator.Verify(x =>
+                x.Send(It.Is<DebitPledgeCommand>(command =>
+                        command.PledgeId == pledgeId && command.Amount == request.Amount),
+                It.IsAny<CancellationToken>()));
         }
 
         [Test]
