@@ -78,7 +78,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             ChangeTrackingSession.TrackUpdate(this);
             Status = ApplicationStatus.Approved;
             UpdatedOn = DateTime.UtcNow;
-            AddEvent(new ApplicationApproved(Id, UpdatedOn.Value));
+            AddEvent(new ApplicationApproved(Id, UpdatedOn.Value, Amount));
         }
     }
 }

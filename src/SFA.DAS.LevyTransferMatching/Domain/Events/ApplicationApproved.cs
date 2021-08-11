@@ -5,13 +5,15 @@ namespace SFA.DAS.LevyTransferMatching.Domain.Events
 {
     public class ApplicationApproved : IDomainEvent
     {
-        public ApplicationApproved(int applicationId, DateTime approvedOn)
+        public ApplicationApproved(int applicationId, DateTime approvedOn, int amount)
         {
+            Amount = amount;
             ApplicationId = applicationId;
             ApprovedOn = approvedOn;
         }
 
         public int ApplicationId { get; }
         public DateTime ApprovedOn { get; }
+        public int Amount { get; }
     }
 }
