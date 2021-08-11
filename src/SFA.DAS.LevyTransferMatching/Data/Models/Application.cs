@@ -69,10 +69,16 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
         public void Approve(UserInfo userInfo)
         {
+            if (Status != ApplicationStatus.Pending)
+            {
+                throw new InvalidOperationException($"Unable to approve Application {Id} status {Status}");
+            }
+
             StartTrackingSession(UserAction.ApproveApplication, userInfo);
             ChangeTrackingSession.TrackUpdate(this);
             Status = ApplicationStatus.Approved;
             UpdatedOn = DateTime.UtcNow;
+            AddEvent(new ApplicationApproved(Id, UpdatedOn.Value));
         }
     }
 }
