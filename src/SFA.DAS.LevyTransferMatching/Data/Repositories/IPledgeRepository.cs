@@ -7,5 +7,6 @@ namespace SFA.DAS.LevyTransferMatching.Data.Repositories
     {
         Task Add(Pledge pledge);
         Task<Pledge> Get(int pledgeId);
+        Task Update(Pledge pledge);
     }
 }

@@ -56,5 +56,18 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         {
             return new Application(this, account, properties, userInfo);
         }
+
+        public void Debit(int debitAmount, UserInfo userInfo)
+        {
+            if(RemainingAmount < debitAmount)
+            {
+                throw new InvalidOperationException(
+                    $"Unable to debit Pledge {Id} by {debitAmount} with remaining amount {RemainingAmount}");
+            }
+
+            StartTrackingSession(UserAction.DebitPledge, userInfo);
+            ChangeTrackingSession.TrackUpdate(this);
+            RemainingAmount -= debitAmount;
+        }
     }
 }

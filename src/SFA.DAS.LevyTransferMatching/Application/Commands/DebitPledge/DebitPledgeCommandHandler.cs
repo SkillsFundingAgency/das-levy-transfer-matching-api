@@ -1,8 +1,8 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
+using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Commands.DebitPledge
 {
@@ -15,9 +15,15 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.DebitPledge
             _repository = repository;
         }
 
-        public Task<Unit> Handle(DebitPledgeCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(DebitPledgeCommand request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var pledge = await _repository.Get(request.PledgeId);
+
+            pledge.Debit(request.Amount, UserInfo.System);
+
+            await _repository.Update(pledge);
+
+            return Unit.Value;
         }
     }
 }

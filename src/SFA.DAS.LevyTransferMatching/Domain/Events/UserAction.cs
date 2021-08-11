@@ -4,6 +4,7 @@
     {
         CreatePledge,
         CreateApplication,
-        ApproveApplication
+        ApproveApplication,
+        DebitPledge
     }
 }
