@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
 {
-    public class GetApplicationsHandler : IRequestHandler<GetApplicationsQuery, GetApplicationsResult>
+    public class GetApplicationsQueryHandler : IRequestHandler<GetApplicationsQuery, GetApplicationsResult>
     {
         private readonly LevyTransferMatchingDbContext _dbContext;
 
-        public GetApplicationsHandler(LevyTransferMatchingDbContext dbContext)
+        public GetApplicationsQueryHandler(LevyTransferMatchingDbContext dbContext)
         {
             _dbContext = dbContext;
         }

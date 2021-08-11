@@ -55,7 +55,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetApplications(long accountId, int pledgeId)
+        public async Task<IActionResult> GetApplications(int pledgeId)
         {
             var query = await _mediator.Send(new GetApplicationsQuery
             {
