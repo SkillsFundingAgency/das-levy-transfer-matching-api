@@ -23,6 +23,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge
             var pledge = await _dbContext.Pledges
                 .Where(x => x.Id == request.Id)
                 .Include(x => x.EmployerAccount)
+                .Include(x => x.Locations)
                 .SingleOrDefaultAsync(cancellationToken);
 
             if (pledge != null)
@@ -38,6 +39,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge
                     JobRoles = pledge.JobRoles.ToList(),
                     Levels = pledge.Levels.ToList(),
                     Sectors = pledge.Sectors.ToList(),
+                    Locations = pledge.Locations.Select(x => new Models.LocationInformation { Name = x.Name, Geopoint = new double[] { x.Latitude, x.Longitude } }),
                     RemainingAmount = pledge.RemainingAmount
                 };
             }

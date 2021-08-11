@@ -23,9 +23,10 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
         {
             var pledges = await _dbContext.Pledges
                 .Include(x => x.EmployerAccount)
+                .Include(x => x.Locations)
                 .ToListAsync();
 
-            return new GetPledgesResult(
+            var result = new GetPledgesResult(
                 pledges.Select(
                     x => new Pledge()
                     {
@@ -38,7 +39,9 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
                         JobRoles = x.JobRoles.ToList(),
                         Levels = x.Levels.ToList(),
                         Sectors = x.Sectors.ToList(),
+                        Locations = x.Locations.Select(y => new LocationInformation { Name = y.Name, Geopoint = new double[] { y.Latitude, y.Longitude } }).ToList()
                     }).OrderByDescending(x => x.Amount));
+            return result;
         }
     }
 }
