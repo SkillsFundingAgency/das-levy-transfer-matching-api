@@ -130,3 +130,5 @@ stages:
     parameters:
       Environment: DEMO
       ServiceConnection: SFA-DAS-DevTest-ARM
+
+- template: azure-pipelines-templates/deploy/stage/nuget-publish.yml@das-platform-building-blocks
