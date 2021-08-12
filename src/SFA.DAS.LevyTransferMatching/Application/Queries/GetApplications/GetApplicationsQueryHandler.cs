@@ -42,7 +42,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                     EmailAddresses = x.EmailAddresses.Any()
                         ? x.EmailAddresses.Select(email => email.EmailAddress)
                         : null,
-                    CreateOn = x.CreatedOn
+                    CreatedOn = x.CreatedOn
                 })
                 .ToListAsync(cancellationToken));
         }
