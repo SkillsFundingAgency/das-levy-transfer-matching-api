@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
 using MediatR;
@@ -79,7 +80,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             Assert.IsNotNull(result);
             var response = result.Value as GetApplicationsResult;
             Assert.IsNotNull(response);
-            Assert.AreEqual(1, response.Count);
+            Assert.AreEqual(1, response.Applications.Count());
         }
     }
 }

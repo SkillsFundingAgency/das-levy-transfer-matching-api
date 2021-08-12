@@ -2,10 +2,13 @@
 
 namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
 {
-    public class GetApplicationsResult : List<Models.Application>
+    public class GetApplicationsResult
     {
-        public GetApplicationsResult(IEnumerable<Models.Application> collection) : base(collection)
+        public IEnumerable<Models.Application> Applications { get; set; }
+
+        public GetApplicationsResult(IEnumerable<Models.Application> applications)
         {
+            Applications = applications;
         }
     }
 }
