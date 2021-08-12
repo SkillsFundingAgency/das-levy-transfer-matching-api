@@ -46,6 +46,8 @@ stages:
       SolutionBaseName: $(DACPACSolutionBaseName)
       SqlProjectPath: src\SFA.DAS.LevyTransferMatching.Database\SFA.DAS.LevyTransferMatching.Database.sqlproj
 
+- template: azure-pipelines-templates/deploy/stage/nuget-publish.yml@das-platform-building-blocks
+
 - stage: Deploy_AT
   dependsOn: Build
   displayName: Deploy to AT
@@ -130,5 +132,3 @@ stages:
     parameters:
       Environment: DEMO
       ServiceConnection: SFA-DAS-DevTest-ARM
-
-- template: azure-pipelines-templates/deploy/stage/nuget-publish.yml@das-platform-building-blocks
