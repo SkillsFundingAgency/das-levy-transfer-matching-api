@@ -18,6 +18,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
         public string LastName { get; set; }
         public IEnumerable<string> EmailAddresses { get; set; }
         public string BusinessWebsite { get; set; }
+        public string EmployerAccountName { get; set; }
 
         public static implicit operator GetApplicationResponse(GetApplicationResult getApplicationResult)
         {
@@ -34,6 +35,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
                 Sectors = getApplicationResult.Sectors,
                 StandardId = getApplicationResult.StandardId,
                 StartDate = getApplicationResult.StartDate,
+                EmployerAccountName = getApplicationResult.EmployerAccountName,
             };
         }
     }

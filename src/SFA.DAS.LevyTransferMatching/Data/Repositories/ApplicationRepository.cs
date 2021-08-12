@@ -28,7 +28,10 @@ namespace SFA.DAS.LevyTransferMatching.Data.Repositories
 
         public async Task<Models.Application> Get(int applicationId)
         {
-            return await _dbContext.Applications.Include(x => x.EmailAddresses).SingleOrDefaultAsync(x => x.Id == applicationId);
+            return await _dbContext.Applications
+                .Include(x => x.EmailAddresses)
+                .Include(x => x.EmployerAccount)
+                .SingleOrDefaultAsync(x => x.Id == applicationId);
         }
     }
 }

@@ -37,6 +37,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                     Sectors = application.Sectors.ToList(),
                     StandardId = application.StandardId,
                     StartDate = application.StartDate,
+                    EmployerAccountName = application.EmployerAccount.Name,
                 };
             }
 
