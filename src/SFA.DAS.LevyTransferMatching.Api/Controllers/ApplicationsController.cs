@@ -23,6 +23,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [Route("{applicationId}")]
         public async Task<IActionResult> GetApplication(int pledgeId, int applicationId)
         {
