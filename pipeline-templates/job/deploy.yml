@@ -11,6 +11,9 @@ jobs:
     runOnce:
       deploy:
         steps:
+        - template: azure-pipelines-templates/deploy/step/set-backendaccessrestrictions-variable.yml@das-platform-building-blocks
+          parameters:
+            ServiceConnection: ${{ parameters.ServiceConnection }}
         - template: azure-pipelines-templates/deploy/step/arm-deploy.yml@das-platform-building-blocks
           parameters:
             ServiceConnection: ${{ parameters.ServiceConnection }}
