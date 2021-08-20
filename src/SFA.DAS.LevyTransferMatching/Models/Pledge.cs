@@ -23,6 +23,9 @@ namespace SFA.DAS.LevyTransferMatching.Models
         public IEnumerable<Level> Levels { get; set; }
 
         public IEnumerable<Sector> Sectors { get; set; }
+
+        public IEnumerable<LocationInformation> Locations { get; set; }
+
         public int RemainingAmount { get; set; }
     }
 }

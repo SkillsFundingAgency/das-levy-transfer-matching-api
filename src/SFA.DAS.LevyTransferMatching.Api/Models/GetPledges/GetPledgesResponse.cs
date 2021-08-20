@@ -1,7 +1,8 @@
-﻿using System;
+﻿using SFA.DAS.LevyTransferMatching.Models;
+using SFA.DAS.LevyTransferMatching.Models.Enums;
+using System;
 using System.Collections.Generic;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
-using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledges
 {
@@ -31,6 +32,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledges
 
             public IEnumerable<Sector> Sectors { get; set; }
 
+            public IEnumerable<LocationInformation> Locations { get; set; }
+
             public static implicit operator Pledge(GetPledgesResult.Pledge pledge)
             {
                 return new Pledge()
@@ -44,7 +47,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledges
                     IsNamePublic = pledge.IsNamePublic,
                     JobRoles = pledge.JobRoles,
                     Levels = pledge.Levels,
-                    Sectors = pledge.Sectors
+                    Sectors = pledge.Sectors,
+                    Locations = pledge.Locations
                 };
             }
         }

@@ -26,6 +26,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
             public IEnumerable<Level> Levels { get; set; }
 
             public IEnumerable<Sector> Sectors { get; set; }
+
+            public IEnumerable<LocationInformation> Locations { get; set; }
         }
     }
 }
