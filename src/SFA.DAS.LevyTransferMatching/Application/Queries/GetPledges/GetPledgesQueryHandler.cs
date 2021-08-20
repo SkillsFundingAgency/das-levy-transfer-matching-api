@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Extensions;
+using SFA.DAS.LevyTransferMatching.Models;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 using static SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges.GetPledgesResult;
 
@@ -29,13 +30,14 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
             }
 
             var pledgeEntries = await pledgeEntriesQuery
-                                        .Include(x => x.EmployerAccount)
-                                        .Include(x => x.Applications)
-                                        .ToListAsync();
+                .Include(x => x.EmployerAccount)
+                .Include(x => x.Locations)
+                .Include(x => x.Applications)
+                .ToListAsync();
 
             var pledges = pledgeEntries
                 .Select(
-                    x => new Pledge()
+                    x => new GetPledgesResult.Pledge()
                     {
                         Amount = x.Amount,
                         RemainingAmount = x.RemainingAmount,
@@ -47,6 +49,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
                         JobRoles = x.JobRoles.ToList(),
                         Levels = x.Levels.ToList(),
                         Sectors = x.Sectors.ToList(),
+                        Locations = x.Locations.Select(y => new LocationInformation { Name = y.Name, Geopoint = new double[] { y.Latitude, y.Longitude } }).ToList(),
                         ApplicationCount = x.Applications.Count
                     })
                 .OrderByDescending(x => x.Amount);

@@ -26,6 +26,8 @@ namespace SFA.DAS.LevyTransferMatching.Models
 
         public IEnumerable<Sector> Sectors { get; set; }
 
+        public IEnumerable<LocationInformation> Locations { get; set; }
+
         public int ApplicationCount { get; set; }
     }
 }
