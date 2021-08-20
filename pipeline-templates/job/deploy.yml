@@ -22,6 +22,7 @@ jobs:
             Environment: ${{ parameters.Environment }}
             TemplatePath: $(Pipeline.Workspace)/LevyTransferMatchingApi/azure/template.json
             ParametersPath: $(Pipeline.Workspace)/LevyTransferMatchingApi/azure/template.parameters.json
+            IsMultiRepoCheckout: true
             TemplateSecrets:
               LoggingRedisConnectionString: $(LoggingRedisConnectionString)
               ConfigurationStorageConnectionString: $(ConfigurationStorageConnectionString)
