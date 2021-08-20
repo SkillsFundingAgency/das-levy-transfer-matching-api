@@ -1,4 +1,8 @@
-﻿using AutoFixture;
+﻿using System.Linq;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +15,6 @@ using SFA.DAS.LevyTransferMatching.Api.Models.GetPledges;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
-using SFA.DAS.LevyTransferMatching.Models;
-using System.Linq;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
 {
@@ -128,12 +127,12 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         public async Task GET_All_Pledges_Returned()
         {
             // Arrange
-            var expectedPledges = _fixture.CreateMany<Pledge>();
+            var expectedPledges = _fixture.CreateMany<GetPledgesResult.Pledge>();
 
             var result = new GetPledgesResult()
             {
-                Pledges = expectedPledges,
-                TotalPledges = expectedPledges.Count(),
+                Items = expectedPledges,
+                TotalItems = expectedPledges.Count(),
             };
 
             _mockMediator
@@ -151,8 +150,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             Assert.IsNotNull(response);
             Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.OK);
             
-            Assert.AreEqual(expectedPledges.Count(), response.Items.Count());
-            Assert.AreEqual(expectedPledges.Count(), response.TotalItems);
+            Assert.AreEqual(expectedPledges.Count(), response.Pledges.Count());
+            Assert.AreEqual(expectedPledges.Count(), response.TotalPledges);
         }
 
         [Test]
@@ -160,12 +159,12 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         {
             // Arrange
             var accountId = _fixture.Create<long>();
-            var expectedPledges = _fixture.CreateMany<Pledge>();
+            var expectedPledges = _fixture.CreateMany<GetPledgesResult.Pledge>();
 
             var result = new GetPledgesResult()
             {
-                Pledges = expectedPledges,
-                TotalPledges = expectedPledges.Count(),
+                Items = expectedPledges,
+                TotalItems = expectedPledges.Count(),
             };
 
             _mockMediator
@@ -183,8 +182,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             Assert.IsNotNull(response);
             Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.OK);
 
-            Assert.AreEqual(expectedPledges.Count(), response.Items.Count());
-            Assert.AreEqual(expectedPledges.Count(), response.TotalItems);
+            Assert.AreEqual(expectedPledges.Count(), response.Pledges.Count());
+            Assert.AreEqual(expectedPledges.Count(), response.TotalPledges);
         }
     }
 }

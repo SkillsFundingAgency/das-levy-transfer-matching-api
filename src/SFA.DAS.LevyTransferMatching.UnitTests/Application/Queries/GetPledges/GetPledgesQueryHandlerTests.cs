@@ -6,9 +6,7 @@ using SFA.DAS.LevyTransferMatching.Data.Models;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using SFA.DAS.LevyTransferMatching.Models.Enums;
 using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;
-using SFA.DAS.LevyTransferMatching.Data;
 using System.Collections.Generic;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 
@@ -57,15 +55,15 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
             // Act
             var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
 
-            var pledges = result.Pledges.ToArray();
+            var actualPledges = result.Items.ToArray();
 
             // Assert
             var dbPledges = await DbContext.Pledges.OrderByDescending(x => x.Amount).ToArrayAsync();
 
-            for (int i = 0; i < pledges.Length; i++)
+            for (int i = 0; i < actualPledges.Length; i++)
             {
-                Assert.AreEqual(pledges[i].Id, dbPledges[i].Id);
-                Assert.AreEqual(pledges[i].AccountId, dbPledges[i].EmployerAccount.Id);
+                Assert.AreEqual(actualPledges[i].Id, dbPledges[i].Id);
+                Assert.AreEqual(actualPledges[i].AccountId, dbPledges[i].EmployerAccount.Id);
             }
         }
 
@@ -84,12 +82,12 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
             // Act
             var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
 
-            var pledges = result.Pledges.ToArray();
+            var actualPledges = result.Items.ToArray();
 
             // Assert
-            var pledgeRecords = await DbContext.Pledges.Where(x => x.EmployerAccount.Id == firstAccount.Id).ToListAsync();
+            var expectedPledgeRecords = await DbContext.Pledges.Where(x => x.EmployerAccount.Id == firstAccount.Id).ToListAsync();
 
-            Assert.AreEqual(result.Pledges.Count(), pledgeRecords.Count());
+            Assert.AreEqual(expectedPledgeRecords.Count(), actualPledges.Count());
         }
     }
 }

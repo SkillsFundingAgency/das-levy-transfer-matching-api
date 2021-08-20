@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SFA.DAS.LevyTransferMatching.Api.Models
+namespace SFA.DAS.LevyTransferMatching.Models
 {
     public abstract class ItemListResponse<TResult>
     {

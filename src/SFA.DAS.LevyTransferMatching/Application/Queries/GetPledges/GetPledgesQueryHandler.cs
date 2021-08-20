@@ -1,12 +1,12 @@
-﻿using MediatR;
+﻿using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Extensions;
-using SFA.DAS.LevyTransferMatching.Models;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using static SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges.GetPledgesResult;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
 {
@@ -53,8 +53,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
 
             return new GetPledgesResult()
             {
-                Pledges = pledges,
-                TotalPledges = pledges.Count(),
+                Items = pledges,
+                TotalItems = pledges.Count(),
             };
         }
     }
