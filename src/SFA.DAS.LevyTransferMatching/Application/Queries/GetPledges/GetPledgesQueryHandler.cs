@@ -1,12 +1,12 @@
-﻿using MediatR;
+﻿using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Extensions;
-using SFA.DAS.LevyTransferMatching.Models;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using static SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges.GetPledgesResult;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
 {
@@ -21,12 +21,17 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
 
         public async Task<GetPledgesResult> Handle(GetPledgesQuery request, CancellationToken cancellationToken)
         {
-            var pledges = await _dbContext.Pledges
-                .Include(x => x.EmployerAccount)
-                .ToListAsync();
+            var pledgeEntriesQuery = _dbContext.Pledges.AsQueryable();
 
-            return new GetPledgesResult(
-                pledges.Select(
+            if (request.AccountId.HasValue)
+            {
+                pledgeEntriesQuery = pledgeEntriesQuery.Where(x => x.EmployerAccount.Id == request.AccountId.Value);
+            }
+
+            var pledgeEntries = await pledgeEntriesQuery.Include(x => x.EmployerAccount).ToListAsync();
+
+            var pledges = pledgeEntries
+                .Select(
                     x => new Pledge()
                     {
                         Amount = x.Amount,
@@ -38,7 +43,14 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
                         JobRoles = x.JobRoles.ToList(),
                         Levels = x.Levels.ToList(),
                         Sectors = x.Sectors.ToList(),
-                    }).OrderByDescending(x => x.Amount));
+                    })
+                .OrderByDescending(x => x.Amount);
+
+            return new GetPledgesResult()
+            {
+                Items = pledges,
+                TotalItems = pledges.Count(),
+            };
         }
     }
 }
