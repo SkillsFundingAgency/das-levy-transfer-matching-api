@@ -10,6 +10,7 @@ using SFA.DAS.LevyTransferMatching.Models.Enums;
 using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;
 using System.Collections.Generic;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
+using SFA.DAS.LevyTransferMatching.Data;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
 {
@@ -19,48 +20,76 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
         private Fixture _fixture;
 
         [SetUp]
-        public void Setup()
+        public async Task Setup()
         {
             _fixture = new Fixture();
-        }
 
-        [Test]
-        public async Task Handle_All_Pledges_Pulled_And_Stitched_Up_With_Accounts()
-        {
             var employerAccounts = _fixture.CreateMany<EmployerAccount>().ToArray();
 
             await DbContext.EmployerAccounts.AddRangeAsync(employerAccounts);
 
-            var pledges = new List<Pledge>();
+            var pledgeRecords = new List<Pledge>();
 
             for (var i = 0; i < employerAccounts.Count(); i++)
             {
-                pledges.Add(
+                pledgeRecords.Add(
                     employerAccounts[i].CreatePledge(
                         _fixture.Create<CreatePledgeProperties>(),
                         _fixture.Create<UserInfo>()
                     ));
             }
-            
-            await DbContext.Pledges.AddRangeAsync(pledges);
+
+            await DbContext.Pledges.AddRangeAsync(pledgeRecords);
 
             await DbContext.SaveChangesAsync();
+        }
 
+        [Test]
+        public async Task Handle_All_Pledges_Pulled_And_Stitched_Up_With_Accounts()
+        {
             var getPledgesQueryHandler = new GetPledgesQueryHandler(DbContext);
 
-            var getPledgesQuery = new GetPledgesQuery();
+            var getPledgesQuery = new GetPledgesQuery()
+            {
+                AccountId = null,
+            };
 
             // Act
             var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
 
+            var actualPledges = result.Items.ToArray();
+
             // Assert
             var dbPledges = await DbContext.Pledges.OrderByDescending(x => x.Amount).ToArrayAsync();
 
-            for (int i = 0; i < result.Count(); i++)
+            for (int i = 0; i < actualPledges.Length; i++)
             {
-                Assert.AreEqual(result[i].Id, dbPledges[i].Id);
-                Assert.AreEqual(result[i].AccountId, dbPledges[i].EmployerAccount.Id);
+                Assert.AreEqual(dbPledges[i].Id, actualPledges[i].Id);
+                Assert.AreEqual(dbPledges[i].EmployerAccount.Id, actualPledges[i].AccountId);
             }
+        }
+
+        [Test]
+        public async Task Handle_Account_Pledges_Pulled()
+        {
+            var firstAccount = await DbContext.EmployerAccounts.FirstAsync();
+
+            var getPledgesQueryHandler = new GetPledgesQueryHandler(DbContext);
+
+            var getPledgesQuery = new GetPledgesQuery()
+            {
+                AccountId = firstAccount.Id,
+            };
+
+            // Act
+            var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
+
+            var actualPledges = result.Items.ToArray();
+
+            // Assert
+            var expectedPledgeRecords = await DbContext.Pledges.Where(x => x.EmployerAccount.Id == firstAccount.Id).ToListAsync();
+
+            Assert.AreEqual(expectedPledgeRecords.Count(), actualPledges.Count());
         }
     }
 }

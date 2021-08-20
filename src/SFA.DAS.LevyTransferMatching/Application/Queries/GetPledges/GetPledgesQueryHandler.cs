@@ -1,12 +1,13 @@
-﻿using MediatR;
+﻿using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Extensions;
 using SFA.DAS.LevyTransferMatching.Models;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using static SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges.GetPledgesResult;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
 {
@@ -21,14 +22,21 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
 
         public async Task<GetPledgesResult> Handle(GetPledgesQuery request, CancellationToken cancellationToken)
         {
-            var pledges = await _dbContext.Pledges
+            var pledgeEntriesQuery = _dbContext.Pledges.AsQueryable();
+
+            if (request.AccountId.HasValue)
+            {
+                pledgeEntriesQuery = pledgeEntriesQuery.Where(x => x.EmployerAccount.Id == request.AccountId.Value);
+            }
+
+            var pledgeEntries = await pledgeEntriesQuery
                 .Include(x => x.EmployerAccount)
                 .Include(x => x.Locations)
                 .ToListAsync();
 
-            var result = new GetPledgesResult(
-                pledges.Select(
-                    x => new Pledge()
+            var pledges = pledgeEntries
+                .Select(
+                    x => new GetPledgesResult.Pledge()
                     {
                         Amount = x.Amount,
                         CreatedOn = x.CreatedOn,
@@ -40,8 +48,14 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
                         Levels = x.Levels.ToList(),
                         Sectors = x.Sectors.ToList(),
                         Locations = x.Locations.Select(y => new LocationInformation { Name = y.Name, Geopoint = new double[] { y.Latitude, y.Longitude } }).ToList()
-                    }).OrderByDescending(x => x.Amount));
-            return result;
+                    })
+                .OrderByDescending(x => x.Amount);
+
+            return new GetPledgesResult()
+            {
+                Items = pledges,
+                TotalItems = pledges.Count(),
+            };
         }
     }
 }

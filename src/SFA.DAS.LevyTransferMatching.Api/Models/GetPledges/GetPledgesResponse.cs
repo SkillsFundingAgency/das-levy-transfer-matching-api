@@ -2,14 +2,14 @@
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 using System;
 using System.Collections.Generic;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledges
 {
-    public class GetPledgesResponse : List<GetPledgesResponse.Pledge>
+    public class GetPledgesResponse
     {
-        public GetPledgesResponse(IEnumerable<Pledge> collection) : base(collection)
-        {
-        }
+        public IEnumerable<Pledge> Pledges { get; set; }
+        public int TotalPledges { get; set; }
 
         public class Pledge
         {
@@ -34,7 +34,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledges
 
             public IEnumerable<LocationInformation> Locations { get; set; }
 
-            public static implicit operator Pledge(LevyTransferMatching.Models.Pledge pledge)
+            public static implicit operator Pledge(GetPledgesResult.Pledge pledge)
             {
                 return new Pledge()
                 {
