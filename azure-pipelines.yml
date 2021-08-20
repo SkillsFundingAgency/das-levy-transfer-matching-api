@@ -22,7 +22,7 @@ resources:
   - repository: das-platform-building-blocks
     type: github
     name: SkillsFundingAgency/das-platform-building-blocks
-    ref: DASD-8942-Set-BackEndAccessRestrictions-Variable
+    ref: refs/tags/0.3.32
     endpoint: SkillsFundingAgency
   - repository: das-platform-automation
     type: github
