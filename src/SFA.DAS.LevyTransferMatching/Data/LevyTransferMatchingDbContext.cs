@@ -29,7 +29,7 @@ namespace SFA.DAS.LevyTransferMatching.Data
             modelBuilder.Entity<Models.Application>().ToTable("Application");
             modelBuilder.Entity<Models.Application>().HasKey(x => x.Id);
             modelBuilder.Entity<Models.Application>().HasOne(x => x.EmployerAccount).WithMany();
-            modelBuilder.Entity<Models.Application>().HasOne(x => x.Pledge).WithMany();
+            modelBuilder.Entity<Models.Application>().HasOne(x => x.Pledge).WithMany(x => x.Applications);
             modelBuilder.Entity<Models.Application>().Property(x => x.RowVersion).IsRowVersion();
             modelBuilder.Entity<Models.Application>().HasMany(x => x.EmailAddresses).WithOne();
             modelBuilder.Entity<Models.Application>().Metadata.FindNavigation(nameof(Models.Application.EmailAddresses))

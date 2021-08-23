@@ -15,6 +15,10 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
 
             public int Amount { get; set; }
 
+            public int RemainingAmount { get; set; }
+
+            public int ApplicationCount { get; set; }
+
             public bool IsNamePublic { get; set; }
 
             public string DasAccountName { get; set; }

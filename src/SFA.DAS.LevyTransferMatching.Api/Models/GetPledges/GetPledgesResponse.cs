@@ -34,13 +34,15 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledges
 
             public IEnumerable<LocationInformation> Locations { get; set; }
 
+            public int ApplicationCount { get; set; }
+
             public static implicit operator Pledge(GetPledgesResult.Pledge pledge)
             {
                 return new Pledge()
                 {
                     AccountId = pledge.AccountId,
                     Amount = pledge.Amount,
-                    RemainingAmount = pledge.Amount,
+                    RemainingAmount = pledge.RemainingAmount,
                     CreatedOn = pledge.CreatedOn,
                     DasAccountName = pledge.DasAccountName,
                     Id = pledge.Id,
@@ -48,7 +50,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledges
                     JobRoles = pledge.JobRoles,
                     Levels = pledge.Levels,
                     Sectors = pledge.Sectors,
-                    Locations = pledge.Locations
+                    Locations = pledge.Locations,
+                    ApplicationCount = pledge.ApplicationCount
                 };
             }
         }

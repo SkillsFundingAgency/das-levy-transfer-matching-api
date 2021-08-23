@@ -6,11 +6,9 @@ using SFA.DAS.LevyTransferMatching.Data.Models;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using SFA.DAS.LevyTransferMatching.Models.Enums;
 using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;
 using System.Collections.Generic;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
-using SFA.DAS.LevyTransferMatching.Data;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
 {
@@ -28,18 +26,18 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
 
             await DbContext.EmployerAccounts.AddRangeAsync(employerAccounts);
 
-            var pledgeRecords = new List<Pledge>();
+            var pledges = new List<Pledge>();
 
             for (var i = 0; i < employerAccounts.Count(); i++)
             {
-                pledgeRecords.Add(
+                pledges.Add(
                     employerAccounts[i].CreatePledge(
                         _fixture.Create<CreatePledgeProperties>(),
                         _fixture.Create<UserInfo>()
                     ));
             }
 
-            await DbContext.Pledges.AddRangeAsync(pledgeRecords);
+            await DbContext.Pledges.AddRangeAsync(pledges);
 
             await DbContext.SaveChangesAsync();
         }
@@ -64,8 +62,8 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
 
             for (int i = 0; i < actualPledges.Length; i++)
             {
-                Assert.AreEqual(dbPledges[i].Id, actualPledges[i].Id);
-                Assert.AreEqual(dbPledges[i].EmployerAccount.Id, actualPledges[i].AccountId);
+                Assert.AreEqual(actualPledges[i].Id, dbPledges[i].Id);
+                Assert.AreEqual(actualPledges[i].AccountId, dbPledges[i].EmployerAccount.Id);
             }
         }
 

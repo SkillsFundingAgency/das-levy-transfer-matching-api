@@ -32,6 +32,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
             var pledgeEntries = await pledgeEntriesQuery
                 .Include(x => x.EmployerAccount)
                 .Include(x => x.Locations)
+                .Include(x => x.Applications)
                 .ToListAsync();
 
             var pledges = pledgeEntries
@@ -39,6 +40,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
                     x => new GetPledgesResult.Pledge()
                     {
                         Amount = x.Amount,
+                        RemainingAmount = x.RemainingAmount,
                         CreatedOn = x.CreatedOn,
                         AccountId = x.EmployerAccount.Id,
                         Id = x.Id,
@@ -47,7 +49,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
                         JobRoles = x.JobRoles.ToList(),
                         Levels = x.Levels.ToList(),
                         Sectors = x.Sectors.ToList(),
-                        Locations = x.Locations.Select(y => new LocationInformation { Name = y.Name, Geopoint = new double[] { y.Latitude, y.Longitude } }).ToList()
+                        Locations = x.Locations.Select(y => new LocationInformation { Name = y.Name, Geopoint = new double[] { y.Latitude, y.Longitude } }).ToList(),
+                        ApplicationCount = x.Applications.Count
                     })
                 .OrderByDescending(x => x.Amount);
 
