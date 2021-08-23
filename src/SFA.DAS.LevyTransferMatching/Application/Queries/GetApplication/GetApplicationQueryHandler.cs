@@ -37,6 +37,10 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                     StandardId = application.StandardId,
                     StartDate = application.StartDate,
                     EmployerAccountName = application.EmployerAccount.Name,
+                    PledgeLocations = application.Pledge.Locations.ToList(),
+                    PledgeSectors = application.Pledge.Sectors.ToList(),
+                    PledgeLevels = application.Pledge.Levels.ToList(),
+                    PledgeJobRoles = application.Pledge.JobRoles.ToList(),
                 };
             }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
+using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
@@ -19,6 +20,10 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
         public IEnumerable<string> EmailAddresses { get; set; }
         public string BusinessWebsite { get; set; }
         public string EmployerAccountName { get; set; }
+        public List<PledgeLocation> PledgeLocations { get; set; }
+        public IEnumerable<Sector> PledgeSectors { get; set; }
+        public IEnumerable<Level> PledgeLevels { get; set; }
+        public IEnumerable<JobRole> PledgeJobRoles { get; set; }
 
         public static implicit operator GetApplicationResponse(GetApplicationResult getApplicationResult)
         {
@@ -36,6 +41,10 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
                 StandardId = getApplicationResult.StandardId,
                 StartDate = getApplicationResult.StartDate,
                 EmployerAccountName = getApplicationResult.EmployerAccountName,
+                PledgeLocations = getApplicationResult.PledgeLocations,
+                PledgeSectors = getApplicationResult.PledgeSectors,
+                PledgeLevels = getApplicationResult.PledgeLevels,
+                PledgeJobRoles = getApplicationResult.PledgeJobRoles,
             };
         }
     }

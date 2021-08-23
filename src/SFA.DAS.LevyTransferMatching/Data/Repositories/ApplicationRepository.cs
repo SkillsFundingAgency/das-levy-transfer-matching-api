@@ -31,6 +31,8 @@ namespace SFA.DAS.LevyTransferMatching.Data.Repositories
             return await _dbContext.Applications
                 .Include(x => x.EmailAddresses)
                 .Include(x => x.EmployerAccount)
+                .Include(x => x.Pledge)
+                .Include(x => x.Pledge.Locations)
                 .SingleOrDefaultAsync(x => x.Id == applicationId);
         }
     }
