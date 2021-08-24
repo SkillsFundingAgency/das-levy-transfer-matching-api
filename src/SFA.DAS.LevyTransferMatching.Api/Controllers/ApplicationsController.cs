@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.LevyTransferMatching.Api.Models.Applications;
 using SFA.DAS.LevyTransferMatching.Application.Commands.ApproveApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
@@ -66,6 +67,19 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 (CreateApplicationResponse)commandResult);
 
             return result;
+        }
+
+        [HttpGet]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetApplications(int pledgeId)
+        {
+            var query = await _mediator.Send(new GetApplicationsQuery
+            {
+                PledgeId = pledgeId
+            });
+
+            return Ok(query);
         }
     }
 }

@@ -1,14 +1,15 @@
-﻿using SFA.DAS.LevyTransferMatching.Models.Enums;
+﻿using SFA.DAS.LevyTransferMatching.Models;
+using SFA.DAS.LevyTransferMatching.Models.Enums;
 using System;
 using System.Collections.Generic;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledges
 {
-    public class GetPledgesResponse : List<GetPledgesResponse.Pledge>
+    public class GetPledgesResponse
     {
-        public GetPledgesResponse(IEnumerable<Pledge> collection) : base(collection)
-        {
-        }
+        public IEnumerable<Pledge> Pledges { get; set; }
+        public int TotalPledges { get; set; }
 
         public class Pledge
         {
@@ -31,20 +32,26 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledges
 
             public IEnumerable<Sector> Sectors { get; set; }
 
-            public static implicit operator Pledge(LevyTransferMatching.Models.Pledge pledge)
+            public IEnumerable<LocationInformation> Locations { get; set; }
+
+            public int ApplicationCount { get; set; }
+
+            public static implicit operator Pledge(GetPledgesResult.Pledge pledge)
             {
                 return new Pledge()
                 {
                     AccountId = pledge.AccountId,
                     Amount = pledge.Amount,
-                    RemainingAmount = pledge.Amount,
+                    RemainingAmount = pledge.RemainingAmount,
                     CreatedOn = pledge.CreatedOn,
                     DasAccountName = pledge.DasAccountName,
                     Id = pledge.Id,
                     IsNamePublic = pledge.IsNamePublic,
                     JobRoles = pledge.JobRoles,
                     Levels = pledge.Levels,
-                    Sectors = pledge.Sectors
+                    Sectors = pledge.Sectors,
+                    Locations = pledge.Locations,
+                    ApplicationCount = pledge.ApplicationCount
                 };
             }
         }

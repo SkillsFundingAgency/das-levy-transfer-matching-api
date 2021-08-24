@@ -28,11 +28,20 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         [HttpGet]
         [Route("pledges")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetPledges()
+        public async Task<IActionResult> GetPledges(long? accountId = null)
         {
-            var result = await _mediator.Send(new GetPledgesQuery());
+            var result = await _mediator.Send(new GetPledgesQuery()
+            {
+                AccountId = accountId,
+            });
 
-            return Ok(new GetPledgesResponse(result.Select(x => (GetPledgesResponse.Pledge)x)));
+            var response = new GetPledgesResponse()
+            {
+                Pledges = result.Items.Select(x => (GetPledgesResponse.Pledge)x),
+                TotalPledges = result.TotalItems,
+            };
+
+            return Ok(response);
         }
 
         [HttpGet]

@@ -50,6 +50,9 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         private readonly List<PledgeLocation> _locations;
         public IReadOnlyCollection<PledgeLocation> Locations => _locations;
 
+        private readonly List<Application> _applications;
+        public IReadOnlyCollection<Application> Applications => _applications;
+
         public byte[] RowVersion { get; private set; }
 
         public Application CreateApplication(EmployerAccount account, CreateApplicationProperties properties, UserInfo userInfo)
