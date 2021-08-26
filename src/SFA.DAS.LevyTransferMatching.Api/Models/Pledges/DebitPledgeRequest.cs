@@ -3,5 +3,6 @@
     public class DebitPledgeRequest
     {
         public int Amount { get; set; }
+        public int ApplicationId { get; set; }
     }
 }

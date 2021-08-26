@@ -139,7 +139,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
 
             _mockMediator.Verify(x =>
                 x.Send(It.Is<DebitPledgeCommand>(command =>
-                        command.PledgeId == pledgeId && command.Amount == request.Amount),
+                        command.PledgeId == pledgeId && command.Amount == request.Amount && command.ApplicationId == request.ApplicationId),
                 It.IsAny<CancellationToken>()));
         }
 

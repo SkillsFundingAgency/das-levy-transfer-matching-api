@@ -74,6 +74,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
             await _mediator.Send(new DebitPledgeCommand
             {
                 PledgeId = pledgeId,
+                ApplicationId = request.ApplicationId,
                 Amount = request.Amount
             });
             
