@@ -36,7 +36,8 @@ namespace SFA.DAS.LevyTransferMatching.Data.Repositories
 
         public async Task<Models.Application> Get(int pledgeId, int applicationId)
         {
-            return await _dbContext.Applications.SingleAsync(x => x.Id == applicationId && x.Pledge.Id == pledgeId);
+            return await _dbContext.Applications
+                .SingleAsync(x => x.Id == applicationId && x.Pledge.Id == pledgeId);
         }
     }
 }

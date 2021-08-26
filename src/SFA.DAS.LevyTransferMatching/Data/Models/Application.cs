@@ -41,6 +41,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
         public EmployerAccount EmployerAccount { get; private set; }
 
+        public int PledgeId { get; private set; }
         public Pledge Pledge { get; private set; }
 
         public string Details { get; private set; }
@@ -78,7 +79,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             ChangeTrackingSession.TrackUpdate(this);
             Status = ApplicationStatus.Approved;
             UpdatedOn = DateTime.UtcNow;
-            AddEvent(new ApplicationApproved(Id, UpdatedOn.Value, Amount));
+            AddEvent(new ApplicationApproved(Id, PledgeId, UpdatedOn.Value, Amount));
         }
     }
 }
