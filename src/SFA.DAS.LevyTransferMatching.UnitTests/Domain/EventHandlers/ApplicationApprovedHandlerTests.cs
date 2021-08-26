@@ -35,6 +35,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Domain.EventHandlers
 
             _eventPublisher.Verify(x => x.Publish(It.Is<ApplicationApprovedEvent>(e =>
                     e.ApplicationId == @event.ApplicationId &&
+                    e.PledgeId == @event.PledgeId &&
                     e.ApprovedOn == @event.ApprovedOn &&
                     e.Amount == @event.Amount)));
         }

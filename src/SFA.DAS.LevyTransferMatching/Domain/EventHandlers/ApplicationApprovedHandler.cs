@@ -18,7 +18,7 @@ namespace SFA.DAS.LevyTransferMatching.Domain.EventHandlers
 
         public async Task Handle(ApplicationApproved @event, CancellationToken cancellationToken = default(CancellationToken))
         {
-            await _eventPublisher.Publish(new ApplicationApprovedEvent(@event.ApplicationId,
+            await _eventPublisher.Publish(new ApplicationApprovedEvent(@event.ApplicationId, @event.PledgeId,
                 @event.ApprovedOn,
                 @event.Amount));
         }
