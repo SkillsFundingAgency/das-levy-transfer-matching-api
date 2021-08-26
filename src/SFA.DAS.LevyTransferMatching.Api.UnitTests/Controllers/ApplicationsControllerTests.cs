@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
@@ -10,6 +11,7 @@ using SFA.DAS.LevyTransferMatching.Api.Controllers;
 using SFA.DAS.LevyTransferMatching.Api.Models.Applications;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 
 namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
@@ -110,6 +112,23 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             Assert.IsNotNull(actionResult);
             Assert.IsNotNull(okObjectResult);
             Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.NotFound);
+        }
+
+        [Test]
+        public async Task Get_Returns_Applications()
+        {
+            _mediator.Setup(x => x.Send(It.Is<GetApplicationsQuery>(query => query.PledgeId == _pledgeId), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new GetApplicationsResult(new LevyTransferMatching.Models.Application[]
+            {
+                new LevyTransferMatching.Models.Application()
+            }));
+
+            var actionResult = await _applicationsController.GetApplications(_pledgeId);
+            var result = actionResult as OkObjectResult;
+            Assert.IsNotNull(result);
+            var response = result.Value as GetApplicationsResult;
+            Assert.IsNotNull(response);
+            Assert.AreEqual(1, response.Applications.Count());
         }
     }
 }

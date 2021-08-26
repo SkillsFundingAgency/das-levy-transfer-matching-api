@@ -26,6 +26,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledge
 
         public IEnumerable<Sector> Sectors { get; set; }
 
+        public IEnumerable<LocationInformation> Locations { get; set; }
+
         public static implicit operator GetPledgeResponse(Pledge pledge)
         {
             return new GetPledgeResponse()
@@ -40,6 +42,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledge
                 JobRoles = pledge.JobRoles,
                 Levels = pledge.Levels,
                 Sectors = pledge.Sectors,
+                Locations = pledge.Locations
             };
         }
     }
