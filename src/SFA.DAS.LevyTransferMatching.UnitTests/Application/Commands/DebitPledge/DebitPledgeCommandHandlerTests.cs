@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitPledge;
@@ -34,7 +35,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.DebitPledg
             _repository = new Mock<IPledgeRepository>();
             _repository.Setup(x => x.Get(_pledge.Id)).ReturnsAsync(_pledge);
 
-            _handler = new DebitPledgeCommandHandler(_repository.Object);
+            _handler = new DebitPledgeCommandHandler(_repository.Object, Mock.Of<ILogger<DebitPledgeCommandHandler>>());
         }
 
         [TestCase(1000, 100, 900)]

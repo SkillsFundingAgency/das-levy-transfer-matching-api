@@ -7,20 +7,18 @@ using SFA.DAS.NServiceBus.Services;
 
 namespace SFA.DAS.LevyTransferMatching.Domain.EventHandlers
 {
-    public class ApplicationApprovedHandler : IDomainEventHandler<ApplicationApproved>
+    public class PledgeDebitFailedHandler : IDomainEventHandler<PledgeDebitFailed>
     {
         private readonly IEventPublisher _eventPublisher;
 
-        public ApplicationApprovedHandler(IEventPublisher eventPublisher)
+        public PledgeDebitFailedHandler(IEventPublisher eventPublisher)
         {
             _eventPublisher = eventPublisher;
         }
 
-        public async Task Handle(ApplicationApproved @event, CancellationToken cancellationToken = default)
+        public async Task Handle(PledgeDebitFailed @event, CancellationToken cancellationToken = default)
         {
-            await _eventPublisher.Publish(new ApplicationApprovedEvent(@event.ApplicationId, @event.PledgeId,
-                @event.ApprovedOn,
-                @event.Amount));
+            await _eventPublisher.Publish(new PledgeDebitFailedEvent(@event.PledgeId, @event.ApplicationId, @event.Amount));
         }
     }
 }

@@ -60,17 +60,23 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             return new Application(this, account, properties, userInfo);
         }
 
-        public void Debit(int debitAmount, UserInfo userInfo)
+        public bool CanDebit(int debitAmount)
         {
-            if(RemainingAmount < debitAmount)
+            return RemainingAmount >= debitAmount;
+        }
+
+        public bool Debit(int debitAmount, int applicationId, UserInfo userInfo)
+        {
+            if (!CanDebit(debitAmount))
             {
-                throw new InvalidOperationException(
-                    $"Unable to debit Pledge {Id} by {debitAmount} with remaining amount {RemainingAmount}");
+                AddEvent(new PledgeDebitFailed(Id, applicationId, debitAmount));
+                return false;
             }
 
             StartTrackingSession(UserAction.DebitPledge, userInfo);
             ChangeTrackingSession.TrackUpdate(this);
             RemainingAmount -= debitAmount;
+            return true;
         }
     }
 }
