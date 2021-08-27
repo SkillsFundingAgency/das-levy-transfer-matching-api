@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
 using Microsoft.Extensions.Logging;
@@ -51,12 +50,14 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.DebitPledg
         }
 
         [Test]
-        public async Task Handle_Throws_If_Pledge_Cannot_Be_Debited_By_Amount()
+        public async Task Handle_Reports_Error_If_Pledge_Cannot_Be_Debited_By_Amount()
         {
             _pledge.SetValue(x => x.RemainingAmount, 1000);
             _command.Amount = 1001;
 
-            Assert.ThrowsAsync<InvalidOperationException>(async () => await _handler.Handle(_command, CancellationToken.None));
+            var result = await _handler.Handle(_command, CancellationToken.None);
+
+            Assert.IsFalse(result.IsSuccess);
         }
     }
 }

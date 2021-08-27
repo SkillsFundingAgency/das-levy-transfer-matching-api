@@ -133,7 +133,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
 
             _mockMediator
                 .Setup(x => x.Send(It.IsAny<DebitPledgeCommand>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(() => Unit.Value);
+                .ReturnsAsync(() => new DebitPledgeCommandResult {IsSuccess = true});
 
             await _pledgesController.DebitPledge(pledgeId, request);
 

@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
@@ -71,13 +72,18 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> DebitPledge(int pledgeId, [FromBody] DebitPledgeRequest request)
         {
-            await _mediator.Send(new DebitPledgeCommand
+            var result = await _mediator.Send(new DebitPledgeCommand
             {
                 PledgeId = pledgeId,
                 ApplicationId = request.ApplicationId,
                 Amount = request.Amount
             });
-            
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest();
+            }
+
             return Ok();
         }
 
