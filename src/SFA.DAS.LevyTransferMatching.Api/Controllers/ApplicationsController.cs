@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.LevyTransferMatching.Api.Models.Applications;
 using SFA.DAS.LevyTransferMatching.Application.Commands.ApproveApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
+using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
@@ -32,6 +33,21 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 ApplicationId = applicationId,
                 UserId = request.UserId,
                 UserDisplayName = request.UserDisplayName
+            });
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [Route("{applicationId}/undo-approval")]
+        public async Task<IActionResult> UndoApplicationApproval(int pledgeId, int applicationId)
+        {
+            await _mediator.Send(new UndoApplicationApprovalCommand
+            {
+                PledgeId = pledgeId,
+                ApplicationId = applicationId
             });
 
             return Ok();

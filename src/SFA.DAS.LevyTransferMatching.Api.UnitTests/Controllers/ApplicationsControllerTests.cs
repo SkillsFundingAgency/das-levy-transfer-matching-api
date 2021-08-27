@@ -10,6 +10,7 @@ using SFA.DAS.LevyTransferMatching.Api.Controllers;
 using SFA.DAS.LevyTransferMatching.Api.Models.Applications;
 using SFA.DAS.LevyTransferMatching.Application.Commands.ApproveApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
+using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
 
 namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
@@ -75,6 +76,20 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
                         command.ApplicationId == _applicationId &&
                         command.UserId == request.UserId &&
                         command.UserDisplayName == request.UserDisplayName),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Test]
+        public async Task Post_UndoApplicationApproval_Undoes_Application_Approval()
+        {
+            var actionResult = await _applicationsController.UndoApplicationApproval(_pledgeId, _applicationId);
+            var okResult = actionResult as OkResult;
+            Assert.IsNotNull(okResult);
+
+            _mediator.Verify(x => x.Send(It.Is<UndoApplicationApprovalCommand>(command =>
+                        command.PledgeId == _pledgeId &&
+                        command.ApplicationId == _applicationId),
                     It.IsAny<CancellationToken>()),
                 Times.Once);
         }

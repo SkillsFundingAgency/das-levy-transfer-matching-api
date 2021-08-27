@@ -5,6 +5,7 @@
         CreatePledge,
         CreateApplication,
         ApproveApplication,
-        DebitPledge
+        DebitPledge,
+        UndoApplicationApproval
     }
 }

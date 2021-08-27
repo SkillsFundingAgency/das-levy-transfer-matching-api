@@ -81,5 +81,18 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             UpdatedOn = DateTime.UtcNow;
             AddEvent(new ApplicationApproved(Id, PledgeId, UpdatedOn.Value, Amount));
         }
+
+        public void UndoApproval(UserInfo userInfo)
+        {
+            if (Status != ApplicationStatus.Approved)
+            {
+                throw new InvalidOperationException($"Unable to undo approval of Application {Id} status {Status}");
+            }
+
+            StartTrackingSession(UserAction.UndoApplicationApproval, userInfo);
+            ChangeTrackingSession.TrackUpdate(this);
+            Status = ApplicationStatus.Pending;
+            UpdatedOn = DateTime.UtcNow;
+        }
     }
 }
