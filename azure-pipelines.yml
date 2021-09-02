@@ -1,3 +1,8 @@
+parameters:
+  - name: SqlAdditionalArguments
+    type: string
+    default: ''
+
 trigger:
   batch: true
   branches:
@@ -59,6 +64,8 @@ stages:
     parameters:
       Environment: AT
       ServiceConnection: SFA-DAS-DevTest-ARM
+      SqlAdditionalArgumentsFlag: $(SqlAdditionalArgumentsFlag)
+      SqlAdditionalArguments: $(SqlAdditionalArguments)
 
 - stage: Deploy_TEST
   dependsOn: Build
@@ -97,6 +104,7 @@ stages:
       ServiceConnection: SFA-DIG-PreProd-ARM
 
 - stage: Deploy_PROD
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   dependsOn: Build
   displayName: Deploy to PROD
   variables:
