@@ -20,7 +20,7 @@ variables:
     value: any cpu
   - group: RELEASE Management Resources
   - group: RELEASE das-levy-transfer-matching-api
-   - name: SqlAdditionalArgumentsFlagYml
+  - name: SqlAdditionalArgumentsFlagYml
     value: $(SqlAdditionalArgumentsFlag)
 
 resources:
