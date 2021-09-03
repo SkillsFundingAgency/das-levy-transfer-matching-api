@@ -13,6 +13,7 @@ jobs:
     runOnce:
       deploy:
         steps:
+        - script: echo $(SqlAdditionalArgumentsFlag)
         - template: azure-pipelines-templates/deploy/step/set-backendaccessrestrictions-variable.yml@das-platform-building-blocks
           parameters:
             ServiceConnection: ${{ parameters.ServiceConnection }}
@@ -49,8 +50,8 @@ jobs:
             SqlUsername: $(SharedSQLServerUsername)
             SqlPassword: $(SharedSQLServerPassword)
             DacpacFile: $(Pipeline.Workspace)/DacpacArtifact/src/SFA.DAS.LevyTransferMatching.Database/bin/Output/SFA.DAS.LevyTransferMatching.Database.dacpac
-            # ${{ if eq(variables['SqlAdditionalArgumentsFlag'], 'true') }}:
-            AdditionalArguments: ${{ parameters.SqlAdditionalArguments }}
+            ${{ if eq(variables['SqlAdditionalArgumentsFlag'], 'true') }}:
+              AdditionalArguments: ${{ parameters.SqlAdditionalArguments }}
         - template: azure-pipelines-templates/deploy/step/app-deploy.yml@das-platform-building-blocks
           parameters:
             ServiceConnection: ${{ parameters.ServiceConnection }}
