@@ -3,10 +3,6 @@ parameters:
   ServiceConnection:
   SqlAdditionalArguments:
 
-variables:
-  - name: SqlAdditionalArgumentsFlagYml
-    value: $(SqlAdditionalArgumentsFlag)
-
 jobs:
 - deployment: DeployWebApp
   pool:
