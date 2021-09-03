@@ -2,7 +2,7 @@ parameters:
   Environment:
   ServiceConnection:
   SqlAdditionalArguments:
-  SqlAdditionalArgumentsFlag: ${{variables.SqlAdditionalArgumentsFlag}}
+  SqlAdditionalArgumentsFlag: $(SqlAdditionalArgumentsFlag)
 
 jobs:
 - deployment: DeployWebApp
