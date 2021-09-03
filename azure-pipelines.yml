@@ -2,10 +2,7 @@ parameters:
   - name: SqlAdditionalArguments
     type: string
     default: ''
-  - name: SqlAdditionalArgumentsFlag
-    type: string
-    default: ''
-    
+
 trigger:
   batch: true
   branches:
@@ -68,7 +65,6 @@ stages:
       Environment: AT
       ServiceConnection: SFA-DAS-DevTest-ARM
       SqlAdditionalArguments: ${{ parameters.SqlAdditionalArguments }}
-      SqlAdditionalArgumentsFlag: $(SqlAdditionalArgumentsFlag)
 
 - stage: Deploy_TEST
   dependsOn: Build
