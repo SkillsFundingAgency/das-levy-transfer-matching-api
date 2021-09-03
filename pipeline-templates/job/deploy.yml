@@ -2,7 +2,7 @@ parameters:
   Environment:
   ServiceConnection:
   SqlAdditionalArguments:
-  SqlAdditionalArgumentsFlag:
+  SqlAdditionalArgumentsFlag: ${{variables.SqlAdditionalArgumentsFlag}}
 
 jobs:
 - deployment: DeployWebApp
@@ -40,6 +40,9 @@ jobs:
           #  SourcePath: $(Pipeline.Workspace)/das-employer-config/Configuration/das-levy-transfer-matching-api
            # TargetFileName: '*.schema.json'
             #TableName: Configuration
+        - script: echo 'compile, ${{variables.SqlAdditionalArgumentsFlag}}''
+        - script: echo 'macro, $(SqlAdditionalArgumentsFlag)''
+        - script: echo 'runtime, $[variables.SqlAdditionalArgumentsFlag]'
         - task: SqlAzureDacpacDeployment@1
           displayName: Execute Azure SQL DacpacTask
           inputs:
