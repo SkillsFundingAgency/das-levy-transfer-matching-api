@@ -9,13 +9,14 @@ jobs:
     name: DAS - Continuous Deployment Agents
   environment: ${{ parameters.Environment }}
   variables:
-    SqlAdditionalArgumentsFlagYml: $(SqlAdditionalArgumentsFlag)
+    SqlAdditionalArgumentsFlagYml: 'test'
   strategy:
     runOnce:
       deploy:
         steps:
         - script: echo $(SqlAdditionalArgumentsFlag)
         - script: echo $(variables.SqlAdditionalArgumentsFlagYml)
+        - script: echo $(SqlAdditionalArgumentsFlagYml)
         - template: azure-pipelines-templates/deploy/step/set-backendaccessrestrictions-variable.yml@das-platform-building-blocks
           parameters:
             ServiceConnection: ${{ parameters.ServiceConnection }}
