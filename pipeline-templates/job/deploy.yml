@@ -9,8 +9,7 @@ jobs:
     name: DAS - Continuous Deployment Agents
   environment: ${{ parameters.Environment }}
   variables:
-    name: SqlAdditionalArgumentsFlag
-    value: $(SqlAdditionalArgumentsFlag)
+    SqlAdditionalArgumentsFlag: $(SqlAdditionalArgumentsFlag)
     strategy:
     runOnce:
       deploy:
