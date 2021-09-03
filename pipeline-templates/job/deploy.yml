@@ -13,7 +13,6 @@ jobs:
       deploy:
         steps:
         - script: echo $(SqlAdditionalArgumentsFlag)
-        - script: echo "${{ (variables['SqlAdditionalArgumentsFlag'], 'test') }}"
         - template: azure-pipelines-templates/deploy/step/set-backendaccessrestrictions-variable.yml@das-platform-building-blocks
           parameters:
             ServiceConnection: ${{ parameters.ServiceConnection }}
