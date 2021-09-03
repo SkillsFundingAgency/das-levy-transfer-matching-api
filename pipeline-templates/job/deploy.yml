@@ -10,7 +10,7 @@ jobs:
   environment: ${{ parameters.Environment }}
   variables:
     SqlAdditionalArgumentsFlag: $(SqlAdditionalArgumentsFlag)
-    strategy:
+  strategy:
     runOnce:
       deploy:
         steps:
