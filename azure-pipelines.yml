@@ -27,7 +27,8 @@ resources:
   - repository: das-platform-building-blocks
     type: github
     name: SkillsFundingAgency/das-platform-building-blocks
-    ref: refs/tags/0.3.32
+    # ref: refs/tags/0.3.32
+    ref: refs/heads/DASD-8970-add-SqlDacpacDeployment-template-to-building-blocks 
     endpoint: SkillsFundingAgency
   - repository: das-platform-automation
     type: github
@@ -65,7 +66,6 @@ stages:
       Environment: AT
       ServiceConnection: SFA-DAS-DevTest-ARM
       SqlAdditionalArguments: ${{ parameters.SqlAdditionalArguments }}
-      SqlAdditionalArgumentsFlag: $(SqlAdditionalArgumentsFlag)
 
 - stage: Deploy_TEST
   dependsOn: Build
