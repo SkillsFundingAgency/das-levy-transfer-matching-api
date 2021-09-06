@@ -66,6 +66,7 @@ stages:
       Environment: AT
       ServiceConnection: SFA-DAS-DevTest-ARM
       SqlAdditionalArguments: ${{ parameters.SqlAdditionalArguments }}
+      EnableSqlAdditionalArguments: $(SqlAdditionalArgumentsFlag)
 
 - stage: Deploy_TEST
   dependsOn: Build
