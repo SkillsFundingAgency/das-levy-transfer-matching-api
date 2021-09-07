@@ -1,8 +1,12 @@
 parameters:  
   Environment:
   ServiceConnection:
-  SqlAdditionalArguments: ''
-  EnableSqlAdditionalArguments: 'false'
+  - name: AdditionalArguments
+    type: string
+    default: ''
+  - name: EnableSqlAdditionalArguments
+    type: string
+    default: 'false'
 
 jobs:
 - deployment: DeployWebApp
