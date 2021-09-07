@@ -33,17 +33,5 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Data.Repositories
             var inserted = await DbContext.Applications.FindAsync(account.Id);
             Assert.AreEqual(account, inserted);
         }
-
-        [Test]
-        public async Task Get_Retrieves_Application()
-        {
-            var application = _fixture.Create<LevyTransferMatching.Data.Models.Application>();
-            DbContext.Applications.Add(application);
-            DbContext.SaveChanges();
-
-            var result = await _repository.Get(application.Id);
-
-            Assert.AreEqual(application, result);
-        }
     }
 }
