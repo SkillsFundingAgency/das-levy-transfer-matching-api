@@ -41,6 +41,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                     PledgeSectors = application.Pledge.Sectors.ToList(),
                     PledgeLevels = application.Pledge.Levels.ToList(),
                     PledgeJobRoles = application.Pledge.JobRoles.ToList(),
+                    Amount = application.Amount,
                     PledgeRemainingAmount = application.Pledge.RemainingAmount
                 };
             }

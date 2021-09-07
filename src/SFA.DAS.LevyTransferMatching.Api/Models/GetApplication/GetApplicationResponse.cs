@@ -25,6 +25,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
         public IEnumerable<Level> PledgeLevels { get; set; }
         public IEnumerable<JobRole> PledgeJobRoles { get; set; }
         public int PledgeRemainingAmount { get; set; }
+        public int Amount { get; set; }
 
         public static implicit operator GetApplicationResponse(GetApplicationResult getApplicationResult)
         {
@@ -46,7 +47,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
                 PledgeSectors = getApplicationResult.PledgeSectors,
                 PledgeLevels = getApplicationResult.PledgeLevels,
                 PledgeJobRoles = getApplicationResult.PledgeJobRoles,
-                PledgeRemainingAmount = getApplicationResult.PledgeRemainingAmount
+                PledgeRemainingAmount = getApplicationResult.PledgeRemainingAmount,
+                Amount = getApplicationResult.Amount
             };
         }
     }
