@@ -1,3 +1,8 @@
+parameters:
+  - name: SqlAdditionalArguments
+    type: string
+    default: ''
+
 trigger:
   batch: true
   branches:
@@ -22,7 +27,8 @@ resources:
   - repository: das-platform-building-blocks
     type: github
     name: SkillsFundingAgency/das-platform-building-blocks
-    ref: refs/tags/0.3.32
+    # ref: refs/tags/0.3.32
+    ref: refs/heads/DASD-8970-second-solution-of-dacpac-deployment-template
     endpoint: SkillsFundingAgency
   - repository: das-platform-automation
     type: github
@@ -59,6 +65,8 @@ stages:
     parameters:
       Environment: AT
       ServiceConnection: SFA-DAS-DevTest-ARM
+      SqlAdditionalArguments: ${{ parameters.SqlAdditionalArguments }}
+      EnableSqlAdditionalArguments: true
 
 - stage: Deploy_TEST
   dependsOn: Build
