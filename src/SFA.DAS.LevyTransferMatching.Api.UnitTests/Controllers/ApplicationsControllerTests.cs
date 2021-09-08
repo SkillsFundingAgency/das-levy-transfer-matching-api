@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Net;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
@@ -8,10 +9,12 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Api.Controllers;
 using SFA.DAS.LevyTransferMatching.Api.Models.Applications;
+using SFA.DAS.LevyTransferMatching.Api.Models.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.ApproveApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 
 namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
 {
@@ -103,6 +106,51 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             var response = createdResult.Value as CreateApplicationResponse;
             Assert.IsNotNull(response);
             Assert.AreEqual(_result.ApplicationId, response.ApplicationId);
+        }
+
+        [Test]
+        public async Task Get_Returns_Application()
+        {
+            // Arrange
+            var pledgeId = _fixture.Create<int>();
+            var applicationId = _fixture.Create<int>();
+            var applicationResult = _fixture.Create<GetApplicationResult>();
+
+            _mediator
+                .Setup(x => x.Send(It.Is<GetApplicationQuery>(y => y.Id == applicationId), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(applicationResult);
+
+            // Act
+            var actionResult = await _applicationsController.GetApplication(pledgeId, applicationId);
+            var okObjectResult = actionResult as OkObjectResult;
+            var getApplicationResponse = okObjectResult.Value as GetApplicationResponse;
+
+            // Assert
+            Assert.IsNotNull(actionResult);
+            Assert.IsNotNull(okObjectResult);
+            Assert.IsNotNull(getApplicationResponse);
+            Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.OK);
+        }
+
+        [Test]
+        public async Task Get_Returns_NotFound()
+        {
+            // Arrange
+            var pledgeId = _fixture.Create<int>();
+            var applicationId = _fixture.Create<int>();
+
+            _mediator
+                .Setup(x => x.Send(It.Is<GetApplicationQuery>(y => y.Id == applicationId), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((GetApplicationResult)null);
+
+            // Act
+            var actionResult = await _applicationsController.GetApplication(pledgeId, applicationId);
+            var okObjectResult = actionResult as NotFoundResult;
+
+            // Assert
+            Assert.IsNotNull(actionResult);
+            Assert.IsNotNull(okObjectResult);
+            Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.NotFound);
         }
 
         [Test]

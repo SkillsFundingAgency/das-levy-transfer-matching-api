@@ -3,10 +3,12 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.LevyTransferMatching.Api.Models.Applications;
+using SFA.DAS.LevyTransferMatching.Api.Models.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.ApproveApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
@@ -22,7 +24,31 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost]
+        [HttpGet]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [Route("{applicationId}")]
+        public async Task<IActionResult> GetApplication(int pledgeId, int applicationId)
+        {
+            var queryResult = await _mediator.Send(new GetApplicationQuery()
+            {
+                Id = applicationId,
+            });
+
+            IActionResult result = null;
+            if (queryResult != null)
+            {
+                result = new OkObjectResult((GetApplicationResponse)queryResult);
+            }
+            else
+            {
+                result = new NotFoundResult();
+            }
+
+            return result;
+        }
+		
+		[HttpPost]
         [ProducesResponseType((int) HttpStatusCode.OK)]
         [Route("{applicationId}/approve")]
         public async Task<IActionResult> ApproveApplication(int pledgeId, int applicationId, [FromBody] ApproveApplicationRequest request)
@@ -37,6 +63,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 
             return Ok();
         }
+
+		
 
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
