@@ -4,6 +4,7 @@ parameters:
   - name: SqlAdditionalArguments
     type: string
     default: ''
+  
 
 jobs:
 - deployment: DeployWebApp
@@ -50,7 +51,6 @@ jobs:
             SqlPassword: $(SharedSQLServerPassword)
             DacpacFile: $(Pipeline.Workspace)/DacpacArtifact/src/SFA.DAS.LevyTransferMatching.Database/bin/Output/SFA.DAS.LevyTransferMatching.Database.dacpac
             AdditionalArguments: ${{ parameters.SqlAdditionalArguments }}
-            EnableSqlAdditionalArguments: $(EnableSqlAdditionalArguments)
 
       #  - template: azure-pipelines-templates/deploy/step/app-deploy.yml@das-platform-building-blocks
       #    parameters:
