@@ -60,8 +60,6 @@ stages:
   variables:
   - group: DevTest Management Resources
   - group: AT DevTest Shared Resources
-  - name: EnableSqlAdditionalArgumentsComp
-    value: ${{ variables.EnableSqlAdditionalArguments }}
   jobs:
   - template: pipeline-templates/job/deploy.yml
     parameters:
