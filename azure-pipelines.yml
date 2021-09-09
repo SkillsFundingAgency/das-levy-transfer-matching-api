@@ -1,5 +1,5 @@
 parameters:
-  - name: SqlAdditionalArguments
+  - name: AdditionalArguments
     type: string
     default: ''
 
@@ -65,7 +65,7 @@ stages:
     parameters:
       Environment: AT
       ServiceConnection: SFA-DAS-DevTest-ARM
-      SqlAdditionalArguments: ${{ parameters.SqlAdditionalArguments }}
+      SqlAdditionalArguments: ${{ parameters.AdditionalArguments }}
       
 
 - stage: Deploy_TEST
