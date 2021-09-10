@@ -2,6 +2,9 @@ parameters:
   - name: AdditionalArguments
     type: string
     default: ''
+  - name: SqlAdditionalArguments
+    type: string
+    default: ''
 
 trigger:
   batch: true
