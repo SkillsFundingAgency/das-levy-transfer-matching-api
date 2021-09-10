@@ -2,9 +2,6 @@ parameters:
   - name: AdditionalArguments
     type: string
     default: ''
-  - name: SqlAdditionalArguments
-    type: string
-    default: ''
 
 trigger:
   batch: true
@@ -69,8 +66,6 @@ stages:
       Environment: AT
       ServiceConnection: SFA-DAS-DevTest-ARM
       AdditionalArguments: ${{ parameters.AdditionalArguments }}
-      SqlAdditionalArguments: ${{ parameters.SqlAdditionalArguments }}
-      
 
 - stage: Deploy_TEST
   dependsOn: Build
