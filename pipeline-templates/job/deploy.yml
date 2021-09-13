@@ -2,8 +2,8 @@ parameters:
   Environment:
   ServiceConnection:
   - name: SqlAdditionalArguments
-    type: string
-    default: ''
+    type: boolean
+    default: false
 
 jobs:
 - deployment: DeployWebApp

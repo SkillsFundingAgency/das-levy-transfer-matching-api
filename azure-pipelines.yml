@@ -1,7 +1,7 @@
 parameters:
   - name: SqlAdditionalArguments
-    type: string
-    default: ''
+    type: boolean
+    default: false
 
 trigger:
   batch: true
