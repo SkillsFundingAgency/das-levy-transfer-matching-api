@@ -8,7 +8,6 @@ parameters:
 jobs:
 - job: waitForValidation
   displayName: Wait for external validation
-  environment: AT
   pool: server
   timeoutInMinutes: 5 
   steps:
