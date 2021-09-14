@@ -61,27 +61,20 @@ stages:
   - group: DevTest Management Resources
   - group: AT DevTest Shared Resources
   jobs:
-  # - job: Run Manual Intervention
-  #   steps:
-  #   - task: ManualValidation@0
-  #     condition:  eq(parameters.RunBlockOnPossibleDataLoss, true)
-  #     timeoutInMinutes: 5
-  #     inputs:
-  #       instructions: '/p:BlockOnPossibleDataLoss=false will run for SQL DACPAC deployment. Are you sure you want to continue?'
-  #       onTimeout: 'reject'
-  # - job: Run pipeline template
+  - job: Run Manual Intervention
     steps:
-      - task: ManualValidation@0
-        condition:  eq(parameters.RunBlockOnPossibleDataLoss, true)
-        timeoutInMinutes: 5
-        inputs:
-          instructions: '/p:BlockOnPossibleDataLoss=false will run for SQL DACPAC deployment. Are you sure you want to continue?'
-          onTimeout: 'reject'
-      - template: pipeline-templates/job/deploy.yml
-        parameters:
-          Environment: AT
-          ServiceConnection: SFA-DAS-DevTest-ARM
-          RunBlockOnPossibleDataLoss: ${{ parameters.RunBlockOnPossibleDataLoss }}
+    - task: ManualValidation@0
+      condition:  eq(parameters.RunBlockOnPossibleDataLoss, true)
+      timeoutInMinutes: 5
+      inputs:
+        instructions: '/p:BlockOnPossibleDataLoss=false will run for SQL DACPAC deployment. Are you sure you want to continue?'
+        onTimeout: 'reject'
+
+    - template: pipeline-templates/job/deploy.yml
+      parameters:
+        Environment: AT
+        ServiceConnection: SFA-DAS-DevTest-ARM
+        RunBlockOnPossibleDataLoss: ${{ parameters.RunBlockOnPossibleDataLoss }}
 
 - stage: Deploy_TEST
   dependsOn: Build
