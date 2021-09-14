@@ -59,3 +59,4 @@ jobs:
     DacpacFile: $(Pipeline.Workspace)/DacpacArtifact/src/SFA.DAS.LevyTransferMatching.Database/bin/Output/SFA.DAS.LevyTransferMatching.Database.dacpac
     AdditionalArguments: ${{ parameters.RunBlockOnPossibleDataLoss }}
     Environment: ${{ parameters.Environment }}
+    pool: DAS - Continuous Deployment Agents
