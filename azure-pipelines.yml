@@ -61,12 +61,12 @@ stages:
   - group: DevTest Management Resources
   - group: AT DevTest Shared Resources
   jobs:
-  - ${{ if eq(parameters.RunBlockOnPossibleDataLoss, true) }}:
-    - task: ManualValidation@0
-      timeoutInMinutes: 5
-      inputs:
-        instructions: '/p:BlockOnPossibleDataLoss=false will run for SQL DACPAC deployment. Are you sure you want to continue?'
-        onTimeout: 'reject'
+  - task: ManualValidation@0
+    condition:  eq(parameters.RunBlockOnPossibleDataLoss, true)
+    timeoutInMinutes: 5
+    inputs:
+      instructions: '/p:BlockOnPossibleDataLoss=false will run for SQL DACPAC deployment. Are you sure you want to continue?'
+      onTimeout: 'reject'
 
   - template: pipeline-templates/job/deploy.yml
     parameters:
