@@ -75,6 +75,7 @@ stages:
   - job: run template
     displayName: run webapp template
     condition: succeeded()
+    steps:
     - template: pipeline-templates/job/deploy.yml
       parameters:
         Environment: AT
