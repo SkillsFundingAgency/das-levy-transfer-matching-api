@@ -69,6 +69,8 @@
     <Build Include="Tables\Application.sql" />
     <Build Include="Tables\ApplicationEmailAddress.sql" />
     <Build Include="Tables\Audit.sql" />
+    <Build Include="Tables\ClientOutboxData.sql" />
+    <Build Include="Tables\ApplicationStatusHistory.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="SFA.DAS.LevyTransferMatching.Database.refactorlog" />

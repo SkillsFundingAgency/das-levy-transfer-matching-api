@@ -20,6 +20,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
         [SetUp]
         public async Task Setup()
         {
+            ResetDbContext();
             _fixture = new Fixture();
 
             var employerAccounts = _fixture.CreateMany<EmployerAccount>().ToArray();

@@ -14,15 +14,13 @@ namespace SFA.DAS.LevyTransferMatching.Services.Audit
         private readonly List<TrackedItem> _trackedItems;
         private readonly Guid _correlationId;
         private readonly UserAction _userAction;
-        private readonly long _employerAccountId;
         private readonly UserInfo _userInfo;
 
 
-        public ChangeTrackingSession(IStateService stateService, UserAction userAction, long employerAccountId, UserInfo userInfo)
+        public ChangeTrackingSession(IStateService stateService, UserAction userAction, UserInfo userInfo)
         {
             _stateService = stateService;
             _userAction = userAction;
-            _employerAccountId = employerAccountId;
             _userInfo = userInfo;
             _correlationId = Guid.NewGuid();
             _trackedItems = new List<TrackedItem>();
@@ -61,7 +59,6 @@ namespace SFA.DAS.LevyTransferMatching.Services.Audit
                     UserAction = _userAction,
                     EntityType = item.TrackedEntity.GetType().Name,
                     EntityId = item.TrackedEntity.GetTrackedEntityId(),
-                    EmployerAccountId = _employerAccountId,
                     InitialState = item.InitialState == null ? null : JsonConvert.SerializeObject(item.InitialState),
                     UpdatedState = updated == null ? null : JsonConvert.SerializeObject(updated),
                     UpdatedOn = DateTime.UtcNow,

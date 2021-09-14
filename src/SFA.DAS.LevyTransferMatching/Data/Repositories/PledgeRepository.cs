@@ -34,5 +34,13 @@ namespace SFA.DAS.LevyTransferMatching.Data.Repositories
                 .Include(p => p.Locations)
                 .SingleOrDefaultAsync(x => x.Id == pledgeId);
         }
+
+        public async Task Update(Pledge pledge)
+        {
+            foreach (dynamic domainEvent in pledge.FlushEvents())
+            {
+                await _domainEventDispatcher.Send(domainEvent);
+            }
+        }
     }
 }

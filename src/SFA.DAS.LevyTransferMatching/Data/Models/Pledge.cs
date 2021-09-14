@@ -23,7 +23,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             CreatedOn = DateTime.UtcNow;
             _locations = properties.Locations;
 
-            StartTrackingSession(UserAction.CreatePledge, employerAccount.Id, userInfo);
+            StartTrackingSession(UserAction.CreatePledge, userInfo);
             ChangeTrackingSession.TrackInsert(this);
             foreach (var location in _locations)
             {
@@ -58,6 +58,25 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         public Application CreateApplication(EmployerAccount account, CreateApplicationProperties properties, UserInfo userInfo)
         {
             return new Application(this, account, properties, userInfo);
+        }
+
+        public bool CanDebit(int debitAmount)
+        {
+            return RemainingAmount >= debitAmount;
+        }
+
+        public bool Debit(int debitAmount, int applicationId, UserInfo userInfo)
+        {
+            if (!CanDebit(debitAmount))
+            {
+                AddEvent(new PledgeDebitFailed(Id, applicationId, debitAmount));
+                return false;
+            }
+
+            StartTrackingSession(UserAction.DebitPledge, userInfo);
+            ChangeTrackingSession.TrackUpdate(this);
+            RemainingAmount -= debitAmount;
+            return true;
         }
     }
 }

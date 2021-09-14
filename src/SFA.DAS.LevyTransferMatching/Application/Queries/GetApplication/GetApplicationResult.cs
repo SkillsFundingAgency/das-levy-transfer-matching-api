@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 
@@ -21,6 +22,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
         public string BusinessWebsite { get; set; }
         public string EmployerAccountName { get; set; }
         public List<PledgeLocation> PledgeLocations { get; set; }
+        public ApplicationStatus Status { get; set; }
         public IEnumerable<Sector> PledgeSectors { get; set; }
         public IEnumerable<Level> PledgeLevels { get; set; }
         public IEnumerable<JobRole> PledgeJobRoles { get; set; }

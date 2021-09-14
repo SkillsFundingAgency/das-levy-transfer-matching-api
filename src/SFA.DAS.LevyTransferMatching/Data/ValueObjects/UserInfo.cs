@@ -10,5 +10,7 @@
 
         public string UserId { get; }
         public string UserDisplayName { get; }
+
+        public static UserInfo System => new UserInfo(string.Empty, string.Empty);
     }
 }
