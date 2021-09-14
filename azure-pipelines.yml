@@ -72,6 +72,9 @@ stages:
       inputs:
         instructions: 'Please validate the build configuration and resume'
         onTimeout: 'reject'
+  - job: run template
+    displayName: run webapp template
+    condition: succeeded()
   - template: pipeline-templates/job/deploy.yml
     parameters:
       Environment: AT
