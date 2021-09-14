@@ -73,7 +73,6 @@ stages:
         instructions: 'Please validate the build configuration and resume'
         onTimeout: 'reject'
   - template: pipeline-templates/job/deploy.yml
-    condition: succeeded()
     parameters:
       Environment: AT
       ServiceConnection: SFA-DAS-DevTest-ARM
