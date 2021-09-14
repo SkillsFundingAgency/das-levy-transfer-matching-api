@@ -41,7 +41,12 @@ jobs:
             SourcePath: $(Pipeline.Workspace)/das-employer-config/Configuration/das-levy-transfer-matching-api
             TargetFileName: '*.schema.json'
             TableName: Configuration
-        - script: echo $(Build.BuildNumber)
+        - task: ManualValidation@0
+          condition:  and(eq(parameters.Environment, 'AT'), eq(parameters.RunBlockOnPossibleDataLoss, true))
+          timeoutInMinutes: 5
+          inputs:
+            instructions: '/p:BlockOnPossibleDataLoss=false will run for SQL DACPAC deployment. Are you sure you want to continue?'
+            onTimeout: 'reject'
         - template: azure-pipelines-templates/deploy/step/sql-dacpac-deploy.yml@das-platform-building-blocks
           parameters:
             AzureSubscription: ${{ parameters.ServiceConnection }}
