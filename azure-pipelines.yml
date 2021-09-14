@@ -72,11 +72,13 @@ stages:
       inputs:
         instructions: 'Please validate the build configuration and resume'
         onTimeout: 'reject'
-  - template: pipeline-templates/job/deploy.yml
-    parameters:
-      Environment: AT
-      ServiceConnection: SFA-DAS-DevTest-ARM
-      SqlAdditionalArguments: ${{ parameters.RunBlockOnPossibleDataLoss }}
+  - job: run template
+    steps:
+    - template: pipeline-templates/job/deploy.yml
+      parameters:
+        Environment: AT
+        ServiceConnection: SFA-DAS-DevTest-ARM
+        SqlAdditionalArguments: ${{ parameters.RunBlockOnPossibleDataLoss }}
 
 - stage: Deploy_TEST
   dependsOn: Build
