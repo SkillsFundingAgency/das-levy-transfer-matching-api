@@ -5,7 +5,7 @@ parameters:
     type: boolean
     default: false
 
-jobs:
+# jobs:
 - deployment: DeployWebApp
   pool:
     name: DAS - Continuous Deployment Agents
