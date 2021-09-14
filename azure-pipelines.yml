@@ -61,6 +61,17 @@ stages:
   - group: DevTest Management Resources
   - group: AT DevTest Shared Resources
   jobs:
+  - job: waitForValidation
+    displayName: Wait for external validation
+    pool: server
+    timeoutInMinutes: 5 
+    steps:
+    - task: ManualValidation@0
+      condition: and(eq(parameters.Environment, 'AT'), eq(parameters.RunBlockOnPossibleDataLoss, true))
+      timeoutInMinutes: 5 
+      inputs:
+        instructions: 'Please validate the build configuration and resume'
+        onTimeout: 'reject'
   - template: pipeline-templates/job/deploy.yml
     parameters:
       Environment: AT
