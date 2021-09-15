@@ -8,7 +8,7 @@ jobs:
   pool:
     name: DAS - Continuous Deployment Agents
   environment: ${{ parameters.Environment }}
-  condition: and(Succeeded())
+  condition: succeeded()
   strategy:
     runOnce:
       deploy:
