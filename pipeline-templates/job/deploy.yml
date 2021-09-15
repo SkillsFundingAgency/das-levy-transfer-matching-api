@@ -8,6 +8,7 @@ jobs:
   pool:
     name: DAS - Continuous Deployment Agents
   environment: ${{ parameters.Environment }}
+  dependsOn: waitForValidation
   strategy:
     runOnce:
       deploy:
