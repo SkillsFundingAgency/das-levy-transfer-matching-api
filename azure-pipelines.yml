@@ -61,12 +61,22 @@ stages:
   - group: DevTest Management Resources
   - group: AT DevTest Shared Resources
   jobs:
+  - job: waitForValidation
+    pool: server
+    timeoutInMinutes: 5 
+    steps:
+    - task: ManualValidation@0
+      condition: eq(${{ parameters.AdditionalArguments }}, true)
+      timeoutInMinutes: 5 
+      inputs:
+        instructions: 'Please validate the build configuration and resume'
+        onTimeout: 'reject'
   - template: pipeline-templates/job/deploy.yml
     parameters:
       Environment: AT
       ServiceConnection: SFA-DAS-DevTest-ARM
       RunBlockOnPossibleDataLoss: ${{ parameters.RunBlockOnPossibleDataLoss }}
-      
+
 - stage: Deploy_TEST
   dependsOn: Build
   displayName: Deploy to TEST
