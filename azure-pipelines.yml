@@ -1,7 +1,7 @@
 parameters:
-  - name: RunBlockOnPossibleDataLoss
-    type: boolean
-    default: false
+- name: RunBlockOnPossibleDataLoss
+  type: boolean
+  default: false
 
 trigger:
   batch: true
