@@ -1,9 +1,8 @@
 parameters:  
   Environment:
   ServiceConnection:
-- name: RunBlockOnPossibleDataLoss
-  type: boolean
-  default: false
+  RunBlockOnPossibleDataLoss:
+
 
 jobs:
 - deployment: DeployWebApp
