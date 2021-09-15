@@ -69,4 +69,4 @@ jobs:
     AdditionalArguments: ${{ parameters.RunBlockOnPossibleDataLoss }}
     Environment: ${{ parameters.Environment }}
     pool: DAS - Continuous Deployment Agents
-    dependsOn: ['DeployWebApp', 'waitForValidation']
+    dependsOn: DeployWebApp
