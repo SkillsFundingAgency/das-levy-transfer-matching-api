@@ -10,7 +10,6 @@ using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
-    [Route("pledges/{pledgeId}/applications")]
     [ApiVersion("1.0")]
     [ApiController]
     public class ApplicationsController : ControllerBase
@@ -25,7 +24,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [Route("{applicationId}")]
+        [Route("pledges/{pledgeId}/applications/{applicationId}")]
         public async Task<IActionResult> GetApplication(int pledgeId, int applicationId)
         {
             var queryResult = await _mediator.Send(new GetApplicationQuery()
@@ -49,6 +48,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [Route("pledges/{pledgeId}/applications")]
         public async Task<IActionResult> CreateApplication(int pledgeId, [FromBody] CreateApplicationRequest request)
         {
             var commandResult = await _mediator.Send(new CreateApplicationCommand
@@ -81,11 +81,26 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [Route("pledges/{pledgeId}/applications")]
         public async Task<IActionResult> GetApplications(int pledgeId)
         {
             var query = await _mediator.Send(new GetApplicationsQuery
             {
-                PledgeId = pledgeId
+                PledgeId = pledgeId,
+            });
+
+            return Ok(query);
+        }
+
+        [HttpGet]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [Route("applications/{accountId}")]
+        public async Task<IActionResult> GetApplications(long accountId)
+        {
+            var query = await _mediator.Send(new GetApplicationsQuery
+            {
+                AccountId = accountId,
             });
 
             return Ok(query);

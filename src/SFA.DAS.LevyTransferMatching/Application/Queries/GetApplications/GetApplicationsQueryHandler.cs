@@ -20,7 +20,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
         public async Task<GetApplicationsResult> Handle(GetApplicationsQuery request, CancellationToken cancellationToken)
         {
             return new GetApplicationsResult(await _dbContext.Applications
-                .Where(x => x.Pledge.Id == request.PledgeId)
+                .Where(x => request.PledgeId.HasValue ? x.Pledge.Id == request.PledgeId : x.EmployerAccount.Id == request.AccountId)
                 .OrderByDescending(x => x.CreatedOn)
                 .ThenBy(x => x.EmployerAccount.Name)
                 .Select(x => new Models.Application
