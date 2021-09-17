@@ -24,6 +24,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         private ApplicationsController _applicationsController;
 
         private int _pledgeId;
+        private long _accountId;
         private CreateApplicationRequest _request;
         private CreateApplicationCommandResult _result;
 
@@ -31,6 +32,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         public void Setup()
         {
             _pledgeId = _fixture.Create<int>();
+            _accountId = _fixture.Create<long>();
             _request = _fixture.Create<CreateApplicationRequest>();
             _result = _fixture.Create<CreateApplicationCommandResult>();
 
@@ -124,6 +126,23 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             }));
 
             var actionResult = await _applicationsController.GetApplications(_pledgeId);
+            var result = actionResult as OkObjectResult;
+            Assert.IsNotNull(result);
+            var response = result.Value as GetApplicationsResult;
+            Assert.IsNotNull(response);
+            Assert.AreEqual(1, response.Applications.Count());
+        }
+
+        [Test]
+        public async Task Get_Returns_Applications_By_Account_Id()
+        {
+            _mediator.Setup(x => x.Send(It.Is<GetApplicationsQuery>(query => query.AccountId == _accountId), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new GetApplicationsResult(new LevyTransferMatching.Models.Application[]
+            {
+                new LevyTransferMatching.Models.Application()
+            }));
+
+            var actionResult = await _applicationsController.GetApplications(_accountId);
             var result = actionResult as OkObjectResult;
             Assert.IsNotNull(result);
             var response = result.Value as GetApplicationsResult;
