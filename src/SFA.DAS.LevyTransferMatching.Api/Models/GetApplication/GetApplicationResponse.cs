@@ -28,6 +28,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
         public int PledgeRemainingAmount { get; set; }
         public int Amount { get; set; }
         public ApplicationStatus Status { get; set; }
+        public bool PledgeIsNamePublic { get; set; }
 
         public static implicit operator GetApplicationResponse(GetApplicationResult getApplicationResult)
         {
@@ -51,7 +52,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
                 PledgeJobRoles = getApplicationResult.PledgeJobRoles,
                 PledgeRemainingAmount = getApplicationResult.PledgeRemainingAmount,
                 Amount = getApplicationResult.Amount,
-                Status = getApplicationResult.Status
+                Status = getApplicationResult.Status,
+                PledgeIsNamePublic = getApplicationResult.PledgeIsNamePublic,
             };
         }
     }

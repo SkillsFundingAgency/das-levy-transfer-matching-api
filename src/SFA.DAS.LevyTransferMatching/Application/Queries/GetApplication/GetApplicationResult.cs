@@ -27,5 +27,6 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
         public IEnumerable<Level> PledgeLevels { get; set; }
         public IEnumerable<JobRole> PledgeJobRoles { get; set; }
         public int PledgeRemainingAmount { get; set; }
+        public bool PledgeIsNamePublic { get; set; }
     }
 }
