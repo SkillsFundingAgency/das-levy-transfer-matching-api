@@ -54,7 +54,9 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
                     command.HasTrainingProvider == _request.HasTrainingProvider &&
                     command.Amount == _request.Amount &&
                     command.Sectors.Equals(_request.Sectors) &&
-                    command.Postcode == _request.Postcode &&
+                    command.Locations == _request.Locations &&
+                    command.AdditionalLocation == _request.AdditionalLocation &&
+                    command.SpecificLocation == _request.SpecificLocation &&
                     command.FirstName == _request.FirstName &&
                     command.LastName == _request.LastName &&
                     command.EmailAddresses.Equals(_request.EmailAddresses) &&

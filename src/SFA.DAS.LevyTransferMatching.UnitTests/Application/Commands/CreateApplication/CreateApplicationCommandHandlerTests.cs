@@ -67,7 +67,9 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreateAppl
             Assert.AreEqual(command.HasTrainingProvider, _inserted.HasTrainingProvider);
             Assert.AreEqual(command.Amount, _inserted.Amount);
             Assert.AreEqual((Sector)command.Sectors.Cast<int>().Sum(), _inserted.Sectors);
-            Assert.AreEqual(command.Postcode, _inserted.Postcode);
+            CollectionAssert.AreEqual(command.Locations, _inserted.ApplicationLocations.Select(x => x.PledgeLocationId).ToList());
+            Assert.AreEqual(command.AdditionalLocation, _inserted.AdditionalLocation);
+            Assert.AreEqual(command.SpecificLocation, _inserted.SpecificLocation);
             Assert.AreEqual(command.FirstName, _inserted.FirstName);
             Assert.AreEqual(command.LastName, _inserted.LastName);
             Assert.AreEqual(command.BusinessWebsite, _inserted.BusinessWebsite);
