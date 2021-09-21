@@ -12,7 +12,6 @@ using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
-    [Route("pledges/{pledgeId}/applications")]
     [ApiVersion("1.0")]
     [ApiController]
     public class ApplicationsController : ControllerBase
@@ -27,7 +26,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [Route("{applicationId}")]
+        [Route("pledges/{pledgeId}/applications/{applicationId}")]
         public async Task<IActionResult> GetApplication(int pledgeId, int applicationId)
         {
             var queryResult = await _mediator.Send(new GetApplicationQuery()
@@ -50,7 +49,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 		
 		[HttpPost]
         [ProducesResponseType((int) HttpStatusCode.OK)]
-        [Route("{applicationId}/approve")]
+        [Route("pledges/{pledgeId}/applications/{applicationId}/approve")]
         public async Task<IActionResult> ApproveApplication(int pledgeId, int applicationId, [FromBody] ApproveApplicationRequest request)
         {
             await _mediator.Send(new ApproveApplicationCommand
@@ -69,7 +68,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [Route("{applicationId}/undo-approval")]
+        [Route("pledges/{pledgeId}/applications/{applicationId}/undo-approval")]
         public async Task<IActionResult> UndoApplicationApproval(int pledgeId, int applicationId)
         {
             await _mediator.Send(new UndoApplicationApprovalCommand
@@ -82,6 +81,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         }
 
         [HttpPost]
+        [Route("pledges/{pledgeId}/applications")]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> CreateApplication(int pledgeId, [FromBody] CreateApplicationRequest request)
@@ -114,13 +114,26 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         }
 
         [HttpGet]
+        [Route("pledges/{pledgeId}/applications")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetApplications(int pledgeId)
         {
             var query = await _mediator.Send(new GetApplicationsQuery
             {
                 PledgeId = pledgeId
+            });
+
+            return Ok(query);
+        }
+
+        [HttpGet]
+        [Route("/accounts/{accountId}/applications")]
+        [ProducesResponseType((int) HttpStatusCode.OK)]
+        public async Task<IActionResult> GetApplications(long accountId)
+        {
+            var query = await _mediator.Send(new GetApplicationsQuery
+            {
+                AccountId = accountId
             });
 
             return Ok(query);
