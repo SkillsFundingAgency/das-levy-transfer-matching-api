@@ -32,11 +32,14 @@ namespace SFA.DAS.LevyTransferMatching.Data
             modelBuilder.Entity<Models.Application>().HasOne(x => x.Pledge).WithMany(x => x.Applications);
             modelBuilder.Entity<Models.Application>().Property(x => x.RowVersion).IsRowVersion();
             modelBuilder.Entity<Models.Application>().HasMany(x => x.EmailAddresses).WithOne();
-            modelBuilder.Entity<Models.Application>().Metadata.FindNavigation(nameof(Models.Application.EmailAddresses))
-                .SetPropertyAccessMode(PropertyAccessMode.Field);
+            modelBuilder.Entity<Models.Application>().Metadata.FindNavigation(nameof(Models.Application.EmailAddresses)).SetPropertyAccessMode(PropertyAccessMode.Field);
+            modelBuilder.Entity<Models.Application>().Metadata.FindNavigation(nameof(Models.Application.StatusHistory)).SetPropertyAccessMode(PropertyAccessMode.Field);
 
             modelBuilder.Entity<ApplicationEmailAddress>().ToTable("ApplicationEmailAddress");
             modelBuilder.Entity<ApplicationEmailAddress>().HasKey(x => x.Id);
+
+            modelBuilder.Entity<ApplicationStatusHistory>().ToTable("ApplicationStatusHistory");
+            modelBuilder.Entity<ApplicationStatusHistory>().HasKey(x => x.Id);
 
             modelBuilder.Entity<EmployerAccount>().ToTable("EmployerAccount");
             modelBuilder.Entity<EmployerAccount>().HasKey(x => x.Id);

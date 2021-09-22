@@ -52,7 +52,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
                         Locations = x.Locations.Select(y => new LocationInformation { Name = y.Name, Geopoint = new double[] { y.Latitude, y.Longitude } }).ToList(),
                         ApplicationCount = x.Applications.Count
                     })
-                .OrderByDescending(x => x.Amount);
+                .OrderByDescending(x => x.RemainingAmount);
 
             return new GetPledgesResult()
             {

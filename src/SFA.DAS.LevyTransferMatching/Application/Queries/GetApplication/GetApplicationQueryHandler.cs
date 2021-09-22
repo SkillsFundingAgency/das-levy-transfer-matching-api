@@ -24,7 +24,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 .Include(x => x.EmployerAccount)
                 .Include(x => x.Pledge)
                 .Include(x => x.Pledge.Locations)
-                .SingleOrDefaultAsync(x => x.Id == request.Id);
+                .SingleOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
             if (application == null)
             {
@@ -50,7 +50,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 PledgeLevels = application.Pledge.Levels.ToList(),
                 PledgeJobRoles = application.Pledge.JobRoles.ToList(),
                 Amount = application.Amount,
-                PledgeRemainingAmount = application.Pledge.RemainingAmount
+                PledgeRemainingAmount = application.Pledge.RemainingAmount,
+                Status = application.Status
             };
 
             return result;

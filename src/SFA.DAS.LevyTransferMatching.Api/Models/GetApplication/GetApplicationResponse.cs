@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
+using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 
@@ -26,6 +27,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
         public IEnumerable<JobRole> PledgeJobRoles { get; set; }
         public int PledgeRemainingAmount { get; set; }
         public int Amount { get; set; }
+        public ApplicationStatus Status { get; set; }
 
         public static implicit operator GetApplicationResponse(GetApplicationResult getApplicationResult)
         {
@@ -48,7 +50,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
                 PledgeLevels = getApplicationResult.PledgeLevels,
                 PledgeJobRoles = getApplicationResult.PledgeJobRoles,
                 PledgeRemainingAmount = getApplicationResult.PledgeRemainingAmount,
-                Amount = getApplicationResult.Amount
+                Amount = getApplicationResult.Amount,
+                Status = getApplicationResult.Status
             };
         }
     }

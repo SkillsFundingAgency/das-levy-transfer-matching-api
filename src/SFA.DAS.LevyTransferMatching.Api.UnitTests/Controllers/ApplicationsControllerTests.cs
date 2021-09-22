@@ -10,7 +10,9 @@ using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Api.Controllers;
 using SFA.DAS.LevyTransferMatching.Api.Models.Applications;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetApplication;
+using SFA.DAS.LevyTransferMatching.Application.Commands.ApproveApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
+using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 
@@ -24,6 +26,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         private ApplicationsController _applicationsController;
 
         private int _pledgeId;
+        private int _applicationId;
         private long _accountId;
         private CreateApplicationRequest _request;
         private CreateApplicationCommandResult _result;
@@ -32,12 +35,16 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         public void Setup()
         {
             _pledgeId = _fixture.Create<int>();
+            _applicationId = _fixture.Create<int>();
             _accountId = _fixture.Create<long>();
             _request = _fixture.Create<CreateApplicationRequest>();
             _result = _fixture.Create<CreateApplicationCommandResult>();
 
             _mediator = new Mock<IMediator>();
             _applicationsController = new ApplicationsController(_mediator.Object);
+
+            _mediator.Setup(x => x.Send(It.IsAny<ApproveApplicationCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(() => Unit.Value);
 
             _mediator.Setup(x => x.Send(It.Is<CreateApplicationCommand>(command =>
                     command.PledgeId == _pledgeId &&
@@ -58,6 +65,38 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
                     command.UserDisplayName == _request.UserDisplayName
                     ), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_result);
+        }
+
+        [Test]
+        public async Task Post_ApproveApplication_Approves_Application()
+        {
+            var request = _fixture.Create<ApproveApplicationRequest>();
+
+            var actionResult = await _applicationsController.ApproveApplication(_pledgeId, _applicationId, request);
+            var okResult = actionResult as OkResult;
+            Assert.IsNotNull(okResult);
+
+            _mediator.Verify(x => x.Send(It.Is<ApproveApplicationCommand>(command =>
+                        command.PledgeId == _pledgeId &&
+                        command.ApplicationId == _applicationId &&
+                        command.UserId == request.UserId &&
+                        command.UserDisplayName == request.UserDisplayName),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Test]
+        public async Task Post_UndoApplicationApproval_Undoes_Application_Approval()
+        {
+            var actionResult = await _applicationsController.UndoApplicationApproval(_pledgeId, _applicationId);
+            var okResult = actionResult as OkResult;
+            Assert.IsNotNull(okResult);
+
+            _mediator.Verify(x => x.Send(It.Is<UndoApplicationApprovalCommand>(command =>
+                        command.PledgeId == _pledgeId &&
+                        command.ApplicationId == _applicationId),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
         }
 
         [Test]
@@ -142,7 +181,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
                 new LevyTransferMatching.Models.Application()
             }));
 
-            var actionResult = await _applicationsController.GetApplications(_accountId);
+            var actionResult = await _applicationsController.GetApplications(null, _accountId);
             var result = actionResult as OkObjectResult;
             Assert.IsNotNull(result);
             var response = result.Value as GetApplicationsResult;

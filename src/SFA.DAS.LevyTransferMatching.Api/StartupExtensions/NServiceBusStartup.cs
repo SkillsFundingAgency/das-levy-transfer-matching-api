@@ -18,7 +18,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
 {
     public static class NServiceBusStartup
     {
-        private const string EndpointName = "SFA.DAS.LevyTransferMatching.Api";
+        private const string EndpointName = "SFA.DAS.LevyTransferMatching.MessageHandlers";
 
         public static void StartNServiceBus(this UpdateableServiceProvider serviceProvider, LevyTransferMatchingApi configuration, IWebHostEnvironment environment)
         {

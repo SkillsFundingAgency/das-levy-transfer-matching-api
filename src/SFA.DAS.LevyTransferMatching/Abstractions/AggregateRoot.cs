@@ -12,9 +12,9 @@ namespace SFA.DAS.LevyTransferMatching.Abstractions
         protected IChangeTrackingSession ChangeTrackingSession { get; private set; }
         private readonly List<IDomainEvent> _events = new List<IDomainEvent>();
 
-        protected void StartTrackingSession(UserAction userAction, long employerAccountId, UserInfo userInfo)
+        protected void StartTrackingSession(UserAction userAction, UserInfo userInfo)
         {
-            ChangeTrackingSession = new ChangeTrackingSession(new StateService(), userAction, employerAccountId, userInfo);
+            ChangeTrackingSession = new ChangeTrackingSession(new StateService(), userAction, userInfo);
         }
 
         protected void AddEvent(IDomainEvent @event)
