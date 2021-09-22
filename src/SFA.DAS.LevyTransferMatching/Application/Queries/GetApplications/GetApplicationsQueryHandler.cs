@@ -19,8 +19,19 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
 
         public async Task<GetApplicationsResult> Handle(GetApplicationsQuery request, CancellationToken cancellationToken)
         {
-            return new GetApplicationsResult(await _dbContext.Applications
-                .Where(x => request.PledgeId.HasValue ? x.Pledge.Id == request.PledgeId : x.EmployerAccount.Id == request.AccountId)
+            IQueryable<Data.Models.Application> applicationsQuery = _dbContext.Applications;
+
+            if (request.PledgeId.HasValue)
+            {
+                applicationsQuery = applicationsQuery.Where(x => x.Pledge.Id == request.PledgeId);
+            }
+
+            if (request.AccountId.HasValue)
+            {
+                applicationsQuery = applicationsQuery.Where(x => x.EmployerAccount.Id == request.AccountId);
+            }
+
+            return new GetApplicationsResult(await applicationsQuery
                 .OrderByDescending(x => x.CreatedOn)
                 .ThenBy(x => x.EmployerAccount.Name)
                 .Select(x => new Models.Application
