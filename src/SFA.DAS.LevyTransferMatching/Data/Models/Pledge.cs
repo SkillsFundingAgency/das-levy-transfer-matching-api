@@ -83,6 +83,8 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
         private void ValidateLocationIds(IEnumerable<int> locationIds)
         {
+            if (locationIds == null) return;
+
             foreach(var locationId in locationIds)
             {
                 if(Locations.All(x => x.Id != locationId))

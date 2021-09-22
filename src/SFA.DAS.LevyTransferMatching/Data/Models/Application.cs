@@ -34,7 +34,11 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             CreatedOn = DateTime.UtcNow;
 
             _emailAddresses = properties.EmailAddresses.Select(x => new ApplicationEmailAddress(x)).ToList();
-            _applicationLocations = properties.Locations.Select(x => new ApplicationLocation(x)).ToList();
+
+            if (properties.Locations != null)
+            {
+                _applicationLocations = properties.Locations.Select(x => new ApplicationLocation(x)).ToList();
+            }
 
             AdditionalLocation = properties.AdditionalLocation;
             SpecificLocation = properties.SpecificLocation;
@@ -44,6 +48,10 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             foreach(var emailAddress in _emailAddresses)
             {
                 ChangeTrackingSession.TrackInsert(emailAddress);
+            }
+            foreach (var location in _applicationLocations)
+            {
+                ChangeTrackingSession.TrackInsert(location);
             }
 
             AddStatusHistory(CreatedOn);
