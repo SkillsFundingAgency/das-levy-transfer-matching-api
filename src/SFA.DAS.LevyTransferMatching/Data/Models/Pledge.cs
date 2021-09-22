@@ -1,6 +1,7 @@
 ﻿using SFA.DAS.LevyTransferMatching.Models.Enums;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using SFA.DAS.LevyTransferMatching.Abstractions;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Domain.Events;
@@ -57,6 +58,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
         public Application CreateApplication(EmployerAccount account, CreateApplicationProperties properties, UserInfo userInfo)
         {
+            ValidateLocationIds(properties.Locations);
             return new Application(this, account, properties, userInfo);
         }
 
@@ -77,6 +79,17 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             ChangeTrackingSession.TrackUpdate(this);
             RemainingAmount -= debitAmount;
             return true;
+        }
+
+        private void ValidateLocationIds(IEnumerable<int> locationIds)
+        {
+            foreach(var locationId in locationIds)
+            {
+                if(Locations.All(x => x.Id != locationId))
+                {
+                    throw new InvalidOperationException($"Location {locationId} is not valid for pledge {Id}");
+                }
+            }
         }
     }
 }

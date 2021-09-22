@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
@@ -54,6 +55,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreateAppl
             var command = _fixture.Create<CreateApplicationCommand>();
             command.EmployerAccountId = _employerAccount.Id;
             command.PledgeId = _pledge.Id;
+            command.Locations = _pledge.Locations.Select(x => x.Id).ToList();
 
             await _handler.Handle(command, CancellationToken.None);
 
