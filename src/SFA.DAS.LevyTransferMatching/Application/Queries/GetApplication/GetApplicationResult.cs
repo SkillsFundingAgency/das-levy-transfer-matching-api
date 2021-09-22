@@ -21,12 +21,13 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
         public IEnumerable<string> EmailAddresses { get; set; }
         public string BusinessWebsite { get; set; }
         public string EmployerAccountName { get; set; }
-        public List<PledgeLocation> PledgeLocations { get; set; }
+        public List<string> PledgeLocations { get; set; }
         public ApplicationStatus Status { get; set; }
         public IEnumerable<Sector> PledgeSectors { get; set; }
         public IEnumerable<Level> PledgeLevels { get; set; }
         public IEnumerable<JobRole> PledgeJobRoles { get; set; }
         public int PledgeRemainingAmount { get; set; }
         public bool PledgeIsNamePublic { get; set; }
+        public int PledgeId { get; set; }
     }
 }
