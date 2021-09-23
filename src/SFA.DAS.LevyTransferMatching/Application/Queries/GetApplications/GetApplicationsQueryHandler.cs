@@ -54,7 +54,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                         ? x.EmailAddresses.Select(email => email.EmailAddress)
                         : null,
                     CreatedOn = x.CreatedOn,
-                    Status = x.Status
+                    Status = x.Status,
+                    IsAnonymousPledge = x.Pledge.IsNamePublic
                 })
                 .ToListAsync(cancellationToken));
         }
