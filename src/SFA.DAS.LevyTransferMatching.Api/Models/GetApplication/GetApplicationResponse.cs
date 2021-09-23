@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
-using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
@@ -21,13 +20,15 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
         public IEnumerable<string> EmailAddresses { get; set; }
         public string BusinessWebsite { get; set; }
         public string EmployerAccountName { get; set; }
-        public List<PledgeLocation> PledgeLocations { get; set; }
+        public List<string> PledgeLocations { get; set; }
         public IEnumerable<Sector> PledgeSectors { get; set; }
         public IEnumerable<Level> PledgeLevels { get; set; }
         public IEnumerable<JobRole> PledgeJobRoles { get; set; }
         public int PledgeRemainingAmount { get; set; }
         public int Amount { get; set; }
         public ApplicationStatus Status { get; set; }
+        public bool PledgeIsNamePublic { get; set; }
+        public int PledgeId { get; set; }
 
         public static implicit operator GetApplicationResponse(GetApplicationResult getApplicationResult)
         {
@@ -51,7 +52,9 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
                 PledgeJobRoles = getApplicationResult.PledgeJobRoles,
                 PledgeRemainingAmount = getApplicationResult.PledgeRemainingAmount,
                 Amount = getApplicationResult.Amount,
-                Status = getApplicationResult.Status
+                Status = getApplicationResult.Status,
+                PledgeIsNamePublic = getApplicationResult.PledgeIsNamePublic,
+                PledgeId = getApplicationResult.PledgeId,
             };
         }
     }

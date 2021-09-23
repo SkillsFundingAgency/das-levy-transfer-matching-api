@@ -45,13 +45,15 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 StandardId = application.StandardId,
                 StartDate = application.StartDate,
                 EmployerAccountName = application.EmployerAccount.Name,
-                PledgeLocations = application.Pledge.Locations.ToList(),
+                PledgeLocations = application.Pledge.Locations.Select(x => x.Name).ToList(),
                 PledgeSectors = application.Pledge.Sectors.ToList(),
                 PledgeLevels = application.Pledge.Levels.ToList(),
                 PledgeJobRoles = application.Pledge.JobRoles.ToList(),
                 Amount = application.Amount,
                 PledgeRemainingAmount = application.Pledge.RemainingAmount,
-                Status = application.Status
+                Status = application.Status,
+                PledgeIsNamePublic = application.Pledge.IsNamePublic,
+                PledgeId = application.PledgeId,
             };
 
             return result;
