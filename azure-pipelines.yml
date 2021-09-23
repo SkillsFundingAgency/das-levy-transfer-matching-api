@@ -1,6 +1,6 @@
 parameters:
 - name: RunBlockOnPossibleDataLoss
-  displayName: Set /p:BlockOnPossibleDataLoss to False
+  displayName: Add /p:BlockOnPossibleDataLoss=false argument to DACPAC deployment
   type: boolean
   default: false
 
