@@ -49,7 +49,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 		
 		[HttpPost]
         [ProducesResponseType((int) HttpStatusCode.OK)]
-        [Route("pledges/{pledgeId}/applications/{applicationId}/approve")]
+        [Route("{applicationId}/approve")]
         public async Task<IActionResult> ApproveApplication(int pledgeId, int applicationId, [FromBody] ApproveApplicationRequest request)
         {
             await _mediator.Send(new ApproveApplicationCommand
@@ -68,7 +68,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [Route("pledges/{pledgeId}/applications/{applicationId}/undo-approval")]
+        [Route("{applicationId}/undo-approval")]
         public async Task<IActionResult> UndoApplicationApproval(int pledgeId, int applicationId)
         {
             await _mediator.Send(new UndoApplicationApprovalCommand
@@ -81,9 +81,9 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         }
 
         [HttpPost]
-        [Route("pledges/{pledgeId}/applications")]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [Route("pledges/{pledgeId}/applications")]
         public async Task<IActionResult> CreateApplication(int pledgeId, [FromBody] CreateApplicationRequest request)
         {
             var commandResult = await _mediator.Send(new CreateApplicationCommand
@@ -114,25 +114,28 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         }
 
         [HttpGet]
-        [Route("pledges/{pledgeId}/applications")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [Route("pledges/{pledgeId}/applications")]
         public async Task<IActionResult> GetApplications(int pledgeId)
         {
             var query = await _mediator.Send(new GetApplicationsQuery
             {
-                PledgeId = pledgeId
+                PledgeId = pledgeId,
             });
 
             return Ok(query);
         }
 
         [HttpGet]
-        [Route("/accounts/{accountId}/applications")]
-        [ProducesResponseType((int) HttpStatusCode.OK)]
-        public async Task<IActionResult> GetApplications(long accountId)
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [Route("applications")]
+        public async Task<IActionResult> GetApplications(int? pledgeId, long? accountId)
         {
             var query = await _mediator.Send(new GetApplicationsQuery
             {
+                PledgeId = pledgeId,
                 AccountId = accountId
             });
 
