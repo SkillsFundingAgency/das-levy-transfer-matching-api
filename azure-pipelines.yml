@@ -1,3 +1,8 @@
+parameters:
+- name: RunBlockOnPossibleDataLoss
+  type: boolean
+  default: false
+
 trigger:
   batch: true
   branches:
@@ -22,7 +27,7 @@ resources:
   - repository: das-platform-building-blocks
     type: github
     name: SkillsFundingAgency/das-platform-building-blocks
-    ref: refs/tags/0.3.32
+    ref: refs/tags/0.4.0
     endpoint: SkillsFundingAgency
   - repository: das-platform-automation
     type: github
@@ -59,6 +64,7 @@ stages:
     parameters:
       Environment: AT
       ServiceConnection: SFA-DAS-DevTest-ARM
+      RunBlockOnPossibleDataLoss: ${{ parameters.RunBlockOnPossibleDataLoss }}
 
 - stage: Deploy_TEST
   dependsOn: Build
@@ -71,6 +77,7 @@ stages:
     parameters:
       Environment: TEST
       ServiceConnection: SFA-DAS-DevTest-ARM
+      RunBlockOnPossibleDataLoss: ${{ parameters.RunBlockOnPossibleDataLoss }}
 
 - stage: Deploy_TEST2
   dependsOn: Build
@@ -83,6 +90,7 @@ stages:
     parameters:
       Environment: TEST2
       ServiceConnection: SFA-DAS-DevTest-ARM
+      RunBlockOnPossibleDataLoss: ${{ parameters.RunBlockOnPossibleDataLoss }}
 
 - stage: Deploy_PP
   dependsOn: Build
@@ -95,6 +103,7 @@ stages:
     parameters:
       Environment: PP
       ServiceConnection: SFA-DIG-PreProd-ARM
+      RunBlockOnPossibleDataLoss: ${{ parameters.RunBlockOnPossibleDataLoss }}
 
 - stage: Deploy_PROD
   dependsOn: Build
@@ -108,6 +117,7 @@ stages:
     parameters:
       Environment: PROD
       ServiceConnection: SFA-DIG-Prod-ARM
+      RunBlockOnPossibleDataLoss: ${{ parameters.RunBlockOnPossibleDataLoss }}
 
 - stage: Deploy_MO
   dependsOn: Build
@@ -120,6 +130,7 @@ stages:
     parameters:
       Environment: MO
       ServiceConnection: SFA-ASM-ModelOffice-ARM
+      RunBlockOnPossibleDataLoss: ${{ parameters.RunBlockOnPossibleDataLoss }}
 
 - stage: Deploy_DEMO
   dependsOn: Build
@@ -132,3 +143,4 @@ stages:
     parameters:
       Environment: DEMO
       ServiceConnection: SFA-DAS-DevTest-ARM
+      RunBlockOnPossibleDataLoss: ${{ parameters.RunBlockOnPossibleDataLoss }}
