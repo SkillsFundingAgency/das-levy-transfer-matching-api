@@ -1,5 +1,6 @@
 parameters:
 - name: RunBlockOnPossibleDataLoss
+  displayName: Set /p:BlockOnPossibleDataLoss to False
   type: boolean
   default: false
 
