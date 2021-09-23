@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
-using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
