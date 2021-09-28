@@ -20,6 +20,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
         public async Task<GetApplicationResult> Handle(GetApplicationQuery request, CancellationToken cancellationToken)
         {
             var application = await _levyTransferMatchingDbContext.Applications
+                .Include(x => x.ApplicationLocations)
                 .Include(x => x.EmailAddresses)
                 .Include(x => x.EmployerAccount)
                 .Include(x => x.Pledge)
@@ -45,6 +46,9 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 StandardId = application.StandardId,
                 StartDate = application.StartDate,
                 EmployerAccountName = application.EmployerAccount.Name,
+                Locations = application.ApplicationLocations.Select(x => new GetApplicationResult.ApplicationLocation { Id = x.Id, PledgeLocationId = x.PledgeLocationId }).ToList(),
+                AdditionalLocation = application.AdditionalLocation,
+                SpecificLocation = application.SpecificLocation,
                 PledgeLocations = application.Pledge.Locations.ToList(),
                 PledgeSectors = application.Pledge.Sectors.ToList(),
                 PledgeLevels = application.Pledge.Levels.ToList(),
