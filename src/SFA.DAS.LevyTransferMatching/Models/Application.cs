@@ -24,6 +24,6 @@ namespace SFA.DAS.LevyTransferMatching.Models
         public IEnumerable<string> EmailAddresses { get; set; }
         public DateTime CreatedOn { get; set; }
         public ApplicationStatus Status { get; set; }
-        public bool IsAnonymousPledge { get; set; }
+        public bool IsNamePublic { get; set; }
     }
 }
