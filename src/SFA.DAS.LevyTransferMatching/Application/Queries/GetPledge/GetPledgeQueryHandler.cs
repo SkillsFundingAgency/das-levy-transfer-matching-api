@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Extensions;
-using SFA.DAS.LevyTransferMatching.Models.Enums;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,7 +27,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge
 
             if (pledge != null)
             {
-                return new GetPledgeResult()
+                return new GetPledgeResult
                 {
                     Amount = pledge.Amount,
                     CreatedOn = pledge.CreatedOn,
@@ -39,14 +38,12 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge
                     JobRoles = pledge.JobRoles.ToList(),
                     Levels = pledge.Levels.ToList(),
                     Sectors = pledge.Sectors.ToList(),
-                    Locations = pledge.Locations.Select(x => new Models.LocationInformation { Name = x.Name, Geopoint = new double[] { x.Latitude, x.Longitude } }),
+                    Locations = pledge.Locations.Select(x => new GetPledgeResult.Location { Id = x.Id, Name = x.Name }),
                     RemainingAmount = pledge.RemainingAmount
                 };
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
     }
 }
