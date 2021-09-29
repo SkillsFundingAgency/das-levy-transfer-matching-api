@@ -1,7 +1,8 @@
-﻿using SFA.DAS.LevyTransferMatching.Models;
-using SFA.DAS.LevyTransferMatching.Models.Enums;
+﻿using SFA.DAS.LevyTransferMatching.Models.Enums;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledge
 {
@@ -26,11 +27,11 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledge
 
         public IEnumerable<Sector> Sectors { get; set; }
 
-        public IEnumerable<LocationInformation> Locations { get; set; }
+        public IEnumerable<Location> Locations { get; set; }
 
-        public static implicit operator GetPledgeResponse(Pledge pledge)
+        public static implicit operator GetPledgeResponse(GetPledgeResult pledge)
         {
-            return new GetPledgeResponse()
+            return new GetPledgeResponse
             {
                 AccountId = pledge.AccountId,
                 Amount = pledge.Amount,
@@ -42,8 +43,14 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledge
                 JobRoles = pledge.JobRoles,
                 Levels = pledge.Levels,
                 Sectors = pledge.Sectors,
-                Locations = pledge.Locations
+                Locations = pledge.Locations.Select(x => new Location { Id = x.Id, Name = x.Name})
             };
+        }
+
+        public class Location
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
         }
     }
 }

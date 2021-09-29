@@ -13,7 +13,9 @@ namespace SFA.DAS.LevyTransferMatching.Data.ValueObjects
         public bool HasTrainingProvider { get; set; }
         public int Amount { get; set; }
         public Sector Sectors { get; set; }
-        public string PostCode { get; set; }
+        public List<int> Locations { get; set; }
+        public string AdditionalLocation { get; set; }
+        public string SpecificLocation { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string BusinessWebsite { get; set; }
