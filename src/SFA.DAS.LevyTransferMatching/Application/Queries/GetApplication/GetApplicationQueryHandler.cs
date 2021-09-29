@@ -40,7 +40,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 HasTrainingProvider = application.HasTrainingProvider,
                 LastName = application.LastName,
                 NumberOfApprentices = application.NumberOfApprentices,
-                Postcode = application.Postcode,
+                Postcode = "",
                 Sectors = application.Sectors.ToList(),
                 StandardId = application.StandardId,
                 StartDate = application.StartDate,

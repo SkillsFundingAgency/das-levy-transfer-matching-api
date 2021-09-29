@@ -19,7 +19,9 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
         public bool HasTrainingProvider { get; set; }
 
         public IEnumerable<Sector> Sectors { get; set; }
-        public string Postcode { get; set; }
+        public List<int> Locations { get; set; }
+        public string AdditionalLocation { get; set; }
+        public string SpecificLocation { get; set; }
 
         public string FirstName { get; set; }
         public string LastName { get; set; }
