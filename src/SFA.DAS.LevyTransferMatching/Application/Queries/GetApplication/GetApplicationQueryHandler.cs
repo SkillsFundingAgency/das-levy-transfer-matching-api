@@ -24,7 +24,15 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 .Include(x => x.EmployerAccount)
                 .Include(x => x.Pledge)
                 .Include(x => x.Pledge.Locations)
-                .SingleOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+                .Where(
+                    x =>
+                        x.Id == request.ApplicationId
+                        &&
+                        (
+                            !request.PledgeId.HasValue || (request.PledgeId.HasValue && (x.PledgeId == request.PledgeId.Value))
+                        )
+                )
+                .SingleOrDefaultAsync();
 
             if (application == null)
             {
