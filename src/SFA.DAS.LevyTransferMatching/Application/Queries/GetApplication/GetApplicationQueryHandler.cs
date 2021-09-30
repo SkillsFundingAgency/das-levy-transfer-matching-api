@@ -23,6 +23,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 .Include(x => x.EmailAddresses)
                 .Include(x => x.EmployerAccount)
                 .Include(x => x.Pledge)
+                .Include(x => x.Pledge.EmployerAccount)
                 .Include(x => x.Pledge.Locations)
                 .Where(
                     x =>
@@ -62,6 +63,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 Status = application.Status,
                 PledgeIsNamePublic = application.Pledge.IsNamePublic,
                 PledgeId = application.PledgeId,
+                ReceiverEmployerAccountId = application.EmployerAccount.Id,
+                SenderEmployerAccountId = application.Pledge.EmployerAccount.Id,
             };
 
             return result;
