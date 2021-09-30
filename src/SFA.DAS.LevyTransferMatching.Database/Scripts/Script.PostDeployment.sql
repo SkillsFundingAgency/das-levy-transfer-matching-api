@@ -10,12 +10,12 @@ Post-Deployment Script Template
 --------------------------------------------------------------------------------------
 */
 
-/* Reporter Role Access */
+/* DashbordReporting Role Access */
 
-IF DATABASE_PRINCIPAL_ID('Reporter') IS NULL
+IF DATABASE_PRINCIPAL_ID('DashbordReporting') IS NULL
 BEGIN
-    CREATE ROLE [Reporter]
+    CREATE ROLE [DashbordReporting]
 END
 
-GRANT SELECT ON Pledge TO Reporter
-GRANT SELECT ON Application TO Reporter
+GRANT SELECT ON vwDashboardPledge TO DashbordReporting
+GRANT SELECT ON vwDashboardPledgeApplication TO DashbordReporting
