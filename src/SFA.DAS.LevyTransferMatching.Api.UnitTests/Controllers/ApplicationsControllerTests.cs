@@ -10,6 +10,7 @@ using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Api.Controllers;
 using SFA.DAS.LevyTransferMatching.Api.Models.Applications;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetApplication;
+using SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.ApproveApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
@@ -189,6 +190,38 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             var response = result.Value as GetApplicationsResult;
             Assert.IsNotNull(response);
             Assert.AreEqual(1, response.Applications.Count());
+        }
+
+        [Test]
+        public async Task POST_AcceptFunding_GivenValidInputs_Returns204Response()
+        {
+            _mediator.Setup(o => o.Send(It.IsAny<AcceptFundingCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new AcceptFundingCommandResult
+                {
+                    Updated = true
+                });
+
+            var result =
+                await _applicationsController.AcceptFunding(1, 1, new AcceptFundingRequest(), CancellationToken.None) as
+                    NoContentResult;
+
+            Assert.IsNotNull(result);
+        }
+
+        [Test]
+        public async Task POST_AcceptFunding_GivenInvalidInputs_ReturnsBadRequest()
+        {
+            _mediator.Setup(o => o.Send(It.IsAny<AcceptFundingCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new AcceptFundingCommandResult
+                {
+                    Updated = false
+                });
+
+            var result =
+                await _applicationsController.AcceptFunding(1, 1, new AcceptFundingRequest(), CancellationToken.None) as
+                    BadRequestResult;
+
+            Assert.IsNotNull(result);
         }
     }
 }
