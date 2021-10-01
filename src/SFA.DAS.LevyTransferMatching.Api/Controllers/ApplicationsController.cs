@@ -33,7 +33,32 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         {
             var queryResult = await _mediator.Send(new GetApplicationQuery()
             {
-                Id = applicationId,
+                PledgeId = pledgeId,
+                ApplicationId = applicationId,
+            });
+
+            IActionResult result = null;
+            if (queryResult != null)
+            {
+                result = new OkObjectResult((GetApplicationResponse)queryResult);
+            }
+            else
+            {
+                result = new NotFoundResult();
+            }
+
+            return result;
+        }
+
+        [HttpGet]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [Route("applications/{applicationId}")]
+        public async Task<IActionResult> GetApplication(int applicationId)
+        {
+            var queryResult = await _mediator.Send(new GetApplicationQuery()
+            {
+                ApplicationId = applicationId,
             });
 
             IActionResult result = null;
