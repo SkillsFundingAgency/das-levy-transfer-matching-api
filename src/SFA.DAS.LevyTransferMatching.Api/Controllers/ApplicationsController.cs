@@ -133,7 +133,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [Route("applications")]
-        public async Task<IActionResult> GetApplications(long? accountId)
+        public async Task<IActionResult> GetApplications(long? accountId = null)
         {
             var query = await _mediator.Send(new GetApplicationsQuery
             {
