@@ -33,7 +33,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                             !request.PledgeId.HasValue || (request.PledgeId.HasValue && (x.PledgeId == request.PledgeId.Value))
                         )
                 )
-                .SingleOrDefaultAsync();
+                .SingleOrDefaultAsync(cancellationToken: cancellationToken);
 
             if (application == null)
             {
