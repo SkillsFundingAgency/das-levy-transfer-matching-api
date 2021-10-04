@@ -17,7 +17,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.ApproveApplication
 
         public async Task<Unit> Handle(ApproveApplicationCommand request, CancellationToken cancellationToken)
         {
-            var application = await _applicationRepository.Get(request.PledgeId, request.ApplicationId);
+            var application = await _applicationRepository.Get(request.PledgeId, request.ApplicationId, null);
 
             application.Approve(new UserInfo(request.UserId, request.UserDisplayName));
 
