@@ -130,19 +130,6 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
             return Ok(query);
         }
 
-
-
-        [HttpGet]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [Route("pledges/{pledgeId}/applications2")]
-        public async Task<IActionResult> GetApplications2(int pledgeId)
-        {
-            throw new NotImplementedException();
-        }
-
-
-
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
