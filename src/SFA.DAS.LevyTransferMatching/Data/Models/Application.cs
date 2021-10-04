@@ -120,7 +120,6 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             ChangeTrackingSession.TrackUpdate(this);
             Status = ApplicationStatus.Accepted;
             UpdatedOn = DateTime.UtcNow;
-            AddEvent(new AcceptedFunding(Id, EmployerAccount.Id, UpdatedOn.Value));
 
             AddStatusHistory(UpdatedOn.Value);
         }
