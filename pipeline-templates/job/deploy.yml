@@ -53,8 +53,8 @@ jobs:
   - RunSqlDacpac
   environment: ${{ parameters.Environment }}
   variables:
-    ApiAppServiceName: $(ApiAppServiceName)
-    ResourceGroupName: $(ResourceGroupName)
+    ApiAppServiceName: $[ dependencies.DeployResources.outputs['DeployResources.ArmOutputs${{ parameters.Environment }}.ApiAppServiceName'] ]
+    ResourceGroupName: $[ dependencies.DeployResources.outputs['DeployResources.ArmOutputs${{ parameters.Environment }}.ResourceGroupName'] ]
   strategy:
     runOnce:
       deploy:
