@@ -37,7 +37,7 @@ jobs:
   parameters:
     AzureSubscription: ${{ parameters.ServiceConnection }}
     ServerName: $(SharedSQLServerFQDN)
-    DatabaseName: $(DatabaseName)
+    DatabaseName: $[ dependencies.DeployResources.outputs['DeployResources.ArmOutputs${{ parameters.Environment }}.DatabaseName'] ]
     SqlUsername: $(SharedSQLServerUsername)
     SqlPassword: $(SharedSQLServerPassword)
     DacpacFile: $(Pipeline.Workspace)/DacpacArtifact/src/SFA.DAS.LevyTransferMatching.Database/bin/Output/SFA.DAS.LevyTransferMatching.Database.dacpac
@@ -52,6 +52,9 @@ jobs:
   - DeployResources
   - RunSqlDacpac
   environment: ${{ parameters.Environment }}
+  variables:
+    ApiAppServiceName: $[ dependencies.DeployResources.outputs['DeployResources.ArmOutputs${{ parameters.Environment }}.ApiAppServiceName'] ]
+    ResourceGroupName: $[ dependencies.DeployResources.outputs['DeployResources.ArmOutputs${{ parameters.Environment }}.ResourceGroupName'] ]
   strategy:
     runOnce:
       deploy:
