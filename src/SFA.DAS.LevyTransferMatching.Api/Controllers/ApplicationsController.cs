@@ -37,17 +37,12 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 ApplicationId = applicationId,
             });
 
-            IActionResult result = null;
             if (queryResult != null)
             {
-                result = new OkObjectResult((GetApplicationResponse)queryResult);
-            }
-            else
-            {
-                result = new NotFoundResult();
+                return Ok((GetApplicationResponse)queryResult);
             }
 
-            return result;
+            return NotFound();
         }
 
         [HttpGet]
@@ -61,17 +56,12 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 ApplicationId = applicationId,
             });
 
-            IActionResult result = null;
             if (queryResult != null)
             {
-                result = new OkObjectResult((GetApplicationResponse)queryResult);
-            }
-            else
-            {
-                result = new NotFoundResult();
+                return Ok((GetApplicationResponse)queryResult);
             }
 
-            return result;
+            return NotFound();
         }
 		
 		[HttpPost]
