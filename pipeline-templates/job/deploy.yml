@@ -3,8 +3,11 @@ parameters:
   ServiceConnection:
   RunBlockOnPossibleDataLoss: false
 
+variables:
+  DeployResourcesJobName: DeployResources
+
 jobs:
-- deployment: DeployResources
+- deployment: ${{ variables.DeployResourcesJobName }}
   pool:
     name: DAS - Continuous Deployment Agents
   environment: ${{ parameters.Environment }}
@@ -43,17 +46,17 @@ jobs:
     RunBlockOnPossibleDataLoss: ${{ parameters.RunBlockOnPossibleDataLoss }}
     Environment: ${{ parameters.Environment }}
     pool: DAS - Continuous Deployment Agents
-    dependsOn: DeployResources
+    dependsOn: ${{ variables.DeployResourcesJobName }}
 - deployment: DeployWebApp
   pool:
     name: DAS - Continuous Deployment Agents
   dependsOn: 
-  - DeployResources
+  - ${{ variables.DeployResourcesJobName }}
   - RunSqlDacpac
   environment: ${{ parameters.Environment }}
   variables:
-    ApiAppServiceName: $[ dependencies.DeployResources.outputs['DeployResources.ArmOutputs${{ parameters.Environment }}.ApiAppServiceName'] ]
-    ResourceGroupName: $[ dependencies.DeployResources.outputs['DeployResources.ArmOutputs${{ parameters.Environment }}.ResourceGroupName'] ]
+    ApiAppServiceName: $[ dependencies.${{ variables.DeployResourcesJobName }}.outputs['${{ variables.DeployResourcesJobName }}.ArmOutputs${{ parameters.Environment }}.ApiAppServiceName'] ]
+    ResourceGroupName: $[ dependencies.${{ variables.DeployResourcesJobName }}.outputs['${{ variables.DeployResourcesJobName }}.ArmOutputs${{ parameters.Environment }}.ResourceGroupName'] ]
   strategy:
     runOnce:
       deploy:
