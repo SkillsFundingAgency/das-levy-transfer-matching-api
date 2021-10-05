@@ -33,6 +33,8 @@ jobs:
             TemplateSecrets:
               LoggingRedisConnectionString: $(LoggingRedisConnectionString)
               ConfigurationStorageConnectionString: $(ConfigurationStorageConnectionString)
+          ##TO DO: remove this task
+          - pwsh: Get-ChildItem ENV:* | Sort-Object Name | Format-Table -AutoSize
 - template: azure-pipelines-templates/deploy/job/sql-dacpac-deploy.yml@das-platform-building-blocks
   parameters:
     AzureSubscription: ${{ parameters.ServiceConnection }}
