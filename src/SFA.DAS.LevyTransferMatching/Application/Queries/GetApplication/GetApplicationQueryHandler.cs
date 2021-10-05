@@ -34,7 +34,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                     .Where(x => x.PledgeId == request.PledgeId.Value);
             }
             
-            var application = await applicationQuery.SingleOrDefaultAsync();
+            var application = await applicationQuery.SingleOrDefaultAsync(cancellationToken: cancellationToken);
 
             if (application == null)
             {
