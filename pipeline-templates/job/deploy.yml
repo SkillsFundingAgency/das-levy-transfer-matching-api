@@ -38,7 +38,7 @@ jobs:
     AzureSubscription: ${{ parameters.ServiceConnection }}
     ServerName: $(SharedSQLServerFQDN)
     ##TO DO: remove AT hardcoding
-    DatabaseName: $[ dependencies.DeployResources.outputs['DeployResources.ArmOutputsAT.DatabaseName'] ]
+    #DatabaseName: $[ dependencies.DeployResources.outputs['DeployResources.ArmOutputsAT.DatabaseName'] ]
     SqlUsername: $(SharedSQLServerUsername)
     SqlPassword: $(SharedSQLServerPassword)
     DacpacFile: $(Pipeline.Workspace)/DacpacArtifact/src/SFA.DAS.LevyTransferMatching.Database/bin/Output/SFA.DAS.LevyTransferMatching.Database.dacpac
