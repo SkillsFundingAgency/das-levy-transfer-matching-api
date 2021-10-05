@@ -48,7 +48,6 @@ jobs:
   pool:
     name: DAS - Continuous Deployment Agents
   dependsOn: 
-  - DeployResources
   - RunSqlDacpac
   environment: ${{ parameters.Environment }}
   variables:
