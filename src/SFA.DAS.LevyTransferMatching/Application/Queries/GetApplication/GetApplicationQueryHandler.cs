@@ -19,21 +19,22 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
 
         public async Task<GetApplicationResult> Handle(GetApplicationQuery request, CancellationToken cancellationToken)
         {
-            var application = await _levyTransferMatchingDbContext.Applications
+            var applicationQuery = _levyTransferMatchingDbContext.Applications
                 .Include(x => x.EmailAddresses)
                 .Include(x => x.EmployerAccount)
                 .Include(x => x.Pledge)
                 .Include(x => x.Pledge.EmployerAccount)
                 .Include(x => x.Pledge.Locations)
-                .Where(
-                    x =>
-                        x.Id == request.ApplicationId
-                        &&
-                        (
-                            !request.PledgeId.HasValue || (request.PledgeId.HasValue && (x.PledgeId == request.PledgeId.Value))
-                        )
-                )
-                .SingleOrDefaultAsync();
+                .Where(x => x.Id == request.ApplicationId)
+                .AsQueryable();
+
+            if (request.PledgeId.HasValue)
+            {
+                applicationQuery = applicationQuery
+                    .Where(x => x.PledgeId == request.PledgeId.Value);
+            }
+            
+            var application = await applicationQuery.SingleOrDefaultAsync();
 
             if (application == null)
             {
