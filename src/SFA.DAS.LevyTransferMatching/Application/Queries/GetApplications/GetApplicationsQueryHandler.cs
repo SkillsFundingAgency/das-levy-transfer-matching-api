@@ -47,7 +47,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                     LastName = x.LastName,
                     HasTrainingProvider = x.HasTrainingProvider,
                     NumberOfApprentices = x.NumberOfApprentices,
-                    Postcode = x.Postcode,
+                    Postcode = "",
                     StandardId = x.StandardId,
                     StartDate = x.StartDate,
                     EmailAddresses = x.EmailAddresses.Any()
