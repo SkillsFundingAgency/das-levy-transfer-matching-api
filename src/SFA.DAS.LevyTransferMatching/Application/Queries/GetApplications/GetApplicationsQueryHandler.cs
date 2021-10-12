@@ -54,7 +54,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                         ? x.EmailAddresses.Select(email => email.EmailAddress)
                         : null,
                     CreatedOn = x.CreatedOn,
-                    Status = x.Status
+                    Status = x.Status,
+                    Locations = x.ApplicationLocations.Select(location => new Models.Application.ApplicationLocation { Id = location.Id, PledgeLocationId = location.PledgeLocationId }).ToList()
                 })
                 .ToListAsync(cancellationToken));
         }
