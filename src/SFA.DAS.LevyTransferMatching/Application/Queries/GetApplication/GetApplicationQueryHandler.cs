@@ -61,6 +61,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 PledgeLevels = application.Pledge.Levels.ToList(),
                 PledgeJobRoles = application.Pledge.JobRoles.ToList(),
                 Amount = application.Amount,
+                PledgeAmount = application.Pledge.Amount,
                 PledgeRemainingAmount = application.Pledge.RemainingAmount,
                 Status = application.Status,
                 PledgeIsNamePublic = application.Pledge.IsNamePublic,
