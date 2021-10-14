@@ -64,7 +64,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 		
 		[HttpPost]
         [ProducesResponseType((int) HttpStatusCode.OK)]
-        [Route("{applicationId}/approve")]
+        [Route("pledges/{pledgeId}/applications/{applicationId}/approve")]
         public async Task<IActionResult> ApproveApplication(int pledgeId, int applicationId, [FromBody] ApproveApplicationRequest request)
         {
             await _mediator.Send(new ApproveApplicationCommand
@@ -83,7 +83,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [Route("{applicationId}/undo-approval")]
+        [Route("pledges/{pledgeId}/applications/{applicationId}/undo-approval")]
         public async Task<IActionResult> UndoApplicationApproval(int pledgeId, int applicationId)
         {
             await _mediator.Send(new UndoApplicationApprovalCommand
