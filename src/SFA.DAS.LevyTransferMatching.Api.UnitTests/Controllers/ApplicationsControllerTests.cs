@@ -166,7 +166,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
                 new LevyTransferMatching.Models.Application()
             }));
 
-            var actionResult = await _applicationsController.GetApplications(_pledgeId);
+            var actionResult = await _applicationsController.GetApplications(_pledgeId, null);
             var result = actionResult as OkObjectResult;
             Assert.IsNotNull(result);
             var response = result.Value as GetApplicationsResult;
