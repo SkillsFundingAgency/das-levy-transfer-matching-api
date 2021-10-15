@@ -19,13 +19,23 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
 
         public async Task<GetApplicationResult> Handle(GetApplicationQuery request, CancellationToken cancellationToken)
         {
-            var application = await _levyTransferMatchingDbContext.Applications
+            var applicationQuery = _levyTransferMatchingDbContext.Applications
                 .Include(x => x.ApplicationLocations)
                 .Include(x => x.EmailAddresses)
                 .Include(x => x.EmployerAccount)
                 .Include(x => x.Pledge)
+                .Include(x => x.Pledge.EmployerAccount)
                 .Include(x => x.Pledge.Locations)
-                .SingleOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+                .Where(x => x.Id == request.ApplicationId)
+                .AsQueryable();
+
+            if (request.PledgeId.HasValue)
+            {
+                applicationQuery = applicationQuery
+                    .Where(x => x.PledgeId == request.PledgeId.Value);
+            }
+            
+            var application = await applicationQuery.SingleOrDefaultAsync();
 
             if (application == null)
             {
@@ -46,6 +56,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 StandardId = application.StandardId,
                 StartDate = application.StartDate,
                 EmployerAccountName = application.EmployerAccount.Name,
+                PledgeEmployerAccountName = application.Pledge.EmployerAccount.Name,
                 Locations = application.ApplicationLocations.Select(x => new GetApplicationResult.ApplicationLocation { Id = x.Id, PledgeLocationId = x.PledgeLocationId }).ToList(),
                 AdditionalLocation = application.AdditionalLocation,
                 SpecificLocation = application.SpecificLocation,
@@ -54,8 +65,13 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 PledgeLevels = application.Pledge.Levels.ToList(),
                 PledgeJobRoles = application.Pledge.JobRoles.ToList(),
                 Amount = application.Amount,
+                PledgeAmount = application.Pledge.Amount,
                 PledgeRemainingAmount = application.Pledge.RemainingAmount,
-                Status = application.Status
+                Status = application.Status,
+                PledgeIsNamePublic = application.Pledge.IsNamePublic,
+                PledgeId = application.PledgeId,
+                ReceiverEmployerAccountId = application.EmployerAccount.Id,
+                SenderEmployerAccountId = application.Pledge.EmployerAccount.Id,
             };
 
             return result;

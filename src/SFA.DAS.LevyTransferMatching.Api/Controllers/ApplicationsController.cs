@@ -31,25 +31,40 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         {
             var queryResult = await _mediator.Send(new GetApplicationQuery()
             {
-                Id = applicationId,
+                PledgeId = pledgeId,
+                ApplicationId = applicationId,
             });
 
-            IActionResult result = null;
             if (queryResult != null)
             {
-                result = new OkObjectResult((GetApplicationResponse)queryResult);
-            }
-            else
-            {
-                result = new NotFoundResult();
+                return Ok((GetApplicationResponse)queryResult);
             }
 
-            return result;
+            return NotFound();
+        }
+
+        [HttpGet]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [Route("applications/{applicationId}")]
+        public async Task<IActionResult> GetApplication(int applicationId)
+        {
+            var queryResult = await _mediator.Send(new GetApplicationQuery()
+            {
+                ApplicationId = applicationId,
+            });
+
+            if (queryResult != null)
+            {
+                return Ok((GetApplicationResponse)queryResult);
+            }
+
+            return NotFound();
         }
 		
 		[HttpPost]
         [ProducesResponseType((int) HttpStatusCode.OK)]
-        [Route("{applicationId}/approve")]
+        [Route("pledges/{pledgeId}/applications/{applicationId}/approve")]
         public async Task<IActionResult> ApproveApplication(int pledgeId, int applicationId, [FromBody] ApproveApplicationRequest request)
         {
             await _mediator.Send(new ApproveApplicationCommand
@@ -68,7 +83,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [Route("{applicationId}/undo-approval")]
+        [Route("pledges/{pledgeId}/applications/{applicationId}/undo-approval")]
         public async Task<IActionResult> UndoApplicationApproval(int pledgeId, int applicationId)
         {
             await _mediator.Send(new UndoApplicationApprovalCommand
@@ -113,20 +128,6 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 (CreateApplicationResponse)commandResult);
 
             return result;
-        }
-
-        [HttpGet]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [Route("pledges/{pledgeId}/applications")]
-        public async Task<IActionResult> GetApplications(int pledgeId)
-        {
-            var query = await _mediator.Send(new GetApplicationsQuery
-            {
-                PledgeId = pledgeId,
-            });
-
-            return Ok(query);
         }
 
         [HttpGet]
