@@ -38,7 +38,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                 {
                     Amount = x.Amount,
                     PledgeId = x.Pledge.Id,
-                    DasAccountName = x.EmployerAccount.Name,
+                    DasAccountName = request.PledgeId.HasValue ? x.EmployerAccount.Name : x.Pledge.EmployerAccount.Name,
                     Id = x.Id,
                     Sectors = x.Sectors.ToList(),
                     BusinessWebsite = x.BusinessWebsite,
@@ -55,6 +55,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                         : null,
                     CreatedOn = x.CreatedOn,
                     Status = x.Status,
+                    IsNamePublic = x.Pledge.IsNamePublic,
                     Locations = x.ApplicationLocations.Select(location => new Models.Application.ApplicationLocation { Id = location.Id, PledgeLocationId = location.PledgeLocationId }).ToList()
                 })
                 .ToListAsync(cancellationToken));

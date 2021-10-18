@@ -32,6 +32,12 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
         public int PledgeRemainingAmount { get; set; }
         public int Amount { get; set; }
         public ApplicationStatus Status { get; set; }
+        public bool PledgeIsNamePublic { get; set; }
+        public int PledgeId { get; set; }
+        public long SenderEmployerAccountId { get; set; }
+        public long ReceiverEmployerAccountId { get; set; }
+        public string PledgeEmployerAccountName { get; set; }
+        public int PledgeAmount { get; set; }
 
         public class ApplicationLocation
         {
@@ -64,7 +70,13 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
                 PledgeJobRoles = getApplicationResult.PledgeJobRoles,
                 PledgeRemainingAmount = getApplicationResult.PledgeRemainingAmount,
                 Amount = getApplicationResult.Amount,
-                Status = getApplicationResult.Status
+                Status = getApplicationResult.Status,
+                PledgeIsNamePublic = getApplicationResult.PledgeIsNamePublic,
+                PledgeId = getApplicationResult.PledgeId,
+                SenderEmployerAccountId = getApplicationResult.SenderEmployerAccountId,
+                ReceiverEmployerAccountId = getApplicationResult.ReceiverEmployerAccountId,
+                PledgeAmount = getApplicationResult.PledgeAmount,
+                PledgeEmployerAccountName = getApplicationResult.PledgeEmployerAccountName,
             };
         }
     }

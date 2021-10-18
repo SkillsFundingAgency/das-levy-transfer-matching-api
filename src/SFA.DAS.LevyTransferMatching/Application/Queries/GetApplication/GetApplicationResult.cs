@@ -21,6 +21,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
         public IEnumerable<string> EmailAddresses { get; set; }
         public string BusinessWebsite { get; set; }
         public string EmployerAccountName { get; set; }
+        public string PledgeEmployerAccountName { get; set; }
         public List<ApplicationLocation> Locations { get; set; }
         public string AdditionalLocation { get; set; }
         public string SpecificLocation { get; set; }
@@ -30,6 +31,11 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
         public IEnumerable<Level> PledgeLevels { get; set; }
         public IEnumerable<JobRole> PledgeJobRoles { get; set; }
         public int PledgeRemainingAmount { get; set; }
+        public bool PledgeIsNamePublic { get; set; }
+        public int PledgeId { get; set; }
+        public long ReceiverEmployerAccountId { get; set; }
+        public long SenderEmployerAccountId { get; set; }
+        public int PledgeAmount { get; set; }
 
         public class ApplicationLocation
         {
