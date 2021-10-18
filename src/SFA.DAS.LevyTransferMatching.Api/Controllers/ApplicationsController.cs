@@ -9,6 +9,7 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
+using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
@@ -142,6 +143,27 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
             });
 
             return Ok(query);
+        }
+
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [Route("applications/{applicationId}/debit")]
+        public async Task<IActionResult> DebitApplication(int applicationId, [FromBody] DebitApplicationRequest request)
+        {
+            var result = await _mediator.Send(new DebitApplicationCommand
+            {
+                ApplicationId = applicationId,
+                NumberOfApprentices = request.NumberOfApprentices,
+                Amount = request.Amount
+            });
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
         }
     }
 }

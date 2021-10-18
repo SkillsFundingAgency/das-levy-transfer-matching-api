@@ -15,6 +15,7 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
+using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
 
 namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
 {
@@ -45,6 +46,9 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
 
             _mediator.Setup(x => x.Send(It.IsAny<ApproveApplicationCommand>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(() => Unit.Value);
+
+            _mediator.Setup(x => x.Send(It.IsAny<DebitApplicationCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(() => new DebitApplicationCommandResult { IsSuccess = true });
 
             _mediator.Setup(x => x.Send(It.Is<CreateApplicationCommand>(command =>
                     command.PledgeId == _pledgeId &&
@@ -189,6 +193,21 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             var response = result.Value as GetApplicationsResult;
             Assert.IsNotNull(response);
             Assert.AreEqual(1, response.Applications.Count());
+        }
+
+        [Test]
+        public async Task Post_DebitApplication_Debits_Application()
+        {
+            var request = _fixture.Create<DebitApplicationRequest>();
+
+            var actionResult = await _applicationsController.DebitApplication(_applicationId, request);
+            var okResult = actionResult as OkResult;
+            Assert.IsNotNull(okResult);
+
+            _mediator.Verify(x => x.Send(It.Is<DebitApplicationCommand>(command =>
+                        command.ApplicationId == _applicationId),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
         }
     }
 }
