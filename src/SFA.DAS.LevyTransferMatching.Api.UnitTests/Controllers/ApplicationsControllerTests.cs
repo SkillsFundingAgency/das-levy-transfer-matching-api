@@ -15,6 +15,7 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
+using SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
 
 namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
 {
@@ -232,6 +233,56 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             var response = result.Value as GetApplicationsResult;
             Assert.IsNotNull(response);
             Assert.AreEqual(1, response.Applications.Count());
+        }
+
+        [Test]
+        public async Task Post_AcceptFunding_Returns_No_Content()
+        {
+            // Arrange
+            var applicationId = _fixture.Create<int>();
+            var accountId = _fixture.Create<long>();
+            var request = _fixture.Create<AcceptFundingRequest>();
+            var result = new AcceptFundingCommandResult()
+            {
+                Updated = true,
+            };
+
+            _mediator
+                .Setup(x => x.Send(It.IsAny<AcceptFundingCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(result);
+
+            // Act
+            var actionResult = await _applicationsController.AcceptFunding(applicationId, accountId, request);
+            var noContentResult = actionResult as NoContentResult;
+
+            // Assert
+            Assert.IsNotNull(actionResult);
+            Assert.IsNotNull(noContentResult);
+        }
+
+        [Test]
+        public async Task Post_AcceptFunding_Returns_BadRequest()
+        {
+            // Arrange
+            var applicationId = _fixture.Create<int>();
+            var accountId = _fixture.Create<long>();
+            var request = _fixture.Create<AcceptFundingRequest>();
+            var result = new AcceptFundingCommandResult()
+            {
+                Updated = false,
+            };
+
+            _mediator
+                .Setup(x => x.Send(It.IsAny<AcceptFundingCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(result);
+
+            // Act
+            var actionResult = await _applicationsController.AcceptFunding(applicationId, accountId, request);
+            var badRequestResult = actionResult as BadRequestResult;
+
+            // Assert
+            Assert.IsNotNull(actionResult);
+            Assert.IsNotNull(badRequestResult);
         }
     }
 }
