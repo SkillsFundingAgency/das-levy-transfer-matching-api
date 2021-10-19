@@ -33,27 +33,9 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding
                 };
             }
 
-
-            try
-            {
-                application.AcceptFunding(new UserInfo(request.UserId, request.UserDisplayName));
-
-            }
-            catch (System.Exception exception)
-            {
-                _logger.LogInformation($"An error occurred in the accept funding method call :\n\n{exception}");
-            }
-
-            try
-            {
-                await _applicationRepository.Update(application);
-            }
-            catch (Exception e)
-            {
-                _logger.LogInformation($"An error occurred in the application repository method call :\n\n{e}");
-            }
+            application.AcceptFunding(new UserInfo(request.UserId, request.UserDisplayName));
+            await _applicationRepository.Update(application);
             
-
             return new AcceptFundingCommandResult
             {
                 Updated = true
