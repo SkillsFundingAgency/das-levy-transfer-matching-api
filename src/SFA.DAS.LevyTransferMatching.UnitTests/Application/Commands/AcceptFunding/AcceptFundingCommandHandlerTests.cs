@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
@@ -20,6 +21,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.AcceptFund
         private AcceptFundingCommand _command;
         private readonly Fixture _fixture = new Fixture();
         private LevyTransferMatching.Data.Models.Application _application;
+        private Mock<ILogger<AcceptFundingCommandHandler>> _logger;
 
         [SetUp]
         public void Setup()
@@ -32,13 +34,14 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.AcceptFund
                 UserDisplayName = "userName"
             };
 
+            _logger = new Mock<ILogger<AcceptFundingCommandHandler>>();
             _application = _fixture.Create<LevyTransferMatching.Data.Models.Application>();
             _application.SetValue(o => o.Status, ApplicationStatus.Approved);
             _repository = new Mock<IApplicationRepository>();
             _repository.Setup(x => x.Get(null, _command.ApplicationId, _command.AccountId))
                 .ReturnsAsync(_application);
 
-            _handler = new AcceptFundingCommandHandler(_repository.Object);
+            _handler = new AcceptFundingCommandHandler(_repository.Object, _logger.Object);
         }
 
         [Test]

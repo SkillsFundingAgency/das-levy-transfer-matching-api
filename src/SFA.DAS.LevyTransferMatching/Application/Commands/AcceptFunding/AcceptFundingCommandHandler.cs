@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -32,9 +33,26 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding
                 };
             }
 
-            application.AcceptFunding(new UserInfo(request.UserId, request.UserDisplayName));
 
-            await _applicationRepository.Update(application);
+            try
+            {
+                application.AcceptFunding(new UserInfo(request.UserId, request.UserDisplayName));
+
+            }
+            catch (System.Exception exception)
+            {
+                _logger.LogInformation($"An error occurred in the accept funding method call :\n\n{exception}");
+            }
+
+            try
+            {
+                await _applicationRepository.Update(application);
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation($"An error occurred in the application repository method call :\n\n{e}");
+            }
+            
 
             return new AcceptFundingCommandResult
             {
