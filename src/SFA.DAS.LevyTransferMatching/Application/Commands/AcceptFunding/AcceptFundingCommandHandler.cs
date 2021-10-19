@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 
@@ -9,10 +10,12 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding
     public class AcceptFundingCommandHandler : IRequestHandler<AcceptFundingCommand, AcceptFundingCommandResult>
     {
         private readonly IApplicationRepository _applicationRepository;
+        private readonly ILogger<AcceptFundingCommandHandler> _logger;
 
-        public AcceptFundingCommandHandler(IApplicationRepository applicationRepository)
+        public AcceptFundingCommandHandler(IApplicationRepository applicationRepository, ILogger<AcceptFundingCommandHandler> logger)
         {
             _applicationRepository = applicationRepository;
+            _logger = logger;
         }
 
         public async Task<AcceptFundingCommandResult> Handle(AcceptFundingCommand request, CancellationToken cancellationToken)
@@ -21,6 +24,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding
 
             if (application == null)
             {
+                _logger.LogInformation($"The application for {request} could not be found.");
+
                 return new AcceptFundingCommandResult
                 {
                     Updated = false
