@@ -38,7 +38,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                 {
                     Amount = x.Amount,
                     PledgeId = x.Pledge.Id,
-                    DasAccountName = x.EmployerAccount.Name,
+                    DasAccountName = request.PledgeId.HasValue ? x.EmployerAccount.Name : x.Pledge.EmployerAccount.Name,
                     Id = x.Id,
                     Sectors = x.Sectors.ToList(),
                     BusinessWebsite = x.BusinessWebsite,
@@ -47,7 +47,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                     LastName = x.LastName,
                     HasTrainingProvider = x.HasTrainingProvider,
                     NumberOfApprentices = x.NumberOfApprentices,
-                    Postcode = x.Postcode,
+                    Postcode = "",
                     StandardId = x.StandardId,
                     StartDate = x.StartDate,
                     EmailAddresses = x.EmailAddresses.Any()

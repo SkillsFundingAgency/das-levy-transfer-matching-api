@@ -14,6 +14,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         protected Application()
         {
             _statusHistory = new List<ApplicationStatusHistory>();
+            _applicationLocations = new List<ApplicationLocation>();
         }
 
         public Application(Pledge pledge, EmployerAccount account, CreateApplicationProperties properties, UserInfo userInfo) : this()
@@ -27,18 +28,30 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             HasTrainingProvider = properties.HasTrainingProvider;
             Amount = properties.Amount;
             Sectors = properties.Sectors;
-            Postcode = properties.PostCode;
             FirstName = properties.FirstName;
             LastName = properties.LastName;
             BusinessWebsite = properties.BusinessWebsite;
             CreatedOn = DateTime.UtcNow;
+
             _emailAddresses = properties.EmailAddresses.Select(x => new ApplicationEmailAddress(x)).ToList();
+
+            if (properties.Locations != null)
+            {
+                _applicationLocations = properties.Locations.Select(x => new ApplicationLocation(x)).ToList();
+            }
+
+            AdditionalLocation = properties.AdditionalLocation;
+            SpecificLocation = properties.SpecificLocation;
 
             StartTrackingSession(UserAction.CreateApplication, userInfo);
             ChangeTrackingSession.TrackInsert(this);
             foreach(var emailAddress in _emailAddresses)
             {
                 ChangeTrackingSession.TrackInsert(emailAddress);
+            }
+            foreach (var location in _applicationLocations)
+            {
+                ChangeTrackingSession.TrackInsert(location);
             }
 
             AddStatusHistory(CreatedOn);
@@ -58,7 +71,8 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         public bool HasTrainingProvider { get; private set; }
 
         public Sector Sectors { get; private set; }
-        public string Postcode { get; private set; }
+        public string AdditionalLocation { get; set; }
+        public string SpecificLocation { get; set; }
 
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
@@ -69,6 +83,9 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
         private readonly List<ApplicationStatusHistory> _statusHistory;
         public IReadOnlyCollection<ApplicationStatusHistory> StatusHistory => _statusHistory;
+
+        private readonly List<ApplicationLocation> _applicationLocations;
+        public IReadOnlyCollection<ApplicationLocation> ApplicationLocations => _applicationLocations;
 
         public DateTime CreatedOn { get; private set; }
         public ApplicationStatus Status { get; private set; }

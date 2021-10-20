@@ -31,6 +31,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
         public int PledgeId { get; set; }
         public long SenderEmployerAccountId { get; set; }
         public long ReceiverEmployerAccountId { get; set; }
+        public string PledgeEmployerAccountName { get; set; }
+        public int PledgeAmount { get; set; }
 
         public static implicit operator GetApplicationResponse(GetApplicationResult getApplicationResult)
         {
@@ -59,6 +61,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
                 PledgeId = getApplicationResult.PledgeId,
                 SenderEmployerAccountId = getApplicationResult.SenderEmployerAccountId,
                 ReceiverEmployerAccountId = getApplicationResult.ReceiverEmployerAccountId,
+                PledgeAmount = getApplicationResult.PledgeAmount,
+                PledgeEmployerAccountName = getApplicationResult.PledgeEmployerAccountName,
             };
         }
     }
