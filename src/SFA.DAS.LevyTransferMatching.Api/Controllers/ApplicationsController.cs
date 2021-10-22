@@ -1,9 +1,11 @@
 ﻿using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.LevyTransferMatching.Api.Models.Applications;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetApplication;
+using SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.ApproveApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
@@ -32,20 +34,35 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         {
             var queryResult = await _mediator.Send(new GetApplicationQuery()
             {
-                Id = applicationId,
+                PledgeId = pledgeId,
+                ApplicationId = applicationId,
             });
 
-            IActionResult result = null;
             if (queryResult != null)
             {
-                result = new OkObjectResult((GetApplicationResponse)queryResult);
-            }
-            else
-            {
-                result = new NotFoundResult();
+                return Ok((GetApplicationResponse)queryResult);
             }
 
-            return result;
+            return NotFound();
+        }
+
+        [HttpGet]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [Route("applications/{applicationId}")]
+        public async Task<IActionResult> GetApplication(int applicationId)
+        {
+            var queryResult = await _mediator.Send(new GetApplicationQuery()
+            {
+                ApplicationId = applicationId,
+            });
+
+            if (queryResult != null)
+            {
+                return Ok((GetApplicationResponse)queryResult);
+            }
+
+            return NotFound();
         }
 		
 		[HttpPost]
@@ -64,7 +81,27 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
             return Ok();
         }
 
-		
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [Route("accounts/{accountId}/applications/{applicationId}/accept-funding")]
+        public async Task<IActionResult> AcceptFunding(int applicationId, long accountId, [FromBody] AcceptFundingRequest request, CancellationToken cancellationToken = default)
+        {
+            var result = await _mediator.Send(new AcceptFundingCommand
+            {
+                ApplicationId = applicationId,
+                AccountId = accountId,
+                UserDisplayName = request.UserDisplayName,
+                UserId = request.UserId
+            }, cancellationToken);
+
+            if (result.Updated)
+            {
+                return NoContent();
+            }
+
+            return BadRequest();
+        }
 
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -114,20 +151,6 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 (CreateApplicationResponse)commandResult);
 
             return result;
-        }
-
-        [HttpGet]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [Route("pledges/{pledgeId}/applications")]
-        public async Task<IActionResult> GetApplications(int pledgeId)
-        {
-            var query = await _mediator.Send(new GetApplicationsQuery
-            {
-                PledgeId = pledgeId,
-            });
-
-            return Ok(query);
         }
 
         [HttpGet]

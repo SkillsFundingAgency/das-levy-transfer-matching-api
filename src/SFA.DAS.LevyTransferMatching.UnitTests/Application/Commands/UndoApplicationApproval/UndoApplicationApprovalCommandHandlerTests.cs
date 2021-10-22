@@ -37,7 +37,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.UndoApplic
             _application.SetValue(x => x.Status, ApplicationStatus.Approved);
 
             _applicationRepository = new Mock<IApplicationRepository>();
-            _applicationRepository.Setup(x => x.Get(_command.PledgeId, _command.ApplicationId)).ReturnsAsync(_application);
+            _applicationRepository.Setup(x => x.Get(_command.PledgeId, _command.ApplicationId, null)).ReturnsAsync(_application);
 
             _applicationRepository.Setup(x => x.Update(It.IsAny<LevyTransferMatching.Data.Models.Application>()))
                 .Returns(Task.CompletedTask);
