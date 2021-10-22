@@ -23,7 +23,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication
 
         public async Task<DebitApplicationCommandResult> Handle(DebitApplicationCommand request, CancellationToken cancellationToken)
         {
-            var application = await _repository.Get(request.ApplicationId);
+            var application = await _repository.Get(null, request.ApplicationId, null);
 
             var success = application.Debit(request.NumberOfApprentices, request.Amount, UserInfo.System);
 

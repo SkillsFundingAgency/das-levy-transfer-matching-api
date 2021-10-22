@@ -35,7 +35,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.DebitAppli
             };
 
             _repository = new Mock<IApplicationRepository>();
-            _repository.Setup(x => x.Get(_application.Id)).ReturnsAsync(_application);
+            _repository.Setup(x => x.Get(null, _application.Id, null)).ReturnsAsync(_application);
 
             _handler = new DebitApplicationCommandHandler(_repository.Object, Mock.Of<ILogger<DebitApplicationCommandHandler>>());
         }
