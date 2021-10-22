@@ -32,6 +32,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         private long _accountId;
         private CreateApplicationRequest _request;
         private CreateApplicationCommandResult _result;
+        private DebitApplicationRequest _debitApplicationRequest;
 
         [SetUp]
         public void Setup()
@@ -41,6 +42,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             _accountId = _fixture.Create<long>();
             _request = _fixture.Create<CreateApplicationRequest>();
             _result = _fixture.Create<CreateApplicationCommandResult>();
+            _debitApplicationRequest = _fixture.Create<DebitApplicationRequest>();
 
             _mediator = new Mock<IMediator>();
             _applicationsController = new ApplicationsController(_mediator.Object);
@@ -48,7 +50,11 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             _mediator.Setup(x => x.Send(It.IsAny<ApproveApplicationCommand>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(() => Unit.Value);
 
-            _mediator.Setup(x => x.Send(It.IsAny<DebitApplicationCommand>(), It.IsAny<CancellationToken>()))
+            _mediator.Setup(x => x.Send(It.Is<DebitApplicationCommand>(command =>
+                    command.ApplicationId == _applicationId &&
+                    command.Amount == _debitApplicationRequest.Amount &&
+                    command.NumberOfApprentices == _debitApplicationRequest.NumberOfApprentices
+                    ), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(() => new DebitApplicationCommandResult { IsSuccess = true });
 
             _mediator.Setup(x => x.Send(It.Is<CreateApplicationCommand>(command =>
@@ -294,9 +300,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         [Test]
         public async Task Post_DebitApplication_Debits_Application()
         {
-            var request = _fixture.Create<DebitApplicationRequest>();
-
-            var actionResult = await _applicationsController.DebitApplication(_applicationId, request);
+            var actionResult = await _applicationsController.DebitApplication(_applicationId, _debitApplicationRequest);
             var okResult = actionResult as OkResult;
             Assert.IsNotNull(okResult);
 
