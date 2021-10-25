@@ -181,11 +181,6 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 Amount = request.Amount
             });
 
-            if (!result.IsSuccess)
-            {
-                return BadRequest();
-            }
-
             return Ok();
         }
     }

@@ -34,7 +34,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.ApproveApp
             _application = _fixture.Create<LevyTransferMatching.Data.Models.Application>();
 
             _applicationRepository = new Mock<IApplicationRepository>();
-            _applicationRepository.Setup(x => x.Get(_command.PledgeId, _command.ApplicationId, null)).ReturnsAsync(_application);
+            _applicationRepository.Setup(x => x.Get(_command.ApplicationId, _command.PledgeId, null)).ReturnsAsync(_application);
 
             _applicationRepository.Setup(x => x.Update(It.IsAny<LevyTransferMatching.Data.Models.Application>()))
                 .Returns(Task.CompletedTask);
