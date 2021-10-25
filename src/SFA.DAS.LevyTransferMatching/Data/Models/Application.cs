@@ -147,6 +147,9 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
         public bool Debit(int numberOfApprenticesUsed, int amountUsed, int maxAmount, UserInfo userInfo)
         {
+            if (Status != ApplicationStatus.Accepted)
+                throw new InvalidOperationException($"Unable to debit application with Id: {Id}. Application status is not accepted.");
+
             StartTrackingSession(UserAction.DebitApplication, userInfo);
             ChangeTrackingSession.TrackUpdate(this);
 
