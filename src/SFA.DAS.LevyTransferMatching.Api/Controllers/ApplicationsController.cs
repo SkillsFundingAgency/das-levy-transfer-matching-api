@@ -182,7 +182,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 MaxAmount = request.MaxAmount
             });
 
-            return Ok();
+            return Ok(result);
         }
     }
 }
