@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication
 {
-    public class DebitApplicationCommandHandler : IRequestHandler<DebitApplicationCommand, DebitApplicationCommandResult>
+    public class DebitApplicationCommandHandler : IRequestHandler<DebitApplicationCommand>
     {
         private readonly IApplicationRepository _repository;
         private readonly ILogger<DebitApplicationCommandHandler> _logger;
@@ -21,18 +21,14 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication
             _logger = logger;
         }
 
-        public async Task<DebitApplicationCommandResult> Handle(DebitApplicationCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(DebitApplicationCommand request, CancellationToken cancellationToken)
         {
             var application = await _repository.Get(request.ApplicationId);
-
-            var success = application.Debit(request.NumberOfApprentices, request.Amount, request.MaxAmount, UserInfo.System);
+            application.Debit(request.NumberOfApprentices, request.Amount, request.MaxAmount, UserInfo.System);
 
             await _repository.Update(application);
 
-            return new DebitApplicationCommandResult
-            {
-                IsSuccess = success
-            };
+            return Unit.Value;
         }
     }
 }

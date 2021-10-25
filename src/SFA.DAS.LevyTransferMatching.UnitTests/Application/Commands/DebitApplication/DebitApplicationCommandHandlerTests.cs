@@ -44,6 +44,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.DebitAppli
         [TestCase(100, 200, 300)]
         public async Task Handle_Application_AmountUsed_Is_Debited_By_Requested_Amount(int startValue, int debitValue, int expected)
         {
+            _application.SetValue(x => x.Status, ApplicationStatus.Accepted);
             _application.SetValue(x => x.AmountUsed, startValue);
             _command.Amount = debitValue;
 
@@ -56,6 +57,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.DebitAppli
         [TestCase(1, 2, 3)]
         public async Task Handle_Application_NumberOfApprenticesUsed_Is_Debited_By_Requested_Amount(int startValue, int debitValue, int expected)
         {
+            _application.SetValue(x => x.Status, ApplicationStatus.Accepted);
             _application.SetValue(x => x.NumberOfApprenticesUsed, startValue);
             _command.NumberOfApprentices = debitValue;
 
@@ -66,9 +68,10 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.DebitAppli
 
         [TestCase(3, 3, 4)]
         [TestCase(3, 5, 4)]
-        [TestCase(3, 2, 0)]
+        [TestCase(3, 2, 3)]
         public async Task Handle_Application_Status_Is_Updated_When_Apprentice_Limit_Reached(int startValue, int debitValue, int expected)
         {
+            _application.SetValue(x => x.Status, ApplicationStatus.Accepted);
             _application.SetValue(x => x.NumberOfApprentices, startValue);
 
             _command.NumberOfApprentices = debitValue;
@@ -82,11 +85,12 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.DebitAppli
         [TestCase(0, 300, 300, 4)]
         [TestCase(0, 500, 300, 4)]
         [TestCase(300, 100, 400, 4)]
-        [TestCase(0, 200, 300, 0)]
-        [TestCase(0, 200, 500, 0)]
-        [TestCase(300, 200, 1000, 0)]
+        [TestCase(0, 200, 300, 3)]
+        [TestCase(0, 200, 500, 3)]
+        [TestCase(300, 200, 1000, 3)]
         public async Task Handle_Application_Status_Is_Updated_When_Amount_Limit_Reached(int initialAmountUsed, int debitAmount, int maxAmount, int expected)
         {
+            _application.SetValue(x => x.Status, ApplicationStatus.Accepted);
             _application.SetValue(x => x.AmountUsed, initialAmountUsed);
 
             _command.MaxAmount = maxAmount;

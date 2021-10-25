@@ -50,13 +50,6 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             _mediator.Setup(x => x.Send(It.IsAny<ApproveApplicationCommand>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(() => Unit.Value);
 
-            _mediator.Setup(x => x.Send(It.Is<DebitApplicationCommand>(command =>
-                    command.ApplicationId == _applicationId &&
-                    command.Amount == _debitApplicationRequest.Amount &&
-                    command.NumberOfApprentices == _debitApplicationRequest.NumberOfApprentices
-                    ), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(() => new DebitApplicationCommandResult { IsSuccess = true });
-
             _mediator.Setup(x => x.Send(It.Is<CreateApplicationCommand>(command =>
                     command.PledgeId == _pledgeId &&
                     command.EmployerAccountId == _request.EmployerAccountId &&

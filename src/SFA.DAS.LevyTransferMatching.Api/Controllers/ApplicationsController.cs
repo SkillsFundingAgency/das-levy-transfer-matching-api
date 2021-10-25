@@ -174,7 +174,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         [Route("applications/{applicationId}/debit")]
         public async Task<IActionResult> DebitApplication(int applicationId, [FromBody] DebitApplicationRequest request)
         {
-            var result = await _mediator.Send(new DebitApplicationCommand
+            await _mediator.Send(new DebitApplicationCommand
             {
                 ApplicationId = applicationId,
                 NumberOfApprentices = request.NumberOfApprentices,
@@ -182,7 +182,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 MaxAmount = request.MaxAmount
             });
 
-            return Ok(result);
+            return Ok();
         }
     }
 }
