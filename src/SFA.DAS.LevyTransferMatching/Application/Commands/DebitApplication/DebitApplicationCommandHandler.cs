@@ -25,7 +25,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication
         {
             var application = await _repository.Get(request.ApplicationId);
 
-            var success = application.Debit(request.NumberOfApprentices, request.Amount, UserInfo.System);
+            var success = application.Debit(request.NumberOfApprentices, request.Amount, request.MaxAmount, UserInfo.System);
 
             await _repository.Update(application);
 

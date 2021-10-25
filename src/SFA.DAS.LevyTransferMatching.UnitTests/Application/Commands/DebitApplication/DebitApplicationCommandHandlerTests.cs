@@ -70,20 +70,27 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.DebitAppli
         public async Task Handle_Application_Status_Is_Updated_When_Apprentice_Limit_Reached(int startValue, int debitValue, int expected)
         {
             _application.SetValue(x => x.NumberOfApprentices, startValue);
+
             _command.NumberOfApprentices = debitValue;
+            _command.MaxAmount = 1000;
 
             await _handler.Handle(_command, CancellationToken.None);
 
             _repository.Verify(x => x.Update(It.Is<LevyTransferMatching.Data.Models.Application>(p => p == _application && p.Status == (ApplicationStatus)expected)));
         }
 
-        [TestCase(300, 300, 4)]
-        [TestCase(300, 500, 4)]
-        [TestCase(300, 200, 0)]
-        public async Task Handle_Application_Status_Is_Updated_When_Amount_Limit_Reached(int startValue, int debitValue, int expected)
+        [TestCase(0, 300, 300, 4)]
+        [TestCase(0, 500, 300, 4)]
+        [TestCase(300, 100, 400, 4)]
+        [TestCase(0, 200, 300, 0)]
+        [TestCase(0, 200, 500, 0)]
+        [TestCase(300, 200, 1000, 0)]
+        public async Task Handle_Application_Status_Is_Updated_When_Amount_Limit_Reached(int initialAmountUsed, int debitAmount, int maxAmount, int expected)
         {
-            _application.SetValue(x => x.Amount, startValue);
-            _command.Amount = debitValue;
+            _application.SetValue(x => x.AmountUsed, initialAmountUsed);
+
+            _command.MaxAmount = maxAmount;
+            _command.Amount = debitAmount;
 
             await _handler.Handle(_command, CancellationToken.None);
 

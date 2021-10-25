@@ -145,7 +145,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             _statusHistory.Add(new ApplicationStatusHistory(Status, date));
         }
 
-        public bool Debit(int numberOfApprenticesUsed, int amountUsed, UserInfo userInfo)
+        public bool Debit(int numberOfApprenticesUsed, int amountUsed, int maxAmount, UserInfo userInfo)
         {
             StartTrackingSession(UserAction.DebitApplication, userInfo);
             ChangeTrackingSession.TrackUpdate(this);
@@ -153,7 +153,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             NumberOfApprenticesUsed += numberOfApprenticesUsed;
             AmountUsed += amountUsed;
 
-            if (NumberOfApprenticesUsed >= NumberOfApprentices || AmountUsed >= Amount)
+            if (NumberOfApprenticesUsed >= NumberOfApprentices || AmountUsed >= maxAmount)
                 Status = ApplicationStatus.FundsUsed;
 
             UpdatedOn = DateTime.UtcNow;

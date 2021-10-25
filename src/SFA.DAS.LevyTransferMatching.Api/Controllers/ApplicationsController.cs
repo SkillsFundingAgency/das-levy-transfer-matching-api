@@ -178,7 +178,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
             {
                 ApplicationId = applicationId,
                 NumberOfApprentices = request.NumberOfApprentices,
-                Amount = request.Amount
+                Amount = request.Amount,
+                MaxAmount = request.MaxAmount
             });
 
             return Ok();
