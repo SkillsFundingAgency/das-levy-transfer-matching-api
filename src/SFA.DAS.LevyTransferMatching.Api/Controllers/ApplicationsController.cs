@@ -11,6 +11,7 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
+using SFA.DAS.LevyTransferMatching.Application.Commands.RejectApplication;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
@@ -70,6 +71,22 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         public async Task<IActionResult> ApproveApplication(int pledgeId, int applicationId, [FromBody] ApproveApplicationRequest request)
         {
             await _mediator.Send(new ApproveApplicationCommand
+            {
+                PledgeId = pledgeId,
+                ApplicationId = applicationId,
+                UserId = request.UserId,
+                UserDisplayName = request.UserDisplayName
+            });
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [Route("pledges/{pledgeId}/applications/{applicationId}/reject")]
+        public async Task<IActionResult> RejectApplication(int pledgeId, int applicationId, [FromBody] RejectApplicationRequest request)
+        {
+            await _mediator.Send(new RejectApplicationCommand
             {
                 PledgeId = pledgeId,
                 ApplicationId = applicationId,

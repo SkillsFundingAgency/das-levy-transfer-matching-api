@@ -55,6 +55,22 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Data.Repositories
         }
 
         [Test]
+        public async Task Reject_Persists_Application()
+        {
+            var application = _fixture.Create<LevyTransferMatching.Data.Models.Application>();
+            await DbContext.Applications.AddAsync(application, CancellationToken.None);
+            await DbContext.SaveChangesAsync();
+
+            application.Reject(_fixture.Create<UserInfo>());
+            await _repository.Update(application);
+            await DbContext.SaveChangesAsync(CancellationToken.None);
+
+            var updated = await DbContext.Applications.FindAsync(application.Id);
+
+            Assert.AreEqual(ApplicationStatus.Rejected, updated.Status);
+        }
+
+        [Test]
         public async Task Get_Retrieves_Application()
         {
             var application = _fixture.Create<LevyTransferMatching.Data.Models.Application>();
