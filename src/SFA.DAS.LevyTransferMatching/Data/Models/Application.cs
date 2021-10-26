@@ -145,10 +145,10 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             _statusHistory.Add(new ApplicationStatusHistory(Status, date));
         }
 
-        public bool Debit(int numberOfApprenticesUsed, int amountUsed, int maxAmount, UserInfo userInfo)
+        public void Debit(int numberOfApprenticesUsed, int amountUsed, int maxAmount, UserInfo userInfo)
         {
             if (Status != ApplicationStatus.Accepted)
-                throw new InvalidOperationException($"Unable to debit application with Id: {Id}. Application status is not accepted.");
+                throw new InvalidOperationException($"Unable to debit application with Id: {Id}. Application status is {Status} when it should be {ApplicationStatus.Accepted}.");
 
             StartTrackingSession(UserAction.DebitApplication, userInfo);
             ChangeTrackingSession.TrackUpdate(this);
@@ -160,7 +160,6 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
                 Status = ApplicationStatus.FundsUsed;
 
             UpdatedOn = DateTime.UtcNow;
-            return true;
         }
     }
 }
