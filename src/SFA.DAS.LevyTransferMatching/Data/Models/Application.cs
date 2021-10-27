@@ -116,6 +116,8 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
                 throw new InvalidOperationException($"Unable to accept funding for Application {Id} status {Status}");
             }
 
+            StartTrackingSession(UserAction.AcceptFunding, userInfo);
+            ChangeTrackingSession.TrackUpdate(this);
             Status = ApplicationStatus.Accepted;
             UpdatedOn = DateTime.UtcNow;
 
