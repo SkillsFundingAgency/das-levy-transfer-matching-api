@@ -16,7 +16,7 @@ jobs:
           displayName: Get-EnvironmentDeploymentRecords
           inputs:
             azureSubscription: ${{ parameters.ServiceConnection }}
-            scriptPath: Infrastructure-Scripts/Get-EnvironmentDeploymentRecords.ps1
+            scriptPath: das-platform-automation/Infrastructure-Scripts/Get-EnvironmentDeploymentRecords.ps1
             scriptArguments:
               -Organisation $(Organisation) `
               -Project $(Project) `
