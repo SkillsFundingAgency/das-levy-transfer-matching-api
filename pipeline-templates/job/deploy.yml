@@ -20,7 +20,13 @@ jobs:
               scriptPath: Infrastructure-Scripts/Get-EnvironmentDeploymentRecords.ps1
             ${{ if eq(parameters.IsMultiRepoCheckout, true) }}:
               scriptPath: das-platform-automation/Infrastructure-Scripts/Get-EnvironmentDeploymentRecords.ps1
-            scriptArguments: '-Organisation $(Organisation) -Project $(Project) -EnvironmentId $(Environment.Id) -PipelineName $(Build.DefinitionName) -RunId $(Build.BuildId) -AccessToken $(AccessToken)'
+            scriptArguments:
+              -Organisation $(Organisation) `
+              -Project $(Project) `
+              -EnvironmentId $(Environment.Id) `
+              -PipelineName $(Build.DefinitionName) `
+              -RunId $(Build.BuildId) `
+              -AccessToken $(AccessToken)
             azurePowerShellVersion: LatestVersion
             pwsh: true
         - template: azure-pipelines-templates/deploy/step/set-backendaccessrestrictions-variable.yml@das-platform-building-blocks
