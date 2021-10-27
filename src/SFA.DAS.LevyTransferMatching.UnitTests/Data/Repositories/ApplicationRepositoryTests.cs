@@ -39,7 +39,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Data.Repositories
         }
 
         [Test]
-        public async Task Update_Persists_Application_With_Approve_ApplicationStatus_Accepted()
+        public async Task Update_Persists_Application_With_Approve_ApplicationStatus_Approved()
         {
             var application = await CreateApprovedApplication();
 
