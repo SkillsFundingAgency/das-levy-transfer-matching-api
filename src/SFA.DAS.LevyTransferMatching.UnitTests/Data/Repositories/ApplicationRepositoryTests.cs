@@ -39,19 +39,25 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Data.Repositories
         }
 
         [Test]
-        public async Task Update_Persists_Application()
+        public async Task Update_Persists_Application_With_Approve_ApplicationStatus_Approved()
         {
-            var application = _fixture.Create<LevyTransferMatching.Data.Models.Application>();
-            await DbContext.Applications.AddAsync(application, CancellationToken.None);
-            await DbContext.SaveChangesAsync();
+            var application = await CreateApprovedApplication();
 
-            application.Approve(_fixture.Create<UserInfo>());
+            Assert.AreEqual(ApplicationStatus.Approved, application.Status);
+        }
+
+        [Test]
+        public async Task Update_Persists_Application_With_AcceptFunding_ApplicationStatus_Accepted()
+        {
+            var application = await CreateApprovedApplication();
+
+            application.AcceptFunding(_fixture.Create<UserInfo>());
             await _repository.Update(application);
             await DbContext.SaveChangesAsync(CancellationToken.None);
 
             var updated = await DbContext.Applications.FindAsync(application.Id);
 
-            Assert.AreEqual(ApplicationStatus.Approved, updated.Status);
+            Assert.AreEqual(ApplicationStatus.Accepted, updated.Status);
         }
 
         [Test]
@@ -68,6 +74,21 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Data.Repositories
             var result = await _repository.Get(application.Pledge.Id, null, application.Id);
 
             Assert.AreEqual(application, result);
+        }
+
+        private async Task<LevyTransferMatching.Data.Models.Application> CreateApprovedApplication()
+        {
+            var application = _fixture.Create<LevyTransferMatching.Data.Models.Application>();
+            await DbContext.Applications.AddAsync(application, CancellationToken.None);
+            await DbContext.SaveChangesAsync();
+
+            application.Approve(_fixture.Create<UserInfo>());
+            await _repository.Update(application);
+            await DbContext.SaveChangesAsync(CancellationToken.None);
+
+            var updated = await DbContext.Applications.FindAsync(application.Id);
+
+            return updated;
         }
     }
 }
