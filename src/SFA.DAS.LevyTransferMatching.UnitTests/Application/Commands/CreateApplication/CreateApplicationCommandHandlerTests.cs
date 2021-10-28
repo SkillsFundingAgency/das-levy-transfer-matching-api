@@ -64,6 +64,11 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreateAppl
             Assert.AreEqual(command.EmployerAccountId, _inserted.EmployerAccount.Id);
             Assert.AreEqual(command.Details, _inserted.Details);
             Assert.AreEqual(command.StandardId, _inserted.StandardId);
+            Assert.AreEqual(command.StandardTitle, _inserted.StandardTitle);
+            Assert.AreEqual(command.StandardLevel, _inserted.StandardLevel);
+            Assert.AreEqual(command.StandardDuration, _inserted.StandardDuration);
+            Assert.AreEqual(command.StandardMaxFunding, _inserted.StandardMaxFunding);
+            Assert.AreEqual(command.StandardRoute, _inserted.StandardRoute);
             Assert.AreEqual(command.NumberOfApprentices, _inserted.NumberOfApprentices);
             Assert.AreEqual(command.StartDate, _inserted.StartDate);
             Assert.AreEqual(command.HasTrainingProvider, _inserted.HasTrainingProvider);

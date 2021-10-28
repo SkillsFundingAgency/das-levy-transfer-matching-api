@@ -23,6 +23,11 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             EmployerAccount = account;
             Details = properties.Details;
             StandardId = properties.StandardId;
+            StandardTitle = properties.StandardTitle;
+            StandardLevel = properties.StandardLevel;
+            StandardDuration = properties.StandardDuration;
+            StandardMaxFunding = properties.StandardMaxFunding;
+            StandardRoute = properties.StandardRoute;
             NumberOfApprentices = properties.NumberOfApprentices;
             StartDate = properties.StartDate;
             HasTrainingProvider = properties.HasTrainingProvider;
@@ -65,6 +70,12 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         public string Details { get; private set; }
 
         public string StandardId { get; private set; }
+        public string StandardTitle { get; private set; }
+        public byte StandardLevel { get; private set; }
+        public int StandardDuration { get; private set; }
+        public int StandardMaxFunding { get; private set; }
+        public string StandardRoute { get; private set; }
+
         public int NumberOfApprentices { get; private set; }
         public DateTime StartDate { get; private set; }
         public int Amount { get; private set; }

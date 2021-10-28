@@ -52,6 +52,11 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
                     command.EmployerAccountId == _request.EmployerAccountId &&
                     command.Details == _request.Details && 
                     command.StandardId == _request.StandardId &&
+                    command.StandardTitle == _request.StandardTitle &&
+                    command.StandardLevel == _request.StandardLevel &&
+                    command.StandardDuration == _request.StandardDuration &&
+                    command.StandardMaxFunding == _request.StandardMaxFunding &&
+                    command.StandardRoute == _request.StandardRoute &&
                     command.NumberOfApprentices == _request.NumberOfApprentices &&
                     command.StartDate == _request.StartDate &&
                     command.HasTrainingProvider == _request.HasTrainingProvider &&
