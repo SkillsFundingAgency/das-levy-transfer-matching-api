@@ -28,7 +28,7 @@ resources:
   - repository: das-platform-building-blocks
     type: github
     name: SkillsFundingAgency/das-platform-building-blocks
-    ref: refs/tags/0.4.7
+    ref: refs/heads/DASD-9071_Adding_concurrant_deployment_template
     endpoint: SkillsFundingAgency
   - repository: das-platform-automation
     type: github

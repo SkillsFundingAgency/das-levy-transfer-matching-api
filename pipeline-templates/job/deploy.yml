@@ -12,20 +12,15 @@ jobs:
     runOnce:
       deploy:
         steps:
-        - task: AzurePowerShell@5
-          displayName: Get-EnvironmentDeploymentRecords
-          inputs:
-            azureSubscription: ${{ parameters.ServiceConnection }}
-            scriptPath: das-platform-automation/Infrastructure-Scripts/Get-EnvironmentDeploymentRecords.ps1
-            scriptArguments:
-              -Organisation $(Organisation) `
-              -Project $(Project) `
-              -EnvironmentId $(Environment.Id) `
-              -PipelineName $(Build.DefinitionName) `
-              -RunId $(Build.BuildId) `
-              -AccessToken $(AccessToken)
-            azurePowerShellVersion: LatestVersion
-            pwsh: true
+        - template: azure-pipelines-templates/deploy/step/get-environment-deployment-records.yml@das-platform-building-blocks
+          parameters:
+            ServiceConnection: ${{ parameters.ServiceConnection }}
+            Organisation: $(Organisation)
+            Project: $(Project)
+            EnvironmentId: $(Environment.Id)
+            PipelineName: $(Build.DefinitionName)
+            RunId: $(Build.BuildId)
+            AccessToken: $(AccessToken)
         - template: azure-pipelines-templates/deploy/step/set-backendaccessrestrictions-variable.yml@das-platform-building-blocks
           parameters:
             ServiceConnection: ${{ parameters.ServiceConnection }}
