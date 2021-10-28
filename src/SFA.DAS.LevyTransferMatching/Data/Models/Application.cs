@@ -122,6 +122,21 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             AddStatusHistory(UpdatedOn.Value);
         }
 
+        public void DeclineFunding(UserInfo userInfo)
+        {
+            if (Status != ApplicationStatus.Approved)
+            {
+                throw new InvalidOperationException($"Unable to accept funding for Application {Id} status {Status}");
+            }
+
+            StartTrackingSession(UserAction.DeclineFunding, userInfo);
+            ChangeTrackingSession.TrackUpdate(this);
+            Status = ApplicationStatus.Declined;
+            UpdatedOn = DateTime.UtcNow;
+
+            AddStatusHistory(UpdatedOn.Value);
+        }
+
         public void UndoApproval(UserInfo userInfo)
         {
             if (Status != ApplicationStatus.Approved)

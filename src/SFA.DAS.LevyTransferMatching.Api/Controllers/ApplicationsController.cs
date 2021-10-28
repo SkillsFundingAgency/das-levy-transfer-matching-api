@@ -11,6 +11,7 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
+using SFA.DAS.LevyTransferMatching.Application.Commands.DeclineFunding;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
@@ -93,6 +94,28 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 UserDisplayName = request.UserDisplayName,
                 UserId = request.UserId
             }, cancellationToken);
+
+            if (result.Updated)
+            {
+                return NoContent();
+            }
+
+            return BadRequest();
+        }
+
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [Route("accounts/{accountId}/applications/{applicationId}/decline-funding")]
+        public async Task<IActionResult> DeclineFunding(int applicationId, long accountId, [FromBody] DeclineFundingRequest request)
+        {
+            var result = await _mediator.Send(new DeclineFundingCommand
+            {
+                ApplicationId = applicationId,
+                AccountId = accountId,
+                UserDisplayName = request.UserDisplayName,
+                UserId = request.UserId,
+            });
 
             if (result.Updated)
             {
