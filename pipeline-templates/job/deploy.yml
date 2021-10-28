@@ -20,7 +20,9 @@ jobs:
             EnvironmentId: $(Environment.Id)
             PipelineName: $(Build.DefinitionName)
             RunId: $(Build.BuildId)
-            AccessToken: $(AccessToken)
+            AccessToken: $env:SYSTEM_ACCESSTOKEN
+          env:
+            SYSTEM_ACCESSTOKEN: $(System.AccessToken)
         - template: azure-pipelines-templates/deploy/step/set-backendaccessrestrictions-variable.yml@das-platform-building-blocks
           parameters:
             ServiceConnection: ${{ parameters.ServiceConnection }}
