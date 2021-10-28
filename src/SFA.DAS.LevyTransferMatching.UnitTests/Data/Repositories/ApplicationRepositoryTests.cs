@@ -71,7 +71,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Data.Repositories
             DbContext.Applications.Add(application);
             DbContext.SaveChanges();
 
-            var result = await _repository.Get(null, application.Pledge.Id, application.Id);
+            var result = await _repository.Get(application.Pledge.Id, null, application.Id);
 
             Assert.AreEqual(application, result);
         }

@@ -78,6 +78,9 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         public string LastName { get; private set; }
         public string BusinessWebsite { get; private set; }
 
+        public int NumberOfApprenticesUsed { get; private set; }
+        public int AmountUsed { get; private set; }
+
         private readonly List<ApplicationEmailAddress> _emailAddresses;
         public IReadOnlyCollection<ApplicationEmailAddress> EmailAddresses => _emailAddresses;
 
@@ -142,6 +145,23 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         private void AddStatusHistory(DateTime date)
         {
             _statusHistory.Add(new ApplicationStatusHistory(Status, date));
+        }
+
+        public void Debit(int numberOfApprenticesUsed, int amountUsed, int maxAmount, UserInfo userInfo)
+        {
+            if (Status != ApplicationStatus.Accepted)
+                throw new InvalidOperationException($"Unable to debit application with Id: {Id}. Application status is {Status} when it should be {ApplicationStatus.Accepted}.");
+
+            StartTrackingSession(UserAction.DebitApplication, userInfo);
+            ChangeTrackingSession.TrackUpdate(this);
+
+            NumberOfApprenticesUsed += numberOfApprenticesUsed;
+            AmountUsed += amountUsed;
+
+            if (NumberOfApprenticesUsed >= NumberOfApprentices || AmountUsed >= maxAmount)
+                Status = ApplicationStatus.FundsUsed;
+
+            UpdatedOn = DateTime.UtcNow;
         }
     }
 }
