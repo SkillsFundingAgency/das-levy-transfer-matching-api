@@ -7,7 +7,7 @@
 	[NumberOfApprentices]	INT				NOT NULL,
 	[StandardId]			VARCHAR(20)		NOT NULL,
 	[StandardTitle]			VARCHAR(500)	NULL,
-	[StandardLevel]			TINYINT			NULL,
+	[StandardLevel]			INT				NULL,
 	[StandardDuration]		INT				NULL,
 	[StandardMaxFunding]	INT				NULL,
 	[StandardRoute]			VARCHAR(500)	NULL,

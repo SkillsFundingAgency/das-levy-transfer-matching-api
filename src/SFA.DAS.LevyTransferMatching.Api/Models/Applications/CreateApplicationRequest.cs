@@ -13,7 +13,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications
 
         public string StandardId { get; set; }
         public string StandardTitle { get; set; }
-        public byte StandardLevel { get; set; }
+        public int StandardLevel { get; set; }
         public int StandardDuration { get; set; }
         public int StandardMaxFunding { get; set; }
         public string StandardRoute { get; set; }
