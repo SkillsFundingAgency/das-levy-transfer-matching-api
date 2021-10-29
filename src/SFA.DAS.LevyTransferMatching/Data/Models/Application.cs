@@ -36,6 +36,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             FirstName = properties.FirstName;
             LastName = properties.LastName;
             BusinessWebsite = properties.BusinessWebsite;
+            TotalAmount = properties.StandardMaxFunding * properties.NumberOfApprentices;
             CreatedOn = DateTime.UtcNow;
 
             _emailAddresses = properties.EmailAddresses.Select(x => new ApplicationEmailAddress(x)).ToList();
@@ -79,6 +80,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         public int NumberOfApprentices { get; private set; }
         public DateTime StartDate { get; private set; }
         public int Amount { get; private set; }
+        public int TotalAmount { get; private set; }
         public bool HasTrainingProvider { get; private set; }
 
         public Sector Sectors { get; private set; }

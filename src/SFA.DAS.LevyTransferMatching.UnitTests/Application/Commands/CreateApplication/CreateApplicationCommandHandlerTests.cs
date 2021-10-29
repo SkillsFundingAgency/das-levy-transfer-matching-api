@@ -80,6 +80,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreateAppl
             Assert.AreEqual(command.FirstName, _inserted.FirstName);
             Assert.AreEqual(command.LastName, _inserted.LastName);
             Assert.AreEqual(command.BusinessWebsite, _inserted.BusinessWebsite);
+            Assert.AreEqual(command.NumberOfApprentices * command.StandardMaxFunding, _inserted.TotalAmount);
             CollectionAssert.AreEqual(command.EmailAddresses, _inserted.EmailAddresses.Select(x=> x.EmailAddress));
         }
     }
