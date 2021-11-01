@@ -60,7 +60,6 @@ stages:
   variables:
   - group: DevTest Management Resources
   - group: AT DevTest Shared Resources
-  - group: AT das-levy-transfer-matching-api
   jobs:
   - template: pipeline-templates/job/deploy.yml
     parameters:
