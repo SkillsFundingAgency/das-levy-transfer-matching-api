@@ -15,7 +15,6 @@ jobs:
         - template: azure-pipelines-templates/deploy/step/get-environment-deployment-records.yml@das-platform-building-blocks
           parameters:
             ServiceConnection: ${{ parameters.ServiceConnection }}
-            Organisation: $(Organisation)
             EnvironmentId: $(Environment.Id)
             PipelineName: $(Build.DefinitionName)
             RunId: $(Build.BuildId)
