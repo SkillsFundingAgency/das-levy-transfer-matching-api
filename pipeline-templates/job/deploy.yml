@@ -16,7 +16,6 @@ jobs:
           parameters:
             ServiceConnection: ${{ parameters.ServiceConnection }}
             Organisation: $(Organisation)
-            Project: $(Project)
             EnvironmentId: $(Environment.Id)
             PipelineName: $(Build.DefinitionName)
             RunId: $(Build.BuildId)
