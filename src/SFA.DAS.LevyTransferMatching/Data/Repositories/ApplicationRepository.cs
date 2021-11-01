@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.LevyTransferMatching.Abstractions.Events;
@@ -35,23 +36,24 @@ namespace SFA.DAS.LevyTransferMatching.Data.Repositories
             }
         }
 
-        public async Task<Models.Application> Get(int? pledgeId, int applicationId, long? accountId)
+        public async Task<Models.Application> Get(int applicationId, int? pledgeId = null, long? accountId = null)
         {
-            var query = _dbContext.Applications
+            var application = await _dbContext.Applications
                 .Include(o => o.EmployerAccount)
-                .Where(x => x.Id == applicationId);
+                .Where(x => x.Id == applicationId)
+                .SingleOrDefaultAsync();
 
-            if (pledgeId.HasValue)
+            if (pledgeId.HasValue && pledgeId != application.PledgeId)
             {
-                query = query.Where(x => x.Pledge.Id == pledgeId);
+                throw new InvalidOperationException("The application's pledge Id does not match the provided pledgeId argument");
             }
 
-            if (accountId.HasValue)
+            if (accountId.HasValue && accountId != application.EmployerAccount.Id)
             {
-                query = query.Where(x => x.EmployerAccount.Id == accountId);
+                throw new InvalidOperationException("The application's account Id does not match the provided accountId argument");
             }
 
-            return await query.SingleOrDefaultAsync();
+            return application;
         }
     }
 }

@@ -38,7 +38,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.AcceptFund
             _application = _fixture.Create<LevyTransferMatching.Data.Models.Application>();
             _application.SetValue(o => o.Status, ApplicationStatus.Approved);
             _repository = new Mock<IApplicationRepository>();
-            _repository.Setup(x => x.Get(null, _command.ApplicationId, _command.AccountId))
+            _repository.Setup(x => x.Get(_command.ApplicationId, null, _command.AccountId))
                 .ReturnsAsync(_application);
 
             _handler = new AcceptFundingCommandHandler(_repository.Object, _logger.Object);
