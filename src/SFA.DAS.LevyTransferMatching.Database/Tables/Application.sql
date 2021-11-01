@@ -18,6 +18,8 @@
 	[BusinessWebsite]		NVARCHAR(75)	NOT NULL,
 	[CreatedOn]				DATETIME2 (7)	CONSTRAINT [DF_Application__CreationDate] DEFAULT (getdate()) NOT NULL,
 	[Status]				TINYINT			CONSTRAINT [DF_Application__Status] DEFAULT (0)  NOT NULL,
+	[NumberOfApprenticesUsed] INT			DEFAULT 0 NOT NULL,
+	[AmountUsed]			INT				DEFAULT 0 NOT NULL,
 	[UpdatedOn]				DATETIME2		NULL,
 	[RowVersion]			TIMESTAMP		NOT NULL,
     CONSTRAINT [PK_Application] PRIMARY KEY CLUSTERED ([Id] ASC),
