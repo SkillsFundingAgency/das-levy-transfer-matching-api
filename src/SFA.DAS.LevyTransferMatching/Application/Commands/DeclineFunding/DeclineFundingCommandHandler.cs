@@ -20,7 +20,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.DeclineFunding
 
         public async Task<DeclineFundingCommandResult> Handle(DeclineFundingCommand request, CancellationToken cancellationToken)
         {
-            var application = await _applicationRepository.Get(null, request.ApplicationId, request.AccountId);
+            var application = await _applicationRepository.Get(request.ApplicationId, accountId: request.AccountId);
 
             if (application == null)
             {

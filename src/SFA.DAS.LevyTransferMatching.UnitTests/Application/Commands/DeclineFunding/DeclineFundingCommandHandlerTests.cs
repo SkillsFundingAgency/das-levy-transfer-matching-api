@@ -43,7 +43,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.DeclineFun
             application.Approve(userInfo);
 
             _mockApplicationRepository
-                .Setup(x => x.Get(It.Is<int?>(y => y == null), It.Is<int>(y => y == request.ApplicationId), It.Is<long?>(y => y == request.AccountId)))
+                .Setup(x => x.Get(It.Is<int>(y => y == request.ApplicationId), It.Is<int?>(y => y == null), It.Is<long?>(y => y == request.AccountId)))
                 .ReturnsAsync(application);
 
             LevyTransferMatching.Data.Models.Application updatedApplication = null;
@@ -73,7 +73,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.DeclineFun
             var request = _fixture.Create<DeclineFundingCommand>();
 
             _mockApplicationRepository
-                .Setup(x => x.Get(It.Is<int?>(y => y == null), It.Is<int>(y => y == request.ApplicationId), It.Is<long?>(y => y == request.AccountId)))
+                .Setup(x => x.Get(It.Is<int>(y => y == request.ApplicationId), It.Is<int?>(y => y == null), It.Is<long?>(y => y == request.AccountId)))
                 .ReturnsAsync((LevyTransferMatching.Data.Models.Application)null);
 
             // Act
