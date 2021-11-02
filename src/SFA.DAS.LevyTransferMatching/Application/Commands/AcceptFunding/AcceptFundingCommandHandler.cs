@@ -21,7 +21,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding
 
         public async Task<AcceptFundingCommandResult> Handle(AcceptFundingCommand request, CancellationToken cancellationToken)
         {
-            var application = await _applicationRepository.Get(null, request.ApplicationId, request.AccountId);
+            var application = await _applicationRepository.Get(request.ApplicationId, null, request.AccountId);
 
             if (application == null)
             {

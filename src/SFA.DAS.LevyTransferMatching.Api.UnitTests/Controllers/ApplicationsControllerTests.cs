@@ -16,6 +16,7 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
+using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
 
 namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
 {
@@ -31,6 +32,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         private long _accountId;
         private CreateApplicationRequest _request;
         private CreateApplicationCommandResult _result;
+        private DebitApplicationRequest _debitApplicationRequest;
 
         [SetUp]
         public void Setup()
@@ -40,6 +42,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             _accountId = _fixture.Create<long>();
             _request = _fixture.Create<CreateApplicationRequest>();
             _result = _fixture.Create<CreateApplicationCommandResult>();
+            _debitApplicationRequest = _fixture.Create<DebitApplicationRequest>();
 
             _mediator = new Mock<IMediator>();
             _applicationsController = new ApplicationsController(_mediator.Object);
@@ -290,6 +293,19 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             // Assert
             Assert.IsNotNull(actionResult);
             Assert.IsNotNull(badRequestResult);
+        }
+
+        [Test]
+        public async Task Post_DebitApplication_Debits_Application()
+        {
+            var actionResult = await _applicationsController.DebitApplication(_applicationId, _debitApplicationRequest);
+            var okResult = actionResult as OkResult;
+            Assert.IsNotNull(okResult);
+
+            _mediator.Verify(x => x.Send(It.Is<DebitApplicationCommand>(command =>
+                        command.ApplicationId == _applicationId),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
         }
     }
 }

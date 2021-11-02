@@ -55,6 +55,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 StandardId = application.StandardId,
                 StartDate = application.StartDate,
                 EmployerAccountName = application.EmployerAccount.Name,
+                AmountUsed = application.AmountUsed,
+                NumberOfApprenticesUsed = application.NumberOfApprenticesUsed,
                 PledgeEmployerAccountName = application.Pledge.EmployerAccount.Name,
                 PledgeLocations = application.Pledge.Locations.Select(x => x.Name).ToList(),
                 PledgeSectors = application.Pledge.Sectors.ToList(),
