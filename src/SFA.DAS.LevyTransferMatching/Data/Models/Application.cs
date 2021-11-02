@@ -138,6 +138,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             ChangeTrackingSession.TrackUpdate(this);
             Status = ApplicationStatus.Declined;
             UpdatedOn = DateTime.UtcNow;
+            AddEvent(new ApplicationFundingDeclined(Id, PledgeId, UpdatedOn.Value, Amount));
 
             AddStatusHistory(UpdatedOn.Value);
         }
