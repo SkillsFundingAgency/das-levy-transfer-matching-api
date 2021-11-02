@@ -35,7 +35,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                     .Where(x => x.PledgeId == request.PledgeId.Value);
             }
             
-            var application = await applicationQuery.SingleOrDefaultAsync();
+            var application = await applicationQuery.SingleOrDefaultAsync(cancellationToken: cancellationToken);
 
             if (application == null)
             {
@@ -56,6 +56,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 StandardId = application.StandardId,
                 StartDate = application.StartDate,
                 EmployerAccountName = application.EmployerAccount.Name,
+                AmountUsed = application.AmountUsed,
+                NumberOfApprenticesUsed = application.NumberOfApprenticesUsed,
                 PledgeEmployerAccountName = application.Pledge.EmployerAccount.Name,
                 Locations = application.ApplicationLocations.Select(x => new GetApplicationResult.ApplicationLocation { Id = x.Id, PledgeLocationId = x.PledgeLocationId }).ToList(),
                 AdditionalLocation = application.AdditionalLocation,

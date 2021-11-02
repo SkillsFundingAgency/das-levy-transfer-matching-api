@@ -15,6 +15,8 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
+using SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
+using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
 
 namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
 {
@@ -30,6 +32,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         private long _accountId;
         private CreateApplicationRequest _request;
         private CreateApplicationCommandResult _result;
+        private DebitApplicationRequest _debitApplicationRequest;
 
         [SetUp]
         public void Setup()
@@ -39,6 +42,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             _accountId = _fixture.Create<long>();
             _request = _fixture.Create<CreateApplicationRequest>();
             _result = _fixture.Create<CreateApplicationCommandResult>();
+            _debitApplicationRequest = _fixture.Create<DebitApplicationRequest>();
 
             _mediator = new Mock<IMediator>();
             _applicationsController = new ApplicationsController(_mediator.Object);
@@ -234,6 +238,69 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             var response = result.Value as GetApplicationsResult;
             Assert.IsNotNull(response);
             Assert.AreEqual(1, response.Applications.Count());
+        }
+
+        [Test]
+        public async Task Post_AcceptFunding_Returns_No_Content()
+        {
+            // Arrange
+            var applicationId = _fixture.Create<int>();
+            var accountId = _fixture.Create<long>();
+            var request = _fixture.Create<AcceptFundingRequest>();
+            var result = new AcceptFundingCommandResult()
+            {
+                Updated = true,
+            };
+
+            _mediator
+                .Setup(x => x.Send(It.IsAny<AcceptFundingCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(result);
+
+            // Act
+            var actionResult = await _applicationsController.AcceptFunding(applicationId, accountId, request);
+            var noContentResult = actionResult as NoContentResult;
+
+            // Assert
+            Assert.IsNotNull(actionResult);
+            Assert.IsNotNull(noContentResult);
+        }
+
+        [Test]
+        public async Task Post_AcceptFunding_Returns_BadRequest()
+        {
+            // Arrange
+            var applicationId = _fixture.Create<int>();
+            var accountId = _fixture.Create<long>();
+            var request = _fixture.Create<AcceptFundingRequest>();
+            var result = new AcceptFundingCommandResult()
+            {
+                Updated = false,
+            };
+
+            _mediator
+                .Setup(x => x.Send(It.IsAny<AcceptFundingCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(result);
+
+            // Act
+            var actionResult = await _applicationsController.AcceptFunding(applicationId, accountId, request);
+            var badRequestResult = actionResult as BadRequestResult;
+
+            // Assert
+            Assert.IsNotNull(actionResult);
+            Assert.IsNotNull(badRequestResult);
+        }
+
+        [Test]
+        public async Task Post_DebitApplication_Debits_Application()
+        {
+            var actionResult = await _applicationsController.DebitApplication(_applicationId, _debitApplicationRequest);
+            var okResult = actionResult as OkResult;
+            Assert.IsNotNull(okResult);
+
+            _mediator.Verify(x => x.Send(It.Is<DebitApplicationCommand>(command =>
+                        command.ApplicationId == _applicationId),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
         }
     }
 }

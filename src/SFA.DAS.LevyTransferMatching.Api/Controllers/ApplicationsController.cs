@@ -1,14 +1,17 @@
 ﻿using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.LevyTransferMatching.Api.Models.Applications;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetApplication;
+using SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.ApproveApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
+using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
@@ -78,7 +81,27 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
             return Ok();
         }
 
-		
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [Route("accounts/{accountId}/applications/{applicationId}/accept-funding")]
+        public async Task<IActionResult> AcceptFunding(int applicationId, long accountId, [FromBody] AcceptFundingRequest request, CancellationToken cancellationToken = default)
+        {
+            var result = await _mediator.Send(new AcceptFundingCommand
+            {
+                ApplicationId = applicationId,
+                AccountId = accountId,
+                UserDisplayName = request.UserDisplayName,
+                UserId = request.UserId
+            }, cancellationToken);
+
+            if (result.Updated)
+            {
+                return NoContent();
+            }
+
+            return BadRequest();
+        }
 
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -143,6 +166,23 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
             });
 
             return Ok(query);
+        }
+
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [Route("applications/{applicationId}/debit")]
+        public async Task<IActionResult> DebitApplication(int applicationId, [FromBody] DebitApplicationRequest request)
+        {
+            await _mediator.Send(new DebitApplicationCommand
+            {
+                ApplicationId = applicationId,
+                NumberOfApprentices = request.NumberOfApprentices,
+                Amount = request.Amount,
+                MaxAmount = request.MaxAmount
+            });
+
+            return Ok();
         }
     }
 }
