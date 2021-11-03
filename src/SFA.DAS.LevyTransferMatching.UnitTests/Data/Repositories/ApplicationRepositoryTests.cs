@@ -63,13 +63,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Data.Repositories
         [Test]
         public async Task Get_Retrieves_Application()
         {
-            var application = _fixture.Create<LevyTransferMatching.Data.Models.Application>();
-            var empAccount = _fixture.Create<EmployerAccount>();
-            empAccount.SetValue(o => o.Id, 1); 
-            application.SetValue(o => o.EmployerAccount, empAccount);
-
-            DbContext.Applications.Add(application);
-            DbContext.SaveChanges();
+            var application = await CreateApprovedApplication();
 
             var result = await _repository.Get(application.Id, application.Pledge.Id, null);
 
