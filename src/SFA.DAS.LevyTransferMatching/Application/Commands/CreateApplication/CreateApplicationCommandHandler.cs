@@ -32,6 +32,11 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
             {
                 Details = request.Details,
                 StandardId = request.StandardId,
+                StandardTitle = request.StandardTitle,
+                StandardLevel = request.StandardLevel,
+                StandardDuration = request.StandardDuration,
+                StandardMaxFunding = request.StandardMaxFunding,
+                StandardRoute = request.StandardRoute,
                 NumberOfApprentices = request.NumberOfApprentices,
                 StartDate = request.StartDate,
                 HasTrainingProvider = request.HasTrainingProvider,

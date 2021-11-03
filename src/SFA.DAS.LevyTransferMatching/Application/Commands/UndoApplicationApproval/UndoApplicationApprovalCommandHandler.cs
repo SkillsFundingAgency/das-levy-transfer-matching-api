@@ -17,7 +17,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationAppro
 
         public async Task<Unit> Handle(UndoApplicationApprovalCommand request, CancellationToken cancellationToken)
         {
-            var application = await _applicationRepository.Get(request.PledgeId, request.ApplicationId);
+            var application = await _applicationRepository.Get(request.ApplicationId, request.PledgeId);
             application.UndoApproval(UserInfo.System);
             await _applicationRepository.Update(application);
             return Unit.Value;
