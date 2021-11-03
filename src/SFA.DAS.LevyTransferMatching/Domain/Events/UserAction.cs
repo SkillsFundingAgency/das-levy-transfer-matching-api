@@ -10,5 +10,6 @@
         AcceptFunding,
         DebitApplication,
         DeclineFunding,
+        CreditPledge,
     }
 }
