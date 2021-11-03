@@ -13,7 +13,7 @@
 	[StandardRoute]			VARCHAR(500)	DEFAULT '' NOT NULL,
 	[StartDate]				DATETIME2		NOT NULL,
 	[Amount]				INT				NOT NULL,
-	[TotalAmount]			INT				NULL,
+	[TotalAmount]			INT				DEFAULT 0 NOT NULL,
 	[HasTrainingProvider]	BIT				NOT NULL,
 	[Sectors]				INT		        NOT NULL,
 	[PostCode]				VARCHAR(8)		NULL,
