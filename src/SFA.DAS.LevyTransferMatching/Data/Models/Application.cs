@@ -131,7 +131,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         {
             if (Status != ApplicationStatus.Approved)
             {
-                throw new InvalidOperationException($"Unable to accept funding for Application {Id} status {Status}");
+                throw new InvalidOperationException($"Unable to decline funding for Application {Id} status {Status}");
             }
 
             StartTrackingSession(UserAction.DeclineFunding, userInfo);
