@@ -81,7 +81,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             return true;
         }
 
-        public void Credit(int creditAmount, int applicationId, UserInfo userInfo)
+        public void Credit(int creditAmount, UserInfo userInfo)
         {
             StartTrackingSession(UserAction.CreditPledge, userInfo);
             ChangeTrackingSession.TrackUpdate(this);

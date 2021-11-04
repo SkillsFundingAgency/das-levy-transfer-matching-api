@@ -19,7 +19,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreditPledge
         {
             var pledge = await _repository.Get(request.PledgeId);
 
-            pledge.Credit(request.Amount, request.ApplicationId, UserInfo.System);
+            pledge.Credit(request.Amount, UserInfo.System);
 
             await _repository.Update(pledge);
 
