@@ -19,3 +19,10 @@ END
 
 GRANT SELECT ON vwDashboardPledge TO DashbordReporting
 GRANT SELECT ON vwDashboardPledgeApplication TO DashbordReporting
+
+
+
+
+/* TM-203 - Close a specific pledge */
+update Pledge set Status=1 where Id = 51 and Status=0
+
