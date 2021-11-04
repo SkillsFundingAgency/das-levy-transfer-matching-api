@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge
@@ -25,7 +26,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge
         public IEnumerable<Level> Levels { get; set; }
 
         public IEnumerable<Sector> Sectors { get; set; }
-
+        public PledgeStatus Status { get; set; }
         public IEnumerable<Location> Locations { get; set; }
 
         public class Location
