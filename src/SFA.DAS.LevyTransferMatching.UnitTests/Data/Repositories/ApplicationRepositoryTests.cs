@@ -68,10 +68,10 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Data.Repositories
             empAccount.SetValue(o => o.Id, 1); 
             application.SetValue(o => o.EmployerAccount, empAccount);
 
-            DbContext.Applications.Add(application);
-            DbContext.SaveChanges();
+            await DbContext.Applications.AddAsync(application);
+            await DbContext.SaveChangesAsync();
 
-            var result = await _repository.Get(application.Pledge.Id, null, application.Id);
+            var result = await _repository.Get(application.Id, application.Pledge.Id, null);
 
             Assert.AreEqual(application, result);
         }

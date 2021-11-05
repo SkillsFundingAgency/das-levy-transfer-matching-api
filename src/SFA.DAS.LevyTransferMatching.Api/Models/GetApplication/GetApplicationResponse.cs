@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
+using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
@@ -20,7 +22,10 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
         public IEnumerable<string> EmailAddresses { get; set; }
         public string BusinessWebsite { get; set; }
         public string EmployerAccountName { get; set; }
-        public List<string> PledgeLocations { get; set; }
+        public List<ApplicationLocation> Locations { get; set; }
+        public string AdditionalLocation { get; set; }
+        public string SpecificLocation { get; set; }
+        public List<PledgeLocation> PledgeLocations { get; set; }
         public IEnumerable<Sector> PledgeSectors { get; set; }
         public IEnumerable<Level> PledgeLevels { get; set; }
         public IEnumerable<JobRole> PledgeJobRoles { get; set; }
@@ -35,6 +40,12 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
         public int PledgeAmount { get; set; }
         public int AmountUsed { get; set; }
         public int NumberOfApprenticesUsed { get; set; }
+
+        public class ApplicationLocation
+        {
+            public int Id { get; set; }
+            public int PledgeLocationId { get; set; }
+        }
 
         public static implicit operator GetApplicationResponse(GetApplicationResult getApplicationResult)
         {
@@ -52,6 +63,9 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
                 StandardId = getApplicationResult.StandardId,
                 StartDate = getApplicationResult.StartDate,
                 EmployerAccountName = getApplicationResult.EmployerAccountName,
+                Locations = getApplicationResult.Locations.Select(x => new ApplicationLocation { PledgeLocationId = x.PledgeLocationId }).ToList(),
+                AdditionalLocation = getApplicationResult.AdditionalLocation,
+                SpecificLocation = getApplicationResult.SpecificLocation,
                 PledgeLocations = getApplicationResult.PledgeLocations,
                 PledgeSectors = getApplicationResult.PledgeSectors,
                 PledgeLevels = getApplicationResult.PledgeLevels,
