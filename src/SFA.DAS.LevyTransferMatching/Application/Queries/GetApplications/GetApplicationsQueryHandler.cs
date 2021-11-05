@@ -5,6 +5,7 @@ using SFA.DAS.LevyTransferMatching.Extensions;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
 {
@@ -19,7 +20,13 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
 
         public async Task<GetApplicationsResult> Handle(GetApplicationsQuery request, CancellationToken cancellationToken)
         {
-            IQueryable<Data.Models.Application> applicationsQuery = _dbContext.Applications;
+            IQueryable<Data.Models.Application> applicationsQuery = _dbContext.Applications
+                .Include(x => x.ApplicationLocations)
+                .Include(x => x.EmailAddresses)
+                .Include(x => x.EmployerAccount)
+                .Include(x => x.Pledge)
+                .Include(x => x.Pledge.EmployerAccount)
+                .Include(x => x.Pledge.Locations);
 
             if (request.PledgeId.HasValue)
             {
@@ -55,7 +62,15 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                         : null,
                     CreatedOn = x.CreatedOn,
                     Status = x.Status,
-                    IsNamePublic = x.Pledge.IsNamePublic
+                    IsNamePublic = x.Pledge.IsNamePublic,
+                    Locations = x.ApplicationLocations.Select(app => new GetApplicationResult.ApplicationLocation { Id = app.Id, PledgeLocationId = app.PledgeLocationId }).ToList(),
+                    PledgeLocations = x.Pledge.Locations.ToList(),
+                    PledgeSectors = x.Pledge.Sectors.ToList(),
+                    PledgeLevels = x.Pledge.Levels.ToList(),
+                    PledgeJobRoles = x.Pledge.JobRoles.ToList(),
+                    AboutDetails = x.Details,
+                    AdditionalLocation = x.AdditionalLocation,
+                    SpecificLocation = x.SpecificLocation
                 })
                 .ToListAsync(cancellationToken));
         }
