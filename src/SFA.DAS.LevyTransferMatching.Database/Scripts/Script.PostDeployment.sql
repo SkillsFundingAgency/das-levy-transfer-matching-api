@@ -168,3 +168,8 @@ UPDATE [Application]  SET [StandardTitle] = 'Creative digital design professiona
 UPDATE [Application]  SET [StandardTitle] = 'Beauty therapist',   [StandardLevel] = 2,   [StandardDuration] = 15,   [StandardRoute] = 'Hair and beauty',   [StandardMaxFunding] = 7000  where [StandardTitle] = ''  AND [StandardId] = 'ST0630_1.0'
 UPDATE [Application]  SET [StandardTitle] = 'Engineering operative',   [StandardLevel] = 2,   [StandardDuration] = 12,   [StandardRoute] = 'Engineering and manufacturing',   [StandardMaxFunding] = 6000  where [StandardTitle] = ''  AND [StandardId] = 'ST0537_1.0'
 UPDATE [Application]  SET [StandardTitle] = 'Early years lead practitioner',   [StandardLevel] = 5,   [StandardDuration] = 24,   [StandardRoute] = 'Education and childcare',   [StandardMaxFunding] = 8000  where [StandardTitle] = ''  AND [StandardId] = 'ST0551_1.0'
+
+
+update Application
+set TotalAmount = NumberOfApprentices * StandardMaxFunding
+where TotalAmount = 0
