@@ -127,6 +127,21 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             AddStatusHistory(UpdatedOn.Value);
         }
 
+        public void Withdraw(UserInfo userInfo)
+        {
+            if (Status != ApplicationStatus.Pending)
+            {
+                throw new InvalidOperationException($"Unable to withraw application with Id: {Id}. Application status is {Status} when it should be {ApplicationStatus.Pending}");
+            }
+
+            StartTrackingSession(UserAction.WithdrawApplication, userInfo);
+            ChangeTrackingSession.TrackUpdate(this);
+            Status = ApplicationStatus.Withdrawn;
+            UpdatedOn = DateTime.UtcNow;
+
+            AddStatusHistory(UpdatedOn.Value);
+        }
+
         public void UndoApproval(UserInfo userInfo)
         {
             if (Status != ApplicationStatus.Approved)
