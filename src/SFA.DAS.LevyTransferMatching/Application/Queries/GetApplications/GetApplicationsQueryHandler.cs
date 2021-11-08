@@ -63,7 +63,6 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                     CreatedOn = x.CreatedOn,
                     Status = x.Status,
                     IsNamePublic = x.Pledge.IsNamePublic,
-                    Locations = x.ApplicationLocations.Select(app => new GetApplicationResult.ApplicationLocation { Id = app.Id, PledgeLocationId = app.PledgeLocationId }).ToList(),
                     PledgeLocations = x.Pledge.Locations.ToList(),
                     PledgeSectors = x.Pledge.Sectors.ToList(),
                     PledgeLevels = x.Pledge.Levels.ToList(),
