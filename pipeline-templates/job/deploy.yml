@@ -40,6 +40,7 @@ jobs:
             SqlUsername: $(SharedSQLServerUsername)
             SqlPassword: $(SharedSQLServerPassword)
             DacpacFile: $(Pipeline.Workspace)/DacpacArtifact/src/SFA.DAS.LevyTransferMatching.Database/bin/Output/SFA.DAS.LevyTransferMatching.Database.dacpac
+            DatabaseName: $(DatabaseName)
             OverrideBlockOnPossibleDataLoss: ${{ parameters.OverrideBlockOnPossibleDataLoss }}
             Environment: ${{ parameters.Environment }}
         - template: azure-pipelines-templates/deploy/step/generate-config.yml@das-platform-building-blocks
