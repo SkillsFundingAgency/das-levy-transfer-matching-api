@@ -5,6 +5,7 @@
         Pending = 0,
         Approved = 1,
         Rejected = 2,
-        Accepted = 3
+        Accepted = 3,
+        FundsUsed = 4
     }
 }

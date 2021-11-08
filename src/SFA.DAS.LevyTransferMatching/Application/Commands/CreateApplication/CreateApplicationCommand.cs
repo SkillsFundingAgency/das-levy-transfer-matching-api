@@ -13,6 +13,11 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
         public string Details { get; set; }
 
         public string StandardId { get; set; }
+        public string StandardTitle { get; set; }
+        public int StandardLevel { get; set; }
+        public int StandardDuration { get; set; }
+        public int StandardMaxFunding { get; set; }
+        public string StandardRoute { get; set; }
         public int NumberOfApprentices { get; set; }
         public DateTime StartDate { get; set; }
         public int Amount { get; set; }

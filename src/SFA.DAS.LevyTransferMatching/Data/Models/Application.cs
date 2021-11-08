@@ -23,6 +23,11 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             EmployerAccount = account;
             Details = properties.Details;
             StandardId = properties.StandardId;
+            StandardTitle = properties.StandardTitle;
+            StandardLevel = properties.StandardLevel;
+            StandardDuration = properties.StandardDuration;
+            StandardMaxFunding = properties.StandardMaxFunding;
+            StandardRoute = properties.StandardRoute;
             NumberOfApprentices = properties.NumberOfApprentices;
             StartDate = properties.StartDate;
             HasTrainingProvider = properties.HasTrainingProvider;
@@ -31,6 +36,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             FirstName = properties.FirstName;
             LastName = properties.LastName;
             BusinessWebsite = properties.BusinessWebsite;
+            TotalAmount = properties.StandardMaxFunding * properties.NumberOfApprentices;
             CreatedOn = DateTime.UtcNow;
 
             _emailAddresses = properties.EmailAddresses.Select(x => new ApplicationEmailAddress(x)).ToList();
@@ -65,9 +71,16 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         public string Details { get; private set; }
 
         public string StandardId { get; private set; }
+        public string StandardTitle { get; private set; }
+        public int StandardLevel { get; private set; }
+        public int StandardDuration { get; private set; }
+        public int StandardMaxFunding { get; private set; }
+        public string StandardRoute { get; private set; }
+
         public int NumberOfApprentices { get; private set; }
         public DateTime StartDate { get; private set; }
         public int Amount { get; private set; }
+        public int TotalAmount { get; private set; }
         public bool HasTrainingProvider { get; private set; }
 
         public Sector Sectors { get; private set; }
@@ -77,6 +90,9 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
         public string BusinessWebsite { get; private set; }
+
+        public int NumberOfApprenticesUsed { get; private set; }
+        public int AmountUsed { get; private set; }
 
         private readonly List<ApplicationEmailAddress> _emailAddresses;
         public IReadOnlyCollection<ApplicationEmailAddress> EmailAddresses => _emailAddresses;
@@ -132,6 +148,8 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
                 throw new InvalidOperationException($"Unable to accept funding for Application {Id} status {Status}");
             }
 
+            StartTrackingSession(UserAction.AcceptFunding, userInfo);
+            ChangeTrackingSession.TrackUpdate(this);
             Status = ApplicationStatus.Accepted;
             UpdatedOn = DateTime.UtcNow;
 
@@ -156,6 +174,23 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         private void AddStatusHistory(DateTime date)
         {
             _statusHistory.Add(new ApplicationStatusHistory(Status, date));
+        }
+
+        public void Debit(int numberOfApprenticesUsed, int amountUsed, int maxAmount, UserInfo userInfo)
+        {
+            if (Status != ApplicationStatus.Accepted)
+                throw new InvalidOperationException($"Unable to debit application with Id: {Id}. Application status is {Status} when it should be {ApplicationStatus.Accepted}.");
+
+            StartTrackingSession(UserAction.DebitApplication, userInfo);
+            ChangeTrackingSession.TrackUpdate(this);
+
+            NumberOfApprenticesUsed += numberOfApprenticesUsed;
+            AmountUsed += amountUsed;
+
+            if (NumberOfApprenticesUsed >= NumberOfApprentices || AmountUsed >= maxAmount)
+                Status = ApplicationStatus.FundsUsed;
+
+            UpdatedOn = DateTime.UtcNow;
         }
     }
 }

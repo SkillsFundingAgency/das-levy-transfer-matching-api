@@ -17,7 +17,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.RejectApplication
 
         public async Task<Unit> Handle(RejectApplicationCommand request, CancellationToken cancellationToken)
         {
-            var application = await _applicationRepository.Get(request.PledgeId, request.ApplicationId, null);
+            var application = await _applicationRepository.Get(request.ApplicationId, request.PledgeId, null);
 
             application.Reject(new UserInfo(request.UserId, request.UserDisplayName));
 
