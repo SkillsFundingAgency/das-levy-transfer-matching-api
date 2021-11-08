@@ -1,10 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using FluentValidation;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication
 {
-    class WithdrawApplicationCommandValidator
+    public class WithdrawApplicationCommandValidator : AbstractValidator<WithdrawApplicationCommand>
     {
+        public WithdrawApplicationCommandValidator()
+        {
+            RuleFor(x => x.ApplicationId).NotEmpty();
+            RuleFor(x => x.AccountId).NotEmpty();
+            RuleFor(x => x.UserId).NotEmpty();
+            RuleFor(x => x.UserDisplayName).NotEmpty();
+        }
     }
 }
