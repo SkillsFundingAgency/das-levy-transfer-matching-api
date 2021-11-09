@@ -21,6 +21,8 @@ GRANT SELECT ON vwDashboardPledge TO DashbordReporting
 GRANT SELECT ON vwDashboardPledgeApplication TO DashbordReporting
 
 
+/* TM-203 - Close a specific pledge */
+update Pledge set Status=1 where Id = 51 and Status=0
 
 /* TM-204-Backfill-Standard-Info */
 UPDATE [Application]  SET [StandardTitle] = 'Carpentry and joinery',   [StandardLevel] = 2,   [StandardDuration] = 24,   [StandardRoute] = 'Construction',   [StandardMaxFunding] = 11000  where [StandardTitle] = ''  AND [StandardId] = 'ST0264_1.1'

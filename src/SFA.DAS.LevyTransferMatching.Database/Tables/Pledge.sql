@@ -9,6 +9,7 @@
     [Levels]            INT           NOT NULL,
     [Sectors]           INT           NOT NULL,
     [RowVersion]        TIMESTAMP     NOT NULL,
+    [Status]            TINYINT       NOT NULL DEFAULT 0 
     CONSTRAINT [PK_Pledge] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_Pledge_EmployerAccount] FOREIGN KEY ([EmployerAccountId]) REFERENCES [dbo].[EmployerAccount] ([Id])
 );
