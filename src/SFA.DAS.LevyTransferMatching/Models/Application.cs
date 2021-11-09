@@ -34,13 +34,11 @@ namespace SFA.DAS.LevyTransferMatching.Models
             public int Id { get; set; }
             public int PledgeLocationId { get; set; }
         }
-        public List<GetApplicationResult.ApplicationLocation> Locations { get; set; }
         public List<PledgeLocation> PledgeLocations { get; set; }
         public IEnumerable<Sector> PledgeSectors { get; set; }
         public IEnumerable<Level> PledgeLevels { get; set; }
         public IEnumerable<JobRole> PledgeJobRoles { get; set; }
         public string AboutDetails { get; set; }
-        public string AdditionalLocation { get; set; }
-        public string SpecificLocation { get; set; }
+        public int PledgeRemainingAmount { get; set; }
     }
 }

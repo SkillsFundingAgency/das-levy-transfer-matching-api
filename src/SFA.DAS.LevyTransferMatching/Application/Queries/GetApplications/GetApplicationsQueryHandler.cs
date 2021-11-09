@@ -68,8 +68,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                     PledgeLevels = x.Pledge.Levels.ToList(),
                     PledgeJobRoles = x.Pledge.JobRoles.ToList(),
                     AboutDetails = x.Details,
-                    AdditionalLocation = x.AdditionalLocation,
-                    SpecificLocation = x.SpecificLocation
+                    PledgeRemainingAmount = x.Pledge.RemainingAmount
+
                 })
                 .ToListAsync(cancellationToken));
         }
