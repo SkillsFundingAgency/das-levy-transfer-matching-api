@@ -19,6 +19,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetAccount
         {
             _fixture = new Fixture();
             _account = _fixture.Create<EmployerAccount>();
+            ResetDbContext();
             DbContext.EmployerAccounts.Add(_account);
             DbContext.SaveChanges();
         }
