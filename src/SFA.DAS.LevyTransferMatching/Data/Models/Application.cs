@@ -125,6 +125,22 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             AddStatusHistory(UpdatedOn.Value);
         }
 
+        public void Reject(UserInfo userInfo)
+        {
+            if (Status != ApplicationStatus.Pending)
+            {
+                throw new InvalidOperationException($"Unable to reject Application {Id} status {Status}");
+            }
+
+            StartTrackingSession(UserAction.RejectApplication, userInfo);
+            ChangeTrackingSession.TrackUpdate(this);
+            Status = ApplicationStatus.Rejected;
+            UpdatedOn = DateTime.UtcNow;
+            AddEvent(new ApplicationRejected(Id, PledgeId, UpdatedOn.Value, Amount));
+
+            AddStatusHistory(UpdatedOn.Value);
+        }
+
         public void AcceptFunding(UserInfo userInfo)
         {
             if (Status != ApplicationStatus.Approved)

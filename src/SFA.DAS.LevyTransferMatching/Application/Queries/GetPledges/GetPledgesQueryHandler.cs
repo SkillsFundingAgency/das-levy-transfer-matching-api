@@ -49,6 +49,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
                         JobRoles = x.JobRoles.ToList(),
                         Levels = x.Levels.ToList(),
                         Sectors = x.Sectors.ToList(),
+                        Status = x.Status,
                         Locations = x.Locations.Select(y => new LocationInformation { Name = y.Name, Geopoint = new double[] { y.Latitude, y.Longitude } }).ToList(),
                         ApplicationCount = x.Applications.Count
                     })

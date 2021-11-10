@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge;
+using SFA.DAS.LevyTransferMatching.Data.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledge
 {
@@ -26,6 +27,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledge
         public IEnumerable<Level> Levels { get; set; }
 
         public IEnumerable<Sector> Sectors { get; set; }
+        public PledgeStatus Status { get; set; }
 
         public IEnumerable<Location> Locations { get; set; }
 
@@ -43,6 +45,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledge
                 JobRoles = pledge.JobRoles,
                 Levels = pledge.Levels,
                 Sectors = pledge.Sectors,
+                Status = pledge.Status,
                 Locations = pledge.Locations.Select(x => new Location { Id = x.Id, Name = x.Name})
             };
         }

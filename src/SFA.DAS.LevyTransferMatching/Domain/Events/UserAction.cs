@@ -9,6 +9,7 @@
         UndoApplicationApproval,
         AcceptFunding,
         DebitApplication,
+        RejectApplication,
         DeclineFunding,
         CreditPledge,
     }
