@@ -23,9 +23,9 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Domain.EventHandlers
         private List<DiffItem> _diffResult;
 
         [SetUp]
-        public void Setup()
+        public override void Setup()
         {
-            ResetDbContext();
+            base.Setup();
 
             _event = _fixture.Create<EntityStateChanged>();
             _event.InitialState = "{ }";

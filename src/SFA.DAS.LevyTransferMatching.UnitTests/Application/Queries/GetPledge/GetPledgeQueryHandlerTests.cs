@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using AutoFixture;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
-using SFA.DAS.LevyTransferMatching.Models.Enums;
 using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledge
@@ -16,6 +15,12 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledge
     public class GetPledgeQueryHandlerTests : LevyTransferMatchingDbContextFixture
     {
         private readonly Fixture _fixture = new Fixture();
+
+        [SetUp]
+        public override void Setup()
+        {
+            base.Setup();
+        }
 
         [Test]
         public async Task Handle_Individual_Pledge_Pulled_And_Stitched_Up_With_Account()

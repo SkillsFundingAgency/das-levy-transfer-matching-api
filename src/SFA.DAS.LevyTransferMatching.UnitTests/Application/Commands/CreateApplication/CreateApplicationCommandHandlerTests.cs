@@ -29,8 +29,9 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreateAppl
         private LevyTransferMatching.Data.Models.Application _inserted;
 
         [SetUp]
-        public void Setup()
+        public override void Setup()
         {
+            base.Setup();
             _fixture = new Fixture();
 
             _employerAccountRepository = new Mock<IEmployerAccountRepository>();

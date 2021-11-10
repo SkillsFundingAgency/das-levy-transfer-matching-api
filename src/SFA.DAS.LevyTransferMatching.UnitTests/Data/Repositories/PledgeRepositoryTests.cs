@@ -6,7 +6,6 @@ using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Abstractions.Events;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
-using SFA.DAS.LevyTransferMatching.Services.Events;
 using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Data.Repositories
@@ -19,8 +18,9 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Data.Repositories
         private Mock<IDomainEventDispatcher> _domainEventDispatcher;
 
         [SetUp]
-        public void SetUp()
+        public override void Setup()
         {
+            base.Setup();
             _domainEventDispatcher = new Mock<IDomainEventDispatcher>();
             _domainEventDispatcher.Setup(x => x.Send(It.IsAny<IDomainEvent>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 

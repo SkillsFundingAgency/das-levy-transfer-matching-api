@@ -15,8 +15,9 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetAccount
         private EmployerAccount _account;
 
         [SetUp]
-        public void Setup()
+        public override void Setup()
         {
+            base.Setup();
             _fixture = new Fixture();
             _account = _fixture.Create<EmployerAccount>();
             DbContext.EmployerAccounts.Add(_account);

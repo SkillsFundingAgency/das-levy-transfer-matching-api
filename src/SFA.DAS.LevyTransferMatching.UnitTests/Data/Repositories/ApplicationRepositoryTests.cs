@@ -21,11 +21,11 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Data.Repositories
         private Mock<IDomainEventDispatcher> _domainEventDispatcher;
 
         [SetUp]
-        public void SetUp()
+        public override void Setup()
         {
+            base.Setup();
             _domainEventDispatcher = new Mock<IDomainEventDispatcher>();
             _domainEventDispatcher.Setup(x => x.Send(It.IsAny<IDomainEvent>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
-            ResetDbContext();
             _repository = new ApplicationRepository(DbContext, _domainEventDispatcher.Object);
         }
 
