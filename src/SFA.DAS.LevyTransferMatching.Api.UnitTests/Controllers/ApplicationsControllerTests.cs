@@ -215,9 +215,9 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         public async Task Get_Returns_Applications()
         {
             _mediator.Setup(x => x.Send(It.Is<GetApplicationsQuery>(query => query.PledgeId == _pledgeId), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new GetApplicationsResult(new LevyTransferMatching.Models.Application[]
+                .ReturnsAsync(new GetApplicationsResult(new[]
             {
-                new LevyTransferMatching.Models.Application()
+                new GetApplicationsResult.Application()
             }));
 
             var actionResult = await _applicationsController.GetApplications(_pledgeId, null);
@@ -232,9 +232,9 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         public async Task Get_Returns_Applications_By_Account_Id()
         {
             _mediator.Setup(x => x.Send(It.Is<GetApplicationsQuery>(query => query.AccountId == _accountId), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new GetApplicationsResult(new LevyTransferMatching.Models.Application[]
+                .ReturnsAsync(new GetApplicationsResult(new[]
             {
-                new LevyTransferMatching.Models.Application()
+                new GetApplicationsResult.Application()
             }));
 
             var actionResult = await _applicationsController.GetApplications(null, _accountId);
