@@ -187,7 +187,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 AccountId = accountId
             });
 
-            return Ok(query);
+            return Ok((GetApplicationsResponse)query);
         }
 
         [HttpPost]
