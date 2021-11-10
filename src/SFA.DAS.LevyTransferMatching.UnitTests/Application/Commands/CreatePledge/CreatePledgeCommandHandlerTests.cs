@@ -25,9 +25,8 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreatePled
         private EmployerAccount _employerAccount;
 
         [SetUp]
-        public override void Setup()
+        public void Setup()
         {
-            base.Setup();
             _fixture = new Fixture();
 
             _employerAccountRepository = new Mock<IEmployerAccountRepository>();

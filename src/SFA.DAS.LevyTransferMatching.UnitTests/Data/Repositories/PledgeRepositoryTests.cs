@@ -18,9 +18,8 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Data.Repositories
         private Mock<IDomainEventDispatcher> _domainEventDispatcher;
 
         [SetUp]
-        public override void Setup()
+        public void Setup()
         {
-            base.Setup();
             _domainEventDispatcher = new Mock<IDomainEventDispatcher>();
             _domainEventDispatcher.Setup(x => x.Send(It.IsAny<IDomainEvent>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 

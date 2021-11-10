@@ -13,9 +13,8 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetApplicat
         private Fixture _fixture;
 
         [SetUp]
-        public override void Setup()
+        public void Setup()
         {
-            base.Setup();
             _fixture = new Fixture();
         }
 

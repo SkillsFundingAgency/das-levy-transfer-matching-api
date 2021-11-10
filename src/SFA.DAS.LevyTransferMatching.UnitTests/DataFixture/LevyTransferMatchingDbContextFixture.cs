@@ -8,14 +8,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.DataFixture
     public class LevyTransferMatchingDbContextFixture
     {
         [SetUp]
-        public virtual void Setup()
-        {
-            ResetDbContext();
-        }
-
-        public LevyTransferMatchingDbContext DbContext { get; set; }
-
-        protected void ResetDbContext()
+        public void BaseSetup()
         {
             var options = new DbContextOptionsBuilder<LevyTransferMatchingDbContext>()
                 .UseInMemoryDatabase($"SFA.DAS.LevyTransferMatching.Database_{DateTime.UtcNow.ToFileTimeUtc()}")
@@ -23,5 +16,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.DataFixture
 
             DbContext = new LevyTransferMatchingDbContext(options);
         }
+
+        public LevyTransferMatchingDbContext DbContext { get; private set; }
     }
 }

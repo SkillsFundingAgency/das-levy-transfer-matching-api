@@ -18,14 +18,13 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
         private Fixture _fixture;
 
         [SetUp]
-        public override void Setup()
+        public async Task Setup()
         {
-            base.Setup();
             _fixture = new Fixture();
 
             var employerAccounts = _fixture.CreateMany<EmployerAccount>().ToArray();
 
-            DbContext.EmployerAccounts.AddRangeAsync(employerAccounts);
+            await DbContext.EmployerAccounts.AddRangeAsync(employerAccounts);
 
             var pledges = new List<Pledge>();
 
@@ -38,9 +37,9 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
                     ));
             }
 
-            DbContext.Pledges.AddRangeAsync(pledges);
+            await DbContext.Pledges.AddRangeAsync(pledges);
 
-            DbContext.SaveChangesAsync();
+            await DbContext.SaveChangesAsync();
         }
 
         [Test]

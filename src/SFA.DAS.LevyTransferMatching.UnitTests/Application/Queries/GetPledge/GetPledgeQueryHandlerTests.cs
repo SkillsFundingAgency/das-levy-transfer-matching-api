@@ -16,12 +16,6 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledge
     {
         private readonly Fixture _fixture = new Fixture();
 
-        [SetUp]
-        public override void Setup()
-        {
-            base.Setup();
-        }
-
         [Test]
         public async Task Handle_Individual_Pledge_Pulled_And_Stitched_Up_With_Account()
         {
