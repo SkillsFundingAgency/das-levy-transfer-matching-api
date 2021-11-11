@@ -28,12 +28,12 @@ resources:
   - repository: das-platform-building-blocks
     type: github
     name: SkillsFundingAgency/das-platform-building-blocks
-    ref: refs/heads/DASD-9071_Adding_concurrant_deployment_template
+    ref: refs/tags/0.4.20
     endpoint: SkillsFundingAgency
   - repository: das-platform-automation
     type: github
     name: SkillsFundingAgency/das-platform-automation
-    ref: refs/heads/DASD-9071_Concurrent_deployment_fix
+    ref: refs/tags/4.5.3
     endpoint: SkillsFundingAgency
   pipelines:
   - pipeline: das-employer-config
