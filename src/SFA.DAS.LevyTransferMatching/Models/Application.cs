@@ -38,7 +38,6 @@ namespace SFA.DAS.LevyTransferMatching.Models
         public IEnumerable<Sector> PledgeSectors { get; set; }
         public IEnumerable<Level> PledgeLevels { get; set; }
         public IEnumerable<JobRole> PledgeJobRoles { get; set; }
-        public string AboutDetails { get; set; }
         public int PledgeRemainingAmount { get; set; }
     }
 }
