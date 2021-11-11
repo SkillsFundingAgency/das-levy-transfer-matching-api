@@ -14,7 +14,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Data.Repositories
         private EmployerAccountRepository _repository;
 
         [SetUp]
-        public void SetUp()
+        public void Setup()
         {
             _repository = new EmployerAccountRepository(DbContext);
         }

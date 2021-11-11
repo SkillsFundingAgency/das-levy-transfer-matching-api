@@ -25,8 +25,6 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Domain.EventHandlers
         [SetUp]
         public void Setup()
         {
-            ResetDbContext();
-
             _event = _fixture.Create<EntityStateChanged>();
             _event.InitialState = "{ }";
             _event.UpdatedState = "{ }";
