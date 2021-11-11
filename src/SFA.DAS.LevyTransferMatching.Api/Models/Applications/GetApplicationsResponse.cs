@@ -38,7 +38,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications
                     CreatedOn = application.CreatedOn,
                     Status = application.Status,
                     IsNamePublic = application.IsNamePublic,
-                    Locations = application.Locations.Select(l => new Application.ApplicationLocation { Id = l.Id, PledgeLocationId = l.PledgeLocationId})
+                    Locations = application.Locations?.Select(l => new Application.ApplicationLocation { Id = l.Id, PledgeLocationId = l.PledgeLocationId})
                 })
             };
 

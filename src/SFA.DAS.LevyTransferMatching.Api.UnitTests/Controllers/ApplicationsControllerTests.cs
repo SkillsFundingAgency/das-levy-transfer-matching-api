@@ -223,7 +223,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             var actionResult = await _applicationsController.GetApplications(_pledgeId, null);
             var result = actionResult as OkObjectResult;
             Assert.IsNotNull(result);
-            var response = result.Value as GetApplicationsResult;
+            var response = result.Value as GetApplicationsResponse;
             Assert.IsNotNull(response);
             Assert.AreEqual(1, response.Applications.Count());
         }
@@ -240,8 +240,10 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             var actionResult = await _applicationsController.GetApplications(null, _accountId);
             var result = actionResult as OkObjectResult;
             Assert.IsNotNull(result);
-            var response = result.Value as GetApplicationsResult;
+            var response = result.Value as GetApplicationsResponse;
             Assert.IsNotNull(response);
+
+            var apps = response.Applications.ToList();
             Assert.AreEqual(1, response.Applications.Count());
         }
 
