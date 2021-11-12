@@ -17,6 +17,7 @@ using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
 using SFA.DAS.LevyTransferMatching.Api.Models.Pledges;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitPledge;
+using SFA.DAS.LevyTransferMatching.Application.Commands.CreditPledge;
 
 namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
 {
@@ -139,6 +140,24 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
 
             _mockMediator.Verify(x =>
                 x.Send(It.Is<DebitPledgeCommand>(command =>
+                        command.PledgeId == pledgeId && command.Amount == request.Amount && command.ApplicationId == request.ApplicationId),
+                It.IsAny<CancellationToken>()));
+        }
+
+        [Test]
+        public async Task POST_Debit_Credits_Pledge_By_Request_Amount()
+        {
+            var pledgeId = _fixture.Create<int>();
+            var request = _fixture.Create<CreditPledgeRequest>();
+
+            _mockMediator
+                .Setup(x => x.Send(It.IsAny<CreditPledgeCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(() => Unit.Value);
+
+            await _pledgesController.CreditPledge(pledgeId, request);
+
+            _mockMediator.Verify(x =>
+                x.Send(It.Is<CreditPledgeCommand>(command =>
                         command.PledgeId == pledgeId && command.Amount == request.Amount && command.ApplicationId == request.ApplicationId),
                 It.IsAny<CancellationToken>()));
         }

@@ -84,6 +84,13 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             return true;
         }
 
+        public void Credit(int creditAmount, UserInfo userInfo)
+        {
+            StartTrackingSession(UserAction.CreditPledge, userInfo);
+            ChangeTrackingSession.TrackUpdate(this);
+            RemainingAmount += creditAmount;
+        }
+
         private void ValidateLocationIds(IEnumerable<int> locationIds)
         {
             if (locationIds == null) return;
