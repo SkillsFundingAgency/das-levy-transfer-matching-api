@@ -14,6 +14,7 @@ using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.RejectApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DeclineFunding;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
@@ -39,7 +40,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 PledgeId = pledgeId,
                 ApplicationId = applicationId,
             });
-
+            
             if (queryResult != null)
             {
                 return Ok((GetApplicationResponse)queryResult);

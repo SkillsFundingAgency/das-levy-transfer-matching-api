@@ -20,14 +20,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
 
         public async Task<GetApplicationsResult> Handle(GetApplicationsQuery request, CancellationToken cancellationToken)
         {
-            IQueryable<Data.Models.Application> applicationsQuery = _dbContext.Applications
-                .Include(x => x.ApplicationLocations)
-                .Include(x => x.EmailAddresses)
-                .Include(x => x.EmployerAccount)
-                .Include(x => x.Pledge)
-                .Include(x => x.Pledge.EmployerAccount)
-                .Include(x => x.Pledge.Locations);
-
+            IQueryable<Data.Models.Application> applicationsQuery = _dbContext.Applications;
             if (request.PledgeId.HasValue)
             {
                 applicationsQuery = applicationsQuery.Where(x => x.Pledge.Id == request.PledgeId);
@@ -68,12 +61,9 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                     CreatedOn = x.CreatedOn,
                     Status = x.Status,
                     IsNamePublic = x.Pledge.IsNamePublic,
-                    Locations = x.ApplicationLocations.Select(location => new Models.Application.ApplicationLocation { Id = location.Id, PledgeLocationId = location.PledgeLocationId }).ToList()
-                    PledgeSectors = x.Pledge.Sectors.ToList(),
-                    PledgeLevels = x.Pledge.Levels.ToList(),
-                    PledgeJobRoles = x.Pledge.JobRoles.ToList(),
-                    PledgeRemainingAmount = x.Pledge.RemainingAmount
-
+                    Locations = x.ApplicationLocations.Select(location => new GetApplicationsResult.Application.ApplicationLocation { Id = location.Id, PledgeLocationId = location.PledgeLocationId }).ToList(),
+                    AdditionalLocations = x.AdditionalLocation,
+                    SpecificLocation = x.SpecificLocation
                 })
                 .ToListAsync(cancellationToken));
         }
