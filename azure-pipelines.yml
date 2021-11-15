@@ -28,12 +28,12 @@ resources:
   - repository: das-platform-building-blocks
     type: github
     name: SkillsFundingAgency/das-platform-building-blocks
-    ref: refs/heads/DASD-9218-SqlDacpacDeployStepTemplate
+    ref: refs/tags/0.4.22
     endpoint: SkillsFundingAgency
   - repository: das-platform-automation
     type: github
     name: SkillsFundingAgency/das-platform-automation
-    ref: refs/heads/DASD-9218-TestSqlDacpacDeploymentScript
+    ref: refs/tags/4.5.5
     endpoint: SkillsFundingAgency
   pipelines:
   - pipeline: das-employer-config
