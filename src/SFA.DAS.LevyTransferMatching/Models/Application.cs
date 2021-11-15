@@ -25,5 +25,12 @@ namespace SFA.DAS.LevyTransferMatching.Models
         public DateTime CreatedOn { get; set; }
         public ApplicationStatus Status { get; set; }
         public bool IsNamePublic { get; set; }
+        public List<ApplicationLocation> Locations { get; set; }
+
+        public class ApplicationLocation
+        {
+            public int Id { get; set; }
+            public int PledgeLocationId { get; set; }
+        }
     }
 }

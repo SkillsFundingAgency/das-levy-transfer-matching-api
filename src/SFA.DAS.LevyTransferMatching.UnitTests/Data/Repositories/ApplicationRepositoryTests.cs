@@ -21,11 +21,10 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Data.Repositories
         private Mock<IDomainEventDispatcher> _domainEventDispatcher;
 
         [SetUp]
-        public void SetUp()
+        public void Setup()
         {
             _domainEventDispatcher = new Mock<IDomainEventDispatcher>();
             _domainEventDispatcher.Setup(x => x.Send(It.IsAny<IDomainEvent>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
-            ResetDbContext();
             _repository = new ApplicationRepository(DbContext, _domainEventDispatcher.Object);
         }
 
@@ -58,6 +57,22 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Data.Repositories
             var updated = await DbContext.Applications.FindAsync(application.Id);
 
             Assert.AreEqual(ApplicationStatus.Accepted, updated.Status);
+        }
+
+        [Test]
+        public async Task Reject_Persists_Application()
+        {
+            var application = _fixture.Create<LevyTransferMatching.Data.Models.Application>();
+            await DbContext.Applications.AddAsync(application, CancellationToken.None);
+            await DbContext.SaveChangesAsync();
+
+            application.Reject(_fixture.Create<UserInfo>());
+            await _repository.Update(application);
+            await DbContext.SaveChangesAsync(CancellationToken.None);
+
+            var updated = await DbContext.Applications.FindAsync(application.Id);
+
+            Assert.AreEqual(ApplicationStatus.Rejected, updated.Status);
         }
 
         [Test]

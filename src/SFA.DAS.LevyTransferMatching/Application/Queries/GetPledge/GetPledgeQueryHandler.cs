@@ -38,6 +38,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge
                     JobRoles = pledge.JobRoles.ToList(),
                     Levels = pledge.Levels.ToList(),
                     Sectors = pledge.Sectors.ToList(),
+                    Status = pledge.Status,
                     Locations = pledge.Locations.Select(x => new GetPledgeResult.Location { Id = x.Id, Name = x.Name }),
                     RemainingAmount = pledge.RemainingAmount
                 };

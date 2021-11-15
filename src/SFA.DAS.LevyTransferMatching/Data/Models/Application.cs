@@ -125,6 +125,22 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             AddStatusHistory(UpdatedOn.Value);
         }
 
+        public void Reject(UserInfo userInfo)
+        {
+            if (Status != ApplicationStatus.Pending)
+            {
+                throw new InvalidOperationException($"Unable to reject Application {Id} status {Status}");
+            }
+
+            StartTrackingSession(UserAction.RejectApplication, userInfo);
+            ChangeTrackingSession.TrackUpdate(this);
+            Status = ApplicationStatus.Rejected;
+            UpdatedOn = DateTime.UtcNow;
+            AddEvent(new ApplicationRejected(Id, PledgeId, UpdatedOn.Value, Amount));
+
+            AddStatusHistory(UpdatedOn.Value);
+        }
+
         public void AcceptFunding(UserInfo userInfo)
         {
             if (Status != ApplicationStatus.Approved)
@@ -136,6 +152,22 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             ChangeTrackingSession.TrackUpdate(this);
             Status = ApplicationStatus.Accepted;
             UpdatedOn = DateTime.UtcNow;
+
+            AddStatusHistory(UpdatedOn.Value);
+        }
+
+        public void DeclineFunding(UserInfo userInfo)
+        {
+            if (Status != ApplicationStatus.Approved)
+            {
+                throw new InvalidOperationException($"Unable to decline funding for Application {Id} status {Status}");
+            }
+
+            StartTrackingSession(UserAction.DeclineFunding, userInfo);
+            ChangeTrackingSession.TrackUpdate(this);
+            Status = ApplicationStatus.Declined;
+            UpdatedOn = DateTime.UtcNow;
+            AddEvent(new ApplicationFundingDeclined(Id, PledgeId, UpdatedOn.Value, Amount));
 
             AddStatusHistory(UpdatedOn.Value);
         }
