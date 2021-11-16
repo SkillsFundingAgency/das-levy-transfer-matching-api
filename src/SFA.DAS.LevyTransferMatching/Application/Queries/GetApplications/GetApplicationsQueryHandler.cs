@@ -56,7 +56,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                     CreatedOn = x.CreatedOn,
                     Status = x.Status,
                     IsNamePublic = x.Pledge.IsNamePublic,
-                    Locations = x.ApplicationLocations.Select(location => new Models.Application.ApplicationLocation { Id = location.Id, PledgeLocationId = location.PledgeLocationId }).ToList()
+                    Locations = x.ApplicationLocations.Select(location => new Models.Application.ApplicationLocation { Id = location.Id, PledgeLocationId = location.PledgeLocationId }).ToList(),
+                    StandardDuration = x.StandardDuration
                 })
                 .ToListAsync(cancellationToken));
         }
