@@ -12,6 +12,8 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
+using SFA.DAS.LevyTransferMatching.Application.Commands.RejectApplication;
+using SFA.DAS.LevyTransferMatching.Application.Commands.DeclineFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
@@ -83,6 +85,22 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [Route("pledges/{pledgeId}/applications/{applicationId}/reject")]
+        public async Task<IActionResult> RejectApplication(int pledgeId, int applicationId, [FromBody] RejectApplicationRequest request)
+        {
+            await _mediator.Send(new RejectApplicationCommand
+            {
+                PledgeId = pledgeId,
+                ApplicationId = applicationId,
+                UserId = request.UserId,
+                UserDisplayName = request.UserDisplayName
+            });
+
+            return Ok();
+        }
+
+        [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [Route("accounts/{accountId}/applications/{applicationId}/accept-funding")]
@@ -95,6 +113,28 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 UserDisplayName = request.UserDisplayName,
                 UserId = request.UserId
             }, cancellationToken);
+
+            if (result.Updated)
+            {
+                return NoContent();
+            }
+
+            return BadRequest();
+        }
+
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [Route("accounts/{accountId}/applications/{applicationId}/decline-funding")]
+        public async Task<IActionResult> DeclineFunding(int applicationId, long accountId, [FromBody] DeclineFundingRequest request)
+        {
+            var result = await _mediator.Send(new DeclineFundingCommand
+            {
+                ApplicationId = applicationId,
+                AccountId = accountId,
+                UserDisplayName = request.UserDisplayName,
+                UserId = request.UserId,
+            });
 
             if (result.Updated)
             {
@@ -148,6 +188,11 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 EmployerAccountId = request.EmployerAccountId,
                 Details = request.Details,
                 StandardId = request.StandardId,
+                StandardTitle = request.StandardTitle,
+                StandardLevel = request.StandardLevel,
+                StandardDuration = request.StandardDuration,
+                StandardMaxFunding = request.StandardMaxFunding,
+                StandardRoute = request.StandardRoute,
                 NumberOfApprentices = request.NumberOfApprentices,
                 StartDate = request.StartDate,
                 HasTrainingProvider = request.HasTrainingProvider,
@@ -183,7 +228,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 AccountId = accountId
             });
 
-            return Ok(query);
+            return Ok((GetApplicationsResponse)query);
         }
 
         [HttpPost]

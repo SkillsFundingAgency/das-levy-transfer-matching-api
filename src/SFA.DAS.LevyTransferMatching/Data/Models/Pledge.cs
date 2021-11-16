@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.LevyTransferMatching.Abstractions;
+using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Domain.Events;
 
@@ -22,6 +23,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             JobRoles = properties.JobRoles;
             Sectors = properties.Sectors;
             CreatedOn = DateTime.UtcNow;
+            Status = PledgeStatus.Active;
             _locations = properties.Locations;
 
             StartTrackingSession(UserAction.CreatePledge, userInfo);
@@ -47,6 +49,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         public Level Levels { get; private set; }
 
         public Sector Sectors { get; private set; }
+        public PledgeStatus Status { get; private set; }
 
         private readonly List<PledgeLocation> _locations;
         public IReadOnlyCollection<PledgeLocation> Locations => _locations;
@@ -79,6 +82,13 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             ChangeTrackingSession.TrackUpdate(this);
             RemainingAmount -= debitAmount;
             return true;
+        }
+
+        public void Credit(int creditAmount, UserInfo userInfo)
+        {
+            StartTrackingSession(UserAction.CreditPledge, userInfo);
+            ChangeTrackingSession.TrackUpdate(this);
+            RemainingAmount += creditAmount;
         }
 
         private void ValidateLocationIds(IEnumerable<int> locationIds)

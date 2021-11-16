@@ -58,6 +58,11 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
                     command.EmployerAccountId == _request.EmployerAccountId &&
                     command.Details == _request.Details && 
                     command.StandardId == _request.StandardId &&
+                    command.StandardTitle == _request.StandardTitle &&
+                    command.StandardLevel == _request.StandardLevel &&
+                    command.StandardDuration == _request.StandardDuration &&
+                    command.StandardMaxFunding == _request.StandardMaxFunding &&
+                    command.StandardRoute == _request.StandardRoute &&
                     command.NumberOfApprentices == _request.NumberOfApprentices &&
                     command.StartDate == _request.StartDate &&
                     command.HasTrainingProvider == _request.HasTrainingProvider &&
@@ -213,15 +218,15 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         public async Task Get_Returns_Applications()
         {
             _mediator.Setup(x => x.Send(It.Is<GetApplicationsQuery>(query => query.PledgeId == _pledgeId), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new GetApplicationsResult(new LevyTransferMatching.Models.Application[]
+                .ReturnsAsync(new GetApplicationsResult(new[]
             {
-                new LevyTransferMatching.Models.Application()
+                new GetApplicationsResult.Application()
             }));
 
             var actionResult = await _applicationsController.GetApplications(_pledgeId, null);
             var result = actionResult as OkObjectResult;
             Assert.IsNotNull(result);
-            var response = result.Value as GetApplicationsResult;
+            var response = result.Value as GetApplicationsResponse;
             Assert.IsNotNull(response);
             Assert.AreEqual(1, response.Applications.Count());
         }
@@ -230,16 +235,18 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         public async Task Get_Returns_Applications_By_Account_Id()
         {
             _mediator.Setup(x => x.Send(It.Is<GetApplicationsQuery>(query => query.AccountId == _accountId), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new GetApplicationsResult(new LevyTransferMatching.Models.Application[]
+                .ReturnsAsync(new GetApplicationsResult(new[]
             {
-                new LevyTransferMatching.Models.Application()
+                new GetApplicationsResult.Application()
             }));
 
             var actionResult = await _applicationsController.GetApplications(null, _accountId);
             var result = actionResult as OkObjectResult;
             Assert.IsNotNull(result);
-            var response = result.Value as GetApplicationsResult;
+            var response = result.Value as GetApplicationsResponse;
             Assert.IsNotNull(response);
+
+            var apps = response.Applications.ToList();
             Assert.AreEqual(1, response.Applications.Count());
         }
 

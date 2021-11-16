@@ -21,11 +21,10 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Data.Repositories
         private Mock<IDomainEventDispatcher> _domainEventDispatcher;
 
         [SetUp]
-        public void SetUp()
+        public void Setup()
         {
             _domainEventDispatcher = new Mock<IDomainEventDispatcher>();
             _domainEventDispatcher.Setup(x => x.Send(It.IsAny<IDomainEvent>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
-            ResetDbContext();
             _repository = new ApplicationRepository(DbContext, _domainEventDispatcher.Object);
         }
 
@@ -61,6 +60,22 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Data.Repositories
         }
 
         [Test]
+        public async Task Reject_Persists_Application()
+        {
+            var application = _fixture.Create<LevyTransferMatching.Data.Models.Application>();
+            await DbContext.Applications.AddAsync(application, CancellationToken.None);
+            await DbContext.SaveChangesAsync();
+
+            application.Reject(_fixture.Create<UserInfo>());
+            await _repository.Update(application);
+            await DbContext.SaveChangesAsync(CancellationToken.None);
+
+            var updated = await DbContext.Applications.FindAsync(application.Id);
+
+            Assert.AreEqual(ApplicationStatus.Rejected, updated.Status);
+        }
+
+        [Test]
         public async Task Get_Retrieves_Application()
         {
             var application = _fixture.Create<LevyTransferMatching.Data.Models.Application>();
@@ -68,10 +83,10 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Data.Repositories
             empAccount.SetValue(o => o.Id, 1); 
             application.SetValue(o => o.EmployerAccount, empAccount);
 
-            DbContext.Applications.Add(application);
-            DbContext.SaveChanges();
+            await DbContext.Applications.AddAsync(application);
+            await DbContext.SaveChangesAsync();
 
-            var result = await _repository.Get(application.Pledge.Id, null, application.Id);
+            var result = await _repository.Get(application.Id, application.Pledge.Id, null);
 
             Assert.AreEqual(application, result);
         }
