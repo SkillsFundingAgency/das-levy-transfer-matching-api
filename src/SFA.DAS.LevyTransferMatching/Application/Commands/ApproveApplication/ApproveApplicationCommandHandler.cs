@@ -19,7 +19,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.ApproveApplication
         {
             var application = await _applicationRepository.Get(request.ApplicationId, request.PledgeId, null);
 
-            application.Approve(new UserInfo(request.UserId, request.UserDisplayName));
+            application.Approve(new UserInfo(request.UserId, request.UserDisplayName), request.AutomaticApproval);
 
             await _applicationRepository.Update(application);
 
