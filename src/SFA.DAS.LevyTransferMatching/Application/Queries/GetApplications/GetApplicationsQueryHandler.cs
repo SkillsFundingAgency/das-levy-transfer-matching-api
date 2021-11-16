@@ -34,9 +34,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
             return new GetApplicationsResult(await applicationsQuery
                 .OrderByDescending(x => x.CreatedOn)
                 .ThenBy(x => x.EmployerAccount.Name)
-                .Select(x => new Models.Application
+                .Select(x => new GetApplicationsResult.Application
                 {
-                    Amount = x.Amount,
                     PledgeId = x.Pledge.Id,
                     DasAccountName = request.PledgeId.HasValue ? x.EmployerAccount.Name : x.Pledge.EmployerAccount.Name,
                     Id = x.Id,
@@ -47,8 +46,14 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                     LastName = x.LastName,
                     HasTrainingProvider = x.HasTrainingProvider,
                     NumberOfApprentices = x.NumberOfApprentices,
-                    Postcode = "",
                     StandardId = x.StandardId,
+                    StandardTitle = x.StandardTitle,
+                    StandardLevel = x.StandardLevel,
+                    StandardDuration = x.StandardDuration,
+                    StandardMaxFunding =  x.StandardMaxFunding,
+                    StandardRoute = x.StandardRoute,
+                    Amount = x.Amount,
+                    TotalAmount = x.TotalAmount,
                     StartDate = x.StartDate,
                     EmailAddresses = x.EmailAddresses.Any()
                         ? x.EmailAddresses.Select(email => email.EmailAddress)
@@ -56,8 +61,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                     CreatedOn = x.CreatedOn,
                     Status = x.Status,
                     IsNamePublic = x.Pledge.IsNamePublic,
-                    Locations = x.ApplicationLocations.Select(location => new Models.Application.ApplicationLocation { Id = location.Id, PledgeLocationId = location.PledgeLocationId }).ToList(),
-                    StandardDuration = x.StandardDuration
+                    Locations = x.ApplicationLocations.Select(location => new GetApplicationsResult.Application.ApplicationLocation { Id = location.Id, PledgeLocationId = location.PledgeLocationId }).ToList()
                 })
                 .ToListAsync(cancellationToken));
         }

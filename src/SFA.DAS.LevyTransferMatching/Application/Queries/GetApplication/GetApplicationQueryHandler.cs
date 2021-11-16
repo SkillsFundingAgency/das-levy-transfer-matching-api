@@ -42,7 +42,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 return null;
             }
 
-            var result = new GetApplicationResult()
+            var result = new GetApplicationResult
             {
                 BusinessWebsite = application.BusinessWebsite,
                 Details = application.Details,
@@ -51,9 +51,13 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 HasTrainingProvider = application.HasTrainingProvider,
                 LastName = application.LastName,
                 NumberOfApprentices = application.NumberOfApprentices,
-                Postcode = "",
                 Sectors = application.Sectors.ToList(),
                 StandardId = application.StandardId,
+                StandardTitle = application.StandardTitle,
+                StandardLevel = application.StandardLevel,
+                StandardDuration = application.StandardDuration,
+                StandardMaxFunding = application.StandardMaxFunding,
+                StandardRoute = application.StandardRoute,
                 StartDate = application.StartDate,
                 EmployerAccountName = application.EmployerAccount.Name,
                 AmountUsed = application.AmountUsed,
@@ -67,6 +71,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 PledgeLevels = application.Pledge.Levels.ToList(),
                 PledgeJobRoles = application.Pledge.JobRoles.ToList(),
                 Amount = application.Amount,
+                    TotalAmount = application.TotalAmount,
                 PledgeAmount = application.Pledge.Amount,
                 PledgeRemainingAmount = application.Pledge.RemainingAmount,
                 Status = application.Status,

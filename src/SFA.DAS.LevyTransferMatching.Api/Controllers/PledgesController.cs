@@ -1,17 +1,17 @@
-﻿using System;
+﻿using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
-using System.Threading.Tasks;
-using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
-using System.Linq;
 using SFA.DAS.LevyTransferMatching.Api.Models.CreatePledge;
-using SFA.DAS.LevyTransferMatching.Api.Models.GetPledges;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetPledge;
+using SFA.DAS.LevyTransferMatching.Api.Models.GetPledges;
 using SFA.DAS.LevyTransferMatching.Api.Models.Pledges;
+using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
+using SFA.DAS.LevyTransferMatching.Application.Commands.CreditPledge;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitPledge;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
@@ -112,6 +112,21 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 (CreatePledgeResponse)commandResult);
 
             return result;
+        }
+
+        [HttpPost]
+        [Route("pledges/{pledgeId}/credit")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<IActionResult> CreditPledge(int pledgeId, [FromBody] CreditPledgeRequest request)
+        {
+            await _mediator.Send(new CreditPledgeCommand
+            {
+                PledgeId = pledgeId,
+                ApplicationId = request.ApplicationId,
+                Amount = request.Amount
+            });
+
+            return Ok();
         }
     }
 }
