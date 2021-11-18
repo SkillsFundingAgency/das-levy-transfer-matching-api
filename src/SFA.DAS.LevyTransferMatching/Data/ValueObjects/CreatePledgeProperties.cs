@@ -12,5 +12,10 @@ namespace SFA.DAS.LevyTransferMatching.Data.ValueObjects
         public JobRole JobRoles { get; set; }
         public Sector Sectors { get; set; }
         public List<PledgeLocation> Locations { get; set; }
+
+        public CreatePledgeProperties()
+        {
+            Locations = new List<PledgeLocation>();
+        }
     }
 }
