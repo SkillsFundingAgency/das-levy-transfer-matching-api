@@ -17,6 +17,7 @@ using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
+using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
 
 namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
 {
@@ -33,6 +34,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         private CreateApplicationRequest _request;
         private CreateApplicationCommandResult _result;
         private DebitApplicationRequest _debitApplicationRequest;
+        private WithdrawApplicationRequest _withdrawApplicationRequest;
 
         [SetUp]
         public void Setup()
@@ -43,6 +45,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             _request = _fixture.Create<CreateApplicationRequest>();
             _result = _fixture.Create<CreateApplicationCommandResult>();
             _debitApplicationRequest = _fixture.Create<DebitApplicationRequest>();
+            _withdrawApplicationRequest = _fixture.Create<WithdrawApplicationRequest>();
 
             _mediator = new Mock<IMediator>();
             _applicationsController = new ApplicationsController(_mediator.Object);
@@ -305,6 +308,19 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             Assert.IsNotNull(okResult);
 
             _mediator.Verify(x => x.Send(It.Is<DebitApplicationCommand>(command =>
+                        command.ApplicationId == _applicationId),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Test]
+        public async Task Post_WithdrawApplication_Withdraws_Application()
+        {
+            var actionResult = await _applicationsController.WithdrawApplication(_applicationId, _accountId, _withdrawApplicationRequest);
+            var okResult = actionResult as OkResult;
+            Assert.IsNotNull(okResult);
+
+            _mediator.Verify(x => x.Send(It.Is<WithdrawApplicationCommand>(command =>
                         command.ApplicationId == _applicationId),
                     It.IsAny<CancellationToken>()),
                 Times.Once);

@@ -8,5 +8,6 @@
         Accepted = 3,
         FundsUsed = 4,
         Declined = 5,
+        Withdrawn = 6
     }
 }
