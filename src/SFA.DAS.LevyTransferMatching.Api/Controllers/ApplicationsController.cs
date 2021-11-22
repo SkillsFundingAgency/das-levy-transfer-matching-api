@@ -14,7 +14,6 @@ using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.RejectApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DeclineFunding;
-using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
@@ -142,6 +141,23 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
             }
 
             return BadRequest();
+        }
+
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [Route("accounts/{accountId}/applications/{applicationId}/withdraw")]
+        public async Task<IActionResult> WithdrawApplication(int applicationId, long accountId, [FromBody] WithdrawApplicationRequest request, CancellationToken cancellationToken = default)
+        {
+            await _mediator.Send(new WithdrawApplicationCommand
+            {
+                ApplicationId = applicationId,
+                AccountId = accountId,
+                UserDisplayName = request.UserDisplayName,
+                UserId = request.UserId
+            }, cancellationToken);
+
+            return Ok();
         }
 
         [HttpPost]
