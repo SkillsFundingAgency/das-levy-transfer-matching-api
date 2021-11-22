@@ -14,6 +14,7 @@ using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.RejectApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DeclineFunding;
+using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
