@@ -60,7 +60,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
                 ChangeTrackingSession.TrackInsert(location);
             }
 
-            AddEvent(new ApplicationCreated(Id, Pledge.Id, CreatedOn));
+            AddEvent(() => new ApplicationCreated(Id, Pledge.Id, CreatedOn));
 
             AddStatusHistory(CreatedOn);
         }
