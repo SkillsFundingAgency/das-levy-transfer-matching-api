@@ -45,6 +45,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
         public int PledgeAmount { get; set; }
         public int AmountUsed { get; set; }
         public int NumberOfApprenticesUsed { get; set; }
+        public bool AutomaticApproval { get; set; }
 
         public class ApplicationLocation
         {
@@ -90,7 +91,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
                 PledgeAmount = getApplicationResult.PledgeAmount,
                 PledgeEmployerAccountName = getApplicationResult.PledgeEmployerAccountName,
                 AmountUsed = getApplicationResult.AmountUsed,
-                NumberOfApprenticesUsed = getApplicationResult.NumberOfApprenticesUsed
+                NumberOfApprenticesUsed = getApplicationResult.NumberOfApprenticesUsed,
+                AutomaticApproval = getApplicationResult.AutomaticApproval
             };
         }
     }

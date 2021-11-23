@@ -43,6 +43,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
         public long ReceiverEmployerAccountId { get; set; }
         public long SenderEmployerAccountId { get; set; }
         public int PledgeAmount { get; set; }
+        public bool AutomaticApproval { get; set; }
 
         public class ApplicationLocation
         {

@@ -71,7 +71,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 PledgeLevels = application.Pledge.Levels.ToList(),
                 PledgeJobRoles = application.Pledge.JobRoles.ToList(),
                 Amount = application.Amount,
-                    TotalAmount = application.TotalAmount,
+                TotalAmount = application.TotalAmount,
                 PledgeAmount = application.Pledge.Amount,
                 PledgeRemainingAmount = application.Pledge.RemainingAmount,
                 Status = application.Status,
@@ -79,6 +79,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 PledgeId = application.PledgeId,
                 ReceiverEmployerAccountId = application.EmployerAccount.Id,
                 SenderEmployerAccountId = application.Pledge.EmployerAccount.Id,
+                AutomaticApproval = application.AutomaticApproval
             };
 
             return result;
