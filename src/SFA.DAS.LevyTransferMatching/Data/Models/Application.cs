@@ -107,7 +107,6 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         public ApplicationStatus Status { get; private set; }
         public bool AutomaticApproval { get; private set; }
         public DateTime? UpdatedOn { get; private set; }
-        public bool? AllowTransferRequestAutoApproval { get; set; }
         public byte[] RowVersion { get; private set; }
 
         public void Approve(UserInfo userInfo, bool automaticApproval = false)
