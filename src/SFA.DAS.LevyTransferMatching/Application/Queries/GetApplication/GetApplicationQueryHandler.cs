@@ -71,7 +71,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 PledgeId = application.PledgeId,
                 ReceiverEmployerAccountId = application.EmployerAccount.Id,
                 SenderEmployerAccountId = application.Pledge.EmployerAccount.Id,
-                AllowTransferRequestAutoApproval = application.AllowTransferRequestAutoApproval ?? false
+                AutomaticApproval = application.AutomaticApproval
             };
 
             return result;

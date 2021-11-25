@@ -37,7 +37,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
         public string PledgeEmployerAccountName { get; set; }
         public int AmountUsed { get; set; }
         public int NumberOfApprenticesUsed { get; set; }
-        public bool AllowTransferRequestAutoApproval { get; set; }
+        public bool AutomaticApproval { get; set; }
 
         public class ApplicationLocation
         {
@@ -77,7 +77,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
                 PledgeEmployerAccountName = getApplicationResult.PledgeEmployerAccountName,
                 AmountUsed = getApplicationResult.AmountUsed,
                 NumberOfApprenticesUsed = getApplicationResult.NumberOfApprenticesUsed,
-                AllowTransferRequestAutoApproval = getApplicationResult.AllowTransferRequestAutoApproval
+                AutomaticApproval = getApplicationResult.AutomaticApproval
             };
         }
     }
