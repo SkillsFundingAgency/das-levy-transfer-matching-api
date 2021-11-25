@@ -5,6 +5,7 @@ using SFA.DAS.LevyTransferMatching.Extensions;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
 {
@@ -20,7 +21,6 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
         public async Task<GetApplicationsResult> Handle(GetApplicationsQuery request, CancellationToken cancellationToken)
         {
             IQueryable<Data.Models.Application> applicationsQuery = _dbContext.Applications;
-
             if (request.PledgeId.HasValue)
             {
                 applicationsQuery = applicationsQuery.Where(x => x.Pledge.Id == request.PledgeId);
@@ -61,7 +61,9 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                     CreatedOn = x.CreatedOn,
                     Status = x.Status,
                     IsNamePublic = x.Pledge.IsNamePublic,
-                    Locations = x.ApplicationLocations.Select(location => new GetApplicationsResult.Application.ApplicationLocation { Id = location.Id, PledgeLocationId = location.PledgeLocationId }).ToList()
+                    Locations = x.ApplicationLocations.Select(location => new GetApplicationsResult.Application.ApplicationLocation { Id = location.Id, PledgeLocationId = location.PledgeLocationId }).ToList(),
+                    AdditionalLocations = x.AdditionalLocation,
+                    SpecificLocation = x.SpecificLocation
                 })
                 .ToListAsync(cancellationToken));
         }
