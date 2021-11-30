@@ -32,17 +32,11 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
         public List<ApplicationLocation> Locations { get; set; }
         public string AdditionalLocation { get; set; }
         public string SpecificLocation { get; set; }
-        public List<PledgeLocation> PledgeLocations { get; set; }
         public ApplicationStatus Status { get; set; }
-        public IEnumerable<Sector> PledgeSectors { get; set; }
-        public IEnumerable<Level> PledgeLevels { get; set; }
-        public IEnumerable<JobRole> PledgeJobRoles { get; set; }
-        public int PledgeRemainingAmount { get; set; }
-        public bool PledgeIsNamePublic { get; set; }
         public int PledgeId { get; set; }
         public long ReceiverEmployerAccountId { get; set; }
         public long SenderEmployerAccountId { get; set; }
-        public int PledgeAmount { get; set; }
+        public bool AutomaticApproval { get; set; }
 
         public class ApplicationLocation
         {

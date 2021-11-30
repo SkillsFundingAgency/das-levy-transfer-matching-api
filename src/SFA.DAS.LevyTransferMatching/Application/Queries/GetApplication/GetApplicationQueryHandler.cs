@@ -25,7 +25,6 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 .Include(x => x.EmployerAccount)
                 .Include(x => x.Pledge)
                 .Include(x => x.Pledge.EmployerAccount)
-                .Include(x => x.Pledge.Locations)
                 .Where(x => x.Id == request.ApplicationId)
                 .AsQueryable();
 
@@ -34,7 +33,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 applicationQuery = applicationQuery
                     .Where(x => x.PledgeId == request.PledgeId.Value);
             }
-            
+
             var application = await applicationQuery.SingleOrDefaultAsync(cancellationToken: cancellationToken);
 
             if (application == null)
@@ -66,19 +65,13 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 Locations = application.ApplicationLocations.Select(x => new GetApplicationResult.ApplicationLocation { Id = x.Id, PledgeLocationId = x.PledgeLocationId }).ToList(),
                 AdditionalLocation = application.AdditionalLocation,
                 SpecificLocation = application.SpecificLocation,
-                PledgeLocations = application.Pledge.Locations.ToList(),
-                PledgeSectors = application.Pledge.Sectors.ToList(),
-                PledgeLevels = application.Pledge.Levels.ToList(),
-                PledgeJobRoles = application.Pledge.JobRoles.ToList(),
                 Amount = application.Amount,
-                    TotalAmount = application.TotalAmount,
-                PledgeAmount = application.Pledge.Amount,
-                PledgeRemainingAmount = application.Pledge.RemainingAmount,
+                TotalAmount = application.TotalAmount,
                 Status = application.Status,
-                PledgeIsNamePublic = application.Pledge.IsNamePublic,
                 PledgeId = application.PledgeId,
                 ReceiverEmployerAccountId = application.EmployerAccount.Id,
                 SenderEmployerAccountId = application.Pledge.EmployerAccount.Id,
+                AutomaticApproval = application.AutomaticApproval
             };
 
             return result;

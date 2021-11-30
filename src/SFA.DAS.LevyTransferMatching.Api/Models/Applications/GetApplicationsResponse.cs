@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SFA.DAS.LevyTransferMatching.Api.Models.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
@@ -38,7 +39,9 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications
                     CreatedOn = application.CreatedOn,
                     Status = application.Status,
                     IsNamePublic = application.IsNamePublic,
-                    Locations = application.Locations?.Select(l => new Application.ApplicationLocation { Id = l.Id, PledgeLocationId = l.PledgeLocationId})
+                    Locations = application.Locations?.Select(l => new Application.ApplicationLocation { Id = l.Id, PledgeLocationId = l.PledgeLocationId}),
+                    SpecificLocation = application.SpecificLocation,
+                    AdditionalLocations = application.AdditionalLocations
                 })
             };
 
@@ -73,6 +76,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications
             public ApplicationStatus Status { get; set; }
             public bool IsNamePublic { get; set; }
             public IEnumerable<ApplicationLocation> Locations { get; set; }
+            public string SpecificLocation { get; set; }
+            public string AdditionalLocations { get; set; }
 
             public class ApplicationLocation
             {

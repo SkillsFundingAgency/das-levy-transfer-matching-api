@@ -40,7 +40,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 PledgeId = pledgeId,
                 ApplicationId = applicationId,
             });
-
+            
             if (queryResult != null)
             {
                 return Ok((GetApplicationResponse)queryResult);
@@ -78,7 +78,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 PledgeId = pledgeId,
                 ApplicationId = applicationId,
                 UserId = request.UserId,
-                UserDisplayName = request.UserDisplayName
+                UserDisplayName = request.UserDisplayName,
+                AutomaticApproval = request.AutomaticApproval
             });
 
             return Ok();
