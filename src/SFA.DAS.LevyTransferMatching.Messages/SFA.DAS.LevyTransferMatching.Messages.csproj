@@ -4,8 +4,4 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="SFA.DAS.Messaging" Version="3.1.120" />
-  </ItemGroup>
-
 </Project>
