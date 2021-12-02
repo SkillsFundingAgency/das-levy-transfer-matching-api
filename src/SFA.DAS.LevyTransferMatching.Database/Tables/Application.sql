@@ -28,6 +28,7 @@
 	[AmountUsed]			INT				DEFAULT 0 NOT NULL,
 	[UpdatedOn]				DATETIME2		NULL,
 	[RowVersion]			TIMESTAMP		NOT NULL,
+    [AutomaticApproval] BIT NOT NULL DEFAULT 0, 
     CONSTRAINT [PK_Application] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_Application_EmployerAccount] FOREIGN KEY ([EmployerAccountId]) REFERENCES [dbo].[EmployerAccount] ([Id]),
 	CONSTRAINT [FK_Application_Pledge] FOREIGN KEY ([PledgeId]) REFERENCES [dbo].[Pledge] ([Id])
