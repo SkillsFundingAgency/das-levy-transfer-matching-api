@@ -2,7 +2,6 @@
 
 namespace SFA.DAS.LevyTransferMatching.Messages.Legacy
 {
-    [MessageGroup("pledge_application_created")]
     public class PledgeApplicationCreated
     {
         public PledgeApplicationCreated()
@@ -17,9 +16,9 @@ namespace SFA.DAS.LevyTransferMatching.Messages.Legacy
             TransferSenderId = transferSenderId;
         }
 
-        public int ApplicationId { get; }
-        public int PledgeId { get; }
-        public DateTime CreatedOn { get; }
+        public int ApplicationId { get; set; }
+        public int PledgeId { get; set; }
+        public DateTime CreatedOn { get; set; }
         public long TransferSenderId { get; set; }
     }
 }
