@@ -2,6 +2,7 @@
 
 namespace SFA.DAS.LevyTransferMatching.Messages.Legacy
 {
+    [MessageGroup("pledge_application_created")]
     public class PledgeApplicationCreated
     {
         public PledgeApplicationCreated()
