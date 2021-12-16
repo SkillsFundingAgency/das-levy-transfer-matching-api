@@ -91,6 +91,11 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             RemainingAmount += creditAmount;
         }
 
+        public void ClosePledge()
+        {
+            Status = PledgeStatus.Closed;
+        }
+
         private void ValidateLocationIds(IEnumerable<int> locationIds)
         {
             if (locationIds == null) return;

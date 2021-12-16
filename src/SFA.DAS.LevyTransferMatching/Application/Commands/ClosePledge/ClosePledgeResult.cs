@@ -1,0 +1,12 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace SFA.DAS.LevyTransferMatching.Application.Commands.ClosePledge
+{
+    public class ClosePledgeResult
+    {
+        public bool Updated { get; set; }
+        public string Message { get; set; }
+    }
+}

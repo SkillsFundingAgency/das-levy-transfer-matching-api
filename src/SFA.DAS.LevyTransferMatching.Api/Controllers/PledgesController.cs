@@ -3,15 +3,18 @@ using System.Net;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.LevyTransferMatching.Api.Models.ClosePledge;
 using SFA.DAS.LevyTransferMatching.Api.Models.CreatePledge;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetPledge;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetPledges;
 using SFA.DAS.LevyTransferMatching.Api.Models.Pledges;
+using SFA.DAS.LevyTransferMatching.Application.Commands.ClosePledge;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreditPledge;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitPledge;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
+using SFA.DAS.LevyTransferMatching.Data.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
@@ -112,6 +115,26 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 (CreatePledgeResponse)commandResult);
 
             return result;
+        }
+
+        [HttpPost]
+        [Route("pledges/close/{pledgeId}")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> ClosePledge(int pledgeId)
+        {
+            var commandResult = await _mediator.Send(new ClosePledgeCommand
+            {
+                PledgeId = pledgeId,
+            });
+
+            if (!commandResult.Updated)
+            {
+                return BadRequest();
+            }
+
+            return Ok(commandResult);
+
         }
 
         [HttpPost]
