@@ -5,6 +5,11 @@ namespace SFA.DAS.LevyTransferMatching.Messages.Legacy
     [MessageGroup("pledge_application_approved")]
     public class PledgeApplicationApproved
     {
+        public PledgeApplicationApproved()
+        {
+            
+        }
+
         public PledgeApplicationApproved(int applicationId, int pledgeId, DateTime approvedOn, int amount, long transferSenderId)
         {
             ApplicationId = applicationId;
