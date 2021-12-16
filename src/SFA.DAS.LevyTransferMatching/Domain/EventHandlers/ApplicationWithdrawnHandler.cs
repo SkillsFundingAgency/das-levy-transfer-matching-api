@@ -23,7 +23,7 @@ namespace SFA.DAS.LevyTransferMatching.Domain.EventHandlers
         {
             var pledge = await _pledgeRepository.Get(@event.PledgeId);
 
-            var senderId = pledge.EmployerAccount.Id;
+            var senderId = pledge.EmployerAccountId;
 
             await _eventPublisher.Publish(new ApplicationWithdrawnEvent(@event.ApplicationId, @event.PledgeId,
                 @event.WithdrawnOn,
