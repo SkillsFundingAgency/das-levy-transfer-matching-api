@@ -9,10 +9,8 @@ using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Api.Controllers;
 using SFA.DAS.LevyTransferMatching.Api.Models.CreateAccount;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetAccount;
-using SFA.DAS.LevyTransferMatching.Api.Models.GetAccounts;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateAccount;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetAccount;
-using SFA.DAS.LevyTransferMatching.Application.Queries.GetAccounts;
 
 namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
 {
@@ -25,7 +23,6 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         private CreateAccountCommandResult _commandResult;
         private CreateAccountRequest _apiRequest;
         private GetAccountQueryResult _getAccountQueryResult;
-        private GetAccountsQueryResult _getAccountsQueryResult;
 
         [SetUp]
         public void Setup()
@@ -49,11 +46,6 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             _mediator
                 .Setup(x => x.Send(It.IsAny<GetAccountQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_getAccountQueryResult);
-
-            _getAccountsQueryResult = _fixture.Create<GetAccountsQueryResult>();
-            _mediator
-                .Setup(x => x.Send(It.IsAny<GetAccountsQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_getAccountsQueryResult);
         }
 
         [Test]
@@ -96,20 +88,6 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             var resultValue = result.Value as GetAccountResponse;
             Assert.AreEqual(_getAccountQueryResult.AccountId, resultValue.AccountId);
             Assert.AreEqual(_getAccountQueryResult.AccountName, resultValue.AccountName);
-        }
-
-        [Test]
-        public async Task GET_Accounts_Returns_Result()
-        {
-            var actionResult = await _controller.GetAccounts();
-
-            var result = actionResult as ObjectResult;
-
-            Assert.IsNotNull(actionResult);
-            Assert.IsNotNull(result);
-            var resultValue = result.Value as GetAccountsResponse;
-            Assert.IsNotNull(resultValue.EmployerAccounts);
-            Assert.AreEqual(_getAccountsQueryResult.EmployerAccounts.Count, resultValue.EmployerAccounts.Count);
         }
     }
 }

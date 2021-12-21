@@ -1,14 +1,11 @@
-﻿using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.LevyTransferMatching.Api.Models.CreateAccount;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetAccount;
-using SFA.DAS.LevyTransferMatching.Api.Models.GetAccounts;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateAccount;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetAccount;
-using SFA.DAS.LevyTransferMatching.Application.Queries.GetAccounts;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
@@ -45,15 +42,6 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 AccountId = queryResult.AccountId,
                 AccountName = queryResult.AccountName
             });
-        }
-
-        [HttpGet]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetAccounts()
-        {
-            var queryResult = await _mediator.Send(new GetAccountsQuery());
-
-            return new ObjectResult((GetAccountsResponse)queryResult);
         }
 
         [HttpPost]

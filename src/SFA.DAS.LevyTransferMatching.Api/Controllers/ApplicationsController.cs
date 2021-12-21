@@ -15,6 +15,7 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.RejectApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DeclineFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
+using SFA.DAS.LevyTransferMatching.Data.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
@@ -221,12 +222,13 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [Route("applications")]
-        public async Task<IActionResult> GetApplications(int? pledgeId, long? accountId)
+        public async Task<IActionResult> GetApplications(int? pledgeId, long? accountId, ApplicationStatus? applicationStatusFilter)
         {
             var query = await _mediator.Send(new GetApplicationsQuery
             {
                 PledgeId = pledgeId,
-                AccountId = accountId
+                AccountId = accountId,
+                ApplicationStatusFilter = applicationStatusFilter
             });
 
             return Ok((GetApplicationsResponse)query);
