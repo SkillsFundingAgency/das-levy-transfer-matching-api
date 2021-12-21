@@ -60,9 +60,13 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.ClosePledg
         public async Task Handle_Pledge_Close_Error_If_Pledge_Id_Cannot_Be_Found_Or_Null(int pledgeId)
         {
             if(pledgeId == 0) {
+
                 _command = null;
+
             } else {
+
                 _command.PledgeId = pledgeId;
+
             }
             
             var result = await _handler.Handle(_command, CancellationToken.None);
