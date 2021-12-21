@@ -18,6 +18,7 @@ using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
 using SFA.DAS.LevyTransferMatching.Api.Models.Pledges;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitPledge;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreditPledge;
+using SFA.DAS.LevyTransferMatching.Application.Commands.ClosePledge;
 
 namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
 {
@@ -161,6 +162,45 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
                         command.PledgeId == pledgeId && command.Amount == request.Amount && command.ApplicationId == request.ApplicationId),
                 It.IsAny<CancellationToken>()));
         }
+
+        
+        [Test]
+        public async Task POST_Close_A_Pledge_By_PledgeId()
+        {
+            var pledgeId = _fixture.Create<int>();
+
+            _mockMediator
+                .Setup(x => x.Send(It.IsAny<ClosePledgeCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(() => new ClosePledgeResult { Updated = true, Message = "Pledge closed" });
+
+            var actionResult = await _pledgesController.ClosePledge(pledgeId);
+            var okObjectResult = actionResult as OkObjectResult;
+            var response = okObjectResult.Value as ClosePledgeResult;
+            
+            Assert.IsNotNull(actionResult);
+            Assert.IsNotNull(okObjectResult);
+            Assert.IsNotNull(response);
+
+            Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.OK);
+            Assert.AreEqual(true, response.Updated);
+
+        }
+
+        [Test]
+        public async Task POST_Close_A_Pledge_By_PledgeId_Returns_BadRequest()
+        {
+            var pledgeId = _fixture.Create<int>();
+
+            _mockMediator
+                .Setup(x => x.Send(It.IsAny<ClosePledgeCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((ClosePledgeResult)null);
+
+            var actionResult = await _pledgesController.ClosePledge(pledgeId);
+            
+            Assert.IsInstanceOf<BadRequestResult>(actionResult);
+            
+        }
+
 
         [Test]
         public async Task GET_All_Pledges_Returned()

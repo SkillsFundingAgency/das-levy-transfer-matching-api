@@ -128,7 +128,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 PledgeId = pledgeId,
             });
 
-            if (!commandResult.Updated)
+            if (commandResult == null || !commandResult.Updated)
             {
                 return BadRequest();
             }
