@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.LevyTransferMatching.Abstractions.CustomExceptions;
 using SFA.DAS.LevyTransferMatching.Application.Commands.ClosePledge;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.Models;
@@ -56,22 +57,30 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.ClosePledg
         }
 
         [TestCase(2)]
-        [TestCase(null)]
-        public async Task Handle_Pledge_Close_Error_If_Pledge_Id_Cannot_Be_Found_Or_Null(int pledgeId)
+        public Task Handle_Pledge_Close_Error_If_Pledge_Id_Cannot_Be_Found(int pledgeId)
         {
-            if(pledgeId == 0) {
+            _command.PledgeId = pledgeId;
 
-                _command = null;
+            var exception = Assert.ThrowsAsync<AggregateNotFoundException>(
+                () => _handler.Handle(_command, CancellationToken.None));
 
-            } else {
+            Assert.IsNotEmpty(exception.Message);
+            return Task.CompletedTask;
+        }
 
-                _command.PledgeId = pledgeId;
+        [TestCase(1)]
+        public Task Handle_Pledge_Where_Pledge_Is_Already_Closed_Error(int pledgeId)
+        {
+            _pledge.SetValue(x => x.Status, PledgeStatus.Closed);
+            _repository.Setup(x => x.Get(_pledge.Id)).ReturnsAsync(_pledge);
 
-            }
-            
-            var result = await _handler.Handle(_command, CancellationToken.None);
-            
-            Assert.IsFalse(result.Updated);
+            _command.PledgeId = pledgeId;
+
+            var exception = Assert.ThrowsAsync<InvalidOperationException>(
+                () => _handler.Handle(_command, CancellationToken.None));
+
+            Assert.IsNotEmpty(exception.Message);
+            return Task.CompletedTask;
         }
     }
 }

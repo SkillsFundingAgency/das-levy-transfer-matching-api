@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.LevyTransferMatching.Abstractions.CustomExceptions;
 using SFA.DAS.LevyTransferMatching.Api.Models.ClosePledge;
 using SFA.DAS.LevyTransferMatching.Api.Models.CreatePledge;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetPledge;
@@ -118,23 +120,24 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         }
 
         [HttpPost]
-        [Route("pledges/close/{pledgeId}")]
+        [Route("pledges/{pledgeId}/close")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> ClosePledge(int pledgeId)
         {
-            var commandResult = await _mediator.Send(new ClosePledgeCommand
+            try
             {
-                PledgeId = pledgeId,
-            });
+                var commandResult = await _mediator.Send(new ClosePledgeCommand
+                {
+                    PledgeId = pledgeId,
+                });
 
-            if (commandResult == null || !commandResult.Updated)
+                return Ok(commandResult);
+
+            } catch (AggregateNotFoundException)
             {
-                return BadRequest();
-            }
-
-            return Ok(commandResult);
-
+                return NotFound();
+            } 
         }
 
         [HttpPost]

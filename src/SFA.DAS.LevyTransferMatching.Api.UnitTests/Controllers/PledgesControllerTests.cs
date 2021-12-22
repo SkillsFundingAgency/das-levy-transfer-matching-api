@@ -19,6 +19,8 @@ using SFA.DAS.LevyTransferMatching.Api.Models.Pledges;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitPledge;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreditPledge;
 using SFA.DAS.LevyTransferMatching.Application.Commands.ClosePledge;
+using System;
+using SFA.DAS.LevyTransferMatching.Abstractions.CustomExceptions;
 
 namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
 {
@@ -187,20 +189,19 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         }
 
         [Test]
-        public async Task POST_Close_A_Pledge_By_PledgeId_Returns_BadRequest()
+        public async Task POST_Close_A_Pledge_By_PledgeId_Returns_NotFound()
         {
             var pledgeId = _fixture.Create<int>();
+            var aggregateNotFoundException = _fixture.Create<AggregateNotFoundException>();
 
             _mockMediator
                 .Setup(x => x.Send(It.IsAny<ClosePledgeCommand>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((ClosePledgeResult)null);
+                .Throws(aggregateNotFoundException);
 
             var actionResult = await _pledgesController.ClosePledge(pledgeId);
-            
-            Assert.IsInstanceOf<BadRequestResult>(actionResult);
-            
-        }
 
+            Assert.IsInstanceOf<NotFoundResult>(actionResult);
+        }
 
         [Test]
         public async Task GET_All_Pledges_Returned()

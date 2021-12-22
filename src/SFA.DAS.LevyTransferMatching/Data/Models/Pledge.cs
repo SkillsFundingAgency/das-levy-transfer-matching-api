@@ -91,9 +91,17 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             RemainingAmount += creditAmount;
         }
 
-        public void ClosePledge()
+        public void ClosePledge(UserInfo userInfo)
         {
-            Status = PledgeStatus.Closed;
+            StartTrackingSession(UserAction.ClosePledge, userInfo);
+            ChangeTrackingSession.TrackUpdate(this);
+
+            if (Status == PledgeStatus.Active) {
+                Status = PledgeStatus.Closed;
+            } else
+            {
+                throw new InvalidOperationException($"The Pledge Id: {Id} is already closed");
+            }
         }
 
         private void ValidateLocationIds(IEnumerable<int> locationIds)
