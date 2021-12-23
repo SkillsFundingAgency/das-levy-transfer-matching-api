@@ -93,15 +93,14 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
         public void ClosePledge(UserInfo userInfo)
         {
+            if (Status != PledgeStatus.Active)
+            {
+                throw new InvalidOperationException($"Unable to close Pledge {Id} status {Status}");
+            }
+
             StartTrackingSession(UserAction.ClosePledge, userInfo);
             ChangeTrackingSession.TrackUpdate(this);
-
-            if (Status == PledgeStatus.Active) {
-                Status = PledgeStatus.Closed;
-            } else
-            {
-                throw new InvalidOperationException($"The Pledge Id: {Id} is already closed");
-            }
+            Status = PledgeStatus.Closed;
         }
 
         private void ValidateLocationIds(IEnumerable<int> locationIds)

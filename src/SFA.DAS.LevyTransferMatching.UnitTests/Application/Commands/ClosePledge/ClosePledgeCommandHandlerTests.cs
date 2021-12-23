@@ -37,13 +37,15 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.ClosePledg
 
             _command = new ClosePledgeCommand
             {
-                PledgeId = _pledge.Id
+                PledgeId = _pledge.Id,
+                UserId = _fixture.Create<string>(),
+                UserDisplayName = _fixture.Create<string>()
             };
 
             _repository = new Mock<IPledgeRepository>();
             _repository.Setup(x => x.Get(_pledge.Id)).ReturnsAsync(_pledge);
 
-            _handler = new ClosePledgeCommandHandler(_repository.Object, Mock.Of<ILogger<ClosePledgeCommandHandler>>());
+            _handler = new ClosePledgeCommandHandler(_repository.Object);
         }
 
         [TestCase(1)]
@@ -61,7 +63,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.ClosePledg
         {
             _command.PledgeId = pledgeId;
 
-            var exception = Assert.ThrowsAsync<AggregateNotFoundException>(
+            var exception = Assert.ThrowsAsync<AggregateNotFoundException<Pledge>>(
                 () => _handler.Handle(_command, CancellationToken.None));
 
             Assert.IsNotEmpty(exception.Message);

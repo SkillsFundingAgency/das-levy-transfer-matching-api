@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.LevyTransferMatching.Abstractions.CustomExceptions;
-using SFA.DAS.LevyTransferMatching.Api.Models.ClosePledge;
 using SFA.DAS.LevyTransferMatching.Api.Models.CreatePledge;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetPledge;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetPledges;
@@ -17,6 +16,7 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.DebitPledge;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
+using SFA.DAS.LevyTransferMatching.Data.Models;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
@@ -123,18 +123,20 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         [Route("pledges/{pledgeId}/close")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> ClosePledge(int pledgeId)
+        public async Task<IActionResult> ClosePledge(int pledgeId, [FromBody] ClosePledgeRequest request)
         {
             try
             {
-                var commandResult = await _mediator.Send(new ClosePledgeCommand
+                await _mediator.Send(new ClosePledgeCommand
                 {
                     PledgeId = pledgeId,
+                    UserId = request.UserId,
+                    UserDisplayName = request.UserDisplayName
                 });
 
-                return Ok(commandResult);
+                return Ok();
 
-            } catch (AggregateNotFoundException)
+            } catch (AggregateNotFoundException<Pledge>)
             {
                 return NotFound();
             } 
