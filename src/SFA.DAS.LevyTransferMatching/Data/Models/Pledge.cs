@@ -16,6 +16,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         public Pledge(EmployerAccount employerAccount, CreatePledgeProperties properties, UserInfo userInfo)
         {
             EmployerAccount = employerAccount;
+            EmployerAccountId = employerAccount.Id;
             Amount = properties.Amount;
             RemainingAmount = properties.Amount;
             IsNamePublic = properties.IsNamePublic;
@@ -33,6 +34,8 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
                 ChangeTrackingSession.TrackInsert(location);
             }
         }
+
+        public long EmployerAccountId { get; private set; }
 
         public EmployerAccount EmployerAccount { get; private set; }
 

@@ -14,10 +14,10 @@ using SFA.DAS.NServiceBus.Services;
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Domain.EventHandlers
 {
     [TestFixture]
-    public class ApplicationApprovedHandlerTests
+    public class ApplicationRejectedHandlerTests
     {
-        private ApplicationApprovedHandler _handler;
-        private ApplicationApproved _event;
+        private ApplicationRejectedHandler _handler;
+        private ApplicationRejected _event;
         private Mock<IEventPublisher> _eventPublisher;
         private readonly Fixture _fixture = new Fixture();
         private Mock<IPledgeRepository> _pledgeRepository;
@@ -26,19 +26,19 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Domain.EventHandlers
         [SetUp]
         public void Setup()
         {
-            _event = _fixture.Create<ApplicationApproved>();
+            _event = _fixture.Create<ApplicationRejected>();
 
             _transferSenderId = _fixture.Create<long>();
 
             _eventPublisher = new Mock<IEventPublisher>();
-            _eventPublisher.Setup(x => x.Publish(It.IsAny<ApplicationApprovedEvent>()));
+            _eventPublisher.Setup(x => x.Publish(It.IsAny<ApplicationRejectedEvent>()));
 
             _pledgeRepository = new Mock<IPledgeRepository>();
             _pledgeRepository.Setup(x => x.Get(It.Is<int>(p => p == _event.PledgeId)))
                 .ReturnsAsync(() => new Pledge(EmployerAccount.New(_transferSenderId, "Test Sender"),
                     new CreatePledgeProperties(), UserInfo.System));
 
-            _handler = new ApplicationApprovedHandler(_eventPublisher.Object, _pledgeRepository.Object);
+            _handler = new ApplicationRejectedHandler(_eventPublisher.Object, _pledgeRepository.Object);
         }
 
         [Test]
@@ -46,10 +46,10 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Domain.EventHandlers
         {
             await _handler.Handle(_event, CancellationToken.None);
 
-            _eventPublisher.Verify(x => x.Publish(It.Is<ApplicationApprovedEvent>(e =>
+            _eventPublisher.Verify(x => x.Publish(It.Is<ApplicationRejectedEvent>(e =>
                     e.ApplicationId == _event.ApplicationId &&
                     e.PledgeId == _event.PledgeId &&
-                    e.ApprovedOn == _event.ApprovedOn &&
+                    e.RejectedOn == _event.RejectedOn &&
                     e.Amount == _event.Amount &&
                     e.TransferSenderId == _transferSenderId)));
         }
