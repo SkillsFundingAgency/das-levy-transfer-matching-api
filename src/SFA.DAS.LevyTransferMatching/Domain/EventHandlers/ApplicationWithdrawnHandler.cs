@@ -8,26 +8,25 @@ using SFA.DAS.NServiceBus.Services;
 
 namespace SFA.DAS.LevyTransferMatching.Domain.EventHandlers
 {
-    public class ApplicationApprovedHandler : IDomainEventHandler<ApplicationApproved>
+    public class ApplicationWithdrawnHandler : IDomainEventHandler<ApplicationWithdrawn>
     {
         private readonly IEventPublisher _eventPublisher;
         private readonly IPledgeRepository _pledgeRepository;
 
-        public ApplicationApprovedHandler(IEventPublisher eventPublisher, IPledgeRepository pledgeRepository)
+        public ApplicationWithdrawnHandler(IEventPublisher eventPublisher, IPledgeRepository pledgeRepository)
         {
             _eventPublisher = eventPublisher;
             _pledgeRepository = pledgeRepository;
         }
 
-        public async Task Handle(ApplicationApproved @event, CancellationToken cancellationToken = default)
+        public async Task Handle(ApplicationWithdrawn @event, CancellationToken cancellationToken = default)
         {
             var pledge = await _pledgeRepository.Get(@event.PledgeId);
 
             var senderId = pledge.EmployerAccountId;
 
-            await _eventPublisher.Publish(new ApplicationApprovedEvent(@event.ApplicationId, @event.PledgeId,
-                @event.ApprovedOn,
-                @event.Amount,
+            await _eventPublisher.Publish(new ApplicationWithdrawnEvent(@event.ApplicationId, @event.PledgeId,
+                @event.WithdrawnOn,
                 senderId));
         }
     }
