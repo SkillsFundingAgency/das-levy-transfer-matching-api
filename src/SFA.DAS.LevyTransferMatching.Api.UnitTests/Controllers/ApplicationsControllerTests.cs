@@ -251,6 +251,26 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         }
 
         [Test]
+        public async Task Get_Returns_Not_Empty_Applications_By_Status()
+        {
+            var applicationStatusFilter = _fixture.Create<Data.Enums.ApplicationStatus>();
+            _mediator.Setup(x => x.Send(It.Is<GetApplicationsQuery>(query => query.ApplicationStatusFilter == applicationStatusFilter), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new GetApplicationsResult(new[]
+            {
+                new GetApplicationsResult.Application()
+            }));
+
+            var actionResult = await _applicationsController.GetApplications(null, null, applicationStatusFilter);
+            var result = actionResult as OkObjectResult;
+            Assert.IsNotNull(result);
+            var response = result.Value as GetApplicationsResponse;
+            Assert.IsNotNull(response);
+
+            var apps = response.Applications.ToList();
+            Assert.AreEqual(1, response.Applications.Count());
+        }
+
+        [Test]
         public async Task Post_AcceptFunding_Returns_No_Content()
         {
             // Arrange
