@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
 using Moq;
@@ -21,7 +22,9 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Domain.EventHandlers
         private Mock<IEventPublisher> _eventPublisher;
         private readonly Fixture _fixture = new Fixture();
         private Mock<IPledgeRepository> _pledgeRepository;
+        private Mock<IApplicationRepository> _applicationRepository;
         private long _transferSenderId;
+        private long _transferReceiverId;
 
         [SetUp]
         public void Setup()
@@ -29,16 +32,27 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Domain.EventHandlers
             _event = _fixture.Create<ApplicationApproved>();
 
             _transferSenderId = _fixture.Create<long>();
+            _transferReceiverId = _fixture.Create<long>();
 
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<ApplicationApprovedEvent>()));
 
+            var pledge = new Pledge(EmployerAccount.New(_transferSenderId, "Test Sender"), new CreatePledgeProperties(), UserInfo.System);
+
             _pledgeRepository = new Mock<IPledgeRepository>();
             _pledgeRepository.Setup(x => x.Get(It.Is<int>(p => p == _event.PledgeId)))
-                .ReturnsAsync(() => new Pledge(EmployerAccount.New(_transferSenderId, "Test Sender"),
-                    new CreatePledgeProperties(), UserInfo.System));
+                .ReturnsAsync(() => pledge);
 
-            _handler = new ApplicationApprovedHandler(_eventPublisher.Object, _pledgeRepository.Object);
+            var applicationProperties = new CreateApplicationProperties();
+            applicationProperties.EmailAddresses = new List<string>();
+
+            _applicationRepository = new Mock<IApplicationRepository>();
+            _applicationRepository.Setup(x => x.Get(It.Is<int>(p => p == _event.ApplicationId), 
+                                                    It.IsAny<int?>(), It.IsAny<long?>()))
+                .ReturnsAsync(() => new LevyTransferMatching.Data.Models.Application(It.IsAny<Pledge>(), EmployerAccount.New(_transferReceiverId, "Test Receiver"),
+                 applicationProperties, UserInfo.System));
+
+            _handler = new ApplicationApprovedHandler(_eventPublisher.Object, _pledgeRepository.Object, _applicationRepository.Object);
         }
 
         [Test]
@@ -51,7 +65,8 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Domain.EventHandlers
                     e.PledgeId == _event.PledgeId &&
                     e.ApprovedOn == _event.ApprovedOn &&
                     e.Amount == _event.Amount &&
-                    e.TransferSenderId == _transferSenderId)));
+                    e.TransferSenderId == _transferSenderId &&
+                    e.TransferReceiverId == _transferReceiverId)));
         }
     }
 }
