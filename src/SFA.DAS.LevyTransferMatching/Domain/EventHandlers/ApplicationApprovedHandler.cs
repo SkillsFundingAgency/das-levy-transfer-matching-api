@@ -12,35 +12,23 @@ namespace SFA.DAS.LevyTransferMatching.Domain.EventHandlers
     {
         private readonly IEventPublisher _eventPublisher;
         private readonly IPledgeRepository _pledgeRepository;
-        private readonly IApplicationRepository _applicationRepository;
 
-        public ApplicationApprovedHandler(IEventPublisher eventPublisher, IPledgeRepository pledgeRepository, IApplicationRepository applicationRepository)
+        public ApplicationApprovedHandler(IEventPublisher eventPublisher, IPledgeRepository pledgeRepository)
         {
             _eventPublisher = eventPublisher;
             _pledgeRepository = pledgeRepository;
-            _applicationRepository = applicationRepository;
         }
 
         public async Task Handle(ApplicationApproved @event, CancellationToken cancellationToken = default)
         {
-            var pledgeTask = _pledgeRepository.Get(@event.PledgeId);
+            var pledge = await _pledgeRepository.Get(@event.PledgeId);
 
-            var applicationTask = _applicationRepository.Get(@event.ApplicationId);
-
-            await Task.WhenAll(pledgeTask, applicationTask);
-
-            var senderId = pledgeTask.Result.EmployerAccountId;
-
-            // TODO - Get other values as well for the email ...
-            // var emailAddresses = applicationTask.Result.EmailAddresses;
-
-            var receiverId = applicationTask.Result.EmployerAccount.Id;
+            var senderId = pledge.EmployerAccountId;
 
             await _eventPublisher.Publish(new ApplicationApprovedEvent(@event.ApplicationId, @event.PledgeId,
                 @event.ApprovedOn,
                 @event.Amount,
-                senderId,
-                receiverId));
+                senderId));
         }
     }
 }
