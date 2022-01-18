@@ -60,6 +60,8 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
                 ChangeTrackingSession.TrackInsert(location);
             }
 
+            AddEvent(() => new ApplicationCreated(Id, Pledge.Id, CreatedOn));
+
             AddStatusHistory(CreatedOn);
         }
 
@@ -177,14 +179,15 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         {
             if (Status != ApplicationStatus.Pending)
             {
-                throw new InvalidOperationException($"Unable to withraw application with Id: {Id}. Application status is {Status} when it should be {ApplicationStatus.Pending}");
+                throw new InvalidOperationException($"Unable to withdraw application with Id: {Id}. Application status is {Status} when it should be {ApplicationStatus.Pending}");
             }
 
             StartTrackingSession(UserAction.WithdrawApplication, userInfo);
             ChangeTrackingSession.TrackUpdate(this);
             Status = ApplicationStatus.Withdrawn;
             UpdatedOn = DateTime.UtcNow;
-
+            AddEvent(new ApplicationWithdrawn(Id, PledgeId, UpdatedOn.Value));
+            
             AddStatusHistory(UpdatedOn.Value);
         }
 
