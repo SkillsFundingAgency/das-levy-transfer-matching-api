@@ -18,7 +18,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Domain.EventHandlers
     public class ApplicationApprovedReceiverNotificationHandlerTests
     {
         private ApplicationApprovedReceiverNotificationHandler _handler;
-        private ApplicationApproved _event;
+        private ApplicationApprovedReceiverNotification _event;
         private Mock<IEventPublisher> _eventPublisher;
         private readonly Fixture _fixture = new Fixture();
         private Mock<IPledgeRepository> _pledgeRepository;
@@ -29,14 +29,13 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Domain.EventHandlers
         [SetUp]
         public void Setup()
         {
-            // TODO: Use ApplicationApprovedReceiverNotification (create new class) instead of ApplicationApproved?
-            _event = _fixture.Create<ApplicationApproved>();
+            _event = _fixture.Create<ApplicationApprovedReceiverNotification>();
 
             _transferSenderId = _fixture.Create<long>();
             _transferReceiverId = _fixture.Create<long>();
 
             _eventPublisher = new Mock<IEventPublisher>();
-            _eventPublisher.Setup(x => x.Publish(It.IsAny<ApplicationApprovedEvent>()));
+            _eventPublisher.Setup(x => x.Publish(It.IsAny<ApplicationApprovedReceiverNotificationEvent>()));
 
             var pledge = new Pledge(EmployerAccount.New(_transferSenderId, "Test Sender"), new CreatePledgeProperties(), UserInfo.System);
 
@@ -64,9 +63,9 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Domain.EventHandlers
             _eventPublisher.Verify(x => x.Publish(It.Is<ApplicationApprovedReceiverNotificationEvent>(e =>
                     e.ApplicationId == _event.ApplicationId &&
                     e.PledgeId == _event.PledgeId &&
-                    e.ApprovedOn == _event.ApprovedOn &&
                     e.TransferSenderId == _transferSenderId &&
-                    e.TransferReceiverId == _transferReceiverId)));
+                    e.TransferReceiverId == _transferReceiverId &&
+                    e.ReceiverAccountId == _event.ReceiverAccountId)));
         }
     }
 }
