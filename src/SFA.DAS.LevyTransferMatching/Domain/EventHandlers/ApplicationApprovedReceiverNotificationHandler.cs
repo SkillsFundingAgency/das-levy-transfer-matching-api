@@ -31,8 +31,6 @@ namespace SFA.DAS.LevyTransferMatching.Domain.EventHandlers
 
             var senderId = pledgeTask.Result.EmployerAccountId;
 
-            // TODO - No need to set email contents here?
-
             var receiverId = applicationTask.Result.EmployerAccount.Id;
 
             await _eventPublisher.Publish(new ApplicationApprovedReceiverNotificationEvent(@event.ApplicationId, @event.PledgeId, senderId, receiverId, @event.ReceiverAccountId));
