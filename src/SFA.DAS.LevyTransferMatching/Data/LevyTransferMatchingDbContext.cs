@@ -23,6 +23,8 @@ namespace SFA.DAS.LevyTransferMatching.Data
             modelBuilder.Entity<Pledge>().HasMany(x => x.Locations).WithOne();
             modelBuilder.Entity<Pledge>().Metadata.FindNavigation(nameof(Pledge.Locations))
                 .SetPropertyAccessMode(PropertyAccessMode.Field);
+            modelBuilder.Entity<Pledge>().Metadata.FindNavigation(nameof(Pledge.Ledger))
+                .SetPropertyAccessMode(PropertyAccessMode.Field);
 
             modelBuilder.Entity<PledgeLocation>().ToTable("PledgeLocation");
 
@@ -44,6 +46,9 @@ namespace SFA.DAS.LevyTransferMatching.Data
 
             modelBuilder.Entity<ApplicationStatusHistory>().ToTable("ApplicationStatusHistory");
             modelBuilder.Entity<ApplicationStatusHistory>().HasKey(x => x.Id);
+
+            modelBuilder.Entity<PledgeLedger>().ToTable("PledgeLedger");
+            modelBuilder.Entity<PledgeLedger>().HasKey(x => x.Id);
 
             modelBuilder.Entity<EmployerAccount>().ToTable("EmployerAccount");
             modelBuilder.Entity<EmployerAccount>().HasKey(x => x.Id);

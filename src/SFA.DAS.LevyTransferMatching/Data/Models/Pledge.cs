@@ -11,9 +11,12 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 {
     public class Pledge : AggregateRoot<int>
     {
-        protected Pledge() {}
+        protected Pledge()
+        {
+            _ledger = new List<PledgeLedger>();
+        }
 
-        public Pledge(EmployerAccount employerAccount, CreatePledgeProperties properties, UserInfo userInfo)
+        public Pledge(EmployerAccount employerAccount, CreatePledgeProperties properties, UserInfo userInfo) : this()
         {
             EmployerAccount = employerAccount;
             EmployerAccountId = employerAccount.Id;
@@ -33,6 +36,8 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             {
                 ChangeTrackingSession.TrackInsert(location);
             }
+
+            AddLedgerItem(UserAction.CreatePledge, Amount);
         }
 
         public long EmployerAccountId { get; private set; }
@@ -60,6 +65,9 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         private readonly List<Application> _applications;
         public IReadOnlyCollection<Application> Applications => _applications;
 
+        private readonly List<PledgeLedger> _ledger;
+        public IReadOnlyCollection<PledgeLedger> Ledger => _ledger;
+
         public byte[] RowVersion { get; private set; }
 
         public Application CreateApplication(EmployerAccount account, CreateApplicationProperties properties, UserInfo userInfo)
@@ -84,14 +92,16 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             StartTrackingSession(UserAction.DebitPledge, userInfo);
             ChangeTrackingSession.TrackUpdate(this);
             RemainingAmount -= debitAmount;
+            AddLedgerItem(UserAction.DebitPledge, debitAmount, applicationId);
             return true;
         }
 
-        public void Credit(int creditAmount, UserInfo userInfo)
+        public void Credit(int creditAmount, int applicationId, UserInfo userInfo)
         {
             StartTrackingSession(UserAction.CreditPledge, userInfo);
             ChangeTrackingSession.TrackUpdate(this);
             RemainingAmount += creditAmount;
+            AddLedgerItem(UserAction.CreatePledge, creditAmount, applicationId);
         }
 
         private void ValidateLocationIds(IEnumerable<int> locationIds)
@@ -105,6 +115,12 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
                     throw new InvalidOperationException($"Location {locationId} is not valid for pledge {Id}");
                 }
             }
+        }
+
+        private void AddLedgerItem(UserAction userAction, int amount, int? applicationId = null)
+        {
+            var item = new PledgeLedger(applicationId, userAction.ToString(), amount,RemainingAmount);
+            _ledger.Add(item);
         }
     }
 }
