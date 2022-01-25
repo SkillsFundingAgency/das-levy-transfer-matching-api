@@ -76,7 +76,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
             {
                 PledgeId = pledgeId,
                 ApplicationId = request.ApplicationId,
-                Amount = request.Amount
+                Amount = request.Amount,
+                UserAction = request.UserAction
             });
 
             if (!result.IsSuccess)
@@ -123,7 +124,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
             {
                 PledgeId = pledgeId,
                 ApplicationId = request.ApplicationId,
-                Amount = request.Amount
+                Amount = request.Amount,
+                UserAction = request.UserAction
             });
 
             return Ok();

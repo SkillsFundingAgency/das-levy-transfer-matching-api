@@ -81,7 +81,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             return RemainingAmount >= debitAmount;
         }
 
-        public bool Debit(int debitAmount, int applicationId, UserInfo userInfo)
+        public bool Debit(int debitAmount, int applicationId, UserAction userAction, UserInfo userInfo)
         {
             if (!CanDebit(debitAmount))
             {
@@ -89,19 +89,19 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
                 return false;
             }
 
-            StartTrackingSession(UserAction.DebitPledge, userInfo);
+            StartTrackingSession(userAction, userInfo);
             ChangeTrackingSession.TrackUpdate(this);
             RemainingAmount -= debitAmount;
-            AddLedgerItem(UserAction.DebitPledge, debitAmount, applicationId);
+            AddLedgerItem(userAction, -debitAmount, applicationId);
             return true;
         }
 
-        public void Credit(int creditAmount, int applicationId, UserInfo userInfo)
+        public void Credit(int creditAmount, int applicationId, UserAction userAction, UserInfo userInfo)
         {
-            StartTrackingSession(UserAction.CreditPledge, userInfo);
+            StartTrackingSession(userAction, userInfo);
             ChangeTrackingSession.TrackUpdate(this);
             RemainingAmount += creditAmount;
-            AddLedgerItem(UserAction.CreatePledge, creditAmount, applicationId);
+            AddLedgerItem(userAction, creditAmount, applicationId);
         }
 
         private void ValidateLocationIds(IEnumerable<int> locationIds)

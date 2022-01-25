@@ -5,13 +5,11 @@
         CreatePledge,
         CreateApplication,
         ApproveApplication,
-        DebitPledge,
         UndoApplicationApproval,
         AcceptFunding,
         DebitApplication,
         RejectApplication,
         DeclineFunding,
-        CreditPledge,
         WithdrawApplication
     }
 }

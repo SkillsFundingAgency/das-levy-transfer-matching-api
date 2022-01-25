@@ -22,7 +22,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.DebitPledge
         {
             var pledge = await _repository.Get(request.PledgeId);
 
-            var success = pledge.Debit(request.Amount, request.ApplicationId, UserInfo.System);
+            var success = pledge.Debit(request.Amount, request.ApplicationId, request.UserAction, UserInfo.System);
 
             if (!success)
             {
