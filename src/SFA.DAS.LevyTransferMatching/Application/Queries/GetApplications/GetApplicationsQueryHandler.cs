@@ -21,6 +21,11 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
         public async Task<GetApplicationsResult> Handle(GetApplicationsQuery request, CancellationToken cancellationToken)
         {
             IQueryable<Data.Models.Application> applicationsQuery = _dbContext.Applications;
+            if (request.ApplicationStatusFilter.HasValue)
+            {
+                applicationsQuery = applicationsQuery.Where(x => x.Status == request.ApplicationStatusFilter);
+            }
+
             if (request.PledgeId.HasValue)
             {
                 applicationsQuery = applicationsQuery.Where(x => x.Pledge.Id == request.PledgeId);
@@ -63,7 +68,9 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                     IsNamePublic = x.Pledge.IsNamePublic,
                     Locations = x.ApplicationLocations.Select(location => new GetApplicationsResult.Application.ApplicationLocation { Id = location.Id, PledgeLocationId = location.PledgeLocationId }).ToList(),
                     AdditionalLocations = x.AdditionalLocation,
-                    SpecificLocation = x.SpecificLocation
+                    SpecificLocation = x.SpecificLocation,
+                    SenderEmployerAccountId = x.Pledge.EmployerAccount.Id,
+                    SenderEmployerAccountName = x.Pledge.EmployerAccount.Name
                 })
                 .ToListAsync(cancellationToken));
         }

@@ -23,6 +23,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public IEnumerable<string> EmailAddresses { get; set; }
+        public DateTime CreatedOn { get; set; }
         public string BusinessWebsite { get; set; }
         public string EmployerAccountName { get; set; }
         public List<ApplicationLocation> Locations { get; set; }
@@ -52,6 +53,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
                 BusinessWebsite = getApplicationResult.BusinessWebsite,
                 Details = getApplicationResult.Details,
                 EmailAddresses = getApplicationResult.EmailAddresses,
+                CreatedOn = getApplicationResult.CreatedOn,
                 FirstName = getApplicationResult.FirstName,
                 HasTrainingProvider = getApplicationResult.HasTrainingProvider,
                 LastName = getApplicationResult.LastName,

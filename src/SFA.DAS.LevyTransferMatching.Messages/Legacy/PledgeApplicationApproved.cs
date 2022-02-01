@@ -1,10 +1,16 @@
 ﻿using System;
 
-namespace SFA.DAS.LevyTransferMatching.Messages.Events
+namespace SFA.DAS.LevyTransferMatching.Messages.Legacy
 {
-    public class ApplicationApprovedEvent
+    [MessageGroup("pledge_application_approved")]
+    public class PledgeApplicationApproved
     {
-        public ApplicationApprovedEvent(int applicationId, int pledgeId, DateTime approvedOn, int amount, long transferSenderId)
+        public PledgeApplicationApproved()
+        {
+            
+        }
+
+        public PledgeApplicationApproved(int applicationId, int pledgeId, DateTime approvedOn, int amount, long transferSenderId)
         {
             ApplicationId = applicationId;
             PledgeId = pledgeId;

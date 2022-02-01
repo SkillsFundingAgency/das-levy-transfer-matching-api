@@ -2,21 +2,19 @@
 
 namespace SFA.DAS.LevyTransferMatching.Messages.Events
 {
-    public class ApplicationApprovedEvent
+    public class ApplicationWithdrawnEvent
     {
-        public ApplicationApprovedEvent(int applicationId, int pledgeId, DateTime approvedOn, int amount, long transferSenderId)
+        public ApplicationWithdrawnEvent(int applicationId, int pledgeId, DateTime withdrawnOn, long transferSenderId)
         {
             ApplicationId = applicationId;
             PledgeId = pledgeId;
-            Amount = amount;
-            ApprovedOn = approvedOn;
+            WithdrawnOn = withdrawnOn;
             TransferSenderId = transferSenderId;
         }
 
         public int ApplicationId { get; }
         public int PledgeId { get; }
-        public DateTime ApprovedOn { get; }
-        public int Amount { get; }
+        public DateTime WithdrawnOn { get; }
         public long TransferSenderId { get; set; }
     }
 }

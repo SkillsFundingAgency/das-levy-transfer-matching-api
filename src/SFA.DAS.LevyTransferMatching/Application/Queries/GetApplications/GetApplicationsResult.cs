@@ -42,6 +42,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
             public List<ApplicationLocation> Locations { get; set; }
             public string SpecificLocation { get; set; }
             public string AdditionalLocations { get; set; }
+            public long SenderEmployerAccountId { get; set; }
+            public string SenderEmployerAccountName { get; set; }
             public class ApplicationLocation
             {
                 public int Id { get; set; }

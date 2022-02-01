@@ -41,7 +41,9 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications
                     IsNamePublic = application.IsNamePublic,
                     Locations = application.Locations?.Select(l => new Application.ApplicationLocation { Id = l.Id, PledgeLocationId = l.PledgeLocationId}),
                     SpecificLocation = application.SpecificLocation,
-                    AdditionalLocations = application.AdditionalLocations
+                    AdditionalLocations = application.AdditionalLocations,
+                    SenderEmployerAccountId = application.SenderEmployerAccountId,
+                    SenderEmployerAccountName = application.SenderEmployerAccountName
                 })
             };
 
@@ -78,6 +80,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications
             public IEnumerable<ApplicationLocation> Locations { get; set; }
             public string SpecificLocation { get; set; }
             public string AdditionalLocations { get; set; }
+            public long SenderEmployerAccountId { get; set; }
+            public string SenderEmployerAccountName { get; set; }
 
             public class ApplicationLocation
             {
