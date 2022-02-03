@@ -46,6 +46,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 BusinessWebsite = application.BusinessWebsite,
                 Details = application.Details,
                 EmailAddresses = application.EmailAddresses.Select(x => x.EmailAddress),
+                CreatedOn = application.CreatedOn,
                 FirstName = application.FirstName,
                 HasTrainingProvider = application.HasTrainingProvider,
                 LastName = application.LastName,
