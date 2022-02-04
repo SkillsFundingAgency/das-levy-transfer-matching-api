@@ -23,15 +23,11 @@ namespace SFA.DAS.LevyTransferMatching.Domain.EventHandlers
 
         public async Task Handle(ApplicationApprovedReceiverNotification @event, CancellationToken cancellationToken = default)
         {
-            var pledgeTask = _pledgeRepository.Get(@event.PledgeId);
+            var pledge = await _pledgeRepository.Get(@event.PledgeId);
+            var application = await _applicationRepository.Get(@event.ApplicationId);
 
-            var applicationTask = _applicationRepository.Get(@event.ApplicationId);
-
-            await Task.WhenAll(pledgeTask, applicationTask);
-
-            var senderId = pledgeTask.Result.EmployerAccountId;
-
-            var receiverId = applicationTask.Result.EmployerAccount.Id;
+            var senderId = pledge.EmployerAccountId;
+            var receiverId = application.EmployerAccount.Id;
 
             await _eventPublisher.Publish(new ApplicationApprovedReceiverNotificationEvent(@event.ApplicationId, @event.PledgeId, senderId, receiverId, @event.ReceiverAccountId));
         }
