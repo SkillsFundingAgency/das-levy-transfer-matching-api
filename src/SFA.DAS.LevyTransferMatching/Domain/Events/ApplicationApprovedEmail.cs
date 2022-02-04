@@ -3,9 +3,9 @@ using SFA.DAS.LevyTransferMatching.Abstractions.Events;
 
 namespace SFA.DAS.LevyTransferMatching.Domain.Events
 {
-    public class ApplicationApprovedReceiverNotification : IDomainEvent
+    public class ApplicationApprovedEmail : IDomainEvent
     {
-        public ApplicationApprovedReceiverNotification(int applicationId, int pledgeId, long receiverAccountId)
+        public ApplicationApprovedEmail(int applicationId, int pledgeId, long receiverAccountId)
         {
             ApplicationId = applicationId;
             PledgeId = pledgeId;

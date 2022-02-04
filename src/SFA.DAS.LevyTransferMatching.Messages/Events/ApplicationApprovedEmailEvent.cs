@@ -2,9 +2,9 @@
 
 namespace SFA.DAS.LevyTransferMatching.Messages.Events
 {
-    public class ApplicationApprovedReceiverNotificationEvent
+    public class ApplicationApprovedEmailEvent
     {
-        public ApplicationApprovedReceiverNotificationEvent(int applicationId, int pledgeId, long transferSenderId, long transferReceiverId, long receiverAccountId)
+        public ApplicationApprovedEmailEvent(int applicationId, int pledgeId, long transferSenderId, long transferReceiverId, long receiverAccountId)
         {
             ApplicationId = applicationId;
             PledgeId = pledgeId;

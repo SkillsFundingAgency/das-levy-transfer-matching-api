@@ -15,10 +15,10 @@ using SFA.DAS.NServiceBus.Services;
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Domain.EventHandlers
 {
     [TestFixture]
-    public class ApplicationApprovedReceiverNotificationHandlerTests
+    public class ApplicationApprovedEmailHandlerTests
     {
-        private ApplicationApprovedReceiverNotificationHandler _handler;
-        private ApplicationApprovedReceiverNotification _event;
+        private ApplicationApprovedEmailHandler _handler;
+        private ApplicationApprovedEmail _event;
         private Mock<IEventPublisher> _eventPublisher;
         private readonly Fixture _fixture = new Fixture();
         private Mock<IPledgeRepository> _pledgeRepository;
@@ -29,13 +29,13 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Domain.EventHandlers
         [SetUp]
         public void Setup()
         {
-            _event = _fixture.Create<ApplicationApprovedReceiverNotification>();
+            _event = _fixture.Create<ApplicationApprovedEmail>();
 
             _transferSenderId = _fixture.Create<long>();
             _transferReceiverId = _fixture.Create<long>();
 
             _eventPublisher = new Mock<IEventPublisher>();
-            _eventPublisher.Setup(x => x.Publish(It.IsAny<ApplicationApprovedReceiverNotificationEvent>()));
+            _eventPublisher.Setup(x => x.Publish(It.IsAny<ApplicationApprovedEmailEvent>()));
 
             var pledge = new Pledge(EmployerAccount.New(_transferSenderId, "Test Sender"), new CreatePledgeProperties(), UserInfo.System);
 
@@ -52,7 +52,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Domain.EventHandlers
                 .ReturnsAsync(() => new LevyTransferMatching.Data.Models.Application(It.IsAny<Pledge>(), EmployerAccount.New(_transferReceiverId, "Test Receiver"),
                  applicationProperties, UserInfo.System));
 
-            _handler = new ApplicationApprovedReceiverNotificationHandler(_eventPublisher.Object, _pledgeRepository.Object, _applicationRepository.Object);
+            _handler = new ApplicationApprovedEmailHandler(_eventPublisher.Object, _pledgeRepository.Object, _applicationRepository.Object);
         }
 
         [Test]
@@ -60,7 +60,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Domain.EventHandlers
         {
             await _handler.Handle(_event, CancellationToken.None);
 
-            _eventPublisher.Verify(x => x.Publish(It.Is<ApplicationApprovedReceiverNotificationEvent>(e =>
+            _eventPublisher.Verify(x => x.Publish(It.Is<ApplicationApprovedEmailEvent>(e =>
                     e.ApplicationId == _event.ApplicationId &&
                     e.PledgeId == _event.PledgeId &&
                     e.TransferSenderId == _transferSenderId &&
