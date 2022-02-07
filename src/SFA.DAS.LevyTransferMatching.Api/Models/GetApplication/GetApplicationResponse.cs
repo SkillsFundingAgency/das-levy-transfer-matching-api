@@ -26,6 +26,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
         public DateTime CreatedOn { get; set; }
         public string BusinessWebsite { get; set; }
         public string EmployerAccountName { get; set; }
+        public string SenderEmployerAccountName { get; set; }
         public List<ApplicationLocation> Locations { get; set; }
         public string AdditionalLocation { get; set; }
         public string SpecificLocation { get; set; }
@@ -67,6 +68,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
                 StandardRoute = getApplicationResult.StandardRoute,
                 StartDate = getApplicationResult.StartDate,
                 EmployerAccountName = getApplicationResult.EmployerAccountName,
+                SenderEmployerAccountName = getApplicationResult.SenderEmployerAccountName,
                 Locations = getApplicationResult.Locations.Select(x => new ApplicationLocation { PledgeLocationId = x.PledgeLocationId }).ToList(),
                 AdditionalLocation = getApplicationResult.AdditionalLocation,
                 SpecificLocation = getApplicationResult.SpecificLocation,
