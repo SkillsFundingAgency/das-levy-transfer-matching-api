@@ -18,6 +18,10 @@ using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
 using SFA.DAS.LevyTransferMatching.Api.Models.Pledges;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitPledge;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreditPledge;
+using SFA.DAS.LevyTransferMatching.Application.Commands.ClosePledge;
+using System;
+using SFA.DAS.LevyTransferMatching.Abstractions.CustomExceptions;
+using SFA.DAS.LevyTransferMatching.Data.Models;
 
 namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
 {
@@ -160,6 +164,39 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
                 x.Send(It.Is<CreditPledgeCommand>(command =>
                         command.PledgeId == pledgeId && command.Amount == request.Amount && command.ApplicationId == request.ApplicationId),
                 It.IsAny<CancellationToken>()));
+        }
+                
+        [Test]
+        public async Task POST_Close_A_Pledge_By_PledgeId()
+        {
+            var pledgeId = _fixture.Create<int>();
+            var request = _fixture.Create<ClosePledgeRequest>();
+            _mockMediator
+                .Setup(x => x.Send(It.IsAny<ClosePledgeCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(() => Unit.Value);
+
+            var actionResult = await _pledgesController.ClosePledge(pledgeId, request);
+            var okResult = actionResult as OkResult;
+            
+            Assert.IsNotNull(actionResult);
+            Assert.IsNotNull(okResult);
+            Assert.AreEqual(okResult.StatusCode, (int)HttpStatusCode.OK);
+        }
+
+        [Test]
+        public async Task POST_Close_A_Pledge_By_PledgeId_Returns_NotFound()
+        {
+            var pledgeId = _fixture.Create<int>();
+            var request = _fixture.Create<ClosePledgeRequest>();
+            var aggregateNotFoundException = _fixture.Create<AggregateNotFoundException<Pledge>>();
+
+            _mockMediator
+                .Setup(x => x.Send(It.IsAny<ClosePledgeCommand>(), It.IsAny<CancellationToken>()))
+                .Throws(aggregateNotFoundException);
+
+            var actionResult = await _pledgesController.ClosePledge(pledgeId, request);
+
+            Assert.IsInstanceOf<NotFoundResult>(actionResult);
         }
 
         [Test]
