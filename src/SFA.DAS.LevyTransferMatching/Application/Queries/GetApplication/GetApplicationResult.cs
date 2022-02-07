@@ -26,7 +26,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
         public IEnumerable<string> EmailAddresses { get; set; }
         public DateTime CreatedOn { get; set; }
         public string BusinessWebsite { get; set; }
-        public string EmployerAccountName { get; set; }
+        public string EmployerAccountName { get; set; }        
+        public string SenderEmployerAccountName { get; set; }
         public int AmountUsed { get; set; }
         public int NumberOfApprenticesUsed { get; set; }
         public string PledgeEmployerAccountName { get; set; }
