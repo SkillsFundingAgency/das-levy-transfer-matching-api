@@ -60,6 +60,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 StandardRoute = application.StandardRoute,
                 StartDate = application.StartDate,
                 EmployerAccountName = application.EmployerAccount.Name,
+                SenderEmployerAccountName = application.Pledge.EmployerAccount.Name,
                 AmountUsed = application.AmountUsed,
                 NumberOfApprenticesUsed = application.NumberOfApprenticesUsed,
                 PledgeEmployerAccountName = application.Pledge.EmployerAccount.Name,

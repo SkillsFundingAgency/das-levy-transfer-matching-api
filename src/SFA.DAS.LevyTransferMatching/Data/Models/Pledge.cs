@@ -53,6 +53,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
         public Sector Sectors { get; private set; }
         public PledgeStatus Status { get; private set; }
+        public DateTime? ClosedOn { get; private set; }
 
         private readonly List<PledgeLocation> _locations;
         public IReadOnlyCollection<PledgeLocation> Locations => _locations;
@@ -92,6 +93,19 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             StartTrackingSession(UserAction.CreditPledge, userInfo);
             ChangeTrackingSession.TrackUpdate(this);
             RemainingAmount += creditAmount;
+        }
+
+        public void ClosePledge(UserInfo userInfo)
+        {
+            if (Status != PledgeStatus.Active)
+            {
+                throw new InvalidOperationException($"Unable to close Pledge {Id} status {Status}");
+            }
+
+            StartTrackingSession(UserAction.ClosePledge, userInfo);
+            ChangeTrackingSession.TrackUpdate(this);
+            Status = PledgeStatus.Closed;
+            ClosedOn = DateTime.UtcNow;
         }
 
         private void ValidateLocationIds(IEnumerable<int> locationIds)
