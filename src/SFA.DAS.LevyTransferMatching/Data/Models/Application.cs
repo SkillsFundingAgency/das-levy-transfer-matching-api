@@ -234,5 +234,10 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
             UpdatedOn = DateTime.UtcNow;
         }
+
+        public void AddCostProjections(List<CostProjection> projections)
+        {
+            _applicationCostProjections.AddRange(projections.Select(x => new ApplicationCostProjection(x.FinancialYear, x.Amount)));
+        }
     }
 }
