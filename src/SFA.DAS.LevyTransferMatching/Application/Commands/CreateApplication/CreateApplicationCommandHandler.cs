@@ -5,6 +5,7 @@ using MediatR;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
+using SFA.DAS.LevyTransferMatching.Services;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
 {
@@ -13,20 +14,26 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
         private readonly IPledgeRepository _pledgeRepository;
         private readonly IEmployerAccountRepository _employerAccountRepository;
         private readonly IApplicationRepository _applicationRepository;
+        private readonly ICostProjectionService _costProjectionService;
 
         public CreateApplicationCommandHandler(IPledgeRepository pledgeRepository,
             IApplicationRepository applicationRepository,
-            IEmployerAccountRepository employerAccountRepository)
+            IEmployerAccountRepository employerAccountRepository,
+            ICostProjectionService costProjectionService)
         {
             _pledgeRepository = pledgeRepository;
             _applicationRepository = applicationRepository;
             _employerAccountRepository = employerAccountRepository;
+            _costProjectionService = costProjectionService;
         }
 
         public async Task<CreateApplicationCommandResult> Handle(CreateApplicationCommand request, CancellationToken cancellationToken)
         {
             var account = await _employerAccountRepository.Get(request.EmployerAccountId);
             var pledge = await _pledgeRepository.Get(request.PledgeId);
+
+            //var costProjections = _costProjectionService.GetCostProjections(request.StandardMaxFunding * request.NumberOfApprentices,
+                //request.StartDate, request.StandardDuration);
 
             var settings = new CreateApplicationProperties
             {
