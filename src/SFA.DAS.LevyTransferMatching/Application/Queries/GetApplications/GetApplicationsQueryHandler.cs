@@ -70,7 +70,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                     AdditionalLocations = x.AdditionalLocation,
                     SpecificLocation = x.SpecificLocation,
                     SenderEmployerAccountId = x.Pledge.EmployerAccount.Id,
-                    SenderEmployerAccountName = x.Pledge.EmployerAccount.Name
+                    SenderEmployerAccountName = x.Pledge.EmployerAccount.Name,
+                    CostProjections = x.ApplicationCostProjections.Select(p => new GetApplicationsResult.Application.CostProjection { FinancialYear = p.FinancialYear, Amount = p.Amount}).ToList()
                 })
                 .ToListAsync(cancellationToken));
         }

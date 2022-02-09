@@ -25,6 +25,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 .Include(x => x.EmployerAccount)
                 .Include(x => x.Pledge)
                 .Include(x => x.Pledge.EmployerAccount)
+                .Include(x => x.ApplicationCostProjections)
                 .Where(x => x.Id == request.ApplicationId)
                 .AsQueryable();
 
@@ -73,7 +74,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 PledgeId = application.PledgeId,
                 ReceiverEmployerAccountId = application.EmployerAccount.Id,
                 SenderEmployerAccountId = application.Pledge.EmployerAccount.Id,
-                AutomaticApproval = application.AutomaticApproval
+                AutomaticApproval = application.AutomaticApproval,
+                CostProjections = application.ApplicationCostProjections.Select(p => new GetApplicationResult.CostProjection { FinancialYear = p.FinancialYear, Amount = p.Amount }).ToList()
             };
 
             return result;

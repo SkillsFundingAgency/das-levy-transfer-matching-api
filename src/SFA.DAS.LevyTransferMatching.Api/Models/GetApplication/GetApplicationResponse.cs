@@ -30,7 +30,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
         public List<ApplicationLocation> Locations { get; set; }
         public string AdditionalLocation { get; set; }
         public string SpecificLocation { get; set; }
-          public int Amount { get; set; }
+        public int Amount { get; set; }
         public int TotalAmount { get; set; }
         public ApplicationStatus Status { get; set; }
         public int PledgeId { get; set; }
@@ -40,11 +40,18 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
         public int AmountUsed { get; set; }
         public int NumberOfApprenticesUsed { get; set; }
         public bool AutomaticApproval { get; set; }
+        public IEnumerable<CostProjection> CostProjections { get; set; }
 
         public class ApplicationLocation
         {
             public int Id { get; set; }
             public int PledgeLocationId { get; set; }
+        }
+
+        public class CostProjection
+        {
+            public string FinancialYear { get; set; }
+            public int Amount { get; set; }
         }
 
         public static implicit operator GetApplicationResponse(GetApplicationResult getApplicationResult)
@@ -81,7 +88,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
                 PledgeEmployerAccountName = getApplicationResult.PledgeEmployerAccountName,
                 AmountUsed = getApplicationResult.AmountUsed,
                 NumberOfApprenticesUsed = getApplicationResult.NumberOfApprenticesUsed,
-                AutomaticApproval = getApplicationResult.AutomaticApproval
+                AutomaticApproval = getApplicationResult.AutomaticApproval,
+                CostProjections = getApplicationResult.CostProjections?.Select(p => new CostProjection{ FinancialYear = p.FinancialYear, Amount = p.Amount })
             };
         }
     }
