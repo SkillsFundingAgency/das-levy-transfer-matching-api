@@ -12,6 +12,7 @@ using SFA.DAS.LevyTransferMatching.Data.Repositories;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 using SFA.DAS.LevyTransferMatching.Services;
+using SFA.DAS.LevyTransferMatching.Testing;
 using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreateApplication
@@ -93,9 +94,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreateAppl
             Assert.AreEqual(command.BusinessWebsite, _inserted.BusinessWebsite);
             Assert.AreEqual(command.NumberOfApprentices * command.StandardMaxFunding, _inserted.TotalAmount);
             CollectionAssert.AreEqual(command.EmailAddresses, _inserted.EmailAddresses.Select(x=> x.EmailAddress));
-
-            Assert.Fail("Assert inserted projects are same as those from service");
-
+            CompareHelper.AreEqualIgnoringTypes(_costProjections, _inserted.ApplicationCostProjections);
         }
     }
 }

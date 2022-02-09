@@ -26,5 +26,11 @@ namespace SFA.DAS.LevyTransferMatching.Data.ValueObjects
         public string BusinessWebsite { get; set; }
         public IEnumerable<string> EmailAddresses { get; set; }
         public IEnumerable<CostProjection> CostProjections { get; set; }
+
+        public CreateApplicationProperties()
+        {
+            EmailAddresses = new List<string>();
+            CostProjections = new List<CostProjection>();
+        }
     }
 }

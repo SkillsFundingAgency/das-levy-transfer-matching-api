@@ -32,8 +32,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
             var account = await _employerAccountRepository.Get(request.EmployerAccountId);
             var pledge = await _pledgeRepository.Get(request.PledgeId);
 
-            //var costProjections = _costProjectionService.GetCostProjections(request.StandardMaxFunding * request.NumberOfApprentices,
-                //request.StartDate, request.StandardDuration);
+            var costProjections = _costProjectionService.GetCostProjections(request.StandardMaxFunding * request.NumberOfApprentices, request.StartDate, request.StandardDuration);
 
             var settings = new CreateApplicationProperties
             {
@@ -55,7 +54,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 BusinessWebsite = request.BusinessWebsite,
-                EmailAddresses = request.EmailAddresses
+                EmailAddresses = request.EmailAddresses,
+                CostProjections = costProjections
             };
 
             var application = pledge.CreateApplication(account, settings, new UserInfo(request.UserId, request.UserDisplayName));
