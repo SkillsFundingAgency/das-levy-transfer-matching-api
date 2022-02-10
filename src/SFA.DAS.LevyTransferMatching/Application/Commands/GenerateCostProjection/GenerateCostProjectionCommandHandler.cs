@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -27,7 +28,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.GenerateCostProjecti
 
             if (application.ApplicationCostProjections.Any())
             {
-                _logger.LogError($"Unable to Add Cost Projections for Application {application.Id}; projections already exist");
+                throw new InvalidOperationException($"Unable to Add Cost Projections for Application {application.Id}; projections already exist");
             }
 
             var costProjections = _costProjectionService.GetCostProjections(
