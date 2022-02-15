@@ -32,6 +32,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.ValueObjects
         {
             EmailAddresses = new List<string>();
             CostProjections = new List<CostProjection>();
+            MatchingCriteria = new MatchingCriteria(false, false, false, false);
         }
     }
 }
