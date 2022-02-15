@@ -15,16 +15,18 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
         private readonly IEmployerAccountRepository _employerAccountRepository;
         private readonly IApplicationRepository _applicationRepository;
         private readonly ICostProjectionService _costProjectionService;
+        private readonly IMatchingCriteriaService _matchingCriteriaService;
 
         public CreateApplicationCommandHandler(IPledgeRepository pledgeRepository,
             IApplicationRepository applicationRepository,
             IEmployerAccountRepository employerAccountRepository,
-            ICostProjectionService costProjectionService)
+            ICostProjectionService costProjectionService, IMatchingCriteriaService matchingCriteriaService)
         {
             _pledgeRepository = pledgeRepository;
             _applicationRepository = applicationRepository;
             _employerAccountRepository = employerAccountRepository;
             _costProjectionService = costProjectionService;
+            _matchingCriteriaService = matchingCriteriaService;
         }
 
         public async Task<CreateApplicationCommandResult> Handle(CreateApplicationCommand request, CancellationToken cancellationToken)
@@ -33,6 +35,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
             var pledge = await _pledgeRepository.Get(request.PledgeId);
 
             var costProjections = _costProjectionService.GetCostProjections(request.StandardMaxFunding * request.NumberOfApprentices, request.StartDate, request.StandardDuration);
+
+            var matchingCriteria = _matchingCriteriaService.GetMatchingCriteria(request, pledge);
 
             var settings = new CreateApplicationProperties
             {
@@ -55,7 +59,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
                 LastName = request.LastName,
                 BusinessWebsite = request.BusinessWebsite,
                 EmailAddresses = request.EmailAddresses,
-                CostProjections = costProjections
+                CostProjections = costProjections,
+                MatchingCriteria = matchingCriteria
             };
 
             var application = pledge.CreateApplication(account, settings, new UserInfo(request.UserId, request.UserDisplayName));

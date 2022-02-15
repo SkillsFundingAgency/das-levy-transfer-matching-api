@@ -52,6 +52,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
 
             services.AddTransient<IDiffService, DiffService>();
             services.AddSingleton<ICostProjectionService, CostProjectionService>();
+            services.AddSingleton<IMatchingCriteriaService, MatchingCriteriaService>();
         }
     }
 }

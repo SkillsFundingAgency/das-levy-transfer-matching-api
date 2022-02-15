@@ -29,6 +29,11 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             StandardDuration = properties.StandardDuration;
             StandardMaxFunding = properties.StandardMaxFunding;
             StandardRoute = properties.StandardRoute;
+            MatchJobRole = properties.MatchingCriteria.MatchJobRole;
+            MatchLevel = properties.MatchingCriteria.MatchLevel;
+            MatchLocation = properties.MatchingCriteria.MatchLocation;
+            MatchSector = properties.MatchingCriteria.MatchSector;
+            MatchPercentage = properties.MatchingCriteria.MatchPercentage;
             NumberOfApprentices = properties.NumberOfApprentices;
             StartDate = properties.StartDate;
             HasTrainingProvider = properties.HasTrainingProvider;
@@ -81,6 +86,16 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         public int StandardDuration { get; private set; }
         public int StandardMaxFunding { get; private set; }
         public string StandardRoute { get; private set; }
+
+        public bool MatchSector { get; private set; }
+
+        public bool MatchLevel { get; private set; }
+
+        public bool MatchLocation { get; private set; }
+
+        public bool MatchJobRole { get; private set; }
+
+        public int MatchPercentage { get; private set; }
 
         public int NumberOfApprentices { get; private set; }
         public DateTime StartDate { get; private set; }
