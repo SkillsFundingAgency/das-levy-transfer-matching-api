@@ -95,7 +95,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
         public bool MatchJobRole { get; private set; }
 
-        public int MatchPercentage { get; private set; }
+        public byte MatchPercentage { get; private set; }
 
         public int NumberOfApprentices { get; private set; }
         public DateTime StartDate { get; private set; }
@@ -250,9 +250,13 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             UpdatedOn = DateTime.UtcNow;
         }
 
-        public void AddCostProjections(List<CostProjection> projections)
+        public void AddMatchingCriteria(MatchingCriteria criteria)
         {
-            _applicationCostProjections.AddRange(projections.Select(x => new ApplicationCostProjection(x.FinancialYear, x.Amount)));
+            MatchJobRole = criteria.MatchJobRole;
+            MatchLevel = criteria.MatchLevel;
+            MatchLocation = criteria.MatchLocation;
+            MatchSector = criteria.MatchSector;
+            MatchPercentage = criteria.MatchPercentage;
         }
     }
 }

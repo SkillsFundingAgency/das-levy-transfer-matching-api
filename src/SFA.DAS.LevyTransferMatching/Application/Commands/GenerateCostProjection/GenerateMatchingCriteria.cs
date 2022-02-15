@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.LevyTransferMatching.Application.Commands.GenerateCostProjection
 {
-    public class GenerateCostProjectionCommand : IRequest
+    public class GenerateMatchingCriteria : IRequest
     {
         public int ApplicationId { get; set; }
     }

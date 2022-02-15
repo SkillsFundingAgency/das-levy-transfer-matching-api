@@ -256,10 +256,10 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [Route("applications/{applicationId}/generate-cost-projection")]
-        public async Task<IActionResult> GenerateCostProjection(int applicationId)
+        [Route("applications/{applicationId}/generate-matching-criteria")]
+        public async Task<IActionResult> GenerateMatchingCriteria(int applicationId)
         {
-            await _mediator.Send(new GenerateCostProjectionCommand
+            await _mediator.Send(new GenerateMatchingCriteria
             {
                 ApplicationId = applicationId,
             });

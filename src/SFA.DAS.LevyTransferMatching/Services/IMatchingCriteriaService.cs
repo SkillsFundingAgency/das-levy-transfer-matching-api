@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
+using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Extensions;
 
@@ -7,42 +8,44 @@ namespace SFA.DAS.LevyTransferMatching.Services
 {
     public interface IMatchingCriteriaService
     {
-        MatchingCriteria GetMatchingCriteria(CreateApplicationCommand createApplicationCommand,
-            Data.Models.Pledge pledge);
+        MatchingCriteria GetMatchingCriteria(CreateApplicationCommand application, Pledge pledge);
+        MatchingCriteria GetMatchingCriteria(Data.Models.Application application, Pledge pledge);
     }
 
     public class MatchingCriteriaService : IMatchingCriteriaService
     {
-        public MatchingCriteria GetMatchingCriteria(CreateApplicationCommand createApplicationCommand, Data.Models.Pledge pledge)
+        public MatchingCriteria GetMatchingCriteria(CreateApplicationCommand application, Pledge pledge)
         {
-            var sector = false;
-            var level = false;
-            var location = false;
-            var jobRole = false;
+            var location = (!pledge.Locations.Any() || application.Locations.Any());
 
-            if (!pledge.Locations.Any() || createApplicationCommand.Locations.Any())
-            {
-                location = true;
-            }
+            var sector = (!pledge.Sectors.ToList().Any() ||
+                          application.Sectors.Any(x => pledge.Sectors.ToList().Contains(x)));
 
-            if (!pledge.Sectors.ToList().Any() || createApplicationCommand.Sectors.Any(x => pledge.Sectors.ToList().Contains(x)))
-            {
-                sector = true;
-            }
+            var jobRole = (!pledge.JobRoles.ToList().Any() || pledge.JobRoles.ToList()
+                .Any(r => application.StandardRoute == r.GetDescription()));
 
-            if (!pledge.JobRoles.ToList().Any() || pledge.JobRoles.ToList().Any(r => createApplicationCommand.StandardRoute == r.GetDescription()))
-            {
-                jobRole = true;
-            }
-
-            if (!pledge.Levels.ToList().Any() || pledge.Levels.ToList().Select(x => char.GetNumericValue(x.GetShortDescription().Last())).Contains(createApplicationCommand.StandardLevel))
-            {
-                level = true;
-            }
+            var level = !pledge.Levels.ToList().Any() || pledge.Levels.ToList()
+                .Select(x => char.GetNumericValue(x.GetShortDescription().Last()))
+                .Contains(application.StandardLevel);
 
             return new MatchingCriteria(sector, level, location, jobRole);
+        }
 
-            //return new MatchingCriteria(false, false, false, false);
+        public MatchingCriteria GetMatchingCriteria(Data.Models.Application application, Pledge pledge)
+        {
+            var location = (!pledge.Locations.Any() || application.ApplicationLocations.Any());
+
+            var sector = (!pledge.Sectors.ToList().Any() ||
+                          application.Sectors.ToList().Any(x => pledge.Sectors.ToList().Contains(x)));
+
+            var jobRole = (!pledge.JobRoles.ToList().Any() || pledge.JobRoles.ToList()
+                .Any(r => application.StandardRoute == r.GetDescription()));
+
+            var level = !pledge.Levels.ToList().Any() || pledge.Levels.ToList()
+                .Select(x => char.GetNumericValue(x.GetShortDescription().Last()))
+                .Contains(application.StandardLevel);
+
+            return new MatchingCriteria(sector, level, location, jobRole);
         }
     }
 }
