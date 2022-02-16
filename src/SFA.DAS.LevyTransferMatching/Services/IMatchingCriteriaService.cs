@@ -16,7 +16,7 @@ namespace SFA.DAS.LevyTransferMatching.Services
     {
         public MatchingCriteria GetMatchingCriteria(CreateApplicationCommand application, Pledge pledge)
         {
-            var location = (!pledge.Locations.Any() || application.Locations.Any());
+            var location = (!pledge.Locations.Any() || (application.Locations != null && application.Locations.Any()));
 
             var sector = (!pledge.Sectors.ToList().Any() ||
                           application.Sectors.Any(x => pledge.Sectors.ToList().Contains(x)));
