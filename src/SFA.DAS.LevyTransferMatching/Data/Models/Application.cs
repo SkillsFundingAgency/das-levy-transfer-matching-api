@@ -15,6 +15,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         {
             _statusHistory = new List<ApplicationStatusHistory>();
             _applicationLocations = new List<ApplicationLocation>();
+            _applicationCostProjections = new List<ApplicationCostProjection>();
         }
 
         public Application(Pledge pledge, EmployerAccount account, CreateApplicationProperties properties, UserInfo userInfo) : this()
@@ -45,6 +46,8 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             {
                 _applicationLocations = properties.Locations.Select(x => new ApplicationLocation(x)).ToList();
             }
+
+            _applicationCostProjections = properties.CostProjections.Select(x => new ApplicationCostProjection(x.FinancialYear, x.Amount)).ToList();
 
             AdditionalLocation = properties.AdditionalLocation;
             SpecificLocation = properties.SpecificLocation;
@@ -104,6 +107,9 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
         private readonly List<ApplicationLocation> _applicationLocations;
         public IReadOnlyCollection<ApplicationLocation> ApplicationLocations => _applicationLocations;
+
+        private readonly List<ApplicationCostProjection> _applicationCostProjections;
+        public IReadOnlyCollection<ApplicationCostProjection> ApplicationCostProjections => _applicationCostProjections;
 
         public DateTime CreatedOn { get; private set; }
         public ApplicationStatus Status { get; private set; }
@@ -227,6 +233,11 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
                 Status = ApplicationStatus.FundsUsed;
 
             UpdatedOn = DateTime.UtcNow;
+        }
+
+        public void AddCostProjections(List<CostProjection> projections)
+        {
+            _applicationCostProjections.AddRange(projections.Select(x => new ApplicationCostProjection(x.FinancialYear, x.Amount)));
         }
     }
 }

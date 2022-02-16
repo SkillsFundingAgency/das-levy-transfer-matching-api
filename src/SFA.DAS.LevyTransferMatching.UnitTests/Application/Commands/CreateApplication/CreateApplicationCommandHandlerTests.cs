@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,7 +9,10 @@ using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
+using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
+using SFA.DAS.LevyTransferMatching.Services;
+using SFA.DAS.LevyTransferMatching.Testing;
 using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreateApplication
@@ -20,11 +24,13 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreateAppl
         private Mock<IEmployerAccountRepository> _employerAccountRepository;
         private Mock<IPledgeRepository> _pledgeRepository;
         private Mock<IApplicationRepository> _applicationRepository;
+        private Mock<ICostProjectionService> _costProjectionService;
 
         private CreateApplicationCommandHandler _handler;
 
         private EmployerAccount _employerAccount;
         private Pledge _pledge;
+        private List<CostProjection> _costProjections;
 
         private LevyTransferMatching.Data.Models.Application _inserted;
 
@@ -36,9 +42,11 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreateAppl
             _employerAccountRepository = new Mock<IEmployerAccountRepository>();
             _pledgeRepository = new Mock<IPledgeRepository>();
             _applicationRepository = new Mock<IApplicationRepository>();
+            _costProjectionService = new Mock<ICostProjectionService>();
 
             _employerAccount = _fixture.Create<EmployerAccount>();
             _pledge = _fixture.Create<Pledge>();
+            _costProjections = _fixture.Create<List<CostProjection>>();
 
             _employerAccountRepository.Setup(x => x.Get(_employerAccount.Id)).ReturnsAsync(_employerAccount);
             _pledgeRepository.Setup(x => x.Get(_pledge.Id)).ReturnsAsync(_pledge);
@@ -46,7 +54,11 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreateAppl
             _applicationRepository.Setup(x => x.Add(It.IsAny<LevyTransferMatching.Data.Models.Application>()))
                 .Callback<LevyTransferMatching.Data.Models.Application>(r => _inserted = r);
 
-            _handler = new CreateApplicationCommandHandler(_pledgeRepository.Object, _applicationRepository.Object, _employerAccountRepository.Object);
+            _costProjectionService
+                .Setup(x => x.GetCostProjections(It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<int>()))
+                .Returns(_costProjections);
+
+            _handler = new CreateApplicationCommandHandler(_pledgeRepository.Object, _applicationRepository.Object, _employerAccountRepository.Object, _costProjectionService.Object);
         }
 
         [Test]
@@ -82,6 +94,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreateAppl
             Assert.AreEqual(command.BusinessWebsite, _inserted.BusinessWebsite);
             Assert.AreEqual(command.NumberOfApprentices * command.StandardMaxFunding, _inserted.TotalAmount);
             CollectionAssert.AreEqual(command.EmailAddresses, _inserted.EmailAddresses.Select(x=> x.EmailAddress));
+            CompareHelper.AreEqualIgnoringTypes(_costProjections, _inserted.ApplicationCostProjections);
         }
     }
 }

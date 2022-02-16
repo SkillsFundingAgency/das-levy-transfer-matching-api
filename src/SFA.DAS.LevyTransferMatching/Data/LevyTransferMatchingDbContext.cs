@@ -35,6 +35,7 @@ namespace SFA.DAS.LevyTransferMatching.Data
             modelBuilder.Entity<Models.Application>().Metadata.FindNavigation(nameof(Models.Application.EmailAddresses)).SetPropertyAccessMode(PropertyAccessMode.Field);
             modelBuilder.Entity<Models.Application>().Metadata.FindNavigation(nameof(Models.Application.StatusHistory)).SetPropertyAccessMode(PropertyAccessMode.Field);
             modelBuilder.Entity<Models.Application>().Metadata.FindNavigation(nameof(Models.Application.ApplicationLocations)).SetPropertyAccessMode(PropertyAccessMode.Field);
+            modelBuilder.Entity<Models.Application>().Metadata.FindNavigation(nameof(Models.Application.ApplicationCostProjections)).SetPropertyAccessMode(PropertyAccessMode.Field);
 
             modelBuilder.Entity<ApplicationEmailAddress>().ToTable("ApplicationEmailAddress");
             modelBuilder.Entity<ApplicationEmailAddress>().HasKey(x => x.Id);

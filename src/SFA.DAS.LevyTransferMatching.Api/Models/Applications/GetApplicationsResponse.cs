@@ -43,7 +43,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications
                     SpecificLocation = application.SpecificLocation,
                     AdditionalLocations = application.AdditionalLocations,
                     SenderEmployerAccountId = application.SenderEmployerAccountId,
-                    SenderEmployerAccountName = application.SenderEmployerAccountName
+                    SenderEmployerAccountName = application.SenderEmployerAccountName,
+                    CostProjections = application.CostProjections?.Select(p => new Application.CostProjection{ FinancialYear = p.FinancialYear, Amount = p.Amount})
                 })
             };
 
@@ -82,11 +83,18 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications
             public string AdditionalLocations { get; set; }
             public long SenderEmployerAccountId { get; set; }
             public string SenderEmployerAccountName { get; set; }
+            public IEnumerable<CostProjection> CostProjections { get; set; }
 
             public class ApplicationLocation
             {
                 public int Id { get; set; }
                 public int PledgeLocationId { get; set; }
+            }
+
+            public class CostProjection
+            {
+                public string FinancialYear { get; set; }
+                public int Amount { get; set; }
             }
         }
 

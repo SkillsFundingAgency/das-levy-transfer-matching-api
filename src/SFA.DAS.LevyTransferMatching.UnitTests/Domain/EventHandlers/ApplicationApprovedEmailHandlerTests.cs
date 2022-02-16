@@ -44,7 +44,6 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Domain.EventHandlers
                 .ReturnsAsync(() => pledge);
 
             var applicationProperties = new CreateApplicationProperties();
-            applicationProperties.EmailAddresses = new List<string>();
 
             _applicationRepository = new Mock<IApplicationRepository>();
             _applicationRepository.Setup(x => x.Get(It.Is<int>(p => p == _event.ApplicationId), 

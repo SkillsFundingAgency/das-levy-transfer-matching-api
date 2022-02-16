@@ -14,6 +14,7 @@ using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.RejectApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DeclineFunding;
+using SFA.DAS.LevyTransferMatching.Application.Commands.GenerateCostProjection;
 using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
 
@@ -246,6 +247,21 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 NumberOfApprentices = request.NumberOfApprentices,
                 Amount = request.Amount,
                 MaxAmount = request.MaxAmount
+            });
+
+            return Ok();
+        }
+
+
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [Route("applications/{applicationId}/generate-cost-projection")]
+        public async Task<IActionResult> GenerateCostProjection(int applicationId)
+        {
+            await _mediator.Send(new GenerateCostProjectionCommand
+            {
+                ApplicationId = applicationId,
             });
 
             return Ok();

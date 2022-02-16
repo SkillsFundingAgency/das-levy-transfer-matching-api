@@ -44,10 +44,18 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
             public string AdditionalLocations { get; set; }
             public long SenderEmployerAccountId { get; set; }
             public string SenderEmployerAccountName { get; set; }
+            public IEnumerable<CostProjection> CostProjections { get; set; }
+
             public class ApplicationLocation
             {
                 public int Id { get; set; }
                 public int PledgeLocationId { get; set; }
+            }
+
+            public class CostProjection
+            {
+                public string FinancialYear { get; set; }
+                public int Amount { get; set; }
             }
         }
     }

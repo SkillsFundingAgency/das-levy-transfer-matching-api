@@ -11,6 +11,7 @@ using SFA.DAS.LevyTransferMatching.Domain.EventHandlers;
 using SFA.DAS.LevyTransferMatching.Infrastructure;
 using SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
 using SFA.DAS.LevyTransferMatching.Infrastructure.ConnectionFactory;
+using SFA.DAS.LevyTransferMatching.Services;
 using SFA.DAS.LevyTransferMatching.Services.Audit;
 using SFA.DAS.LevyTransferMatching.Services.Events;
 
@@ -50,6 +51,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
                 .AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
 
             services.AddTransient<IDiffService, DiffService>();
+            services.AddSingleton<ICostProjectionService, CostProjectionService>();
         }
     }
 }
