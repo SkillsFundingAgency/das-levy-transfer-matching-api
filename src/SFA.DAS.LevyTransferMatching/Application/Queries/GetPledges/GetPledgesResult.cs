@@ -6,7 +6,7 @@ using SFA.DAS.LevyTransferMatching.Data.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
 {
-    public class GetPledgesResult : ItemListResponse<GetPledgesResult.Pledge>
+    public class GetPledgesResult : PagedQueryResult<GetPledgesResult.Pledge>
     {
         public class Pledge
         {

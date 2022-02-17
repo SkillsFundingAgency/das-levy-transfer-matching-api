@@ -207,7 +207,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
 
             var result = new GetPledgesResult()
             {
-                Items = expectedPledges,
+                Items = expectedPledges.ToList(),
                 TotalItems = expectedPledges.Count(),
             };
 
@@ -239,7 +239,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
 
             var result = new GetPledgesResult()
             {
-                Items = expectedPledges,
+                Items = expectedPledges.ToList(),
                 TotalItems = expectedPledges.Count(),
             };
 
