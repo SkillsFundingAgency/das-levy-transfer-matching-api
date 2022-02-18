@@ -3,7 +3,7 @@
     public enum GetApplicationsSortOrder
     {
         ApplicationDate,
-        TotalCost,
+        CurrentFinancialYearAmount,
         Duration,
         Applicant,
         CriteriaMatch,

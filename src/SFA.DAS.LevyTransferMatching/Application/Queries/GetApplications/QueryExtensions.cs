@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using SFA.DAS.LevyTransferMatching.Extensions;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
@@ -29,7 +30,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
         }
 
         public static IQueryable<Data.Models.Application> Sort(this IQueryable<Data.Models.Application> queryable,
-            GetApplicationsSortOrder sortOrder, SortDirection sortDirection)
+            GetApplicationsSortOrder sortOrder, SortDirection sortDirection, DateTime now)
         {
             var result = sortOrder switch
             {
@@ -43,9 +44,13 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                 GetApplicationsSortOrder.Duration => sortDirection == SortDirection.Ascending
                     ? queryable.OrderBy(x => x.StandardDuration)
                     : queryable.OrderByDescending(x => x.StandardDuration),
-                GetApplicationsSortOrder.TotalCost => sortDirection == SortDirection.Ascending
-                    ? queryable.OrderBy(x => x.TotalAmount)
-                    : queryable.OrderByDescending(x => x.TotalAmount),
+                GetApplicationsSortOrder.CurrentFinancialYearAmount => sortDirection == SortDirection.Ascending
+                    ? queryable.OrderBy(x => x.ApplicationCostProjections
+                        .Where(p => p.FinancialYear == now.GetFinancialYear())
+                        .Sum(p=> p.Amount))
+                    : queryable.OrderByDescending(x => x.ApplicationCostProjections
+                        .Where(p => p.FinancialYear == now.GetFinancialYear())
+                        .Sum(p => p.Amount)),
                 GetApplicationsSortOrder.Status => sortDirection == SortDirection.Ascending
                     ? queryable.OrderBy(x => x.Status.ToString())
                     : queryable.OrderByDescending(x => x.Status.ToString()),

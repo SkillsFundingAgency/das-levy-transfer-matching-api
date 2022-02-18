@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
+using SFA.DAS.LevyTransferMatching.Extensions;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;
 
@@ -40,6 +42,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetApplicat
             for (var i = 0; i < 20; i++)
             {
                 var properties = _fixture.Build<CreateApplicationProperties>()
+                    .With(x => x.CostProjections, () => new List<CostProjection>{ new CostProjection(DateTime.UtcNow.GetFinancialYear(), _fixture.Create<int>())})
                     .With(x => x.Locations, () => new List<int>())
                     .With(x => x.EmailAddresses, () => new List<string>{"test@test.com"})
                     .Create();
@@ -137,13 +140,13 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetApplicat
         }
 
         [Test]
-        public async Task Handle_SortBy_TotalCost_Produces_ExpectedResult()
+        public async Task Handle_SortBy_CurrentFinancialYearAmount_Produces_ExpectedResult()
         {
-            var request = new GetApplicationsQuery { SortOrder = GetApplicationsSortOrder.TotalCost, SortDirection = SortDirection.Descending };
+            var request = new GetApplicationsQuery { SortOrder = GetApplicationsSortOrder.CurrentFinancialYearAmount, SortDirection = SortDirection.Descending };
             var result = await _handler.Handle(request, CancellationToken.None);
 
             var expectedSequence = DbContext.Applications
-                .OrderByDescending(x => x.TotalAmount)
+                .OrderByDescending(x => x.ApplicationCostProjections.Where(p=> p.FinancialYear == DateTime.UtcNow.GetFinancialYear()).Sum(p=> p.Amount))
                 .ThenBy(x => x.EmployerAccount.Name)
                 .Select(x => x.Id).ToArray();
 
