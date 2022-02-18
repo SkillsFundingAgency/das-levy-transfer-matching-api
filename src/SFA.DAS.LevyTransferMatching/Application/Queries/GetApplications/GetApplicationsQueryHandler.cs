@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.LevyTransferMatching.Data;
@@ -20,25 +20,11 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
 
         public async Task<GetApplicationsResult> Handle(GetApplicationsQuery request, CancellationToken cancellationToken)
         {
-            IQueryable<Data.Models.Application> applicationsQuery = _dbContext.Applications;
-            if (request.ApplicationStatusFilter.HasValue)
-            {
-                applicationsQuery = applicationsQuery.Where(x => x.Status == request.ApplicationStatusFilter);
-            }
-
-            if (request.PledgeId.HasValue)
-            {
-                applicationsQuery = applicationsQuery.Where(x => x.Pledge.Id == request.PledgeId);
-            }
-
-            if (request.AccountId.HasValue)
-            {
-                applicationsQuery = applicationsQuery.Where(x => x.EmployerAccount.Id == request.AccountId);
-            }
+            var applicationsQuery = _dbContext.Applications.AsQueryable()
+                .Filter(request)
+                .Sort(request.SortOrder, request.SortDirection);
 
             var queryResult = await applicationsQuery
-                .OrderByDescending(x => x.CreatedOn)
-                .ThenBy(x => x.EmployerAccount.Name)
                 .Skip(request.Offset)
                 .Take(request.Limit)
                 .Select(x => new GetApplicationsResult.Application
@@ -64,7 +50,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                     Amount = x.Amount,
                     TotalAmount = x.TotalAmount,
                     StartDate = x.StartDate,
-                    EmailAddresses = x.EmailAddresses.Any()
+                    EmailAddresses = Convert.ToInt32(x.EmailAddresses.Count()) > 0
                         ? x.EmailAddresses.Select(email => email.EmailAddress)
                         : null,
                     CreatedOn = x.CreatedOn,
