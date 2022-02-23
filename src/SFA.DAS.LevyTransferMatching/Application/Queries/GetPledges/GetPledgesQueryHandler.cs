@@ -30,7 +30,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
 
             if (request.Sectors > 0)
             {
-                pledgesQuery = pledgesQuery.Where(x => (x.Sectors & request.Sectors) != 0);
+                pledgesQuery = pledgesQuery.Where(x => (x.Sectors & request.Sectors) != 0 || x.Sectors == 0);
             }
 
             var queryResult = await pledgesQuery

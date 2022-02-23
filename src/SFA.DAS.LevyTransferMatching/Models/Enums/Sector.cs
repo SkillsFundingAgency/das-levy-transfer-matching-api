@@ -1,7 +1,9 @@
 ﻿using SFA.DAS.LevyTransferMatching.Attributes;
+using System;
 
 namespace SFA.DAS.LevyTransferMatching.Models.Enums
 {
+    [Flags]
     public enum Sector
     {
         [ReferenceMetadata(Description = "Agriculture, environmental and animal care", Hint = "For example, Veterinary Nurse, Horticulture and Landscape Operative, Equine Groom, Golf Greenkeeper")]
