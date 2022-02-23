@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -24,17 +23,24 @@ namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
                     var synchronizedStorageSession = unitOfWorkContext.Get<SynchronizedStorageSession>();
                     var sqlStorageSession = synchronizedStorageSession.GetSqlStorageSession();
                     var optionsBuilder = new DbContextOptionsBuilder<LevyTransferMatchingDbContext>().UseSqlServer(sqlStorageSession.Connection);
+                    optionsBuilder.UseLoggerFactory(DebugLoggingFactory);
                     dbContext = new LevyTransferMatchingDbContext(optionsBuilder.Options);
                     dbContext.Database.UseTransaction(sqlStorageSession.Transaction);
                 }
                 catch (KeyNotFoundException)
                 {
                     var optionsBuilder = new DbContextOptionsBuilder<LevyTransferMatchingDbContext>().UseSqlServer(config.DatabaseConnectionString);
+                    optionsBuilder.UseLoggerFactory(DebugLoggingFactory);
                     dbContext = new LevyTransferMatchingDbContext(optionsBuilder.Options);
                 }
 
                 return dbContext;
             });
         }
+        
+        public static readonly LoggerFactory DebugLoggingFactory =
+            new LoggerFactory(new[] {
+                new Microsoft.Extensions.Logging.Debug.DebugLoggerProvider()
+            });
     }
 }

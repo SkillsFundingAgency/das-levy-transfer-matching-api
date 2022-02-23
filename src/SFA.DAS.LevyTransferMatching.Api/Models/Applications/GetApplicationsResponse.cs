@@ -13,9 +13,14 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications
         {
             var result = new GetApplicationsResponse
             {
-                Applications = source.Applications.Select(application => new Application
+                Page = source.Page,
+                TotalItems = source.TotalItems,
+                PageSize = source.PageSize,
+                TotalPages = source.TotalPages,
+                Applications = source.Items.Select(application => new Application
                 {
                     Id = application.Id,
+                    EmployerAccountId = application.EmployerAccountId,
                     DasAccountName = application.DasAccountName,
                     PledgeId = application.PledgeId,
                     Details = application.Details,
@@ -26,9 +31,11 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications
                     StandardMaxFunding = application.StandardMaxFunding,
                     StandardRoute = application.StandardRoute,
                     NumberOfApprentices = application.NumberOfApprentices,
+                    NumberOfApprenticesUsed = application.NumberOfApprenticesUsed,
                     StartDate = application.StartDate,
                     Amount = application.Amount,
                     TotalAmount = application.TotalAmount,
+                    CurrentFinancialYearAmount = application.CurrentFinancialYearAmount,
                     HasTrainingProvider = application.HasTrainingProvider,
                     Sectors = application.Sectors,
                     FirstName = application.FirstName,
@@ -55,11 +62,19 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications
             return result;
         }
 
-        public IEnumerable<Application> Applications { get; set; }
+        public int Page { get; set; }
 
+        public int TotalPages { get; set; }
+
+        public int PageSize { get; set; }
+        public int TotalItems { get; set; }
+
+        public IEnumerable<Application> Applications { get; set; }
+        
         public class Application
         {
             public int Id { get; set; }
+            public long EmployerAccountId { get; set; }
             public string DasAccountName { get; set; }
             public int PledgeId { get; set; }
             public string Details { get; set; }
@@ -70,9 +85,11 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications
             public int StandardMaxFunding { get; set; }
             public string StandardRoute { get; set; }
             public int NumberOfApprentices { get; set; }
+            public int NumberOfApprenticesUsed { get; set; }
             public DateTime StartDate { get; set; }
             public int Amount { get; set; }
             public int TotalAmount { get; set; }
+            public int CurrentFinancialYearAmount { get; set; }
             public bool HasTrainingProvider { get; set; }
             public IEnumerable<Sector> Sectors { get; set; }
             public string FirstName { get; set; }
@@ -106,6 +123,5 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications
                 public int Amount { get; set; }
             }
         }
-
     }
 }

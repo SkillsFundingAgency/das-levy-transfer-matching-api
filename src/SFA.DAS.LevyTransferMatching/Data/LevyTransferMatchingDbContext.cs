@@ -23,6 +23,9 @@ namespace SFA.DAS.LevyTransferMatching.Data
             modelBuilder.Entity<Pledge>().HasMany(x => x.Locations).WithOne();
             modelBuilder.Entity<Pledge>().Metadata.FindNavigation(nameof(Pledge.Locations))
                 .SetPropertyAccessMode(PropertyAccessMode.Field);
+            modelBuilder.Entity<Pledge>().HasMany(x => x.Applications).WithOne();
+            modelBuilder.Entity<Pledge>().Metadata.FindNavigation(nameof(Pledge.Applications))
+                .SetPropertyAccessMode(PropertyAccessMode.Field);
 
             modelBuilder.Entity<PledgeLocation>().ToTable("PledgeLocation");
 
@@ -33,8 +36,11 @@ namespace SFA.DAS.LevyTransferMatching.Data
             modelBuilder.Entity<Models.Application>().Property(x => x.RowVersion).IsRowVersion();
             modelBuilder.Entity<Models.Application>().HasMany(x => x.EmailAddresses).WithOne();
             modelBuilder.Entity<Models.Application>().Metadata.FindNavigation(nameof(Models.Application.EmailAddresses)).SetPropertyAccessMode(PropertyAccessMode.Field);
+            modelBuilder.Entity<Models.Application>().HasMany(x => x.StatusHistory).WithOne();
             modelBuilder.Entity<Models.Application>().Metadata.FindNavigation(nameof(Models.Application.StatusHistory)).SetPropertyAccessMode(PropertyAccessMode.Field);
+            modelBuilder.Entity<Models.Application>().HasMany(x => x.ApplicationLocations).WithOne();
             modelBuilder.Entity<Models.Application>().Metadata.FindNavigation(nameof(Models.Application.ApplicationLocations)).SetPropertyAccessMode(PropertyAccessMode.Field);
+            modelBuilder.Entity<Models.Application>().HasMany(x => x.ApplicationCostProjections).WithOne();
             modelBuilder.Entity<Models.Application>().Metadata.FindNavigation(nameof(Models.Application.ApplicationCostProjections)).SetPropertyAccessMode(PropertyAccessMode.Field);
 
             modelBuilder.Entity<ApplicationEmailAddress>().ToTable("ApplicationEmailAddress");

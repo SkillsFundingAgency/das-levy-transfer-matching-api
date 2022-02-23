@@ -40,6 +40,8 @@ namespace SFA.DAS.LevyTransferMatching.Data.Repositories
         {
             var application = await _dbContext.Applications
                 .Include(o => o.EmployerAccount)
+                .Include(o => o.ApplicationLocations)
+                .Include(o => o.EmailAddresses)
                 .Include(o => o.ApplicationCostProjections)
                 .Where(x => x.Id == applicationId)
                 .SingleOrDefaultAsync();

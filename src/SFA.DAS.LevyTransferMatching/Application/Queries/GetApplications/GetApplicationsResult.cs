@@ -1,22 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
+using SFA.DAS.LevyTransferMatching.Models;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
 {
-    public class GetApplicationsResult
+    public class GetApplicationsResult : PagedQueryResult<GetApplicationsResult.Application>
     {
-        public IEnumerable<Application> Applications { get; set; }
-
-        public GetApplicationsResult(IEnumerable<Application> applications)
-        {
-            Applications = applications;
-        }
-
         public class Application
         {
             public int Id { get; set; }
+            public long EmployerAccountId { get; set; }
             public string DasAccountName { get; set; }
             public int PledgeId { get; set; }
             public string Details { get; set; }
@@ -27,9 +22,11 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
             public int StandardMaxFunding { get; set; }
             public string StandardRoute { get; set; }
             public int NumberOfApprentices { get; set; }
+            public int NumberOfApprenticesUsed { get; set; }
             public DateTime StartDate { get; set; }
             public int Amount { get; set; }
             public int TotalAmount { get; set; }
+            public int CurrentFinancialYearAmount { get; set; }
             public bool HasTrainingProvider { get; set; }
             public IEnumerable<Sector> Sectors { get; set; }
             public string FirstName { get; set; }

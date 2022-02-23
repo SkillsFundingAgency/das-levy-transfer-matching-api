@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -6,8 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Extensions;
 using SFA.DAS.LevyTransferMatching.Models;
-using SFA.DAS.LevyTransferMatching.Models.Enums;
-using static SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges.GetPledgesResult;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
 {
@@ -22,43 +21,45 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
 
         public async Task<GetPledgesResult> Handle(GetPledgesQuery request, CancellationToken cancellationToken)
         {
-            var pledgeEntriesQuery = _dbContext.Pledges.AsQueryable();
+            var pledgesQuery = _dbContext.Pledges.AsQueryable();
 
             if (request.AccountId.HasValue)
             {
-                pledgeEntriesQuery = pledgeEntriesQuery.Where(x => x.EmployerAccount.Id == request.AccountId.Value);
+                pledgesQuery = pledgesQuery.Where(x => x.EmployerAccount.Id == request.AccountId.Value);
             }
 
-            var pledgeEntries = await pledgeEntriesQuery
-                .Include(x => x.EmployerAccount)
-                .Include(x => x.Locations)
-                .Include(x => x.Applications)
-                .ToListAsync();
+            var queryResult = await pledgesQuery
+                .OrderByDescending(x => x.RemainingAmount)
+                .Skip(request.Offset)
+                .Take(request.Limit)
+                .Select(x => new GetPledgesResult.Pledge
+                {
+                    Amount = x.Amount,
+                    RemainingAmount = x.RemainingAmount,
+                    CreatedOn = x.CreatedOn,
+                    AccountId = x.EmployerAccount.Id,
+                    Id = x.Id,
+                    IsNamePublic = x.IsNamePublic,
+                    DasAccountName = x.EmployerAccount.Name,
+                    JobRoles = x.JobRoles.ToList(),
+                    Levels = x.Levels.ToList(),
+                    Sectors = x.Sectors.ToList(),
+                    Status = x.Status,
+                    Locations = x.Locations.Select(y => new LocationInformation { Name = y.Name, Geopoint = new double[] { y.Latitude, y.Longitude } }).ToList(),
+                    ApplicationCount = Convert.ToInt32(x.Applications.Count())
+                })
+                .AsNoTracking()
+                .AsSingleQuery()
+                .ToListAsync(cancellationToken);
 
-            var pledges = pledgeEntries
-                .Select(
-                    x => new GetPledgesResult.Pledge()
-                    {
-                        Amount = x.Amount,
-                        RemainingAmount = x.RemainingAmount,
-                        CreatedOn = x.CreatedOn,
-                        AccountId = x.EmployerAccount.Id,
-                        Id = x.Id,
-                        IsNamePublic = x.IsNamePublic,
-                        DasAccountName = x.EmployerAccount.Name,
-                        JobRoles = x.JobRoles.ToList(),
-                        Levels = x.Levels.ToList(),
-                        Sectors = x.Sectors.ToList(),
-                        Status = x.Status,
-                        Locations = x.Locations.Select(y => new LocationInformation { Name = y.Name, Geopoint = new double[] { y.Latitude, y.Longitude } }).ToList(),
-                        ApplicationCount = x.Applications.Count
-                    })
-                .OrderByDescending(x => x.RemainingAmount);
+            var count = await pledgesQuery.CountAsync(cancellationToken: cancellationToken);
 
             return new GetPledgesResult()
             {
-                Items = pledges,
-                TotalItems = pledges.Count(),
+                Items = queryResult.ToList(),
+                TotalItems = count,
+                PageSize = request.PageSize ?? int.MaxValue,
+                Page = request.Page
             };
         }
     }
