@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.LevyTransferMatching.Abstractions.CustomExceptions;
 using SFA.DAS.LevyTransferMatching.Api.Models.CreatePledge;
@@ -15,8 +11,12 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.CreditPledge;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitPledge;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
-using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.Models;
+using SFA.DAS.LevyTransferMatching.Models.Enums;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
@@ -34,10 +34,11 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         [HttpGet]
         [Route("pledges")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetPledges(long? accountId = null, int page = 0, int? pageSize = null)
+        public async Task<IActionResult> GetPledges([FromQuery] IEnumerable<Sector> sectors = null, long? accountId = null, int page = 0, int? pageSize = null)
         {
             var result = await _mediator.Send(new GetPledgesQuery
             {
+                Sectors = sectors != null ? (Sector)sectors.Cast<int>().Sum() : 0,
                 AccountId = accountId,
                 Page = page,
                 PageSize = pageSize
@@ -101,7 +102,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         [Route("accounts/{accountId}/pledges")]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> CreatePledge(long accountId, [FromBody]CreatePledgeRequest request)
+        public async Task<IActionResult> CreatePledge(long accountId, [FromBody] CreatePledgeRequest request)
         {
             var commandResult = await _mediator.Send(new CreatePledgeCommand
             {
@@ -141,10 +142,11 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 
                 return Ok();
 
-            } catch (AggregateNotFoundException<Pledge>)
+            }
+            catch (AggregateNotFoundException<Pledge>)
             {
                 return NotFound();
-            } 
+            }
         }
 
         [HttpPost]

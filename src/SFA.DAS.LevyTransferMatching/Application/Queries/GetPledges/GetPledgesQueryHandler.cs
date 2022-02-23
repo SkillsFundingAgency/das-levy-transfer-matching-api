@@ -1,12 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Extensions;
 using SFA.DAS.LevyTransferMatching.Models;
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
 {
@@ -28,29 +28,34 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
                 pledgesQuery = pledgesQuery.Where(x => x.EmployerAccount.Id == request.AccountId.Value);
             }
 
+            if (request.Sectors > 0)
+            {
+                pledgesQuery = pledgesQuery.Where(x => (x.Sectors & request.Sectors) != 0);
+            }
+
             var queryResult = await pledgesQuery
-                .OrderByDescending(x => x.RemainingAmount)
-                .Skip(request.Offset)
-                .Take(request.Limit)
-                .Select(x => new GetPledgesResult.Pledge
-                {
-                    Amount = x.Amount,
-                    RemainingAmount = x.RemainingAmount,
-                    CreatedOn = x.CreatedOn,
-                    AccountId = x.EmployerAccount.Id,
-                    Id = x.Id,
-                    IsNamePublic = x.IsNamePublic,
-                    DasAccountName = x.EmployerAccount.Name,
-                    JobRoles = x.JobRoles.ToList(),
-                    Levels = x.Levels.ToList(),
-                    Sectors = x.Sectors.ToList(),
-                    Status = x.Status,
-                    Locations = x.Locations.Select(y => new LocationInformation { Name = y.Name, Geopoint = new double[] { y.Latitude, y.Longitude } }).ToList(),
-                    ApplicationCount = Convert.ToInt32(x.Applications.Count())
-                })
-                .AsNoTracking()
-                .AsSingleQuery()
-                .ToListAsync(cancellationToken);
+            .OrderByDescending(x => x.RemainingAmount)
+            .Skip(request.Offset)
+            .Take(request.Limit)
+            .Select(x => new GetPledgesResult.Pledge
+            {
+                Amount = x.Amount,
+                RemainingAmount = x.RemainingAmount,
+                CreatedOn = x.CreatedOn,
+                AccountId = x.EmployerAccount.Id,
+                Id = x.Id,
+                IsNamePublic = x.IsNamePublic,
+                DasAccountName = x.EmployerAccount.Name,
+                JobRoles = x.JobRoles.ToList(),
+                Levels = x.Levels.ToList(),
+                Sectors = x.Sectors.ToList(),
+                Status = x.Status,
+                Locations = x.Locations.Select(y => new LocationInformation { Name = y.Name, Geopoint = new double[] { y.Latitude, y.Longitude } }).ToList(),
+                ApplicationCount = Convert.ToInt32(x.Applications.Count())
+            })
+            .AsNoTracking()
+            .AsSingleQuery()
+            .ToListAsync(cancellationToken);
 
             var count = await pledgesQuery.CountAsync(cancellationToken: cancellationToken);
 

@@ -1,27 +1,28 @@
-﻿using System.Linq;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture;
+﻿using AutoFixture;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.LevyTransferMatching.Abstractions.CustomExceptions;
 using SFA.DAS.LevyTransferMatching.Api.Controllers;
 using SFA.DAS.LevyTransferMatching.Api.Models.CreatePledge;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetPledge;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetPledges;
+using SFA.DAS.LevyTransferMatching.Api.Models.Pledges;
+using SFA.DAS.LevyTransferMatching.Application.Commands.ClosePledge;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
+using SFA.DAS.LevyTransferMatching.Application.Commands.CreditPledge;
+using SFA.DAS.LevyTransferMatching.Application.Commands.DebitPledge;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
-using SFA.DAS.LevyTransferMatching.Api.Models.Pledges;
-using SFA.DAS.LevyTransferMatching.Application.Commands.DebitPledge;
-using SFA.DAS.LevyTransferMatching.Application.Commands.CreditPledge;
-using SFA.DAS.LevyTransferMatching.Application.Commands.ClosePledge;
-using System;
-using SFA.DAS.LevyTransferMatching.Abstractions.CustomExceptions;
 using SFA.DAS.LevyTransferMatching.Data.Models;
+using SFA.DAS.LevyTransferMatching.Models.Enums;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
 {
@@ -127,7 +128,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             // Assert
             Assert.IsNotNull(actionResult);
             Assert.IsNotNull(notFoundResult);
-            Assert.AreEqual(notFoundResult.StatusCode, (int) HttpStatusCode.NotFound);
+            Assert.AreEqual(notFoundResult.StatusCode, (int)HttpStatusCode.NotFound);
         }
 
         [Test]
@@ -138,7 +139,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
 
             _mockMediator
                 .Setup(x => x.Send(It.IsAny<DebitPledgeCommand>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(() => new DebitPledgeCommandResult {IsSuccess = true});
+                .ReturnsAsync(() => new DebitPledgeCommandResult { IsSuccess = true });
 
             await _pledgesController.DebitPledge(pledgeId, request);
 
@@ -165,7 +166,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
                         command.PledgeId == pledgeId && command.Amount == request.Amount && command.ApplicationId == request.ApplicationId),
                 It.IsAny<CancellationToken>()));
         }
-                
+
         [Test]
         public async Task POST_Close_A_Pledge_By_PledgeId()
         {
@@ -177,7 +178,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
 
             var actionResult = await _pledgesController.ClosePledge(pledgeId, request);
             var okResult = actionResult as OkResult;
-            
+
             Assert.IsNotNull(actionResult);
             Assert.IsNotNull(okResult);
             Assert.AreEqual(okResult.StatusCode, (int)HttpStatusCode.OK);
@@ -225,7 +226,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             Assert.IsNotNull(okObjectResult);
             Assert.IsNotNull(response);
             Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.OK);
-            
+
             Assert.AreEqual(expectedPledges.Count(), response.Pledges.Count());
             Assert.AreEqual(expectedPledges.Count(), response.TotalPledges);
         }
@@ -236,6 +237,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             // Arrange
             var accountId = _fixture.Create<long>();
             var expectedPledges = _fixture.CreateMany<GetPledgesResult.Pledge>();
+            var sectors = _fixture.Create<IEnumerable<Sector>>();
 
             var result = new GetPledgesResult()
             {
@@ -248,7 +250,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
                 .ReturnsAsync(result);
 
             // Act
-            var actionResult = await _pledgesController.GetPledges(accountId: accountId);
+            var actionResult = await _pledgesController.GetPledges(sectors, accountId: accountId);
             var okObjectResult = actionResult as OkObjectResult;
             var response = okObjectResult.Value as GetPledgesResponse;
 
