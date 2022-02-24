@@ -25,12 +25,14 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreateAppl
         private Mock<IPledgeRepository> _pledgeRepository;
         private Mock<IApplicationRepository> _applicationRepository;
         private Mock<ICostProjectionService> _costProjectionService;
+        private Mock<IMatchingCriteriaService> _matchingCriteriaService;
 
         private CreateApplicationCommandHandler _handler;
 
         private EmployerAccount _employerAccount;
         private Pledge _pledge;
         private List<CostProjection> _costProjections;
+        private MatchingCriteria _matchingCriteria;
 
         private LevyTransferMatching.Data.Models.Application _inserted;
 
@@ -43,10 +45,12 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreateAppl
             _pledgeRepository = new Mock<IPledgeRepository>();
             _applicationRepository = new Mock<IApplicationRepository>();
             _costProjectionService = new Mock<ICostProjectionService>();
+            _matchingCriteriaService = new Mock<IMatchingCriteriaService>();
 
             _employerAccount = _fixture.Create<EmployerAccount>();
             _pledge = _fixture.Create<Pledge>();
             _costProjections = _fixture.Create<List<CostProjection>>();
+            _matchingCriteria = _fixture.Create<MatchingCriteria>();
 
             _employerAccountRepository.Setup(x => x.Get(_employerAccount.Id)).ReturnsAsync(_employerAccount);
             _pledgeRepository.Setup(x => x.Get(_pledge.Id)).ReturnsAsync(_pledge);
@@ -58,7 +62,11 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreateAppl
                 .Setup(x => x.GetCostProjections(It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<int>()))
                 .Returns(_costProjections);
 
-            _handler = new CreateApplicationCommandHandler(_pledgeRepository.Object, _applicationRepository.Object, _employerAccountRepository.Object, _costProjectionService.Object);
+            _matchingCriteriaService.Setup(x =>
+                x.GetMatchingCriteria(It.IsAny<CreateApplicationCommand>(), It.IsAny<Pledge>()))
+                .Returns(_matchingCriteria);
+
+            _handler = new CreateApplicationCommandHandler(_pledgeRepository.Object, _applicationRepository.Object, _employerAccountRepository.Object, _costProjectionService.Object, _matchingCriteriaService.Object);
         }
 
         [Test]
@@ -95,6 +103,11 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreateAppl
             Assert.AreEqual(command.NumberOfApprentices * command.StandardMaxFunding, _inserted.TotalAmount);
             CollectionAssert.AreEqual(command.EmailAddresses, _inserted.EmailAddresses.Select(x=> x.EmailAddress));
             CompareHelper.AreEqualIgnoringTypes(_costProjections, _inserted.ApplicationCostProjections);
+            Assert.AreEqual(_matchingCriteria.MatchJobRole, _inserted.MatchJobRole);
+            Assert.AreEqual(_matchingCriteria.MatchLevel, _inserted.MatchLevel);
+            Assert.AreEqual(_matchingCriteria.MatchLocation, _inserted.MatchLocation);
+            Assert.AreEqual(_matchingCriteria.MatchSector, _inserted.MatchSector);
+            Assert.AreEqual(_matchingCriteria.MatchPercentage, _inserted.MatchPercentage);
         }
     }
 }

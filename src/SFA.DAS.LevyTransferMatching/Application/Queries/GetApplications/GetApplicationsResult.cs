@@ -45,6 +45,11 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
             public long SenderEmployerAccountId { get; set; }
             public string SenderEmployerAccountName { get; set; }
             public IEnumerable<CostProjection> CostProjections { get; set; }
+            public bool MatchSector { get; set; }
+            public bool MatchJobRole { get; set; }
+            public bool MatchLevel { get; set; }
+            public bool MatchLocation { get; set; }
+            public int MatchPercentage { get; set; }
 
             public class ApplicationLocation
             {

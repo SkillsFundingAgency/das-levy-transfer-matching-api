@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SFA.DAS.LevyTransferMatching.Api.Models.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
@@ -44,7 +43,12 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications
                     AdditionalLocations = application.AdditionalLocations,
                     SenderEmployerAccountId = application.SenderEmployerAccountId,
                     SenderEmployerAccountName = application.SenderEmployerAccountName,
-                    CostProjections = application.CostProjections?.Select(p => new Application.CostProjection{ FinancialYear = p.FinancialYear, Amount = p.Amount})
+                    CostProjections = application.CostProjections?.Select(p => new Application.CostProjection{ FinancialYear = p.FinancialYear, Amount = p.Amount}),
+                    MatchPercentage = application.MatchPercentage,
+                    MatchJobRole = application.MatchJobRole,
+                    MatchSector = application.MatchSector,
+                    MatchLevel = application.MatchLevel,
+                    MatchLocation = application.MatchLocation
                 })
             };
 
@@ -84,6 +88,11 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications
             public long SenderEmployerAccountId { get; set; }
             public string SenderEmployerAccountName { get; set; }
             public IEnumerable<CostProjection> CostProjections { get; set; }
+            public bool MatchSector { get; set; }
+            public bool MatchJobRole { get; set; }
+            public bool MatchLevel { get; set; }
+            public bool MatchLocation { get; set; }
+            public int MatchPercentage { get; set; }
 
             public class ApplicationLocation
             {

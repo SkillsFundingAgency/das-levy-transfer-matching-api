@@ -66,7 +66,7 @@ namespace SFA.DAS.LevyTransferMatching.Extensions
         public static IEnumerable<TEnum> ToList<TEnum>(this TEnum value) where TEnum : Enum
         {
             return Enum.GetValues(typeof(TEnum)).Cast<TEnum>()
-                .Where(x => value.HasFlag(x)); ;
+                .Where(x => value.HasFlag(x));
         }
     }
 }
