@@ -11,9 +11,12 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 {
     public class Pledge : AggregateRoot<int>
     {
-        protected Pledge() {}
+        protected Pledge()
+        {
+            _applications = new List<Application>();
+        }
 
-        public Pledge(EmployerAccount employerAccount, CreatePledgeProperties properties, UserInfo userInfo)
+        public Pledge(EmployerAccount employerAccount, CreatePledgeProperties properties, UserInfo userInfo) : this()
         {
             EmployerAccount = employerAccount;
             EmployerAccountId = employerAccount.Id;

@@ -1,4 +1,5 @@
-﻿using AutoFixture;
+﻿using System;
+using AutoFixture;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
@@ -22,7 +23,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
         {
             _fixture = new Fixture();
 
-            var employerAccounts = _fixture.CreateMany<EmployerAccount>().ToArray();
+            var employerAccounts = _fixture.CreateMany<EmployerAccount>(10).ToArray();
 
             await DbContext.EmployerAccounts.AddRangeAsync(employerAccounts);
 
@@ -65,6 +66,27 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
                 Assert.AreEqual(actualPledges[i].Id, dbPledges[i].Id);
                 Assert.AreEqual(actualPledges[i].AccountId, dbPledges[i].EmployerAccount.Id);
             }
+        }
+
+        [TestCase(null, 1)]
+        [TestCase(10, 1)]
+        [TestCase(5, 2)]
+        [TestCase(3, 4)]
+        public async Task Handle_Paging_Options_Are_Reflected_In_Results(int? pageSize, int expectedPages)
+        {
+            var getPledgesQueryHandler = new GetPledgesQueryHandler(DbContext);
+
+            var getPledgesQuery = new GetPledgesQuery()
+            {
+                AccountId = null,
+                PageSize = pageSize
+            };
+
+            var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
+            
+            Assert.AreEqual(10, result.TotalItems);
+            Assert.AreEqual(expectedPages, result.TotalPages);
+            Assert.LessOrEqual(result.Items.Count, pageSize ?? int.MaxValue);
         }
 
         [Test]

@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -218,10 +219,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         public async Task Get_Returns_Applications()
         {
             _mediator.Setup(x => x.Send(It.Is<GetApplicationsQuery>(query => query.PledgeId == _pledgeId), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new GetApplicationsResult(new[]
-            {
-                new GetApplicationsResult.Application()
-            }));
+                .ReturnsAsync(new GetApplicationsResult{Items = new List<GetApplicationsResult.Application>{new GetApplicationsResult.Application()}});
 
             var actionResult = await _applicationsController.GetApplications(_pledgeId, null, null);
             var result = actionResult as OkObjectResult;
@@ -235,10 +233,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         public async Task Get_Returns_Applications_By_Account_Id()
         {
             _mediator.Setup(x => x.Send(It.Is<GetApplicationsQuery>(query => query.AccountId == _accountId), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new GetApplicationsResult(new[]
-            {
-                new GetApplicationsResult.Application()
-            }));
+                .ReturnsAsync(new GetApplicationsResult { Items = new List<GetApplicationsResult.Application> { new GetApplicationsResult.Application() } });
 
             var actionResult = await _applicationsController.GetApplications(null, _accountId, null);
             var result = actionResult as OkObjectResult;
@@ -255,10 +250,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         {
             var applicationStatusFilter = _fixture.Create<Data.Enums.ApplicationStatus>();
             _mediator.Setup(x => x.Send(It.Is<GetApplicationsQuery>(query => query.ApplicationStatusFilter == applicationStatusFilter), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new GetApplicationsResult(new[]
-            {
-                new GetApplicationsResult.Application()
-            }));
+                .ReturnsAsync(new GetApplicationsResult{Items = new List<GetApplicationsResult.Application>{new GetApplicationsResult.Application()}});
 
             var actionResult = await _applicationsController.GetApplications(null, null, applicationStatusFilter);
             var result = actionResult as OkObjectResult;
