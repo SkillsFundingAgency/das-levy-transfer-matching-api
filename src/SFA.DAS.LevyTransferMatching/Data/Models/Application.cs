@@ -235,8 +235,8 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
         public void Debit(int numberOfApprenticesUsed, int amountUsed, int maxAmount, UserInfo userInfo)
         {
-            if (Status != ApplicationStatus.Accepted)
-                throw new InvalidOperationException($"Unable to debit application with Id: {Id}. Application status is {Status} when it should be {ApplicationStatus.Accepted}.");
+            if (Status != ApplicationStatus.Accepted && Status != ApplicationStatus.FundsUsed)
+                throw new InvalidOperationException($"Unable to debit application Id {Id}. Application status is {Status} and must be one of {ApplicationStatus.Accepted}, {ApplicationStatus.FundsUsed}");
 
             StartTrackingSession(UserAction.DebitApplication, userInfo);
             ChangeTrackingSession.TrackUpdate(this);
