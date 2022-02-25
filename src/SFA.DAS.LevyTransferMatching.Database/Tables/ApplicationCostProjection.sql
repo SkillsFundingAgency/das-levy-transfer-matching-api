@@ -10,5 +10,8 @@
 )
 GO
 
-CREATE NONCLUSTERED INDEX [IX_ApplicationCostProjection_ApplicationId]
-    ON [dbo].[ApplicationCostProjection]([ApplicationId] ASC);
+CREATE NONCLUSTERED INDEX [IX_ApplicationCostProjection_ApplicationId] ON [dbo].[ApplicationCostProjection]
+(
+	[ApplicationId] ASC
+)
+INCLUDE ([FinancialYear], [Amount])
