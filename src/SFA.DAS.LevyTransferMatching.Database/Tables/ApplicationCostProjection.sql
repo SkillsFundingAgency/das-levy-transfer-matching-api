@@ -8,3 +8,7 @@
 	CONSTRAINT [FK_ApplicationCostProjection_Application] FOREIGN KEY ([ApplicationId]) REFERENCES [Application]([Id]),
 	CONSTRAINT [IX_ApplicationCostProjection_FinancialYear] UNIQUE ([ApplicationId],[FinancialYear])
 )
+GO
+
+CREATE NONCLUSTERED INDEX [IX_ApplicationCostProjection_ApplicationId]
+    ON [dbo].[ApplicationCostProjection]([ApplicationId] ASC);
