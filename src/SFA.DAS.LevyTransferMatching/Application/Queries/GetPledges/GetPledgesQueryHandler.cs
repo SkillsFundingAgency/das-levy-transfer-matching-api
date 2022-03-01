@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Extensions;
 using SFA.DAS.LevyTransferMatching.Models;
+using SFA.DAS.LevyTransferMatching.Models.Enums;
 using System;
 using System.Linq;
 using System.Threading;
@@ -28,9 +29,9 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
                 pledgesQuery = pledgesQuery.Where(x => x.EmployerAccount.Id == request.AccountId.Value);
             }
 
-            if (request.Sectors > 0)
+            if (request.Sectors != null && request.Sectors.Any())
             {
-                pledgesQuery = pledgesQuery.Where(x => (x.Sectors & request.Sectors) != 0 || x.Sectors == 0);
+                pledgesQuery = pledgesQuery.Where(x => (x.Sectors & (Sector)request.Sectors.Cast<int>().Sum()) != 0 || x.Sectors == 0);
             }
 
             var queryResult = await pledgesQuery

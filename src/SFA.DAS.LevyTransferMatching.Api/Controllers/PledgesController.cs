@@ -38,7 +38,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         {
             var result = await _mediator.Send(new GetPledgesQuery
             {
-                Sectors = sectors != null ? (Sector)sectors.Cast<int>().Sum() : 0,
+                Sectors = sectors,
                 AccountId = accountId,
                 Page = page,
                 PageSize = pageSize
