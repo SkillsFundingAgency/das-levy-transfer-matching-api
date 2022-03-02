@@ -35,6 +35,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications
                     StartDate = application.StartDate,
                     Amount = application.Amount,
                     TotalAmount = application.TotalAmount,
+                    CurrentFinancialYearAmount = application.CurrentFinancialYearAmount,
                     HasTrainingProvider = application.HasTrainingProvider,
                     Sectors = application.Sectors,
                     FirstName = application.FirstName,
@@ -88,6 +89,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications
             public DateTime StartDate { get; set; }
             public int Amount { get; set; }
             public int TotalAmount { get; set; }
+            public int CurrentFinancialYearAmount { get; set; }
             public bool HasTrainingProvider { get; set; }
             public IEnumerable<Sector> Sectors { get; set; }
             public string FirstName { get; set; }
