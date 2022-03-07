@@ -17,6 +17,14 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
     public class GetPledgesQueryHandlerTests : LevyTransferMatchingDbContextFixture
     {
         private Fixture _fixture;
+        private static readonly object[] _sectorLists =
+            {
+                new object[] {new List<Sector> {Sector.Agriculture}},
+                new object[] {new List<Sector> {Sector.Business, Sector.Charity}},
+                new object[] {new List<Sector> {Sector.Education, Sector.Digital, Sector.Construction, Sector.Legal}},
+                new object[] {new List<Sector> {Sector.Health, Sector.ProtectiveServices}},
+                new object[] {new List<Sector> {Sector.Sales, Sector.Transport, Sector.CareServices, Sector.Catering}}
+            };
 
         [SetUp]
         public async Task Setup()
@@ -41,6 +49,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
             await DbContext.Pledges.AddRangeAsync(pledges);
 
             await DbContext.SaveChangesAsync();
+
         }
 
         [Test]
@@ -112,24 +121,26 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
             Assert.AreEqual(expectedPledgeRecords.Count(), actualPledges.Count());
         }
 
-        [Test]
-        public async Task Handle_Pledges_Are_Filtered_By_Sector()
+        [TestCaseSource("_sectorLists")]
+        public async Task Handle_Pledges_Are_Filtered_By_Sector(List<Sector> sector)
         {
             // Arrange
-            var firstPledge = await DbContext.Pledges.FirstAsync();
             var getPledgesQueryHandler = new GetPledgesQueryHandler(DbContext);
             var getPledgesQuery = new GetPledgesQuery()
             {
-                Sectors = new List<Sector>() { firstPledge.Sectors }
+                AccountId = null,
+                Sectors = sector
             };
 
             // Act
             var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
             var actualPledges = result.Items.ToArray();
-            var expectedPledgeRecords = await DbContext.Pledges.Where(x => x.Sectors == firstPledge.Sectors).ToListAsync();
 
             // Assert
-            Assert.AreEqual(expectedPledgeRecords.Count(), actualPledges.Count());
+            for (int i = 0; i < actualPledges.Length; i++)
+            {
+                Assert.IsTrue(actualPledges[i].Sectors.Any(x => sector.Contains(x)));
+            }
         }
 
     }
