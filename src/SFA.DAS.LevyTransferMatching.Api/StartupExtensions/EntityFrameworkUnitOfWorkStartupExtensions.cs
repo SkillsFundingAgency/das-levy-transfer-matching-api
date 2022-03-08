@@ -23,7 +23,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
                     var synchronizedStorageSession = unitOfWorkContext.Get<SynchronizedStorageSession>();
                     var sqlStorageSession = synchronizedStorageSession.GetSqlStorageSession();
                     var optionsBuilder = new DbContextOptionsBuilder<LevyTransferMatchingDbContext>().UseSqlServer(sqlStorageSession.Connection);
-                    optionsBuilder.UseLoggerFactory(DebugLoggingFactory);
+                    //optionsBuilder.UseLoggerFactory(DebugLoggingFactory);
                     dbContext = new LevyTransferMatchingDbContext(optionsBuilder.Options);
                     dbContext.Database.UseTransaction(sqlStorageSession.Transaction);
                 }

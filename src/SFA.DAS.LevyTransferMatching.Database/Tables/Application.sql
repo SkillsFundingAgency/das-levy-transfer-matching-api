@@ -38,4 +38,21 @@
     CONSTRAINT [FK_Application_EmployerAccount] FOREIGN KEY ([EmployerAccountId]) REFERENCES [dbo].[EmployerAccount] ([Id]),
 	CONSTRAINT [FK_Application_Pledge] FOREIGN KEY ([PledgeId]) REFERENCES [dbo].[Pledge] ([Id])
 )
+GO
 
+CREATE NONCLUSTERED INDEX [IX_Application_PledgeId]
+    ON [dbo].[Application]([PledgeId] ASC);
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Application_EmployerAccountId] ON [dbo].[Application]
+(
+	[EmployerAccountId] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Application_CreatedOnIdEmployerAccountId] ON [dbo].[Application]
+(
+	[CreatedOn] DESC,
+	[Id] ASC,
+	[EmployerAccountId] ASC
+)
