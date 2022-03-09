@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.LevyTransferMatching.Data;
@@ -20,25 +20,13 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
 
         public async Task<GetApplicationsResult> Handle(GetApplicationsQuery request, CancellationToken cancellationToken)
         {
-            IQueryable<Data.Models.Application> applicationsQuery = _dbContext.Applications;
-            if (request.ApplicationStatusFilter.HasValue)
-            {
-                applicationsQuery = applicationsQuery.Where(x => x.Status == request.ApplicationStatusFilter);
-            }
+            var now = DateTime.UtcNow;
 
-            if (request.PledgeId.HasValue)
-            {
-                applicationsQuery = applicationsQuery.Where(x => x.Pledge.Id == request.PledgeId);
-            }
-
-            if (request.AccountId.HasValue)
-            {
-                applicationsQuery = applicationsQuery.Where(x => x.EmployerAccount.Id == request.AccountId);
-            }
+            var applicationsQuery = _dbContext.Applications.AsQueryable()
+                .Filter(request)
+                .Sort(request.SortOrder, request.SortDirection, now);
 
             var queryResult = await applicationsQuery
-                .OrderByDescending(x => x.CreatedOn)
-                .ThenBy(x => x.EmployerAccount.Name)
                 .Skip(request.Offset)
                 .Take(request.Limit)
                 .Select(x => new GetApplicationsResult.Application
@@ -63,8 +51,9 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                     StandardRoute = x.StandardRoute,
                     Amount = x.Amount,
                     TotalAmount = x.TotalAmount,
+                    CurrentFinancialYearAmount = Convert.ToInt32(x.ApplicationCostProjections.Where(p=> p.FinancialYear == now.GetFinancialYear()).Sum(p => p.Amount)),
                     StartDate = x.StartDate,
-                    EmailAddresses = x.EmailAddresses.Any()
+                    EmailAddresses = Convert.ToInt32(x.EmailAddresses.Count()) > 0
                         ? x.EmailAddresses.Select(email => email.EmailAddress)
                         : null,
                     CreatedOn = x.CreatedOn,
@@ -77,7 +66,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                     SpecificLocation = x.SpecificLocation,
                     SenderEmployerAccountId = x.Pledge.EmployerAccount.Id,
                     SenderEmployerAccountName = x.Pledge.EmployerAccount.Name,
-                    CostProjections = x.ApplicationCostProjections.Select(p =>
+                    CostProjections = x.ApplicationCostProjections.OrderBy(p=> p.FinancialYear).Select(p =>
                         new GetApplicationsResult.Application.CostProjection
                             { FinancialYear = p.FinancialYear, Amount = p.Amount }).ToList(),
                     MatchPercentage = x.MatchPercentage,
