@@ -75,7 +75,13 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 ReceiverEmployerAccountId = application.EmployerAccount.Id,
                 SenderEmployerAccountId = application.Pledge.EmployerAccount.Id,
                 AutomaticApproval = application.AutomaticApproval,
-                CostProjections = application.ApplicationCostProjections.Select(p => new GetApplicationResult.CostProjection { FinancialYear = p.FinancialYear, Amount = p.Amount }).ToList()
+                CostProjections = application.ApplicationCostProjections.Select(p => new GetApplicationResult.CostProjection { FinancialYear = p.FinancialYear, Amount = p.Amount }).ToList(),
+                MatchPercentage = application.MatchPercentage,
+                MatchJobRole = application.MatchJobRole,
+                MatchLevel = application.MatchLevel,
+                MatchLocation = application.MatchLocation,
+                MatchSector = application.MatchSector,
+
             };
 
             return result;
