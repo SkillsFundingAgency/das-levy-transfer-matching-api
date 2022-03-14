@@ -37,7 +37,11 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
                     {
                         Name = x.Name,
                         Latitude = x.Geopoint[0],
-                        Longitude = x.Geopoint[1]
+                        Longitude = x.Geopoint[1],
+                        LocalAuthorityName = x.LocalAuthorityName,
+                        LocalAuthorityDistrict = x.LocalAuthorityDistrict,
+                        County = x.County,
+                        Region = x.Region
                     }).ToList(),
             };
 

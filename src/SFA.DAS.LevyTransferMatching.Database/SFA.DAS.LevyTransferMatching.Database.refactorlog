@@ -21,4 +21,18 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="Longitude" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="88afa271-3699-4cb3-876a-a1a746dbbe05" ChangeDateTime="03/14/2022 09:14:37">
+    <Property Name="ElementName" Value="[dbo].[PledgeLocation].[LocalAuthorityDistrict]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[PledgeLocation]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="LocalAuthorityName" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="250f3c8d-a567-4ca7-9143-83ac8403f373" ChangeDateTime="03/14/2022 09:14:44">
+    <Property Name="ElementName" Value="[dbo].[PledgeLocation].[Region]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[PledgeLocation]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="LocalAuthorityDistrict" />
+  </Operation>
 </Operations>
