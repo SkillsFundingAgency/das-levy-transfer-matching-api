@@ -8,3 +8,8 @@
     CONSTRAINT [FK_PledgeLocation_ToTable] FOREIGN KEY ([PledgeId]) REFERENCES [Pledge]([Id]), 
     CONSTRAINT [PK_PledgeLocation] PRIMARY KEY ([Id])
 )
+GO
+
+CREATE NONCLUSTERED INDEX [IX_PledgeLocation_PledgeId]
+    ON [dbo].[PledgeLocation]([PledgeId] ASC);
+

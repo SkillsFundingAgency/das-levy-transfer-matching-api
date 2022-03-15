@@ -6,3 +6,7 @@
 	CONSTRAINT [FK_ApplicationId_Application] FOREIGN KEY ([ApplicationId]) REFERENCES [Application]([Id]), 
     CONSTRAINT [PK_ApplicationEmailAddress] PRIMARY KEY ([Id])
 )
+GO
+
+CREATE NONCLUSTERED INDEX [IX_ApplicationEmailAddress_ApplicationId]
+    ON [dbo].[ApplicationEmailAddress]([ApplicationId] ASC);

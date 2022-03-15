@@ -41,6 +41,11 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
         public int NumberOfApprenticesUsed { get; set; }
         public bool AutomaticApproval { get; set; }
         public IEnumerable<CostProjection> CostProjections { get; set; }
+        public bool MatchSector { get; set; }
+        public bool MatchJobRole { get; set; }
+        public bool MatchLevel { get; set; }
+        public bool MatchLocation { get; set; }
+        public int MatchPercentage { get; set; }
 
         public class ApplicationLocation
         {
@@ -89,7 +94,12 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
                 AmountUsed = getApplicationResult.AmountUsed,
                 NumberOfApprenticesUsed = getApplicationResult.NumberOfApprenticesUsed,
                 AutomaticApproval = getApplicationResult.AutomaticApproval,
-                CostProjections = getApplicationResult.CostProjections?.Select(p => new CostProjection{ FinancialYear = p.FinancialYear, Amount = p.Amount })
+                CostProjections = getApplicationResult.CostProjections?.Select(p => new CostProjection{ FinancialYear = p.FinancialYear, Amount = p.Amount }),
+                MatchPercentage = getApplicationResult.MatchPercentage,
+                MatchSector = getApplicationResult.MatchSector,
+                MatchJobRole = getApplicationResult.MatchJobRole,
+                MatchLevel = getApplicationResult.MatchLevel,
+                MatchLocation = getApplicationResult.MatchLocation
             };
         }
     }

@@ -17,6 +17,7 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.DeclineFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.GenerateCostProjection;
 using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
+using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
@@ -223,15 +224,17 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [Route("applications")]
-        public async Task<IActionResult> GetApplications(int? pledgeId, long? accountId, ApplicationStatus? applicationStatusFilter, int page=0, int? pageSize=null)
+        public async Task<IActionResult> GetApplications([FromQuery] GetApplicationsRequest request)
         {
             var query = await _mediator.Send(new GetApplicationsQuery
             {
-                PledgeId = pledgeId,
-                AccountId = accountId,
-                ApplicationStatusFilter = applicationStatusFilter,
-                Page = page,
-                PageSize = pageSize
+                PledgeId = request.PledgeId,
+                AccountId = request.AccountId,
+                ApplicationStatusFilter = request.ApplicationStatusFilter,
+                Page = request.Page,
+                PageSize = request.PageSize,
+                SortOrder = request.SortOrder,
+                SortDirection = request.SortDirection
             });
 
             return Ok((GetApplicationsResponse)query);
