@@ -63,7 +63,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreatePled
             Assert.AreEqual((JobRole)command.JobRoles.Cast<int>().Sum(), inserted.JobRoles);
 
             var compareLogic = new CompareLogic(new ComparisonConfig{ IgnoreCollectionOrder = true, IgnoreObjectTypes = true, IgnoreUnknownObjectTypes = true });
-            var expectedLocations = command.Locations.Select(l => new PledgeLocation { Name =  l.Name, Latitude = l.Geopoint[0], Longitude = l.Geopoint[1] }).ToList();
+            var expectedLocations = command.Locations.Select(l => new PledgeLocation { Name =  l.Name, Latitude = l.Geopoint[0], Longitude = l.Geopoint[1], LocalAuthorityName = l.LocalAuthorityName, LocalAuthorityDistrict = l.LocalAuthorityDistrict, County = l.County, Region = l.Region }).ToList();
             var result = compareLogic.Compare(expectedLocations, inserted.Locations);
             Assert.IsTrue(result.AreEqual, result.DifferencesString);
         }
