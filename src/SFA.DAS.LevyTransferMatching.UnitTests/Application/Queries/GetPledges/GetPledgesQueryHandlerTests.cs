@@ -1,15 +1,15 @@
-﻿using System;
-using AutoFixture;
+﻿using AutoFixture;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
 using SFA.DAS.LevyTransferMatching.Data.Models;
+using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
+using SFA.DAS.LevyTransferMatching.Models.Enums;
+using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;
-using System.Collections.Generic;
-using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
 {
@@ -17,6 +17,14 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
     public class GetPledgesQueryHandlerTests : LevyTransferMatchingDbContextFixture
     {
         private Fixture _fixture;
+        private static readonly object[] _sectorLists =
+            {
+                new object[] {new List<Sector> {Sector.Agriculture}},
+                new object[] {new List<Sector> {Sector.Business, Sector.Charity}},
+                new object[] {new List<Sector> {Sector.Education, Sector.Digital, Sector.Construction, Sector.Legal}},
+                new object[] {new List<Sector> {Sector.Health, Sector.ProtectiveServices}},
+                new object[] {new List<Sector> {Sector.Sales, Sector.Transport, Sector.CareServices, Sector.Catering}}
+            };
 
         [SetUp]
         public async Task Setup()
@@ -41,6 +49,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
             await DbContext.Pledges.AddRangeAsync(pledges);
 
             await DbContext.SaveChangesAsync();
+
         }
 
         [Test]
@@ -83,7 +92,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
             };
 
             var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
-            
+
             Assert.AreEqual(10, result.TotalItems);
             Assert.AreEqual(expectedPages, result.TotalPages);
             Assert.LessOrEqual(result.Items.Count, pageSize ?? int.MaxValue);
@@ -111,5 +120,28 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
 
             Assert.AreEqual(expectedPledgeRecords.Count(), actualPledges.Count());
         }
+
+        [TestCaseSource("_sectorLists")]
+        public async Task Handle_Pledges_Are_Filtered_By_Sector(List<Sector> sector)
+        {
+            // Arrange
+            var getPledgesQueryHandler = new GetPledgesQueryHandler(DbContext);
+            var getPledgesQuery = new GetPledgesQuery()
+            {
+                AccountId = null,
+                Sectors = sector
+            };
+
+            // Act
+            var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
+            var actualPledges = result.Items.ToArray();
+
+            // Assert
+            for (int i = 0; i < actualPledges.Length; i++)
+            {
+                Assert.IsTrue(actualPledges[i].Sectors.Any(x => sector.Contains(x)));
+            }
+        }
+
     }
 }
