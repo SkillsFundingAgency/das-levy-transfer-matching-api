@@ -1,10 +1,16 @@
 ﻿using System;
 
-namespace SFA.DAS.LevyTransferMatching.Messages.Events
+namespace SFA.DAS.LevyTransferMatching.Messages.Legacy
 {
-    public class ApplicationFundingDeclinedEvent
+    [MessageGroup("pledge_application_funding_declined")]
+    public class PledgeApplicationFundingDeclined
     {
-        public ApplicationFundingDeclinedEvent(int applicationId, int pledgeId, DateTime declinedOn, int amount, long accountId)
+        public PledgeApplicationFundingDeclined()
+        {
+
+        }
+
+        public PledgeApplicationFundingDeclined(int applicationId, int pledgeId, DateTime declinedOn, int amount, long accountId)
         {
             Amount = amount;
             ApplicationId = applicationId;

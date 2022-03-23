@@ -23,7 +23,8 @@ namespace SFA.DAS.LevyTransferMatching.Domain.EventHandlers
                     @event.ApplicationId,
                     @event.PledgeId,
                     @event.DeclinedOn,
-                    @event.Amount));
+                    @event.Amount,
+                    @event.AccountId));
         }
     }
 }
