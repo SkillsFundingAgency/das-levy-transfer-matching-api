@@ -10,6 +10,14 @@ namespace SFA.DAS.LevyTransferMatching.Messages.Legacy
 
         }
 
+        public PledgeApplicationFundingDeclined(int applicationId, int pledgeId, DateTime declinedOn, int amount)
+        {
+            Amount = amount;
+            ApplicationId = applicationId;
+            DeclinedOn = declinedOn;
+            PledgeId = pledgeId;
+        }
+
         public PledgeApplicationFundingDeclined(int applicationId, int pledgeId, DateTime declinedOn, int amount, long accountId)
         {
             Amount = amount;
