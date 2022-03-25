@@ -13,9 +13,8 @@ namespace SFA.DAS.LevyTransferMatching.Domain.Events
             PledgeId = pledgeId;
         }
 
-        public ApplicationFundingDeclined(int applicationId, int pledgeId, DateTime declinedOn, int amount, long accountId)
+        public ApplicationFundingDeclined(int applicationId, int pledgeId, DateTime declinedOn, long accountId)
         {
-            Amount = amount;
             ApplicationId = applicationId;
             DeclinedOn = declinedOn;
             PledgeId = pledgeId;
