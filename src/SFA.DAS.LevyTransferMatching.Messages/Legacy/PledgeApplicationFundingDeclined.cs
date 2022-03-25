@@ -21,7 +21,6 @@ namespace SFA.DAS.LevyTransferMatching.Messages.Legacy
         public int ApplicationId { get; }
         public int PledgeId { get; }
         public DateTime DeclinedOn { get; }
-        public int Amount { get; }
         public long AccountId { get; }
     }
 }
