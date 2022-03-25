@@ -4,16 +4,9 @@ namespace SFA.DAS.LevyTransferMatching.Messages.Events
 {
     public class ApplicationFundingDeclinedEvent
     {
-        public ApplicationFundingDeclinedEvent(int applicationId, int pledgeId, DateTime declinedOn, int amount)
+        public ApplicationFundingDeclinedEvent(int applicationId, int pledgeId, DateTime declinedOn, int amount, long accountId)
         {
             Amount = amount;
-            ApplicationId = applicationId;
-            DeclinedOn = declinedOn;
-            PledgeId = pledgeId;
-        }
-
-        public ApplicationFundingDeclinedEvent(int applicationId, int pledgeId, DateTime declinedOn, long accountId)
-        {
             ApplicationId = applicationId;
             DeclinedOn = declinedOn;
             PledgeId = pledgeId;
