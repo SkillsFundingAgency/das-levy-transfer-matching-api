@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
+using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
@@ -143,5 +144,23 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledges
             }
         }
 
+        [TestCase(PledgeStatus.Active)]
+        [TestCase(PledgeStatus.Closed)]
+        public async Task Handle_Pledges_Are_Filtered_By_Status(PledgeStatus pledgeStatusFilter)
+        {
+            // Arrange
+            var getPledgesQueryHandler = new GetPledgesQueryHandler(DbContext);
+            var getPledgesQuery = new GetPledgesQuery()
+            {
+                AccountId = null,
+                PledgeStatusFilter = pledgeStatusFilter
+            };
+
+            // Act
+            var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
+
+            // Assert
+            Assert.IsTrue(result.Items.All(x => x.Status == pledgeStatusFilter));
+        }
     }
 }
