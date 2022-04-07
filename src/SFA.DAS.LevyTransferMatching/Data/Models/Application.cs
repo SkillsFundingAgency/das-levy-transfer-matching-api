@@ -144,7 +144,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             Status = ApplicationStatus.Approved;
             AutomaticApproval = automaticApproval;
             UpdatedOn = DateTime.UtcNow;
-            AddEvent(new ApplicationApproved(Id, PledgeId, UpdatedOn.Value, Amount));
+            AddEvent(new ApplicationApproved(Id, PledgeId, UpdatedOn.Value, Amount, EmployerAccount.Id));
             AddEvent(new ApplicationApprovedEmail(Id, PledgeId, EmployerAccount.Id));
             
             AddStatusHistory(UpdatedOn.Value);
