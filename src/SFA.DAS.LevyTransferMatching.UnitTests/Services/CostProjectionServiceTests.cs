@@ -22,15 +22,16 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Services
         public void GetCostProjections_Produces_Expected_Output()
         {
             _fixture
-                .WithTotalAmount(11000)
-                .WithStartDate(new DateTime(2021, 9, 1))
-                .WithDuration(15)
+                .WithTotalAmount(17000)
+                .WithStartDate(new DateTime(2023, 3, 1))
+                .WithDuration(24)
                 .Calculate();
 
-            _fixture.Verify("2020/21", null);
-            _fixture.Verify("2021/22", 4100);
-            _fixture.Verify("2022/23", 6900);
-            _fixture.Verify("2023/24", null);
+            _fixture.Verify("2022/23", null);
+            _fixture.Verify("2023/24", 6800);
+            _fixture.Verify("2024/25", 6800);
+            _fixture.Verify("2025/26", 3400);
+            _fixture.Verify("2026/27", null);
         }
 
         private class CostProjectionServiceTestsFixture
