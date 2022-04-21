@@ -10,15 +10,11 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.RecalculateCostProje
     public class RecalculateCostProjectionHandler : IRequestHandler<RecalculateCostProjectionCommand>
     {
         private readonly IApplicationRepository _repository;
-        private readonly IPledgeRepository _pledgeRepository;
-        private readonly ILogger<RecalculateCostProjectionHandler> _logger;
         private readonly ICostProjectionService _costProjectionService;
 
-        public RecalculateCostProjectionHandler(IApplicationRepository repository, ILogger<RecalculateCostProjectionHandler> logger, IPledgeRepository pledgeRepository, ICostProjectionService costProjectionService)
+        public RecalculateCostProjectionHandler(IApplicationRepository repository, ILogger<RecalculateCostProjectionHandler> logger, ICostProjectionService costProjectionService)
         {
             _repository = repository;
-            _logger = logger;
-            _pledgeRepository = pledgeRepository;
             _costProjectionService = costProjectionService;
         }
 
