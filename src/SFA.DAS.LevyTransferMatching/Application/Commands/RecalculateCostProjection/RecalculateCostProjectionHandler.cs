@@ -1,7 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.Extensions.Logging;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
 using SFA.DAS.LevyTransferMatching.Services;
 
@@ -12,7 +11,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.RecalculateCostProje
         private readonly IApplicationRepository _repository;
         private readonly ICostProjectionService _costProjectionService;
 
-        public RecalculateCostProjectionHandler(IApplicationRepository repository, ILogger<RecalculateCostProjectionHandler> logger, ICostProjectionService costProjectionService)
+        public RecalculateCostProjectionHandler(IApplicationRepository repository, ICostProjectionService costProjectionService)
         {
             _repository = repository;
             _costProjectionService = costProjectionService;
