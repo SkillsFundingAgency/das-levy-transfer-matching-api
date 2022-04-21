@@ -11,6 +11,7 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.CreditPledge;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitPledge;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
+using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 using System.Collections.Generic;
@@ -34,14 +35,15 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         [HttpGet]
         [Route("pledges")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetPledges([FromQuery] IEnumerable<Sector> sectors = null, long? accountId = null, int page = 1, int? pageSize = null)
+        public async Task<IActionResult> GetPledges([FromQuery] IEnumerable<Sector> sectors = null, long? accountId = null, int page = 1, int? pageSize = null, PledgeStatus? pledgeStatusFilter = null)
         {
             var result = await _mediator.Send(new GetPledgesQuery
             {
                 Sectors = sectors,
                 AccountId = accountId,
                 Page = page,
-                PageSize = pageSize
+                PageSize = pageSize,
+                PledgeStatusFilter = pledgeStatusFilter
             });
 
             var response = new GetPledgesResponse
