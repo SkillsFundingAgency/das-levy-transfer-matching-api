@@ -35,6 +35,11 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
                 pledgesQuery = pledgesQuery.Where(x => (x.Sectors & sectors) != 0 || x.Sectors == 0);
             }
 
+            if (request.PledgeStatusFilter.HasValue)
+            {
+                pledgesQuery = pledgesQuery.Where(x => x.Status == request.PledgeStatusFilter);
+            }
+
             var queryResult = await pledgesQuery
             .OrderByDescending(x => x.RemainingAmount)
             .Skip(request.Offset)
