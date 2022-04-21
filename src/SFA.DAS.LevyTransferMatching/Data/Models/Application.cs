@@ -250,13 +250,10 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             UpdatedOn = DateTime.UtcNow;
         }
 
-        public void AddMatchingCriteria(MatchingCriteria criteria)
+        public void SetCostProjection(IEnumerable<CostProjection> costProjections)
         {
-            MatchJobRole = criteria.MatchJobRole;
-            MatchLevel = criteria.MatchLevel;
-            MatchLocation = criteria.MatchLocation;
-            MatchSector = criteria.MatchSector;
-            MatchPercentage = criteria.MatchPercentage;
+            _applicationCostProjections.Clear();
+            _applicationCostProjections.AddRange(costProjections.Select(x => new ApplicationCostProjection(x.FinancialYear, x.Amount)).ToList());
         }
     }
 }

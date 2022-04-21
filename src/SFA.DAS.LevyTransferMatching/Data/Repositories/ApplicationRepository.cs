@@ -30,6 +30,8 @@ namespace SFA.DAS.LevyTransferMatching.Data.Repositories
 
         public async Task Update(Models.Application application)
         {
+            await _dbContext.SaveChangesAsync();
+
             foreach (dynamic domainEvent in application.FlushEvents())
             {
                 await _domainEventDispatcher.Send(domainEvent);

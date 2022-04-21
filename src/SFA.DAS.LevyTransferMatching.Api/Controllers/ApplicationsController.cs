@@ -14,10 +14,8 @@ using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.RejectApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DeclineFunding;
-using SFA.DAS.LevyTransferMatching.Application.Commands.GenerateCostProjection;
+using SFA.DAS.LevyTransferMatching.Application.Commands.RecalculateCostProjection;
 using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
-using SFA.DAS.LevyTransferMatching.Data.Enums;
-using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
@@ -261,10 +259,10 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [Route("applications/{applicationId}/generate-matching-criteria")]
-        public async Task<IActionResult> GenerateMatchingCriteria(int applicationId)
+        [Route("applications/{applicationId}/recalculate-cost-projection")]
+        public async Task<IActionResult> RecalculateCostProjection(int applicationId)
         {
-            await _mediator.Send(new GenerateMatchingCriteria
+            await _mediator.Send(new RecalculateCostProjectionCommand
             {
                 ApplicationId = applicationId,
             });
