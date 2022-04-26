@@ -1,9 +1,6 @@
 ﻿using MediatR;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 

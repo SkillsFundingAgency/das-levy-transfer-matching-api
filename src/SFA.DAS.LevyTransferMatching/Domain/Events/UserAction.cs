@@ -13,6 +13,7 @@
         DeclineFunding,
         CreditPledge,
         WithdrawApplication,
-        ClosePledge
+        ClosePledge,
+        WithdrawApplicationAfterAcceptance
     }
 }

@@ -5,8 +5,6 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
