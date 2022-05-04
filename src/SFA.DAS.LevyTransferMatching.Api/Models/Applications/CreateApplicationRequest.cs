@@ -20,8 +20,6 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications
         public int NumberOfApprentices { get; set; }
         public DateTime StartDate { get; set; }
         public bool HasTrainingProvider { get; set; }
-        public int Amount { get; set; }
-
         public IEnumerable<Sector> Sectors { get; set; }
         public List<int> Locations { get; set; }
         public string AdditionalLocation { get; set; }

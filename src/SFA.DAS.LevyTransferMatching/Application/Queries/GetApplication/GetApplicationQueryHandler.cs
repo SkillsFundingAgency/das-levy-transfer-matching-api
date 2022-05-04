@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -19,6 +20,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
 
         public async Task<GetApplicationResult> Handle(GetApplicationQuery request, CancellationToken cancellationToken)
         {
+            var now = DateTime.UtcNow;
+
             var applicationQuery = _levyTransferMatchingDbContext.Applications
                 .Include(x => x.ApplicationLocations)
                 .Include(x => x.EmailAddresses)
@@ -68,7 +71,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 Locations = application.ApplicationLocations.Select(x => new GetApplicationResult.ApplicationLocation { Id = x.Id, PledgeLocationId = x.PledgeLocationId }).ToList(),
                 AdditionalLocation = application.AdditionalLocation,
                 SpecificLocation = application.SpecificLocation,
-                Amount = application.Amount,
+                Amount = Convert.ToInt32(application.ApplicationCostProjections.Where(p => p.FinancialYear == now.GetFinancialYear()).Sum(p => p.Amount)),
                 TotalAmount = application.TotalAmount,
                 Status = application.Status,
                 PledgeId = application.PledgeId,

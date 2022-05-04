@@ -45,6 +45,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Repositories
                 .Include(o => o.ApplicationLocations)
                 .Include(o => o.EmailAddresses)
                 .Include(o => o.ApplicationCostProjections)
+                .Include(o => o.StatusHistory)
                 .Where(x => x.Id == applicationId)
                 .SingleOrDefaultAsync();
 
