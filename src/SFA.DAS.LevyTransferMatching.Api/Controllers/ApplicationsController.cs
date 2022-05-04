@@ -16,7 +16,6 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.RejectApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DeclineFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.GenerateCostProjection;
 using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
-using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplicationAfterAcceptance;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
@@ -157,21 +156,6 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
             {
                 ApplicationId = applicationId,
                 AccountId = accountId,
-                UserDisplayName = request.UserDisplayName,
-                UserId = request.UserId
-            }, cancellationToken);
-
-            return Ok();
-        }
-
-        [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        [Route("accounts/{accountId}/applications/{applicationId}/withdraw-after-acceptance")]
-        public async Task<IActionResult> WithdrawApplicationAfterAcceptance(int applicationId, long accountId, [FromBody] WithdrawApplicationAfterAcceptanceRequest request, CancellationToken cancellationToken = default)
-        {
-            await _mediator.Send(new WithdrawApplicationAfterAcceptanceCommand
-            {
-                ApplicationId = applicationId,
                 UserDisplayName = request.UserDisplayName,
                 UserId = request.UserId
             }, cancellationToken);

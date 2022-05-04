@@ -199,31 +199,26 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
         public void Withdraw(UserInfo userInfo)
         {
-            if (Status != ApplicationStatus.Pending)
+            if (Status == ApplicationStatus.Pending)
             {
-                throw new InvalidOperationException($"Unable to withdraw application with Id: {Id}. Application status is {Status} when it should be {ApplicationStatus.Pending}");
+                StartTrackingSession(UserAction.WithdrawApplication, userInfo);
+                ChangeTrackingSession.TrackUpdate(this);
+                Status = ApplicationStatus.Withdrawn;
+                UpdatedOn = DateTime.UtcNow;
+                AddEvent(new ApplicationWithdrawn(Id, PledgeId, UpdatedOn.Value));
             }
-
-            StartTrackingSession(UserAction.WithdrawApplication, userInfo);
-            ChangeTrackingSession.TrackUpdate(this);
-            Status = ApplicationStatus.Withdrawn;
-            UpdatedOn = DateTime.UtcNow;
-            AddEvent(new ApplicationWithdrawn(Id, PledgeId, UpdatedOn.Value));
-            
-            AddStatusHistory(UpdatedOn.Value);
-        }
-
-        public void WithdrawAfterAcceptance(UserInfo userInfo)
-        {
-            if (Status != ApplicationStatus.Accepted)
+            else if (Status == ApplicationStatus.Accepted)
             {
-                throw new InvalidOperationException($"Unable to withdraw after acceptance application with Id: {Id}. Application status is {Status} when it should be {ApplicationStatus.Accepted}");
+                StartTrackingSession(UserAction.WithdrawApplicationAfterAcceptance, userInfo);
+                ChangeTrackingSession.TrackUpdate(this);
+                Status = ApplicationStatus.WithdrawnAfterAcceptance;
+                UpdatedOn = DateTime.UtcNow;
+                AddEvent(new ApplicationWithdrawnAfterAcceptance(Id, PledgeId, Amount));
             }
-
-            StartTrackingSession(UserAction.WithdrawApplicationAfterAcceptance, userInfo);
-            ChangeTrackingSession.TrackUpdate(this);
-            Status = ApplicationStatus.WithdrawnAfterAcceptance;
-            UpdatedOn = DateTime.UtcNow;
+            else
+            {
+                throw new InvalidOperationException($"Unable to withdraw application with Id: {Id}. Application status is {Status} when it should be {ApplicationStatus.Pending} or {ApplicationStatus.Accepted}");
+            }
 
             AddStatusHistory(UpdatedOn.Value);
         }

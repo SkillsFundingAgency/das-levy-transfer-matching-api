@@ -19,7 +19,6 @@ using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
-using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplicationAfterAcceptance;
 
 namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
 {
@@ -335,24 +334,6 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
 
             _mediator.Verify(x => x.Send(It.Is<WithdrawApplicationCommand>(command =>
                         command.ApplicationId == _applicationId),
-                    It.IsAny<CancellationToken>()),
-                Times.Once);
-        }
-
-        [Test]
-        public async Task Post_WithdrawApplicationAfterAcceptance_Withdraws_Application()
-        {
-            var request = _fixture.Create<WithdrawApplicationAfterAcceptanceRequest>();
-            
-            var actionResult = await _applicationsController.WithdrawApplicationAfterAcceptance(_applicationId, _accountId, request);
-            
-            var okResult = actionResult as OkResult;
-            Assert.IsNotNull(okResult);
-
-            _mediator.Verify(x => x.Send(It.Is<WithdrawApplicationAfterAcceptanceCommand>(command =>
-                        command.ApplicationId == _applicationId &&
-                        command.UserId == request.UserId &&
-                        command.UserDisplayName == request.UserDisplayName),
                     It.IsAny<CancellationToken>()),
                 Times.Once);
         }
