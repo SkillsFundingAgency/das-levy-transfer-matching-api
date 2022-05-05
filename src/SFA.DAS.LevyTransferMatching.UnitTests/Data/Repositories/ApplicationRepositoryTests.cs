@@ -105,6 +105,21 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Data.Repositories
             Assert.AreEqual(ApplicationStatus.Withdrawn, updated.Status);
         }
 
+        [Test]
+        public async Task Update_Persists_Application_With_Withdraw_ApplicationStatus_WithdrawnAfterAcceptance()
+        {
+            var application = _fixture.Create<LevyTransferMatching.Data.Models.Application>();
+            application.SetValue(x => x.Status, ApplicationStatus.Accepted);
+            await DbContext.Applications.AddAsync(application, CancellationToken.None);
+
+            application.Withdraw(_fixture.Create<UserInfo>());
+            await _repository.Update(application);
+
+            var updated = await DbContext.Applications.FindAsync(application.Id);
+
+            Assert.AreEqual(ApplicationStatus.WithdrawnAfterAcceptance, updated.Status);
+        }
+
         private async Task<LevyTransferMatching.Data.Models.Application> CreateApprovedApplication()
         {
             var application = _fixture.Create<LevyTransferMatching.Data.Models.Application>();
