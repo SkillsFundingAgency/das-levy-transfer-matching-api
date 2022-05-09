@@ -12,8 +12,8 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Services
         [Test]
         public void UtcNow_Returns_Provided_Date()
         {
-            dateTimeService = new DateTimeService("22/03/2021 00:00:00");
             var expected = new DateTime(2021, 3, 22);
+            dateTimeService = new DateTimeService(expected.ToShortDateString());
 
             var actual = dateTimeService.UtcNow;
 
