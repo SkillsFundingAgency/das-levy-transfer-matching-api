@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Models;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 using System.Collections.Generic;
@@ -9,5 +10,6 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
     {
         public long? AccountId { get; set; }
         public IEnumerable<Sector> Sectors { get; set; }
+        public PledgeStatus? PledgeStatusFilter { get; set; }
     }
 }

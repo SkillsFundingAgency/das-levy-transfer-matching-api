@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace SFA.DAS.LevyTransferMatching.Models
@@ -10,7 +9,7 @@ namespace SFA.DAS.LevyTransferMatching.Models
         public int? PageSize { get; set; }
 
         public int Limit => PageSize ?? int.MaxValue;
-        public int Offset => PageSize.HasValue ? Page * PageSize.Value : 0;
+        public int Offset => PageSize.HasValue ? (Page-1) * PageSize.Value : 0;
     }
 
     public abstract class PagedQueryResult<T>
