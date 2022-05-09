@@ -1,8 +1,6 @@
 ﻿using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Services;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Services
 {
@@ -14,7 +12,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Services
         [Test]
         public void UtcNow_Returns_Provided_Date()
         {
-            dateTimeService = new DateTimeService("22/03/2021");
+            dateTimeService = new DateTimeService("22/03/2021 00:00:00");
             var expected = new DateTime(2021, 3, 22);
 
             var actual = dateTimeService.UtcNow;
