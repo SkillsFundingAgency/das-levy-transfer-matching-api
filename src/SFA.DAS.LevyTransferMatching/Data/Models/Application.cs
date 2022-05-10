@@ -5,6 +5,7 @@ using SFA.DAS.LevyTransferMatching.Abstractions;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Domain.Events;
+using SFA.DAS.LevyTransferMatching.Extensions;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Data.Models
@@ -37,7 +38,6 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             NumberOfApprentices = properties.NumberOfApprentices;
             StartDate = properties.StartDate;
             HasTrainingProvider = properties.HasTrainingProvider;
-            Amount = properties.Amount;
             Sectors = properties.Sectors;
             FirstName = properties.FirstName;
             LastName = properties.LastName;
@@ -144,7 +144,9 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             Status = ApplicationStatus.Approved;
             AutomaticApproval = automaticApproval;
             UpdatedOn = DateTime.UtcNow;
-            AddEvent(new ApplicationApproved(Id, PledgeId, UpdatedOn.Value, Amount));
+
+            var amount = ApplicationCostProjections.FirstOrDefault(p => p.FinancialYear == DateTime.UtcNow.GetFinancialYear())?.Amount ?? 0;
+            AddEvent(new ApplicationApproved(Id, PledgeId, UpdatedOn.Value, amount));
             AddEvent(new ApplicationApprovedEmail(Id, PledgeId, EmployerAccount.Id));
             
             AddStatusHistory(UpdatedOn.Value);
@@ -161,7 +163,9 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             ChangeTrackingSession.TrackUpdate(this);
             Status = ApplicationStatus.Rejected;
             UpdatedOn = DateTime.UtcNow;
-            AddEvent(new ApplicationRejected(Id, PledgeId, UpdatedOn.Value, Amount));
+
+            var amount = ApplicationCostProjections.FirstOrDefault(p => p.FinancialYear == DateTime.UtcNow.GetFinancialYear())?.Amount ?? 0;
+            AddEvent(new ApplicationRejected(Id, PledgeId, UpdatedOn.Value, amount));
 
             AddStatusHistory(UpdatedOn.Value);
         }
@@ -192,7 +196,11 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             ChangeTrackingSession.TrackUpdate(this);
             Status = ApplicationStatus.Declined;
             UpdatedOn = DateTime.UtcNow;
-            AddEvent(new ApplicationFundingDeclined(Id, PledgeId, UpdatedOn.Value, Amount));
+
+            var approvalDate = StatusHistory.First(x => x.Status == ApplicationStatus.Approved).CreatedOn;
+            var amountOnApproval = ApplicationCostProjections.FirstOrDefault(p => p.FinancialYear == approvalDate.GetFinancialYear())?.Amount ?? 0;
+
+            AddEvent(new ApplicationFundingDeclined(Id, PledgeId, UpdatedOn.Value, amountOnApproval));
 
             AddStatusHistory(UpdatedOn.Value);
         }
@@ -250,13 +258,10 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             UpdatedOn = DateTime.UtcNow;
         }
 
-        public void AddMatchingCriteria(MatchingCriteria criteria)
+        public void SetCostProjection(IEnumerable<CostProjection> costProjections)
         {
-            MatchJobRole = criteria.MatchJobRole;
-            MatchLevel = criteria.MatchLevel;
-            MatchLocation = criteria.MatchLocation;
-            MatchSector = criteria.MatchSector;
-            MatchPercentage = criteria.MatchPercentage;
+            _applicationCostProjections.Clear();
+            _applicationCostProjections.AddRange(costProjections.Select(x => new ApplicationCostProjection(x.FinancialYear, x.Amount)).ToList());
         }
     }
 }
