@@ -221,7 +221,9 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
                 ChangeTrackingSession.TrackUpdate(this);
                 Status = ApplicationStatus.WithdrawnAfterAcceptance;
                 UpdatedOn = DateTime.UtcNow;
-                AddEvent(new ApplicationWithdrawnAfterAcceptance(Id, PledgeId, Amount));
+
+                var amount = ApplicationCostProjections.FirstOrDefault(p => p.FinancialYear == DateTime.UtcNow.GetFinancialYear())?.Amount ?? 0;
+                AddEvent(new ApplicationWithdrawnAfterAcceptance(Id, PledgeId, amount));
             }
             else
             {
