@@ -22,9 +22,9 @@ namespace SFA.DAS.LevyTransferMatching.Services
 
             var monthly = (total - completionPayment) / duration;
 
-            var workingDate = startDate;
+            var workingDate = startDate.AddMonths(1);
 
-            for (var i = 0; i < duration; i++)
+            for (var i = 0; i <= duration; i++)
             {
                 var financialYear = workingDate.GetLastDayOfMonth().GetFinancialYear();
 
@@ -39,9 +39,11 @@ namespace SFA.DAS.LevyTransferMatching.Services
                     result.Add(financialYear, 0);
                 }
 
-                currentAmount += monthly;
-
-                if (i == duration-1)
+                if (i < duration)
+                {
+                    currentAmount += monthly;
+                }
+                else
                 {
                     currentAmount += completionPayment;
                 }

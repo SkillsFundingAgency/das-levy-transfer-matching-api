@@ -40,7 +40,7 @@ namespace SFA.DAS.LevyTransferMatching.Data
             modelBuilder.Entity<Models.Application>().Metadata.FindNavigation(nameof(Models.Application.StatusHistory)).SetPropertyAccessMode(PropertyAccessMode.Field);
             modelBuilder.Entity<Models.Application>().HasMany(x => x.ApplicationLocations).WithOne();
             modelBuilder.Entity<Models.Application>().Metadata.FindNavigation(nameof(Models.Application.ApplicationLocations)).SetPropertyAccessMode(PropertyAccessMode.Field);
-            modelBuilder.Entity<Models.Application>().HasMany(x => x.ApplicationCostProjections).WithOne();
+            modelBuilder.Entity<Models.Application>().HasMany(x => x.ApplicationCostProjections).WithOne().IsRequired(true);
             modelBuilder.Entity<Models.Application>().Metadata.FindNavigation(nameof(Models.Application.ApplicationCostProjections)).SetPropertyAccessMode(PropertyAccessMode.Field);
 
             modelBuilder.Entity<ApplicationEmailAddress>().ToTable("ApplicationEmailAddress");
