@@ -6,24 +6,21 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Extensions;
-using SFA.DAS.LevyTransferMatching.Services;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
 {
     public class GetApplicationQueryHandler : IRequestHandler<GetApplicationQuery, GetApplicationResult>
     {
         private readonly LevyTransferMatchingDbContext _levyTransferMatchingDbContext;
-        private readonly IDateTimeService _dateTimeService;
 
-        public GetApplicationQueryHandler(LevyTransferMatchingDbContext levyTransferMatchingDbContext, IDateTimeService dateTimeService)
+        public GetApplicationQueryHandler(LevyTransferMatchingDbContext levyTransferMatchingDbContext)
         {
             _levyTransferMatchingDbContext = levyTransferMatchingDbContext;
-            _dateTimeService = dateTimeService;
         }
 
         public async Task<GetApplicationResult> Handle(GetApplicationQuery request, CancellationToken cancellationToken)
         {
-            var now = _dateTimeService.UtcNow;
+            var now = DateTime.UtcNow;
 
             var applicationQuery = _levyTransferMatchingDbContext.Applications
                 .Include(x => x.ApplicationLocations)
