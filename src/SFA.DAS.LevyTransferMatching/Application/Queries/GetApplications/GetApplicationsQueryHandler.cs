@@ -6,24 +6,21 @@ using SFA.DAS.LevyTransferMatching.Extensions;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using SFA.DAS.LevyTransferMatching.Services;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
 {
     public class GetApplicationsQueryHandler : IRequestHandler<GetApplicationsQuery, GetApplicationsResult>
     {
         private readonly LevyTransferMatchingDbContext _dbContext;
-        private readonly IDateTimeService _dateTimeService;
 
-        public GetApplicationsQueryHandler(LevyTransferMatchingDbContext dbContext, IDateTimeService dateTimeService)
+        public GetApplicationsQueryHandler(LevyTransferMatchingDbContext dbContext)
         {
             _dbContext = dbContext;
-            _dateTimeService = dateTimeService;
         }
 
         public async Task<GetApplicationsResult> Handle(GetApplicationsQuery request, CancellationToken cancellationToken)
         {
-            var now = _dateTimeService.UtcNow;
+            var now = DateTime.UtcNow;
 
             var applicationsQuery = _dbContext.Applications
                 .Include(x => x.ApplicationCostProjections)

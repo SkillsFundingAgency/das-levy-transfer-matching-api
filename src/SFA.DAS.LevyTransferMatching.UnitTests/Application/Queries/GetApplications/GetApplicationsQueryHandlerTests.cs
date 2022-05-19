@@ -4,14 +4,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
-using Moq;
 using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Extensions;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
-using SFA.DAS.LevyTransferMatching.Services;
 using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetApplications
@@ -21,7 +19,6 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetApplicat
     {
         private Fixture _fixture;
         private GetApplicationsQueryHandler _handler;
-        private Mock<IDateTimeService> _dateTimeService;
 
         [SetUp]
         public async Task Setup()
@@ -42,9 +39,6 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetApplicat
 
             var applications = new List<LevyTransferMatching.Data.Models.Application>();
 
-            _dateTimeService = new Mock<IDateTimeService>();
-            _dateTimeService.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
-
             for (var i = 0; i < 20; i++)
             {
                 var properties = _fixture.Build<CreateApplicationProperties>()
@@ -62,7 +56,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetApplicat
 
             await DbContext.SaveChangesAsync();
 
-            _handler = new GetApplicationsQueryHandler(DbContext, _dateTimeService.Object);
+            _handler = new GetApplicationsQueryHandler(DbContext);
         }
     
         [Test]
