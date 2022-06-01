@@ -20,7 +20,6 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetApplicat
         public void Setup()
         {
             _fixture = new Fixture();
-
             _dateTimeService = new Mock<IDateTimeService>();
             _dateTimeService.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
         }

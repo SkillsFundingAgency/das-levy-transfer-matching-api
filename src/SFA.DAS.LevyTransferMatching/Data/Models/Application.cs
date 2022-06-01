@@ -207,17 +207,29 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
         public void Withdraw(UserInfo userInfo)
         {
-            if (Status != ApplicationStatus.Pending)
+            if (Status == ApplicationStatus.Pending)
             {
-                throw new InvalidOperationException($"Unable to withdraw application with Id: {Id}. Application status is {Status} when it should be {ApplicationStatus.Pending}");
+                StartTrackingSession(UserAction.WithdrawApplication, userInfo);
+                ChangeTrackingSession.TrackUpdate(this);
+                Status = ApplicationStatus.Withdrawn;
+                UpdatedOn = DateTime.UtcNow;
+                AddEvent(new ApplicationWithdrawn(Id, PledgeId, UpdatedOn.Value));
+            }
+            else if (Status == ApplicationStatus.Accepted)
+            {
+                StartTrackingSession(UserAction.WithdrawApplicationAfterAcceptance, userInfo);
+                ChangeTrackingSession.TrackUpdate(this);
+                Status = ApplicationStatus.WithdrawnAfterAcceptance;
+                UpdatedOn = DateTime.UtcNow;
+
+                var amount = ApplicationCostProjections.FirstOrDefault(p => p.FinancialYear == DateTime.UtcNow.GetFinancialYear())?.Amount ?? 0;
+                AddEvent(new ApplicationWithdrawnAfterAcceptance(Id, PledgeId, amount));
+            }
+            else
+            {
+                throw new InvalidOperationException($"Unable to withdraw application with Id: {Id}. Application status is {Status} when it should be {ApplicationStatus.Pending} or {ApplicationStatus.Accepted}");
             }
 
-            StartTrackingSession(UserAction.WithdrawApplication, userInfo);
-            ChangeTrackingSession.TrackUpdate(this);
-            Status = ApplicationStatus.Withdrawn;
-            UpdatedOn = DateTime.UtcNow;
-            AddEvent(new ApplicationWithdrawn(Id, PledgeId, UpdatedOn.Value));
-            
             AddStatusHistory(UpdatedOn.Value);
         }
 
