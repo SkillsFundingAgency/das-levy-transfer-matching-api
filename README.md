@@ -31,7 +31,7 @@ This utility uses the standard Apprenticeship Service configuration. All configu
 
 Azure Table Storage config
 
-Row Key: SFA.DAS.LevyTransferMatching.Web_1.0
+Row Key: SFA.DAS.LevyTransferMatching.Api_1.0
 
 Partition Key: LOCAL
 
