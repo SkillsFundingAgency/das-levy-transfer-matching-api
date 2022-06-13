@@ -21,7 +21,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.RecalculateCostProje
         {
             var application = await _repository.Get(request.ApplicationId);
 
-            var costProjections = _costProjectionService.GetCostProjections(application.StandardMaxFunding, application.StartDate, application.StandardDuration);
+            var costProjections = _costProjectionService.GetCostProjections(application.StandardMaxFunding * application.NumberOfApprentices, application.StartDate, application.StandardDuration);
 
             application.SetCostProjection(costProjections);
             
