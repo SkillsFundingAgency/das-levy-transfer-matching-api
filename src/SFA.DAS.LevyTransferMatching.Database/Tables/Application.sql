@@ -34,6 +34,7 @@
 	[MatchLocation]			BIT				NOT NULL DEFAULT 0,
 	[MatchJobRole]			BIT				NOT NULL DEFAULT 0,
 	[MatchPercentage]		TINYINT			NOT NULL DEFAULT 255,
+	[CostingModel]			TINYINT			NOT NULL DEFAULT 0,
     CONSTRAINT [PK_Application] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_Application_EmployerAccount] FOREIGN KEY ([EmployerAccountId]) REFERENCES [dbo].[EmployerAccount] ([Id]),
 	CONSTRAINT [FK_Application_Pledge] FOREIGN KEY ([PledgeId]) REFERENCES [dbo].[Pledge] ([Id])

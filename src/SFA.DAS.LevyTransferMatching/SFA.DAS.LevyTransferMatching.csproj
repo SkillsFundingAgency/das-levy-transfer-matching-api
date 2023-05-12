@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SFA.DAS.LevyTransferMatching.Infrastructure\SFA.DAS.LevyTransferMatching.Infrastructure.csproj" />
     <ProjectReference Include="..\SFA.DAS.LevyTransferMatching.Messages\SFA.DAS.LevyTransferMatching.Messages.csproj" />
     <ProjectReference Include="..\SFA.DAS.LevyTransferMatching.Testing\SFA.DAS.LevyTransferMatching.Testing.csproj" />
   </ItemGroup>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Data.ValueObjects
@@ -26,6 +27,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.ValueObjects
         public IEnumerable<string> EmailAddresses { get; set; }
         public IEnumerable<CostProjection> CostProjections { get; set; }
         public MatchingCriteria MatchingCriteria { get; set; }
+        public ApplicationCostingModel CostingModel { get; set; }
 
         public CreateApplicationProperties()
         {

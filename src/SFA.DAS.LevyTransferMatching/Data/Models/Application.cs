@@ -57,6 +57,12 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             AdditionalLocation = properties.AdditionalLocation;
             SpecificLocation = properties.SpecificLocation;
 
+            CostingModel = properties.CostingModel;
+            if (CostingModel == ApplicationCostingModel.OneYear)
+            {
+                Amount = CalculateOneYearCost();
+            }
+
             StartTrackingSession(UserAction.CreateApplication, userInfo);
             ChangeTrackingSession.TrackInsert(this);
             foreach(var emailAddress in _emailAddresses)
@@ -130,6 +136,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         public ApplicationStatus Status { get; private set; }
         public bool AutomaticApproval { get; private set; }
         public DateTime? UpdatedOn { get; private set; }
+        public ApplicationCostingModel CostingModel { get; private set; }
         public byte[] RowVersion { get; private set; }
 
         public void Approve(UserInfo userInfo, bool automaticApproval = false)
@@ -274,6 +281,17 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         {
             _applicationCostProjections.Clear();
             _applicationCostProjections.AddRange(costProjections.Select(x => new ApplicationCostProjection(x.FinancialYear, x.Amount)).ToList());
+        }
+
+        private int CalculateOneYearCost()
+        {
+            if (StandardDuration <= 12)
+            {
+                return StandardMaxFunding * NumberOfApprentices;
+            }
+
+            var fundingBandMax = (decimal)StandardMaxFunding * NumberOfApprentices;
+            return ((fundingBandMax / StandardDuration) * 12).ToNearest(1);
         }
     }
 }
