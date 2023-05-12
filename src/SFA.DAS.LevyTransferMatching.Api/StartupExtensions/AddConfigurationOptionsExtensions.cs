@@ -12,6 +12,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
             services.AddOptions();
             services.Configure<LevyTransferMatchingApi>(configuration.GetSection("LevyTransferMatchingApi"));
             services.AddSingleton(cfg => cfg.GetService<IOptions<LevyTransferMatchingApi>>().Value);
+            services.Configure<FeatureToggles>(configuration.GetSection("FeatureToggles"));
+            services.AddSingleton(cfg => cfg.GetService<IOptions<FeatureToggles>>().Value);
         }
     }
 }
