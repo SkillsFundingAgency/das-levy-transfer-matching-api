@@ -152,8 +152,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             AutomaticApproval = automaticApproval;
             UpdatedOn = DateTime.UtcNow;
 
-            var amount = ApplicationCostProjections.FirstOrDefault(p => p.FinancialYear == DateTime.UtcNow.GetFinancialYear())?.Amount ?? 0;
-            AddEvent(new ApplicationApproved(Id, PledgeId, UpdatedOn.Value, amount));
+            AddEvent(new ApplicationApproved(Id, PledgeId, UpdatedOn.Value, GetAmount(DateTime.UtcNow)));
             AddEvent(new ApplicationApprovedEmail(Id, PledgeId, EmployerAccount.Id));
             
             AddStatusHistory(UpdatedOn.Value);
@@ -171,8 +170,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             Status = ApplicationStatus.Rejected;
             UpdatedOn = DateTime.UtcNow;
 
-            var amount = ApplicationCostProjections.FirstOrDefault(p => p.FinancialYear == DateTime.UtcNow.GetFinancialYear())?.Amount ?? 0;
-            AddEvent(new ApplicationRejected(Id, PledgeId, UpdatedOn.Value, amount));
+            AddEvent(new ApplicationRejected(Id, PledgeId, UpdatedOn.Value, GetAmount(DateTime.UtcNow)));
 
             AddStatusHistory(UpdatedOn.Value);
         }
@@ -205,7 +203,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             UpdatedOn = DateTime.UtcNow;
 
             var approvalDate = StatusHistory.First(x => x.Status == ApplicationStatus.Approved).CreatedOn;
-            var amountOnApproval = ApplicationCostProjections.FirstOrDefault(p => p.FinancialYear == approvalDate.GetFinancialYear())?.Amount ?? 0;
+            var amountOnApproval = GetAmount(approvalDate);
 
             AddEvent(new ApplicationFundingDeclined(Id, PledgeId, UpdatedOn.Value, amountOnApproval));
 
@@ -229,8 +227,10 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
                 Status = ApplicationStatus.WithdrawnAfterAcceptance;
                 UpdatedOn = DateTime.UtcNow;
 
-                var amount = ApplicationCostProjections.FirstOrDefault(p => p.FinancialYear == DateTime.UtcNow.GetFinancialYear())?.Amount ?? 0;
-                AddEvent(new ApplicationWithdrawnAfterAcceptance(Id, PledgeId, amount));
+                var approvalDate = StatusHistory.First(x => x.Status == ApplicationStatus.Approved).CreatedOn;
+                var amountOnApproval = GetAmount(approvalDate);
+
+                AddEvent(new ApplicationWithdrawnAfterAcceptance(Id, PledgeId, amountOnApproval));
             }
             else
             {
@@ -292,6 +292,15 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
             var fundingBandMax = (decimal)StandardMaxFunding * NumberOfApprentices;
             return ((fundingBandMax / StandardDuration) * 12).ToNearest(1);
+        }
+
+        private int GetAmount(DateTime effectiveDate)
+        {
+            if (CostingModel == ApplicationCostingModel.Original)
+            {
+                return ApplicationCostProjections.FirstOrDefault(p => p.FinancialYear == effectiveDate.GetFinancialYear())?.Amount ?? 0;
+            }
+            return Amount;
         }
     }
 }
