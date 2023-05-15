@@ -6,6 +6,7 @@ using SFA.DAS.LevyTransferMatching.Extensions;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Services;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
@@ -54,7 +55,9 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                     StandardDuration = x.StandardDuration,
                     StandardMaxFunding = x.StandardMaxFunding,
                     StandardRoute = x.StandardRoute,
-                    Amount = Convert.ToInt32(x.ApplicationCostProjections.Where(p => p.FinancialYear == now.GetFinancialYear()).Sum(p => p.Amount)),
+                    Amount = x.CostingModel == ApplicationCostingModel.Original
+                        ? Convert.ToInt32(x.ApplicationCostProjections.Where(p => p.FinancialYear == now.GetFinancialYear()).Sum(p => p.Amount))
+                        : x.Amount,
                     TotalAmount = x.TotalAmount,
                     CurrentFinancialYearAmount = Convert.ToInt32(x.ApplicationCostProjections.Where(p=> p.FinancialYear == now.GetFinancialYear()).Sum(p => p.Amount)),
                     StartDate = x.StartDate,
@@ -78,7 +81,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                     MatchSector = x.MatchSector,
                     MatchJobRole = x.MatchJobRole,
                     MatchLevel = x.MatchLevel,
-                    MatchLocation = x.MatchLocation
+                    MatchLocation = x.MatchLocation,
+                    CostingModel = x.CostingModel
                 })
                 .AsNoTracking()
                 .AsSingleQuery()

@@ -1,7 +1,6 @@
 ﻿using AutoFixture;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.LevyTransferMatching.Application.Commands.DeclineFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
@@ -24,6 +23,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.WithdrawAp
         private readonly Fixture _fixture = new Fixture();
         private WithdrawApplicationCommand _command;
         private Data.Models.Application _application;
+        private UserInfo _userInfo;
 
         [SetUp]
         public void SetUp()
@@ -31,13 +31,9 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.WithdrawAp
             _application = _fixture.Create<LevyTransferMatching.Data.Models.Application>();
             _application.SetValue(x => x.Amount, _fixture.Create<int>());
 
-            var userInfo = _fixture.Create<UserInfo>();
+            _userInfo = _fixture.Create<UserInfo>();
             _application = _fixture.Create<Data.Models.Application>();
             _application.SetValue(x => x.Amount, _fixture.Create<int>());
-
-            // Make it 'accepted', otherwise withdrawing will fail
-            _application.Approve(userInfo);
-            _application.AcceptFunding(userInfo);
 
             _command = new WithdrawApplicationCommand
             {
@@ -56,7 +52,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.WithdrawAp
         }
 
         [Test]
-        public async Task Withdraw_Application_Is_Marked_As_Approved()
+        public async Task Withdraw_Application_Is_Marked_As_Withdrawn()
         {
             await _handler.Handle(_command, CancellationToken.None);
 
@@ -67,9 +63,25 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.WithdrawAp
         }
 
         [Test]
+        public async Task Withdraw_Application_When_Accepted_Then_Application_Is_Marked_As_WithdrawnAfterAcceptance()
+        {
+            _application.Approve(_userInfo);
+            _application.AcceptFunding(_userInfo);
+
+            await _handler.Handle(_command, CancellationToken.None);
+
+            _applicationRepository.Verify(x =>
+                x.Update(It.Is<Data.Models.Application>(a => a == _application &&
+                                                             a.Status == ApplicationStatus.WithdrawnAfterAcceptance &&
+                                                             a.UpdatedOn.Value.Date == DateTime.UtcNow.Date)));
+        }
+
+        [Test]
         public async Task Handle_When_Application_Withdrawn_After_Acceptance_Under_New_Cost_Model_Amount_Is_Correct()
         {
-            _application.SetValue(x => x.Status, ApplicationStatus.Accepted);
+            _application.Approve(_userInfo);
+            _application.AcceptFunding(_userInfo);
+
             _application.SetValue(x => x.CostingModel, ApplicationCostingModel.OneYear);
 
             await _handler.Handle(_command, CancellationToken.None);
