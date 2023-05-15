@@ -18,7 +18,7 @@ namespace SFA.DAS.LevyTransferMatching.Models.Enums
         Creative = 32,
         [ReferenceMetadata(Description = "Digital", Hint = "For example, Infrastructure Technician, Digital and Technology Solutions Professional, Data Analyst, Software Developer")]
         Digital = 64,
-        [ReferenceMetadata(Description = "Education and childcare", Hint = "For example, Early Years Educator, Teaching Assistant, Academic Professional, Learning and Skills Teacher")]
+        [ReferenceMetadata(Description = "Education and early years", Hint = "For example, Early Years Educator, Teaching Assistant, Academic Professional, Learning and Skills Teacher")]
         Education = 128,
         [ReferenceMetadata(Description = "Engineering and manufacturing", Hint = "For example, Engineering Technician, Motor Vehicle Service and Maintenance Technician, Metal fabricator, Aerospace engineer (degree)")]
         Engineering = 256,
