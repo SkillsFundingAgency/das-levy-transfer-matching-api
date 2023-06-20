@@ -45,6 +45,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
         public bool MatchLevel { get; set; }
         public bool MatchLocation { get; set; }
         public int MatchPercentage { get; set; }
+        public ApplicationCostingModel CostingModel { get; set; }
 
         public class ApplicationLocation
         {

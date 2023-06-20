@@ -2,8 +2,10 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
+using SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 using SFA.DAS.LevyTransferMatching.Services;
 
@@ -16,17 +18,19 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
         private readonly IApplicationRepository _applicationRepository;
         private readonly ICostProjectionService _costProjectionService;
         private readonly IMatchingCriteriaService _matchingCriteriaService;
+        private readonly FeatureToggles _featureToggles;
 
         public CreateApplicationCommandHandler(IPledgeRepository pledgeRepository,
             IApplicationRepository applicationRepository,
             IEmployerAccountRepository employerAccountRepository,
-            ICostProjectionService costProjectionService, IMatchingCriteriaService matchingCriteriaService)
+            ICostProjectionService costProjectionService, IMatchingCriteriaService matchingCriteriaService, FeatureToggles featureToggles)
         {
             _pledgeRepository = pledgeRepository;
             _applicationRepository = applicationRepository;
             _employerAccountRepository = employerAccountRepository;
             _costProjectionService = costProjectionService;
             _matchingCriteriaService = matchingCriteriaService;
+            _featureToggles = featureToggles;
         }
 
         public async Task<CreateApplicationCommandResult> Handle(CreateApplicationCommand request, CancellationToken cancellationToken)
@@ -59,7 +63,10 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
                 BusinessWebsite = request.BusinessWebsite,
                 EmailAddresses = request.EmailAddresses,
                 CostProjections = costProjections,
-                MatchingCriteria = matchingCriteria
+                MatchingCriteria = matchingCriteria,
+                CostingModel = _featureToggles.ToggleNewCostingModel
+                    ? ApplicationCostingModel.OneYear
+                    : ApplicationCostingModel.Original
             };
 
             var application = pledge.CreateApplication(account, settings, new UserInfo(request.UserId, request.UserDisplayName));

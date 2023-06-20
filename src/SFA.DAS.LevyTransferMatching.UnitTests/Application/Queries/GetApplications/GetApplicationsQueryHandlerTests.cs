@@ -7,11 +7,13 @@ using AutoFixture;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
+using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Extensions;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 using SFA.DAS.LevyTransferMatching.Services;
+using SFA.DAS.LevyTransferMatching.Testing;
 using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetApplications
@@ -72,6 +74,27 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetApplicat
             var result = await _handler.Handle(request, CancellationToken.None);
 
             Assert.AreEqual(20, result.TotalItems);
+        }
+
+        [Test]
+        public async Task Handle_When_Application_CostingModel_Is_OneYear_Then_Amount_Is_Correct()
+        {
+            var request = new GetApplicationsQuery();
+
+            foreach (var expected in DbContext.Applications)
+            {
+                expected.SetValue(x=> x.CostingModel, ApplicationCostingModel.OneYear);
+            }
+            await DbContext.SaveChangesAsync();
+
+            var result = await _handler.Handle(request, CancellationToken.None);
+
+            foreach (var expected in DbContext.Applications)
+            {
+                var actual = result.Items.Single(x => x.Id == expected.Id);
+
+                Assert.AreEqual(expected.Amount, actual.Amount);
+            }
         }
 
         [TestCase(10, 2)]
