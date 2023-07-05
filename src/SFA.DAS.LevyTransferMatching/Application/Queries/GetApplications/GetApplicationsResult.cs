@@ -48,6 +48,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
             public bool MatchLocation { get; set; }
             public int MatchPercentage { get; set; }
             public ApplicationCostingModel CostingModel { get; set; }
+            public string AutomaticApprovalChoice { get; set; }
+
 
             public class ApplicationLocation
             {
