@@ -47,7 +47,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         public int RemainingAmount { get; private set; }
 
         public bool IsNamePublic { get; private set; }
-        public string AutomaticApprovalChoice { get; set; }
+        public bool? AutoApproveFullMatches { get; set; }
 
         public DateTime CreatedOn { get; private set; }
 

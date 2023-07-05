@@ -57,7 +57,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications
                     MatchLevel = application.MatchLevel,
                     MatchLocation = application.MatchLocation,
                     CostingModel = application.CostingModel,
-                    AutomaticApprovalChoice = application.AutomaticApprovalChoice
+                    AutoApproveFullMatches = application.AutoApproveFullMatches
                 })
             };
 
@@ -112,7 +112,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications
             public bool MatchLevel { get; set; }
             public bool MatchLocation { get; set; }
             public int MatchPercentage { get; set; }
-            public string AutomaticApprovalChoice { get; set; }
+            public bool? AutoApproveFullMatches { get; set; }
             public ApplicationCostingModel CostingModel { get; set; }
 
             public class ApplicationLocation
