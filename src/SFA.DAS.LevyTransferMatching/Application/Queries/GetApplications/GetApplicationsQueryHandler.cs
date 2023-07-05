@@ -83,6 +83,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                     MatchLevel = x.MatchLevel,
                     MatchLocation = x.MatchLocation,
                     CostingModel = x.CostingModel,
+                    PledgeRemainingAmount = x.Pledge.RemainingAmount,
                     AutoApproveFullMatches = x.Pledge.AutoApproveFullMatches
                 })
                 .AsNoTracking()

@@ -49,7 +49,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
             public int MatchPercentage { get; set; }
             public ApplicationCostingModel CostingModel { get; set; }
             public bool? AutoApproveFullMatches { get; set; }
-
+            public int PledgeRemainingAmount { get; set; }
 
             public class ApplicationLocation
             {
