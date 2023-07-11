@@ -92,7 +92,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 MatchSector = application.MatchSector,
                 CostingModel = application.CostingModel,
                 PledgeRemainingAmount = application.Pledge.RemainingAmount,
-                AutoApproveFullMatches = application.Pledge.AutoApproveFullMatches 
+                AutomaticApprovalOption = application.Pledge.AutomaticApprovalOption
             };
 
             return result;

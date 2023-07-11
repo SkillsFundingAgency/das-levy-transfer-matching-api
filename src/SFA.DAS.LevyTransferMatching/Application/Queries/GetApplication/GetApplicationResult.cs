@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
-using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
@@ -47,7 +46,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
         public int MatchPercentage { get; set; }
         public ApplicationCostingModel CostingModel { get; set; }
         public int PledgeRemainingAmount { get; set; }
-        public bool? AutoApproveFullMatches { get; set; }
+        public AutomaticApprovalOption AutomaticApprovalOption { get; set; }
 
         public class ApplicationLocation
         {
