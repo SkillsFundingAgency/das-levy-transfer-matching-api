@@ -97,6 +97,8 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             StartTrackingSession(UserAction.CreditPledge, userInfo);
             ChangeTrackingSession.TrackUpdate(this);
             RemainingAmount += creditAmount;
+
+            AddEvent(new PledgeCredited(Id));
         }
 
         public void ClosePledge(UserInfo userInfo)

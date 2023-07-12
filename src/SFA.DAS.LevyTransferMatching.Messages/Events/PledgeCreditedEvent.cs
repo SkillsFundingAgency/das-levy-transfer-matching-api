@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SFA.DAS.LevyTransferMatching.Messages.Events
+﻿namespace SFA.DAS.LevyTransferMatching.Messages.Events
 {
     public class PledgeCreditedEvent
     {
@@ -14,6 +10,5 @@ namespace SFA.DAS.LevyTransferMatching.Messages.Events
 
         public int PledgeId { get; set; }
         public long TransferSenderId { get; set; }
-
     }
 }
