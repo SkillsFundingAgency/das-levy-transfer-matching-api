@@ -46,6 +46,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
         public bool MatchLevel { get; set; }
         public bool MatchLocation { get; set; }
         public int MatchPercentage { get; set; }
+        public ApplicationCostingModel CostingModel { get; set; }
 
         public class ApplicationLocation
         {
@@ -99,7 +100,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
                 MatchSector = getApplicationResult.MatchSector,
                 MatchJobRole = getApplicationResult.MatchJobRole,
                 MatchLevel = getApplicationResult.MatchLevel,
-                MatchLocation = getApplicationResult.MatchLocation
+                MatchLocation = getApplicationResult.MatchLocation,
+                CostingModel = getApplicationResult.CostingModel
             };
         }
     }

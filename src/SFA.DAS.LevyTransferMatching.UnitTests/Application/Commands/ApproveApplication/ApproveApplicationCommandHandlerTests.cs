@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
@@ -7,6 +8,9 @@ using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Application.Commands.ApproveApplication;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
+using SFA.DAS.LevyTransferMatching.Domain.Events;
+using SFA.DAS.LevyTransferMatching.Extensions;
+using SFA.DAS.LevyTransferMatching.Testing;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.ApproveApplication
 {
@@ -31,7 +35,8 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.ApproveApp
                 UserDisplayName = _fixture.Create<string>()
             };
 
-            _application = _fixture.Create<LevyTransferMatching.Data.Models.Application>();
+            _application = _fixture.Build<Data.Models.Application>()
+                .Create();
 
             _applicationRepository = new Mock<IApplicationRepository>();
             _applicationRepository.Setup(x => x.Get(_command.ApplicationId, _command.PledgeId, null)).ReturnsAsync(_application);
@@ -51,6 +56,17 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.ApproveApp
                 x.Update(It.Is<LevyTransferMatching.Data.Models.Application>(a => a == _application &&
                     a.Status == ApplicationStatus.Approved &&
                     a.UpdatedOn.Value.Date == DateTime.UtcNow.Date)));
+        }
+
+        [Test]
+        public async Task Handle_On_Approval_When_Application_Under_New_Cost_Model_Amount_Is_Correct()
+        {
+            _application.SetValue(x => x.CostingModel, ApplicationCostingModel.OneYear);
+
+            await _handler.Handle(_command, CancellationToken.None);
+
+            var events = _application.FlushEvents();
+            Assert.IsTrue(events.Any(x => x is ApplicationApproved approvalEvent && approvalEvent.Amount == _application.Amount));
         }
     }
 }

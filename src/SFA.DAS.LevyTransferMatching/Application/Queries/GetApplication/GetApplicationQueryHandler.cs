@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.LevyTransferMatching.Data;
+using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Extensions;
 using SFA.DAS.LevyTransferMatching.Services;
 
@@ -74,7 +75,9 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 Locations = application.ApplicationLocations.Select(x => new GetApplicationResult.ApplicationLocation { Id = x.Id, PledgeLocationId = x.PledgeLocationId }).ToList(),
                 AdditionalLocation = application.AdditionalLocation,
                 SpecificLocation = application.SpecificLocation,
-                Amount = Convert.ToInt32(application.ApplicationCostProjections.Where(p => p.FinancialYear == now.GetFinancialYear()).Sum(p => p.Amount)),
+                Amount = application.CostingModel == ApplicationCostingModel.Original
+                    ? Convert.ToInt32(application.ApplicationCostProjections.Where(p => p.FinancialYear == now.GetFinancialYear()).Sum(p => p.Amount))
+                    : application.Amount,
                 TotalAmount = application.TotalAmount,
                 Status = application.Status,
                 PledgeId = application.PledgeId,
@@ -87,7 +90,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 MatchLevel = application.MatchLevel,
                 MatchLocation = application.MatchLocation,
                 MatchSector = application.MatchSector,
-
+                CostingModel = application.CostingModel
             };
 
             return result;

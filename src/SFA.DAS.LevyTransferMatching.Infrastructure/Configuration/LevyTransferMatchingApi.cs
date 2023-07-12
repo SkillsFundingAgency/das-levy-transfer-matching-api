@@ -8,5 +8,11 @@
         public string RedisConnectionString { get; set; }
         public string DataProtectionKeysDatabase { get; set; }
         public string UtcNowOverride { get; set; }
+        public FeatureToggles FeatureToggles { get; set; }
+    }
+
+    public class FeatureToggles
+    {
+        public bool ToggleNewCostingModel { get; set; }
     }
 }
