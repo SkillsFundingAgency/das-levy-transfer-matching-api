@@ -84,7 +84,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                     MatchLocation = x.MatchLocation,
                     CostingModel = x.CostingModel,
                     PledgeRemainingAmount = x.Pledge.RemainingAmount,
-                    AutomaticApprovalOption = x.Pledge.AutomaticApprovalOption
+                    PledgeAutomaticApprovalOption = x.Pledge.AutomaticApprovalOption
                 })
                 .AsNoTracking()
                 .AsSingleQuery()
