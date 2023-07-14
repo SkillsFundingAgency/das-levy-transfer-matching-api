@@ -29,6 +29,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
             {
                 Amount = request.Amount,
                 IsNamePublic = request.IsNamePublic,
+                AutomaticApprovalOption = request.AutomaticApprovalOption,
                 Levels = (Level)request.Levels.Cast<int>().Sum(),
                 JobRoles = (JobRole)request.JobRoles.Cast<int>().Sum(),
                 Sectors = (Sector)request.Sectors.Cast<int>().Sum(),

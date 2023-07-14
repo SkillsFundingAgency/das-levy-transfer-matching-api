@@ -8,6 +8,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.ValueObjects
     {
         public int Amount { get; set; }
         public bool IsNamePublic { get; set; }
+        public AutomaticApprovalOption AutomaticApprovalOption { get; set; }
         public Level Levels { get; set; }
         public JobRole JobRoles { get; set; }
         public Sector Sectors { get; set; }

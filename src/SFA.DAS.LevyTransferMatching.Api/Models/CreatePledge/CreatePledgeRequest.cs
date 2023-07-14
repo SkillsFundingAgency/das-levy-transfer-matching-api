@@ -28,5 +28,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.CreatePledge
 
         [JsonProperty(Required = Required.Always)]
         public List<LocationInformation> Locations { get; set; }
+
+        public AutomaticApprovalOption AutomaticApprovalOption { get; set; }
     }
 }
