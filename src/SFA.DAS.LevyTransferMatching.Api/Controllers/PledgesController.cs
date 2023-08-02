@@ -116,6 +116,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 Levels = request.Levels,
                 Sectors = request.Sectors,
                 Locations = request.Locations,
+                AutomaticApprovalOption = request.AutomaticApprovalOption,
                 UserId = request.UserId,
                 UserDisplayName = request.UserDisplayName
             });
