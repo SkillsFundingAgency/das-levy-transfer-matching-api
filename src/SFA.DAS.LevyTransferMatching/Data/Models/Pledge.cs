@@ -23,6 +23,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             Amount = properties.Amount;
             RemainingAmount = properties.Amount;
             IsNamePublic = properties.IsNamePublic;
+            AutomaticApprovalOption = properties.AutomaticApprovalOption;
             Levels = properties.Levels;
             JobRoles = properties.JobRoles;
             Sectors = properties.Sectors;
