@@ -11,7 +11,7 @@
     [RowVersion]        TIMESTAMP     NOT NULL,
     [Status]            TINYINT       NOT NULL DEFAULT 0,
     [ClosedOn]          DATETIME2     NULL,
-    [AutoApproveFullMatches ] BIT NULL, 
+    [AutomaticApprovalOption]    TINYINT       NOT NULL DEFAULT 0,
     CONSTRAINT [PK_Pledge] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_Pledge_EmployerAccount] FOREIGN KEY ([EmployerAccountId]) REFERENCES [dbo].[EmployerAccount] ([Id])
 );

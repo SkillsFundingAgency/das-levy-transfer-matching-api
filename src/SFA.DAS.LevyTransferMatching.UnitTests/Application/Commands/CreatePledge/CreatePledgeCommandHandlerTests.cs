@@ -58,6 +58,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreatePled
             Assert.AreEqual(command.Amount, inserted.Amount);
             Assert.AreEqual(command.Amount, inserted.RemainingAmount);
             Assert.AreEqual(command.IsNamePublic, inserted.IsNamePublic);
+            Assert.AreEqual(command.AutomaticApprovalOption, inserted.AutomaticApprovalOption);
             Assert.AreEqual((Level)command.Levels.Cast<int>().Sum(), inserted.Levels);
             Assert.AreEqual((Sector)command.Sectors.Cast<int>().Sum(), inserted.Sectors);
             Assert.AreEqual((JobRole)command.JobRoles.Cast<int>().Sum(), inserted.JobRoles);
