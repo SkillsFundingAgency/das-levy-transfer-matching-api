@@ -48,6 +48,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
         public int RemainingAmount { get; private set; }
 
         public bool IsNamePublic { get; private set; }
+
         public AutomaticApprovalOption AutomaticApprovalOption { get; set; }
 
         public DateTime CreatedOn { get; private set; }
@@ -98,6 +99,8 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             StartTrackingSession(UserAction.CreditPledge, userInfo);
             ChangeTrackingSession.TrackUpdate(this);
             RemainingAmount += creditAmount;
+
+            AddEvent(new PledgeCredited(Id));
         }
 
         public void ClosePledge(UserInfo userInfo)

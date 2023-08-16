@@ -90,7 +90,9 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 MatchLevel = application.MatchLevel,
                 MatchLocation = application.MatchLocation,
                 MatchSector = application.MatchSector,
-                CostingModel = application.CostingModel
+                CostingModel = application.CostingModel,
+                PledgeRemainingAmount = application.Pledge.RemainingAmount,
+                AutomaticApprovalOption = application.Pledge.AutomaticApprovalOption
             };
 
             return result;

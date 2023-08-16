@@ -38,7 +38,9 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                 GetApplicationsSortOrder.CriteriaMatch => sortDirection == SortDirection.Ascending
                     ? queryable.OrderBy(x => x.MatchPercentage)
                     : queryable.OrderByDescending(x => x.MatchPercentage),
-                GetApplicationsSortOrder.ApplicationDate => queryable.OrderByDescending(x => x.CreatedOn),
+                GetApplicationsSortOrder.ApplicationDate => sortDirection == SortDirection.Ascending
+                    ? queryable.OrderBy(x => x.CreatedOn)
+                    : queryable.OrderByDescending(x => x.CreatedOn),
                 GetApplicationsSortOrder.Applicant => sortDirection == SortDirection.Ascending
                     ? queryable.OrderBy(x => x.EmployerAccount.Name)
                     : queryable.OrderByDescending(x => x.EmployerAccount.Name),

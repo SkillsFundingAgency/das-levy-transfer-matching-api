@@ -47,6 +47,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
         public bool MatchLocation { get; set; }
         public int MatchPercentage { get; set; }
         public ApplicationCostingModel CostingModel { get; set; }
+        public int PledgeRemainingAmount { get; set; }
+        public AutomaticApprovalOption AutomaticApprovalOption { get; set; }
 
         public class ApplicationLocation
         {
@@ -101,7 +103,9 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
                 MatchJobRole = getApplicationResult.MatchJobRole,
                 MatchLevel = getApplicationResult.MatchLevel,
                 MatchLocation = getApplicationResult.MatchLocation,
-                CostingModel = getApplicationResult.CostingModel
+                CostingModel = getApplicationResult.CostingModel,
+                PledgeRemainingAmount = getApplicationResult.PledgeRemainingAmount,
+                AutomaticApprovalOption = getApplicationResult.AutomaticApprovalOption
             };
         }
     }
