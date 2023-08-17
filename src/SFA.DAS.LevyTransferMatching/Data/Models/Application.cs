@@ -285,12 +285,14 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
         private int CalculateOneYearCost()
         {
+            if (NumberOfApprentices == 0) return 0;
+
             if (StandardDuration <= 12)
             {
                 return StandardMaxFunding * NumberOfApprentices;
             }
 
-            var fundingBandMax = (decimal)StandardMaxFunding * NumberOfApprentices;
+            var fundingBandMax = StandardMaxFunding * NumberOfApprentices * 0.8m;
             return ((fundingBandMax / StandardDuration) * 12).ToNearest(1);
         }
 
