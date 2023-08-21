@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Data.Models;
@@ -38,7 +39,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Domain.EventHandlers
                 .ReturnsAsync(() => new Pledge(EmployerAccount.New(_transferSenderId, "Test Sender"),
                     new CreatePledgeProperties(), UserInfo.System));
 
-            _handler = new ApplicationCreatedHandler(_eventPublisher.Object, _pledgeRepository.Object);
+            _handler = new ApplicationCreatedHandler(_eventPublisher.Object, _pledgeRepository.Object, Mock.Of<ILogger<ApplicationCreatedHandler>>());
         }
 
         [Test]
