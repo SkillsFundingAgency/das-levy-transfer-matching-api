@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
@@ -19,11 +20,15 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
         private readonly ICostProjectionService _costProjectionService;
         private readonly IMatchingCriteriaService _matchingCriteriaService;
         private readonly FeatureToggles _featureToggles;
+        private readonly ILogger<CreateApplicationCommandHandler> _logger;
 
         public CreateApplicationCommandHandler(IPledgeRepository pledgeRepository,
             IApplicationRepository applicationRepository,
             IEmployerAccountRepository employerAccountRepository,
-            ICostProjectionService costProjectionService, IMatchingCriteriaService matchingCriteriaService, FeatureToggles featureToggles)
+            ICostProjectionService costProjectionService, 
+            IMatchingCriteriaService matchingCriteriaService,
+            FeatureToggles featureToggles,
+            ILogger<CreateApplicationCommandHandler> logger)
         {
             _pledgeRepository = pledgeRepository;
             _applicationRepository = applicationRepository;
@@ -31,10 +36,13 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
             _costProjectionService = costProjectionService;
             _matchingCriteriaService = matchingCriteriaService;
             _featureToggles = featureToggles;
+            _logger = logger;
         }
 
         public async Task<CreateApplicationCommandResult> Handle(CreateApplicationCommand request, CancellationToken cancellationToken)
         {
+            _logger.LogInformation("{TypeName} started processing.", nameof(CreateApplicationCommandHandler));
+            
             var account = await _employerAccountRepository.Get(request.EmployerAccountId);
             var pledge = await _pledgeRepository.Get(request.PledgeId);
 
@@ -72,6 +80,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
             var application = pledge.CreateApplication(account, settings, new UserInfo(request.UserId, request.UserDisplayName));
 
             await _applicationRepository.Add(application);
+            
+            _logger.LogInformation("{TypeName} completed processing. Application Id: {ApplicationId}.", nameof(CreateApplicationCommandHandler), application.Id);
            
             return new CreateApplicationCommandResult
             {

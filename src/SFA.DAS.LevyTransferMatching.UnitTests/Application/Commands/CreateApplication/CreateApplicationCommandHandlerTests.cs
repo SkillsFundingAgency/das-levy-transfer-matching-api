@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
@@ -72,7 +73,15 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreateAppl
                 x.GetMatchingCriteria(It.IsAny<CreateApplicationCommand>(), It.IsAny<Pledge>()))
                 .Returns(_matchingCriteria);
 
-            _handler = new CreateApplicationCommandHandler(_pledgeRepository.Object, _applicationRepository.Object, _employerAccountRepository.Object, _costProjectionService.Object, _matchingCriteriaService.Object, _featureToggles);
+            _handler = new CreateApplicationCommandHandler(
+                _pledgeRepository.Object,
+                _applicationRepository.Object,
+                _employerAccountRepository.Object,
+                _costProjectionService.Object,
+                _matchingCriteriaService.Object,
+                _featureToggles, 
+                Mock.Of<ILogger<CreateApplicationCommandHandler>>()
+                );
         }
 
         [Test]
