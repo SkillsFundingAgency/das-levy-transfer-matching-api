@@ -149,7 +149,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.CreateAppl
                 ? fundingBandMax * command.NumberOfApprentices
                 : (((fundingBandMax * 0.8m) / command.StandardDuration) * 12 * command.NumberOfApprentices).ToNearest(1);
 
-            Assert.AreEqual(expected, _inserted.Amount);
+            Assert.AreEqual(expected, _inserted.GetCost());
         }
     }
 }

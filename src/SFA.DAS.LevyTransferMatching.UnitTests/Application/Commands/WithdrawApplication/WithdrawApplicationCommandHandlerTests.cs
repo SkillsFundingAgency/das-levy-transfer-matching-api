@@ -28,12 +28,9 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.WithdrawAp
         [SetUp]
         public void SetUp()
         {
-            _application = _fixture.Create<LevyTransferMatching.Data.Models.Application>();
-            _application.SetValue(x => x.Amount, _fixture.Create<int>());
-
+            _application = _fixture.Create<Data.Models.Application>();
             _userInfo = _fixture.Create<UserInfo>();
             _application = _fixture.Create<Data.Models.Application>();
-            _application.SetValue(x => x.Amount, _fixture.Create<int>());
 
             _command = new WithdrawApplicationCommand
             {
@@ -87,7 +84,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.WithdrawAp
             await _handler.Handle(_command, CancellationToken.None);
 
             var events = _application.FlushEvents();
-            Assert.IsTrue(events.Any(x => x is ApplicationWithdrawnAfterAcceptance approvalEvent && approvalEvent.Amount == _application.Amount));
+            Assert.IsTrue(events.Any(x => x is ApplicationWithdrawnAfterAcceptance approvalEvent && approvalEvent.Amount == _application.GetCost()));
         }
     }
 }
