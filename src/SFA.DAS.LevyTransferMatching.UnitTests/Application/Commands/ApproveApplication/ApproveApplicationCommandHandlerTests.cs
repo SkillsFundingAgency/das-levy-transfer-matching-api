@@ -66,7 +66,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.ApproveApp
             await _handler.Handle(_command, CancellationToken.None);
 
             var events = _application.FlushEvents();
-            Assert.IsTrue(events.Any(x => x is ApplicationApproved approvalEvent && approvalEvent.Amount == _application.Amount));
+            Assert.IsTrue(events.Any(x => x is ApplicationApproved approvalEvent && approvalEvent.Amount == _application.GetCost()));
         }
     }
 }

@@ -93,7 +93,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetApplicat
             {
                 var actual = result.Items.Single(x => x.Id == expected.Id);
 
-                Assert.AreEqual(expected.Amount, actual.Amount);
+                Assert.AreEqual(expected.GetCost(), actual.Amount);
             }
         }
 

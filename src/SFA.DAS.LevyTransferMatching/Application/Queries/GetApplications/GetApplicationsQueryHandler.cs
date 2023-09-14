@@ -28,6 +28,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
 
             var applicationsQuery = _dbContext.Applications
                 .Include(x => x.ApplicationCostProjections)
+                .Include(x => x.StatusHistory)
                 .AsQueryable()
                 .Filter(request)
                 .Sort(request.SortOrder, request.SortDirection, now);
@@ -55,9 +56,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                     StandardDuration = x.StandardDuration,
                     StandardMaxFunding = x.StandardMaxFunding,
                     StandardRoute = x.StandardRoute,
-                    Amount = x.CostingModel == ApplicationCostingModel.Original
-                        ? Convert.ToInt32(x.ApplicationCostProjections.Where(p => p.FinancialYear == now.GetFinancialYear()).Sum(p => p.Amount))
-                        : x.Amount,
+                    Amount = x.GetCost(),
                     TotalAmount = x.TotalAmount,
                     CurrentFinancialYearAmount = Convert.ToInt32(x.ApplicationCostProjections.Where(p=> p.FinancialYear == now.GetFinancialYear()).Sum(p => p.Amount)),
                     StartDate = x.StartDate,

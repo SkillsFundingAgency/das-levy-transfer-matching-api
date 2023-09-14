@@ -147,7 +147,6 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetApplicat
 
             var application = _fixture.Create<Data.Models.Application>();
             application.SetValue(x => x.CostingModel, ApplicationCostingModel.OneYear);
-            application.SetValue(x => x.Amount, _fixture.Create<int>());
             await DbContext.AddAsync(application);
             await DbContext.SaveChangesAsync();
 
@@ -163,7 +162,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetApplicat
             var result = await handler.Handle(request, CancellationToken.None);
 
             // Assert
-            Assert.AreEqual(application.Amount, result.Amount);
+            Assert.AreEqual(application.GetCost(), result.Amount);
         }
 
     }

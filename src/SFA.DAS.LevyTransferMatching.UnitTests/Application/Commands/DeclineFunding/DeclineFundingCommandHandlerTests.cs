@@ -11,7 +11,6 @@ using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Domain.Events;
-using SFA.DAS.LevyTransferMatching.Messages.Events;
 using SFA.DAS.LevyTransferMatching.Testing;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.DeclineFunding
@@ -38,7 +37,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.DeclineFun
 
             var userInfo = _fixture.Create<UserInfo>();
             _application = _fixture.Create<Data.Models.Application>();
-            _application.SetValue(x => x.Amount, _fixture.Create<int>());
+            //_application.SetValue(x => x.Amount, _fixture.Create<int>());
 
             // Make it 'approved', otherwise declining will fail
             _application.Approve(userInfo);
@@ -95,7 +94,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.DeclineFun
              await _declineFundingCommandHandler.Handle(_request, CancellationToken.None);
 
             var events = _application.FlushEvents();
-            Assert.IsTrue(events.Any(x => x is ApplicationFundingDeclined approvalEvent && approvalEvent.Amount == _application.Amount));
+            Assert.IsTrue(events.Any(x => x is ApplicationFundingDeclined approvalEvent && approvalEvent.Amount == _application.GetCost()));
         }
     }
 }

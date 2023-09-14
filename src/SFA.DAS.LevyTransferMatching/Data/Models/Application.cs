@@ -58,10 +58,6 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             SpecificLocation = properties.SpecificLocation;
 
             CostingModel = properties.CostingModel;
-            if (CostingModel == ApplicationCostingModel.OneYear)
-            {
-                Amount = CalculateOneYearCost();
-            }
 
             StartTrackingSession(UserAction.CreateApplication, userInfo);
             ChangeTrackingSession.TrackInsert(this);
@@ -105,6 +101,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
         public int NumberOfApprentices { get; private set; }
         public DateTime StartDate { get; private set; }
+        [Obsolete("Application costs are now dynamic and subject to change, so values previously persisted in the Amount field should no longer be used")]
         public int Amount { get; private set; }
         public int TotalAmount { get; private set; }
         public bool HasTrainingProvider { get; private set; }
@@ -152,7 +149,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             AutomaticApproval = automaticApproval;
             UpdatedOn = DateTime.UtcNow;
 
-            AddEvent(new ApplicationApproved(Id, PledgeId, UpdatedOn.Value, GetAmount(DateTime.UtcNow)));
+            AddEvent(new ApplicationApproved(Id, PledgeId, UpdatedOn.Value, GetCost()));
             AddEvent(new ApplicationApprovedEmail(Id, PledgeId, EmployerAccount.Id));
             
             AddStatusHistory(UpdatedOn.Value);
@@ -170,7 +167,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             Status = ApplicationStatus.Rejected;
             UpdatedOn = DateTime.UtcNow;
 
-            AddEvent(new ApplicationRejected(Id, PledgeId, UpdatedOn.Value, GetAmount(DateTime.UtcNow)));
+            AddEvent(new ApplicationRejected(Id, PledgeId, UpdatedOn.Value, GetCost()));
 
             AddStatusHistory(UpdatedOn.Value);
         }
@@ -202,10 +199,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             Status = ApplicationStatus.Declined;
             UpdatedOn = DateTime.UtcNow;
 
-            var approvalDate = StatusHistory.First(x => x.Status == ApplicationStatus.Approved).CreatedOn;
-            var amountOnApproval = GetAmount(approvalDate);
-
-            AddEvent(new ApplicationFundingDeclined(Id, PledgeId, UpdatedOn.Value, amountOnApproval));
+            AddEvent(new ApplicationFundingDeclined(Id, PledgeId, UpdatedOn.Value, GetCost()));
 
             AddStatusHistory(UpdatedOn.Value);
         }
@@ -227,10 +221,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
                 Status = ApplicationStatus.WithdrawnAfterAcceptance;
                 UpdatedOn = DateTime.UtcNow;
 
-                var approvalDate = StatusHistory.First(x => x.Status == ApplicationStatus.Approved).CreatedOn;
-                var amountOnApproval = GetAmount(approvalDate);
-
-                AddEvent(new ApplicationWithdrawnAfterAcceptance(Id, PledgeId, amountOnApproval));
+                AddEvent(new ApplicationWithdrawnAfterAcceptance(Id, PledgeId, GetCost()));
             }
             else
             {
@@ -283,8 +274,18 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             _applicationCostProjections.AddRange(costProjections.Select(x => new ApplicationCostProjection(x.FinancialYear, x.Amount)).ToList());
         }
 
-        private int CalculateOneYearCost()
+        public int GetCost()
         {
+            if (CostingModel == ApplicationCostingModel.Original)
+            {
+                var statusChangeDate = StatusHistory.FirstOrDefault(x =>
+                    x.Status == ApplicationStatus.Approved || x.Status == ApplicationStatus.Rejected);
+
+                var costDate = statusChangeDate?.CreatedOn ?? DateTime.Now;
+
+                return ApplicationCostProjections.FirstOrDefault(p => p.FinancialYear == costDate.GetFinancialYear())?.Amount ?? 0;
+            }
+
             if (NumberOfApprentices == 0) return 0;
 
             if (StandardDuration <= 12)
@@ -294,15 +295,6 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
             var fundingBandMax = StandardMaxFunding * NumberOfApprentices * 0.8m;
             return ((fundingBandMax / StandardDuration) * 12).ToNearest(1);
-        }
-
-        private int GetAmount(DateTime effectiveDate)
-        {
-            if (CostingModel == ApplicationCostingModel.Original)
-            {
-                return ApplicationCostProjections.FirstOrDefault(p => p.FinancialYear == effectiveDate.GetFinancialYear())?.Amount ?? 0;
-            }
-            return Amount;
         }
     }
 }

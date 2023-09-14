@@ -33,6 +33,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 .Include(x => x.Pledge)
                 .Include(x => x.Pledge.EmployerAccount)
                 .Include(x => x.ApplicationCostProjections)
+                .Include(x => x.StatusHistory)
                 .Where(x => x.Id == request.ApplicationId)
                 .AsQueryable();
 
@@ -75,9 +76,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication
                 Locations = application.ApplicationLocations.Select(x => new GetApplicationResult.ApplicationLocation { Id = x.Id, PledgeLocationId = x.PledgeLocationId }).ToList(),
                 AdditionalLocation = application.AdditionalLocation,
                 SpecificLocation = application.SpecificLocation,
-                Amount = application.CostingModel == ApplicationCostingModel.Original
-                    ? Convert.ToInt32(application.ApplicationCostProjections.Where(p => p.FinancialYear == now.GetFinancialYear()).Sum(p => p.Amount))
-                    : application.Amount,
+                Amount = application.GetCost(),
                 TotalAmount = application.TotalAmount,
                 Status = application.Status,
                 PledgeId = application.PledgeId,
