@@ -71,7 +71,8 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             }
 
             AddEvent(() => new ApplicationCreated(Id, Pledge.Id, CreatedOn));
-
+            CreateApplicationEmail(properties);
+            
             AddStatusHistory(CreatedOn);
         }
 
@@ -296,5 +297,15 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             var fundingBandMax = StandardMaxFunding * NumberOfApprentices * 0.8m;
             return ((fundingBandMax / StandardDuration) * 12).ToNearest(1);
         }
+
+        private void CreateApplicationEmail(CreateApplicationProperties properties)
+        {
+            if (properties.MatchingCriteria.MatchPercentage < 100 || (properties.MatchingCriteria.MatchPercentage == 100 
+                && Pledge.AutomaticApprovalOption == AutomaticApprovalOption.DelayedAutoApproval))
+            {
+                AddEvent(() => new ApplicationCreatedEmail(Id, Pledge.Id, EmployerAccount.Id));
+            }                      
+        }
+
     }
 }
