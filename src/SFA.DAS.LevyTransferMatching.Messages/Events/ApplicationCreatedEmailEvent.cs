@@ -1,22 +1,16 @@
-﻿using System;
-
-namespace SFA.DAS.LevyTransferMatching.Messages.Events
+﻿namespace SFA.DAS.LevyTransferMatching.Messages.Events
 {
     public class ApplicationCreatedEmailEvent
     {
-        public ApplicationCreatedEmailEvent(int applicationId, int pledgeId, long transferSenderId, long transferReceiverId, long receiverAccountId)
+        public ApplicationCreatedEmailEvent(int applicationId, int pledgeId, long receiverAccountId)
         {
             ApplicationId = applicationId;
-            PledgeId = pledgeId;
-            TransferSenderId = transferSenderId;
-            TransferReceiverId = transferReceiverId;
+            PledgeId = pledgeId;          
             ReceiverAccountId = receiverAccountId;
         }
 
         public int ApplicationId { get; }
-        public int PledgeId { get; }
-        public long TransferSenderId { get; set; }
-        public long TransferReceiverId { get; set; }
+        public int PledgeId { get; }     
         public long ReceiverAccountId { get; set; }
     }
 }
