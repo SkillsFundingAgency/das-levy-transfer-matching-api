@@ -169,6 +169,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             UpdatedOn = DateTime.UtcNow;
 
             AddEvent(new ApplicationRejected(Id, PledgeId, UpdatedOn.Value, GetCost()));
+            AddEvent(new ApplicationRejectedEmail(Id, PledgeId, EmployerAccount.Id));
 
             AddStatusHistory(UpdatedOn.Value);
         }
