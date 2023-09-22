@@ -11,21 +11,21 @@ using SFA.DAS.NServiceBus.Services;
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Domain.EventHandlers
 {
     [TestFixture]
-    public class ApplicationApprovedEmailHandlerTests
+    public class ApplicationRejectedEmailHandlerTests
     {
-        private ApplicationApprovedEmailHandler _handler;
-        private ApplicationApprovedEmail _event;
+        private ApplicationRejectedEmailHandler _handler;
+        private ApplicationRejectedEmail _event;
         private Mock<IEventPublisher> _eventPublisher;
         private readonly Fixture _fixture = new Fixture();
 
         [SetUp]
         public void Setup()
         {
-            _event = _fixture.Create<ApplicationApprovedEmail>();
+            _event = _fixture.Create<ApplicationRejectedEmail>();
             _eventPublisher = new Mock<IEventPublisher>();
-            _eventPublisher.Setup(x => x.Publish(It.IsAny<ApplicationApprovedEmailEvent>()));
+            _eventPublisher.Setup(x => x.Publish(It.IsAny<ApplicationRejectedEmailEvent>()));
 
-            _handler = new ApplicationApprovedEmailHandler(_eventPublisher.Object);
+            _handler = new ApplicationRejectedEmailHandler(_eventPublisher.Object);
         }
 
         [Test]
@@ -33,7 +33,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Domain.EventHandlers
         {
             await _handler.Handle(_event, CancellationToken.None);
 
-            _eventPublisher.Verify(x => x.Publish(It.Is<ApplicationApprovedEmailEvent>(e =>
+            _eventPublisher.Verify(x => x.Publish(It.Is<ApplicationRejectedEmailEvent>(e =>
                     e.ApplicationId == _event.ApplicationId &&
                     e.PledgeId == _event.PledgeId &&
                     e.ReceiverAccountId == _event.ReceiverAccountId)));
