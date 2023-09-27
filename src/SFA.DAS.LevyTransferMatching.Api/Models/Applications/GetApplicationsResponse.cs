@@ -58,7 +58,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications
                     MatchLocation = application.MatchLocation,
                     CostingModel = application.CostingModel,
                     PledgeAutomaticApprovalOption = application.PledgeAutomaticApprovalOption,
-                    PledgeRemainingAmount = application.PledgeRemainingAmount
+                    PledgeRemainingAmount = application.PledgeRemainingAmount,
+                    PledgeCreatedOn = application.PledgeCreatedOn
                 })
             };
 
@@ -115,6 +116,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications
             public int MatchPercentage { get; set; }
             public AutomaticApprovalOption PledgeAutomaticApprovalOption { get; set; }
             public int PledgeRemainingAmount { get; set; }
+
+            public DateTime PledgeCreatedOn { get; set; }
             public ApplicationCostingModel CostingModel { get; set; }
 
             public class ApplicationLocation
