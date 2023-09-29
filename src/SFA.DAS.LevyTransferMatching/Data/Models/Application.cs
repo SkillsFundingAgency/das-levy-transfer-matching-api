@@ -70,8 +70,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
                 ChangeTrackingSession.TrackInsert(location);
             }
 
-            AddEvent(() => new ApplicationCreated(Id, Pledge.Id, CreatedOn));
-            CreateApplicationEmail(properties);
+            AddEvent(() => new ApplicationCreated(Id, Pledge.Id, EmployerAccount.Id, CreatedOn));
             
             AddStatusHistory(CreatedOn);
         }
@@ -151,7 +150,6 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             UpdatedOn = DateTime.UtcNow;
 
             AddEvent(new ApplicationApproved(Id, PledgeId, UpdatedOn.Value, GetCost()));
-            AddEvent(new ApplicationApprovedEmail(Id, PledgeId, EmployerAccount.Id));
             
             AddStatusHistory(UpdatedOn.Value);
         }
@@ -169,7 +167,6 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             UpdatedOn = DateTime.UtcNow;
 
             AddEvent(new ApplicationRejected(Id, PledgeId, UpdatedOn.Value, GetCost()));
-            AddEvent(new ApplicationRejectedEmail(Id, PledgeId, EmployerAccount.Id));
 
             AddStatusHistory(UpdatedOn.Value);
         }
@@ -298,15 +295,5 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             var fundingBandMax = StandardMaxFunding * NumberOfApprentices * 0.8m;
             return ((fundingBandMax / StandardDuration) * 12).ToNearest(1);
         }
-
-        private void CreateApplicationEmail(CreateApplicationProperties properties)
-        {
-            if (properties.MatchingCriteria.MatchPercentage < 100 || (properties.MatchingCriteria.MatchPercentage == 100 
-                && Pledge.AutomaticApprovalOption == AutomaticApprovalOption.DelayedAutoApproval))
-            {
-                AddEvent(() => new ApplicationCreatedEmail(Id, Pledge.Id, EmployerAccount.Id));
-            }                      
-        }
-
     }
 }

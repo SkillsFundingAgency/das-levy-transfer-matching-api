@@ -50,7 +50,8 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Domain.EventHandlers
                     e.ApplicationId == _event.ApplicationId &&
                     e.PledgeId == _event.PledgeId &&
                     e.CreatedOn == _event.CreatedOn &&
-                    e.TransferSenderId == _transferSenderId)));
+                    e.TransferSenderId == _transferSenderId &&
+                    e.ReceiverAccountId == _event.ReceiverAccountId)));
         }
     }
 }
