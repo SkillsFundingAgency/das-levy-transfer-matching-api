@@ -28,7 +28,8 @@ namespace SFA.DAS.LevyTransferMatching.Domain.EventHandlers
             await _eventPublisher.Publish(new ApplicationRejectedEvent(@event.ApplicationId, @event.PledgeId,
                 @event.RejectedOn,
                 @event.Amount,
-                senderId));
+                senderId,
+                @event.ReceiverAccountId));
         }
     }
 }

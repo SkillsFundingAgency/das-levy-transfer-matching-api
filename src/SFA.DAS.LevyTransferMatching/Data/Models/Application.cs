@@ -149,7 +149,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             AutomaticApproval = automaticApproval;
             UpdatedOn = DateTime.UtcNow;
 
-            AddEvent(new ApplicationApproved(Id, PledgeId, UpdatedOn.Value, GetCost()));
+            AddEvent(new ApplicationApproved(Id, PledgeId, UpdatedOn.Value, GetCost(), EmployerAccount.Id));
             
             AddStatusHistory(UpdatedOn.Value);
         }
@@ -166,7 +166,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             Status = ApplicationStatus.Rejected;
             UpdatedOn = DateTime.UtcNow;
 
-            AddEvent(new ApplicationRejected(Id, PledgeId, UpdatedOn.Value, GetCost()));
+            AddEvent(new ApplicationRejected(Id, PledgeId, UpdatedOn.Value, GetCost(), EmployerAccount.Id));
 
             AddStatusHistory(UpdatedOn.Value);
         }

@@ -51,7 +51,8 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Domain.EventHandlers
                     e.PledgeId == _event.PledgeId &&
                     e.RejectedOn == _event.RejectedOn &&
                     e.Amount == _event.Amount &&
-                    e.TransferSenderId == _transferSenderId)));
+                    e.TransferSenderId == _transferSenderId &&
+                    e.ReceiverAccountId == _event.ReceiverAccountId)));
         }
     }
 }
