@@ -50,7 +50,6 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
             public ApplicationCostingModel CostingModel { get; set; }
             public AutomaticApprovalOption PledgeAutomaticApprovalOption { get; set; }
             public int PledgeRemainingAmount { get; set; }
-            public DateTime PledgeCreatedOn { get; set; }
 
             public class ApplicationLocation
             {
