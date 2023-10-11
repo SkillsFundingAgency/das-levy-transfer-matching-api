@@ -80,12 +80,24 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             return RemainingAmount >= debitAmount;
         }
 
+        public bool ShouldPledgeBeAutoClosed(int debitAmount)
+        {
+            var updatedPledgeAmount = RemainingAmount - debitAmount;
+            return updatedPledgeAmount > 0 && updatedPledgeAmount < 2000;
+        }
+
         public bool Debit(int debitAmount, int applicationId, UserInfo userInfo)
         {
             if (!CanDebit(debitAmount))
             {
                 AddEvent(new PledgeDebitFailed(Id, applicationId, debitAmount));
                 return false;
+            }
+
+            if (ShouldPledgeBeAutoClosed(debitAmount))
+            {
+                this.ClosePledge(userInfo);
+                AddEvent(new PledgeClosed(Id, true));
             }
 
             StartTrackingSession(UserAction.DebitPledge, userInfo);
