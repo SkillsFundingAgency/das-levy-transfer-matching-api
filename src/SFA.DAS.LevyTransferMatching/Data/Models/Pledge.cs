@@ -88,6 +88,12 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
                 return false;
             }
 
+            if (ShouldPledgeBeAutoClosed(debitAmount))
+            {
+                this.ClosePledge(userInfo);
+                AddEvent(new PledgeClosed(Id, true));
+            }
+
             StartTrackingSession(UserAction.DebitPledge, userInfo);
             ChangeTrackingSession.TrackUpdate(this);
             RemainingAmount -= debitAmount;
@@ -127,6 +133,12 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
                     throw new InvalidOperationException($"Location {locationId} is not valid for pledge {Id}");
                 }
             }
+        }
+
+        public bool ShouldPledgeBeAutoClosed(int debitAmount)
+        {
+            var updatedPledgeAmount = RemainingAmount - debitAmount;
+            return updatedPledgeAmount > 0 && updatedPledgeAmount < 2000;
         }
     }
 }
