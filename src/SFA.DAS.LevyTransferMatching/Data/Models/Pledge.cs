@@ -90,8 +90,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
             if (ShouldPledgeBeAutoClosed(debitAmount))
             {
-                this.ClosePledge(userInfo);
-                AddEvent(new PledgeClosed(Id, true));
+                this.ClosePledge(userInfo, true);
             }
 
             StartTrackingSession(UserAction.DebitPledge, userInfo);
@@ -109,7 +108,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             AddEvent(new PledgeCredited(Id));
         }
 
-        public void ClosePledge(UserInfo userInfo)
+        public void ClosePledge(UserInfo userInfo, bool insufficientFunds = false)
         {
             if (Status != PledgeStatus.Active)
             {
@@ -120,6 +119,8 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             ChangeTrackingSession.TrackUpdate(this);
             Status = PledgeStatus.Closed;
             ClosedOn = DateTime.UtcNow;
+
+            AddEvent(new PledgeClosed(Id, insufficientFunds));
         }
 
         private void ValidateLocationIds(IEnumerable<int> locationIds)
