@@ -70,8 +70,8 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
                 ChangeTrackingSession.TrackInsert(location);
             }
 
-            AddEvent(() => new ApplicationCreated(Id, Pledge.Id, CreatedOn));
-
+            AddEvent(() => new ApplicationCreated(Id, Pledge.Id, EmployerAccount.Id, CreatedOn));
+            
             AddStatusHistory(CreatedOn);
         }
 
@@ -149,8 +149,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             AutomaticApproval = automaticApproval;
             UpdatedOn = DateTime.UtcNow;
 
-            AddEvent(new ApplicationApproved(Id, PledgeId, UpdatedOn.Value, GetCost()));
-            AddEvent(new ApplicationApprovedEmail(Id, PledgeId, EmployerAccount.Id));
+            AddEvent(new ApplicationApproved(Id, PledgeId, UpdatedOn.Value, GetCost(), EmployerAccount.Id));
             
             AddStatusHistory(UpdatedOn.Value);
         }
@@ -167,7 +166,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             Status = ApplicationStatus.Rejected;
             UpdatedOn = DateTime.UtcNow;
 
-            AddEvent(new ApplicationRejected(Id, PledgeId, UpdatedOn.Value, GetCost()));
+            AddEvent(new ApplicationRejected(Id, PledgeId, UpdatedOn.Value, GetCost(), EmployerAccount.Id));
 
             AddStatusHistory(UpdatedOn.Value);
         }
