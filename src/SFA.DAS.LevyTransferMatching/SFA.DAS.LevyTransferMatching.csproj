@@ -14,7 +14,10 @@
     <PackageReference Include="SFA.DAS.NServiceBus" Version="16.0.21" />
     <PackageReference Include="SFA.DAS.NServiceBus.SqlServer" Version="16.0.21" />
     <PackageReference Include="SFA.DAS.UnitOfWork.NServiceBus" Version="9.0.28" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="7.0.1" />
   </ItemGroup>
 
   <ItemGroup>
