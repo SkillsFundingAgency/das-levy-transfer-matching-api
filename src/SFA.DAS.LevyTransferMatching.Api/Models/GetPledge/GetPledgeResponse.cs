@@ -31,6 +31,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledge
 
         public IEnumerable<Location> Locations { get; set; }
 
+        public AutomaticApprovalOption AutomaticApprovalOption { get; set; }
+
         public static implicit operator GetPledgeResponse(GetPledgeResult pledge)
         {
             return new GetPledgeResponse
@@ -46,7 +48,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledge
                 Levels = pledge.Levels,
                 Sectors = pledge.Sectors,
                 Status = pledge.Status,
-                Locations = pledge.Locations.Select(x => new Location { Id = x.Id, Name = x.Name})
+                Locations = pledge.Locations.Select(x => new Location { Id = x.Id, Name = x.Name}),
+                AutomaticApprovalOption = pledge.AutomaticApprovalOption
             };
         }
 
