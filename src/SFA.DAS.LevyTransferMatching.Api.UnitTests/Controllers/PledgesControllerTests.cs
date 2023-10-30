@@ -107,7 +107,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
             Assert.IsNotNull(actionResult);
             Assert.IsNotNull(okObjectResult);
             Assert.IsNotNull(getPledgeResponse);
-            Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.OK);
+            Assert.IsNotNull(getPledgeResponse.AutomaticApprovalOption);
+            Assert.AreEqual((int)HttpStatusCode.OK, okObjectResult.StatusCode);
             Assert.AreEqual(getPledgeResponse.Id, pledgeResult.Id);
         }
 

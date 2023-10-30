@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Extensions;
+using SFA.DAS.LevyTransferMatching.Models.Enums;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -40,7 +41,8 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge
                     Sectors = pledge.Sectors.ToList(),
                     Status = pledge.Status,
                     Locations = pledge.Locations.Select(x => new GetPledgeResult.Location { Id = x.Id, Name = x.Name }),
-                    RemainingAmount = pledge.RemainingAmount
+                    RemainingAmount = pledge.RemainingAmount,
+                    AutomaticApprovalOption = pledge.AutomaticApprovalOption
                 };
             }
 
