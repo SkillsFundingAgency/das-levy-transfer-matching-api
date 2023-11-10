@@ -183,6 +183,8 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             Status = ApplicationStatus.Accepted;
             UpdatedOn = DateTime.UtcNow;
 
+            AddEvent(new ApplicationFundingAccepted(Id, PledgeId, ShouldPendingApplicationsBeAutomaticallyClosed()));
+
             AddStatusHistory(UpdatedOn.Value);
         }
 
@@ -294,6 +296,11 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
             var fundingBandMax = StandardMaxFunding * NumberOfApprentices * 0.8m;
             return ((fundingBandMax / StandardDuration) * 12).ToNearest(1);
+        }
+
+        private bool ShouldPendingApplicationsBeAutomaticallyClosed()
+        {
+            return Pledge.Status == PledgeStatus.Closed && Pledge.RemainingAmount <= 2000;
         }
     }
 }
