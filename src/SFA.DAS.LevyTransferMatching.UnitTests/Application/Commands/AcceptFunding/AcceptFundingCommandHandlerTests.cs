@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
@@ -10,6 +9,7 @@ using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
+using SFA.DAS.LevyTransferMatching.Domain.Events;
 using SFA.DAS.LevyTransferMatching.Testing;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.AcceptFunding
@@ -53,6 +53,15 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.AcceptFund
                 x.Update(It.Is<LevyTransferMatching.Data.Models.Application>(a => a == _application &&
                     a.Status == ApplicationStatus.Accepted &&
                     a.UpdatedOn.Value.Date == DateTime.UtcNow.Date)));
+        }
+
+        [Test]
+        public async Task Handle_Application_Publishes_ApplicationFundingAcceptedEvent()
+        {
+            await _handler.Handle(_command, CancellationToken.None);
+
+            var events = _application.FlushEvents();
+            Assert.IsTrue(events.Any(x => x is ApplicationFundingAccepted));
         }
     }
 }
