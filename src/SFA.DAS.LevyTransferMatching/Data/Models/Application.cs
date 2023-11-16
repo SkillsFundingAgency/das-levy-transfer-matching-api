@@ -171,7 +171,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             AddStatusHistory(UpdatedOn.Value);
         }
 
-        public void AcceptFunding(UserInfo userInfo)
+        public void AcceptFunding(UserInfo userInfo, Pledge pledge)
         {
             if (Status != ApplicationStatus.Approved)
             {
@@ -183,7 +183,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             Status = ApplicationStatus.Accepted;
             UpdatedOn = DateTime.UtcNow;
 
-            AddEvent(new ApplicationFundingAccepted(Id, PledgeId, ShouldPendingApplicationsBeAutomaticallyClosed()));
+            AddEvent(new ApplicationFundingAccepted(Id, PledgeId, ShouldPendingApplicationsBeAutomaticallyClosed(pledge)));
 
             AddStatusHistory(UpdatedOn.Value);
         }
@@ -298,9 +298,10 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             return ((fundingBandMax / StandardDuration) * 12).ToNearest(1);
         }
 
-        private bool ShouldPendingApplicationsBeAutomaticallyClosed()
+        private bool ShouldPendingApplicationsBeAutomaticallyClosed(Pledge pledge)
         {
-            return Pledge.Status == PledgeStatus.Closed && Pledge.RemainingAmount <= 2000;
+            return pledge.Status == PledgeStatus.Closed && pledge.RemainingAmount <= 2000 
+                && !pledge.Applications.Any(x => x.Status == ApplicationStatus.Approved);
         }
     }
 }

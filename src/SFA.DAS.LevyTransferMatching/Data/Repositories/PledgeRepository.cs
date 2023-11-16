@@ -32,6 +32,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Repositories
             return await _dbContext
                 .Pledges
                 .Include(p => p.Locations)
+                .Include(p => p.Applications)
                 .SingleOrDefaultAsync(x => x.Id == pledgeId);
         }
 
