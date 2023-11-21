@@ -171,7 +171,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             AddStatusHistory(UpdatedOn.Value);
         }
 
-        public void AcceptFunding(UserInfo userInfo, Pledge pledge)
+        public void AcceptFunding(UserInfo userInfo, bool shouldRejectApplications = false)
         {
             if (Status != ApplicationStatus.Approved)
             {
@@ -183,7 +183,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             Status = ApplicationStatus.Accepted;
             UpdatedOn = DateTime.UtcNow;
 
-            AddEvent(new ApplicationFundingAccepted(Id, PledgeId, ShouldPendingApplicationsBeAutomaticallyClosed(pledge)));
+            AddEvent(new ApplicationFundingAccepted(Id, PledgeId, shouldRejectApplications));
 
             AddStatusHistory(UpdatedOn.Value);
         }
@@ -296,12 +296,6 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
             var fundingBandMax = StandardMaxFunding * NumberOfApprentices * 0.8m;
             return ((fundingBandMax / StandardDuration) * 12).ToNearest(1);
-        }
-
-        private bool ShouldPendingApplicationsBeAutomaticallyClosed(Pledge pledge)
-        {
-            return pledge.Status == PledgeStatus.Closed && pledge.RemainingAmount <= 2000 
-                && !pledge.Applications.Any(x => x.Status == ApplicationStatus.Approved);
-        }
+        }      
     }
 }

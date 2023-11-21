@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.LevyTransferMatching.Data.Enums;
+using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 
@@ -47,13 +50,21 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding
                 };
             }
 
-            application.AcceptFunding(new UserInfo(request.UserId, request.UserDisplayName), pledge);
+            var shouldRejectApplications = ShouldPendingApplicationsBeAutomaticallyClosed(pledge);
+
+            application.AcceptFunding(new UserInfo(request.UserId, request.UserDisplayName), shouldRejectApplications);
             await _applicationRepository.Update(application);
             
             return new AcceptFundingCommandResult
             {
                 Updated = true
             };
+        }
+
+        private bool ShouldPendingApplicationsBeAutomaticallyClosed(Pledge pledge)
+        {
+            return pledge.Status == PledgeStatus.Closed && pledge.RemainingAmount <= 2000
+                && !pledge.Applications.Any(x => x.Status == ApplicationStatus.Approved);
         }
     }
 }

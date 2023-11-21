@@ -71,7 +71,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.WithdrawAp
         public async Task Withdraw_Application_When_Accepted_Then_Application_Is_Marked_As_WithdrawnAfterAcceptance()
         {
             _application.Approve(_userInfo);
-            _application.AcceptFunding(_userInfo, _pledge);
+            _application.AcceptFunding(_userInfo, false);
 
             await _handler.Handle(_command, CancellationToken.None);
 
@@ -85,7 +85,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.WithdrawAp
         public async Task Handle_When_Application_Withdrawn_After_Acceptance_Under_New_Cost_Model_Amount_Is_Correct()
         {
             _application.Approve(_userInfo);
-            _application.AcceptFunding(_userInfo, _pledge);
+            _application.AcceptFunding(_userInfo, false);
 
             _application.SetValue(x => x.CostingModel, ApplicationCostingModel.OneYear);
 
