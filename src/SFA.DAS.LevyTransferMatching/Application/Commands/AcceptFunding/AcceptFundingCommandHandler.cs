@@ -31,7 +31,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding
             
             if (application == null)
             {
-                _logger.LogInformation($"The application for {request} could not be found.");
+                _logger.LogInformation($"The application for {request.ApplicationId} could not be found.");
 
                 return new AcceptFundingCommandResult
                 {
@@ -42,7 +42,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding
 
             if (pledge == null)
             {
-                _logger.LogInformation($"The pledge for {request} could not be found.");
+                _logger.LogInformation($"The pledge for {request.ApplicationId} could not be found.");
 
                 return new AcceptFundingCommandResult
                 {
@@ -50,7 +50,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding
                 };
             }
 
-            var shouldRejectApplications = ShouldPendingApplicationsBeAutomaticallyClosed(pledge);
+            var shouldRejectApplications = ShouldPendingApplicationsBeAutomaticallyClosed(pledge, request.ApplicationId);
 
             application.AcceptFunding(new UserInfo(request.UserId, request.UserDisplayName), shouldRejectApplications);
             await _applicationRepository.Update(application);
@@ -61,10 +61,12 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding
             };
         }
 
-        private bool ShouldPendingApplicationsBeAutomaticallyClosed(Pledge pledge)
+        private bool ShouldPendingApplicationsBeAutomaticallyClosed(Pledge pledge, int applicationId)
         {
             return pledge.Status == PledgeStatus.Closed && pledge.RemainingAmount <= 2000
-                && !pledge.Applications.Any(x => x.Status == ApplicationStatus.Approved);
+               && !pledge.Applications
+               .Where(x => x.Id != applicationId)
+               .Any(x => x.Status == ApplicationStatus.Approved);
         }
     }
 }
