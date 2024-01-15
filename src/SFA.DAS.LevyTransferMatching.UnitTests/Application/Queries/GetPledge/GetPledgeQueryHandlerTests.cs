@@ -1,11 +1,5 @@
-﻿using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using NUnit.Framework;
+﻿using Microsoft.EntityFrameworkCore;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;

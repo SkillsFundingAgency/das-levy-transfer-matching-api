@@ -1,9 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.LevyTransferMatching.Data.Models;
+﻿using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Domain.EventHandlers;
@@ -19,7 +14,7 @@ public class ApplicationRejectedHandlerTests
     private ApplicationRejectedHandler _handler;
     private ApplicationRejected _event;
     private Mock<IEventPublisher> _eventPublisher;
-    private readonly Fixture _fixture = new Fixture();
+    private readonly Fixture _fixture = new();
     private Mock<IPledgeRepository> _pledgeRepository;
     private long _transferSenderId;
 
@@ -34,7 +29,7 @@ public class ApplicationRejectedHandlerTests
         _eventPublisher.Setup(x => x.Publish(It.IsAny<ApplicationRejectedEvent>()));
 
         _pledgeRepository = new Mock<IPledgeRepository>();
-        _pledgeRepository.Setup(x => x.Get(It.Is<int>(p => p == _event.PledgeId)))
+        _pledgeRepository.Setup(pledgeRepository => pledgeRepository.Get(It.Is<int>(p => p == _event.PledgeId)))
             .ReturnsAsync(() => new Pledge(EmployerAccount.New(_transferSenderId, "Test Sender"),
                 new CreatePledgeProperties(), UserInfo.System));
 
@@ -46,12 +41,12 @@ public class ApplicationRejectedHandlerTests
     {
         await _handler.Handle(_event, CancellationToken.None);
 
-        _eventPublisher.Verify(x => x.Publish(It.Is<ApplicationRejectedEvent>(e =>
-            e.ApplicationId == _event.ApplicationId &&
-            e.PledgeId == _event.PledgeId &&
-            e.RejectedOn == _event.RejectedOn &&
-            e.Amount == _event.Amount &&
-            e.TransferSenderId == _transferSenderId &&
-            e.ReceiverAccountId == _event.ReceiverAccountId)));
+        _eventPublisher.Verify(x => x.Publish(It.Is<ApplicationRejectedEvent>(applicationRejectedEvent =>
+            applicationRejectedEvent.ApplicationId == _event.ApplicationId &&
+            applicationRejectedEvent.PledgeId == _event.PledgeId &&
+            applicationRejectedEvent.RejectedOn == _event.RejectedOn &&
+            applicationRejectedEvent.Amount == _event.Amount &&
+            applicationRejectedEvent.TransferSenderId == _transferSenderId &&
+            applicationRejectedEvent.ReceiverAccountId == _event.ReceiverAccountId)));
     }
 }

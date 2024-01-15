@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using NUnit.Framework;
-using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
+﻿using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Services;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Services;
@@ -79,7 +75,7 @@ public class CostProjectionServiceTests
             }
             else
             {
-                Assert.IsFalse(_result.Exists(x => x.FinancialYear == financialYear));
+                Assert.That(_result.Exists(x => x.FinancialYear == financialYear), Is.False);
             }
         }
     }

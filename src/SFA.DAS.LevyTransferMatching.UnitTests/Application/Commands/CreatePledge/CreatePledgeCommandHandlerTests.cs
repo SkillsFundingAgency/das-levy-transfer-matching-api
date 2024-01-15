@@ -1,12 +1,6 @@
-﻿using System.Linq;
-using AutoFixture;
-using NUnit.Framework;
-using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
 using KellermanSoftware.CompareNetObjects;
 using SFA.DAS.LevyTransferMatching.Data.Models;
-using Moq;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;

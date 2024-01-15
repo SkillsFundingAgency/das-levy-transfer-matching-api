@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture;
-using FluentAssertions;
-using Moq;
-using NUnit.Framework;
+﻿using FluentAssertions;
 using SFA.DAS.LevyTransferMatching.Abstractions.Events;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Services.Events;
@@ -63,8 +56,8 @@ public class WhenSendIsCalled
     {
         //Arrange
         var domainEvent = _fixture.Create<TestEvent>();
-        bool isHandled1 = false;
-        bool isHandled2 = false;
+        var isHandled1 = false;
+        var isHandled2 = false;
 
         _mockTestEventHandler.Setup(m => m.Handle(domainEvent, It.IsAny<CancellationToken>()))
             .Callback(() =>

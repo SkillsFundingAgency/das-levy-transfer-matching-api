@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoFixture;
-using Microsoft.EntityFrameworkCore;
-using Moq;
+﻿using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Abstractions.Audit;
 using SFA.DAS.LevyTransferMatching.Domain.EventHandlers;
 using SFA.DAS.LevyTransferMatching.Domain.Events;
@@ -18,7 +12,7 @@ public class EntityStateChangedHandlerTests : LevyTransferMatchingDbContextFixtu
 {
     private EntityStateChangedHandler _handler;
     private Mock<IDiffService> _diffService;
-    private readonly Fixture _fixture = new Fixture();
+    private readonly Fixture _fixture = new();
     private EntityStateChanged _event;
     private List<DiffItem> _diffResult;
 
@@ -29,8 +23,7 @@ public class EntityStateChangedHandlerTests : LevyTransferMatchingDbContextFixtu
         _event.InitialState = "{ }";
         _event.UpdatedState = "{ }";
 
-        _diffResult = new List<DiffItem>()
-                {new DiffItem {InitialValue = "initial", PropertyName = "myproperty", UpdatedValue = "updated"}};
+        _diffResult = [new() { InitialValue = "initial", PropertyName = "myproperty", UpdatedValue = "updated" }];
 
         _diffService = new Mock<IDiffService>();
         _diffService.Setup(x =>
@@ -70,6 +63,6 @@ public class EntityStateChangedHandlerTests : LevyTransferMatchingDbContextFixtu
 
         await DbContext.SaveChangesAsync();
         var audit = await DbContext.Audits.FirstOrDefaultAsync();
-        Assert.IsNull(audit);
+        Assert.That(audit, Is.Null);
     }
 }

@@ -1,9 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.LevyTransferMatching.Domain.EventHandlers;
+﻿using SFA.DAS.LevyTransferMatching.Domain.EventHandlers;
 using SFA.DAS.LevyTransferMatching.Domain.Events;
 using SFA.DAS.LevyTransferMatching.Messages.Events;
 using SFA.DAS.NServiceBus.Services;
@@ -15,7 +10,7 @@ public class PledgeClosedEventHandlerTests
 {
     private PledgeClosedEventHandler _handler;
     private Mock<IEventPublisher> _eventPublisher;
-    private readonly Fixture _fixture = new Fixture();
+    private readonly Fixture _fixture = new();
 
     [SetUp]
     public void Setup()
@@ -32,8 +27,8 @@ public class PledgeClosedEventHandlerTests
 
         await _handler.Handle(@event, CancellationToken.None);
 
-        _eventPublisher.Verify(x => x.Publish(It.Is<PledgeClosedEvent>(e =>
-            e.PledgeId == @event.PledgeId &&
-            e.InsufficientFunds == @event.InsufficientFunds)));
+        _eventPublisher.Verify(x => x.Publish(It.Is<PledgeClosedEvent>(pledgeClosedEvent =>
+            pledgeClosedEvent.PledgeId == @event.PledgeId &&
+            pledgeClosedEvent.InsufficientFunds == @event.InsufficientFunds)));
     }
 }

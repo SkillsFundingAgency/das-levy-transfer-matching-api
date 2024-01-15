@@ -1,12 +1,7 @@
-﻿using AutoFixture;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.LevyTransferMatching.Domain.EventHandlers;
+﻿using SFA.DAS.LevyTransferMatching.Domain.EventHandlers;
 using SFA.DAS.LevyTransferMatching.Domain.Events;
 using SFA.DAS.LevyTransferMatching.Messages.Events;
 using SFA.DAS.NServiceBus.Services;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Domain.EventHandlers;
 
@@ -15,7 +10,7 @@ public class ApplicationWithdrawnAfterAcceptanceHandlerTests
     private ApplicationWithdrawnAfterAcceptanceHandler _handler;
     private ApplicationWithdrawnAfterAcceptance _event;
     private Mock<IEventPublisher> _eventPublisher;
-    private readonly Fixture _fixture = new Fixture();
+    private readonly Fixture _fixture = new();
 
     [SetUp]
     public void Setup()
@@ -33,9 +28,9 @@ public class ApplicationWithdrawnAfterAcceptanceHandlerTests
     {
         await _handler.Handle(_event, CancellationToken.None);
 
-        _eventPublisher.Verify(x => x.Publish(It.Is<ApplicationWithdrawnAfterAcceptanceEvent>(e =>
-            e.ApplicationId == _event.ApplicationId &&
-            e.PledgeId == _event.PledgeId &&
-            e.Amount == _event.Amount)));
+        _eventPublisher.Verify(x => x.Publish(It.Is<ApplicationWithdrawnAfterAcceptanceEvent>(applicationWithdrawnAfterAcceptanceEvent =>
+            applicationWithdrawnAfterAcceptanceEvent.ApplicationId == _event.ApplicationId &&
+            applicationWithdrawnAfterAcceptanceEvent.PledgeId == _event.PledgeId &&
+            applicationWithdrawnAfterAcceptanceEvent.Amount == _event.Amount)));
     }
 }

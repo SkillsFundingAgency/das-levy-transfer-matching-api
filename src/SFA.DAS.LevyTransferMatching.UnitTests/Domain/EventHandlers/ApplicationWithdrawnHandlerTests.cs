@@ -1,9 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.LevyTransferMatching.Data.Models;
+﻿using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Domain.EventHandlers;
@@ -19,7 +14,7 @@ public class ApplicationWithdrawnHandlerTests
     private ApplicationWithdrawnHandler _handler;
     private ApplicationWithdrawn _event;
     private Mock<IEventPublisher> _eventPublisher;
-    private readonly Fixture _fixture = new Fixture();
+    private readonly Fixture _fixture = new();
     private Mock<IPledgeRepository> _pledgeRepository;
     private long _transferSenderId;
 
@@ -46,10 +41,10 @@ public class ApplicationWithdrawnHandlerTests
     {
         await _handler.Handle(_event, CancellationToken.None);
 
-        _eventPublisher.Verify(x => x.Publish(It.Is<ApplicationWithdrawnEvent>(e =>
-            e.ApplicationId == _event.ApplicationId &&
-            e.PledgeId == _event.PledgeId &&
-            e.WithdrawnOn == _event.WithdrawnOn &&
-            e.TransferSenderId == _transferSenderId)));
+        _eventPublisher.Verify(x => x.Publish(It.Is<ApplicationWithdrawnEvent>(applicationWithdrawnEvent =>
+            applicationWithdrawnEvent.ApplicationId == _event.ApplicationId &&
+            applicationWithdrawnEvent.PledgeId == _event.PledgeId &&
+            applicationWithdrawnEvent.WithdrawnOn == _event.WithdrawnOn &&
+            applicationWithdrawnEvent.TransferSenderId == _transferSenderId)));
     }
 }

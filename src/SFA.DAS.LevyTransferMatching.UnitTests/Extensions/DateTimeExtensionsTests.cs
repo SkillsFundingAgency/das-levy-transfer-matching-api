@@ -1,6 +1,4 @@
-﻿using System;
-using NUnit.Framework;
-using SFA.DAS.LevyTransferMatching.Extensions;
+﻿using SFA.DAS.LevyTransferMatching.Extensions;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Extensions;
 

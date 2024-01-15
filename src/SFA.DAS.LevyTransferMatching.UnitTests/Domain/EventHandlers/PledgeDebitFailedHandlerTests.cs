@@ -1,9 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.LevyTransferMatching.Domain.EventHandlers;
+﻿using SFA.DAS.LevyTransferMatching.Domain.EventHandlers;
 using SFA.DAS.LevyTransferMatching.Domain.Events;
 using SFA.DAS.LevyTransferMatching.Messages.Events;
 using SFA.DAS.NServiceBus.Services;
@@ -15,7 +10,7 @@ public class PledgeDebitFailedHandlerTests
 {
     private PledgeDebitFailedHandler _handler;
     private Mock<IEventPublisher> _eventPublisher;
-    private readonly Fixture _fixture = new Fixture();
+    private readonly Fixture _fixture = new();
 
     [SetUp]
     public void Setup()
@@ -33,9 +28,9 @@ public class PledgeDebitFailedHandlerTests
 
         await _handler.Handle(@event, CancellationToken.None);
 
-        _eventPublisher.Verify(x => x.Publish(It.Is<PledgeDebitFailedEvent>(e =>
-            e.ApplicationId == @event.ApplicationId &&
-            e.PledgeId == @event.PledgeId &&
-            e.Amount == @event.Amount)));
+        _eventPublisher.Verify(x => x.Publish(It.Is<PledgeDebitFailedEvent>(pledgeDebitFailedEvent =>
+            pledgeDebitFailedEvent.ApplicationId == @event.ApplicationId &&
+            pledgeDebitFailedEvent.PledgeId == @event.PledgeId &&
+            pledgeDebitFailedEvent.Amount == @event.Amount)));
     }
 }

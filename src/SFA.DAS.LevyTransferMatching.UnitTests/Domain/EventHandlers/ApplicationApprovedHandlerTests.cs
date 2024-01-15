@@ -1,9 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.LevyTransferMatching.Data.Models;
+﻿using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Domain.EventHandlers;
@@ -34,7 +29,7 @@ public class ApplicationApprovedHandlerTests
         _eventPublisher.Setup(x => x.Publish(It.IsAny<ApplicationApprovedEvent>()));
 
         _pledgeRepository = new Mock<IPledgeRepository>();
-        _pledgeRepository.Setup(x => x.Get(It.Is<int>(p => p == _event.PledgeId)))
+        _pledgeRepository.Setup(repository => repository.Get(It.Is<int>(p => p == _event.PledgeId)))
             .ReturnsAsync(() => new Pledge(EmployerAccount.New(_transferSenderId, "Test Sender"),
                 new CreatePledgeProperties(), UserInfo.System));
 
@@ -46,12 +41,12 @@ public class ApplicationApprovedHandlerTests
     {
         await _handler.Handle(_event, CancellationToken.None);
 
-        _eventPublisher.Verify(x => x.Publish(It.Is<ApplicationApprovedEvent>(e =>
-            e.ApplicationId == _event.ApplicationId &&
-            e.PledgeId == _event.PledgeId &&
-            e.ApprovedOn == _event.ApprovedOn &&
-            e.Amount == _event.Amount &&
-            e.TransferSenderId == _transferSenderId &&
-            e.ReceiverAccountId == _event.ReceiverAccountId)));
+        _eventPublisher.Verify(x => x.Publish(It.Is<ApplicationApprovedEvent>(applicationApprovedEvent =>
+            applicationApprovedEvent.ApplicationId == _event.ApplicationId &&
+            applicationApprovedEvent.PledgeId == _event.PledgeId &&
+            applicationApprovedEvent.ApprovedOn == _event.ApprovedOn &&
+            applicationApprovedEvent.Amount == _event.Amount &&
+            applicationApprovedEvent.TransferSenderId == _transferSenderId &&
+            applicationApprovedEvent.ReceiverAccountId == _event.ReceiverAccountId)));
     }
 }

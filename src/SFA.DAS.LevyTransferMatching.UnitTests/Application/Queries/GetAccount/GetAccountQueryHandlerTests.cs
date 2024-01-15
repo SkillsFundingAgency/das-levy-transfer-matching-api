@@ -1,8 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture;
-using NUnit.Framework;
-using SFA.DAS.LevyTransferMatching.Application.Queries.GetAccount;
+﻿using SFA.DAS.LevyTransferMatching.Application.Queries.GetAccount;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;
 

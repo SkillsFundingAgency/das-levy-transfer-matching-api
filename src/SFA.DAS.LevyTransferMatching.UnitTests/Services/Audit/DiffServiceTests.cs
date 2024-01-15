@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using AutoFixture;
-using NUnit.Framework;
-using SFA.DAS.LevyTransferMatching.Abstractions.Audit;
+﻿using SFA.DAS.LevyTransferMatching.Abstractions.Audit;
 using SFA.DAS.LevyTransferMatching.Services.Audit;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Services.Audit;
@@ -24,7 +18,7 @@ public class DiffServiceTests
     public void IdenticalItemsProducesEmptyDiff()
     {
         _fixture.WithIdenticalItems().GenerateDiff();
-        Assert.IsEmpty(_fixture.Result);
+        Assert.That(_fixture.Result, Is.Empty);
     }
 
     [Test]
@@ -49,7 +43,7 @@ public class DiffServiceTests
         foreach (var item in _fixture.UpdatedItem)
         {
             var resultItem = _fixture.Result.Single(x => x.PropertyName == item.Key);
-            Assert.IsNull(resultItem.InitialValue);
+            Assert.That(resultItem.InitialValue, Is.Null);
             Assert.That(resultItem.UpdatedValue, Is.EqualTo(item.Value));
         }
     }
@@ -63,7 +57,7 @@ public class DiffServiceTests
         foreach (var item in _fixture.UpdatedItem)
         {
             var resultItem = _fixture.Result.Single(x => x.PropertyName == item.Key);
-            Assert.IsNull(resultItem.InitialValue);
+            Assert.That(resultItem.InitialValue, Is.Null);
             Assert.That(resultItem.UpdatedValue, Is.EqualTo(item.Value));
         }
     }
@@ -77,7 +71,7 @@ public class DiffServiceTests
         foreach (var item in _fixture.InitialItem)
         {
             var resultItem = _fixture.Result.Single(x => x.PropertyName == item.Key);
-            Assert.IsNull(resultItem.UpdatedValue);
+            Assert.That(resultItem.UpdatedValue, Is.Null);
             Assert.That(resultItem.InitialValue, Is.EqualTo(item.Value));
         }
     }
@@ -162,14 +156,14 @@ public class DiffServiceTests
         private Dictionary<string, object> GenerateRandomDataWithNullValues()
         {
             var result = new Dictionary<string, object>();
-            for (var i = 0; i < 10; i++)
+            for (var index = 0; index < 10; index++)
             {
                 result.Add(_autoFixture.Create<string>(), null);
             }
             return result;
         }
 
-        private Dictionary<string, object> GenerateModifiedData(Dictionary<string, object> source)
+        private static Dictionary<string, object> GenerateModifiedData(Dictionary<string, object> source)
         {
             var result = new Dictionary<string, object>();
 

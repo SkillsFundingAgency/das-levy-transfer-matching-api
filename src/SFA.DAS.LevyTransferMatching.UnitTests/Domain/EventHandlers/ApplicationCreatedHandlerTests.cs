@@ -1,9 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.LevyTransferMatching.Data.Models;
+﻿using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Domain.EventHandlers;
@@ -19,7 +14,7 @@ public class ApplicationCreatedHandlerTests
     private ApplicationCreatedHandler _handler;
     private ApplicationCreated _event;
     private Mock<IEventPublisher> _eventPublisher;
-    private readonly Fixture _fixture = new Fixture();
+    private readonly Fixture _fixture = new();
     private Mock<IPledgeRepository> _pledgeRepository;
     private long _transferSenderId;
 
@@ -34,7 +29,7 @@ public class ApplicationCreatedHandlerTests
         _eventPublisher.Setup(x => x.Publish(It.IsAny<ApplicationCreatedEvent>()));
 
         _pledgeRepository = new Mock<IPledgeRepository>();
-        _pledgeRepository.Setup(x => x.Get(It.Is<int>(p => p == _event.PledgeId)))
+        _pledgeRepository.Setup(repository => repository.Get(It.Is<int>(p => p == _event.PledgeId)))
             .ReturnsAsync(() => new Pledge(EmployerAccount.New(_transferSenderId, "Test Sender"),
                 new CreatePledgeProperties(), UserInfo.System));
 
@@ -46,11 +41,11 @@ public class ApplicationCreatedHandlerTests
     {
         await _handler.Handle(_event, CancellationToken.None);
 
-        _eventPublisher.Verify(x => x.Publish(It.Is<ApplicationCreatedEvent>(e =>
-            e.ApplicationId == _event.ApplicationId &&
-            e.PledgeId == _event.PledgeId &&
-            e.CreatedOn == _event.CreatedOn &&
-            e.TransferSenderId == _transferSenderId &&
-            e.ReceiverAccountId == _event.ReceiverAccountId)));
+        _eventPublisher.Verify(x => x.Publish(It.Is<ApplicationCreatedEvent>(applicationCreatedEvent =>
+            applicationCreatedEvent.ApplicationId == _event.ApplicationId &&
+            applicationCreatedEvent.PledgeId == _event.PledgeId &&
+            applicationCreatedEvent.CreatedOn == _event.CreatedOn &&
+            applicationCreatedEvent.TransferSenderId == _transferSenderId &&
+            applicationCreatedEvent.ReceiverAccountId == _event.ReceiverAccountId)));
     }
 }

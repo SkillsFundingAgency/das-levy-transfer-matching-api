@@ -1,15 +1,12 @@
-﻿using AutoFixture;
-using NUnit.Framework;
-using SFA.DAS.LevyTransferMatching.Extensions;
+﻿using SFA.DAS.LevyTransferMatching.Extensions;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
-using System.Linq;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Extensions;
 
 [TestFixture]
 public class IntExtensionsTests
 {
-    private Fixture _fixture;
+    private readonly Fixture _fixture;
 
     public IntExtensionsTests()
     {

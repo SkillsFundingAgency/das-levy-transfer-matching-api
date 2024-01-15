@@ -1,15 +1,9 @@
-﻿using AutoFixture;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.LevyTransferMatching.Abstractions.CustomExceptions;
+﻿using SFA.DAS.LevyTransferMatching.Abstractions.CustomExceptions;
 using SFA.DAS.LevyTransferMatching.Application.Commands.ClosePledge;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
 using SFA.DAS.LevyTransferMatching.Testing;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.ClosePledge;
 

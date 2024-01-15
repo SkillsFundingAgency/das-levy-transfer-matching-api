@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using KellermanSoftware.CompareNetObjects;
-using NUnit.Framework;
+﻿using KellermanSoftware.CompareNetObjects;
 using SFA.DAS.LevyTransferMatching.Attributes;
 using SFA.DAS.LevyTransferMatching.Extensions;
 using SFA.DAS.LevyTransferMatching.Models.ReferenceData;
@@ -19,9 +15,9 @@ public class EnumExtensionsTests
 
         var expected = new List<ReferenceDataItem>
         {
-            new ReferenceDataItem{ Id = "Option1", Description = "Option one", Hint = "Description for option 1"},
-            new ReferenceDataItem{ Id = "Option2", Description = "Option two", Hint = "Description for option 2"},
-            new ReferenceDataItem{ Id = "Option3", Description = "Option three", Hint = "Description for option 3"}
+            new() { Id = "Option1", Description = "Option one", Hint = "Description for option 1"},
+            new() { Id = "Option2", Description = "Option two", Hint = "Description for option 2"},
+            new() { Id = "Option3", Description = "Option three", Hint = "Description for option 3"}
         };
 
         var compareLogic = new CompareLogic(new ComparisonConfig { IgnoreObjectTypes = true });
@@ -30,7 +26,7 @@ public class EnumExtensionsTests
     }
 
 
-    public enum TestEnum
+    private enum TestEnum
     {
         [ReferenceMetadata(Description = "Option one", Hint = "Description for option 1")]
         Option1 = 1,
