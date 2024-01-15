@@ -1,13 +1,8 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Extensions;
 using SFA.DAS.LevyTransferMatching.Models;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
 

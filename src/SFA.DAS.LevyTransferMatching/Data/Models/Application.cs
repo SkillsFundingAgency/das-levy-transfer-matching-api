@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using SFA.DAS.LevyTransferMatching.Abstractions;
+﻿using SFA.DAS.LevyTransferMatching.Abstractions;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Domain.Events;

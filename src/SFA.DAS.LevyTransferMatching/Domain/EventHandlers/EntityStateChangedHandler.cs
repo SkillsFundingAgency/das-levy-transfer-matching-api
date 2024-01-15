@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using SFA.DAS.LevyTransferMatching.Abstractions.Audit;
 using SFA.DAS.LevyTransferMatching.Abstractions.Events;
 using SFA.DAS.LevyTransferMatching.Data;

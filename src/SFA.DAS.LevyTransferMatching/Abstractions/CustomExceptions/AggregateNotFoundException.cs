@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SFA.DAS.LevyTransferMatching.Abstractions.CustomExceptions;
+﻿namespace SFA.DAS.LevyTransferMatching.Abstractions.CustomExceptions;
 
 [Serializable]
 public class AggregateNotFoundException<T> : Exception

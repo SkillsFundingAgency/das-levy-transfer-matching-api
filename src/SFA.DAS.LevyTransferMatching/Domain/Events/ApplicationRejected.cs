@@ -1,5 +1,4 @@
 ﻿using SFA.DAS.LevyTransferMatching.Abstractions.Events;
-using System;
 
 namespace SFA.DAS.LevyTransferMatching.Domain.Events;
 

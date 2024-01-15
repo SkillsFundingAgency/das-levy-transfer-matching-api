@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace SFA.DAS.LevyTransferMatching.Application.Commands.DebitPledge;
+﻿namespace SFA.DAS.LevyTransferMatching.Application.Commands.DebitPledge;
 
 public class DebitPledgeCommandValidator : AbstractValidator<DebitPledgeCommand>
 {

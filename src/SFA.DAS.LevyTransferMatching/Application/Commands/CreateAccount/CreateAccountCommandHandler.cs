@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
-using SFA.DAS.LevyTransferMatching.Data.Models;
+﻿using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateAccount;

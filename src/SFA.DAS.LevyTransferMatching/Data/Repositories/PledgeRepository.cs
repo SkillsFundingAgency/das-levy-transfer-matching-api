@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SFA.DAS.LevyTransferMatching.Abstractions.Events;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 

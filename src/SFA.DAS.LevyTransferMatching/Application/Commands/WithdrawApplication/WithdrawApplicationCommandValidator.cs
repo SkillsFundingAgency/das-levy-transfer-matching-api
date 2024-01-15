@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
+﻿namespace SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
 
 public class WithdrawApplicationCommandValidator : AbstractValidator<WithdrawApplicationCommand>
 {

@@ -1,6 +1,4 @@
-﻿using MediatR;
-
-namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreditPledge;
+﻿namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreditPledge;
 
 public class CreditPledgeCommand : IRequest
 {

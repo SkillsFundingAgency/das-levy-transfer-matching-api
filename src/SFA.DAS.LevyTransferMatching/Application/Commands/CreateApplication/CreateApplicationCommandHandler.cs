@@ -1,8 +1,4 @@
-﻿using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
-using SFA.DAS.LevyTransferMatching.Data.Enums;
+﻿using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;

@@ -1,8 +1,5 @@
-﻿using MediatR;
-using SFA.DAS.LevyTransferMatching.Data.Repositories;
+﻿using SFA.DAS.LevyTransferMatching.Data.Repositories;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Commands.RejectApplication;
 

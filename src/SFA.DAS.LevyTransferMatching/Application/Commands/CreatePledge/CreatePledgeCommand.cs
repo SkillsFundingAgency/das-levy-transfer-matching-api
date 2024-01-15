@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using MediatR;
-using SFA.DAS.LevyTransferMatching.Models;
+﻿using SFA.DAS.LevyTransferMatching.Models;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;

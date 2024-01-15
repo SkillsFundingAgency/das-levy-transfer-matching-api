@@ -1,9 +1,5 @@
 ﻿namespace SFA.DAS.LevyTransferMatching.Extensions;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 public static class IntExtensions
 {
     public static IEnumerable<TEnum> GetFlags<TEnum>(this int value) where TEnum : Enum

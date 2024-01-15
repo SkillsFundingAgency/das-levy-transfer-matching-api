@@ -2,8 +2,6 @@
 using SFA.DAS.LevyTransferMatching.Abstractions.Audit;
 using SFA.DAS.LevyTransferMatching.Abstractions.Events;
 using SFA.DAS.LevyTransferMatching.Domain.Events;
-using System;
-using System.Collections.Generic;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 
 namespace SFA.DAS.LevyTransferMatching.Services.Audit;
@@ -23,10 +21,8 @@ public class ChangeTrackingSession : IChangeTrackingSession
         _userAction = userAction;
         _userInfo = userInfo;
         _correlationId = Guid.NewGuid();
-        _trackedItems = new List<TrackedItem>();
+        _trackedItems = [];
     }
-
-    public IReadOnlyList<TrackedItem> TrackedItems => _trackedItems.AsReadOnly();
 
     public void TrackInsert(ITrackableEntity trackedObject)
     {
@@ -38,13 +34,7 @@ public class ChangeTrackingSession : IChangeTrackingSession
         var initialState = _stateService.GetState(trackedObject);
         _trackedItems.Add(TrackedItem.CreateUpdateTrackedItem(trackedObject, initialState));
     }
-
-    public void TrackDelete(ITrackableEntity trackedObject)
-    {
-        var initialState = _stateService.GetState(trackedObject);
-        _trackedItems.Add(TrackedItem.CreateDeleteTrackedItem(trackedObject, initialState));
-    }
-
+    
     public IEnumerable<IDomainEvent> FlushEvents()
     {
         var result = new List<IDomainEvent>();

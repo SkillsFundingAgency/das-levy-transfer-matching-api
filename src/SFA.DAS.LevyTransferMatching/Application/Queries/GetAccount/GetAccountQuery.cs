@@ -1,6 +1,4 @@
-﻿using MediatR;
-
-namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetAccount;
+﻿namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetAccount;
 
 public class GetAccountQuery : IRequest<GetAccountQueryResult>
 {

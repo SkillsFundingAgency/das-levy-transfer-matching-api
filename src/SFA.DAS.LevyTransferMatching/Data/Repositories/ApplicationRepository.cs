@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SFA.DAS.LevyTransferMatching.Abstractions.Events;
 
 namespace SFA.DAS.LevyTransferMatching.Data.Repositories;

@@ -1,6 +1,4 @@
-﻿using MediatR;
-
-namespace SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
+﻿namespace SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
 
 public class UndoApplicationApprovalCommand : IRequest
 {

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using SFA.DAS.LevyTransferMatching.Data.Enums;
+﻿using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Extensions;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 

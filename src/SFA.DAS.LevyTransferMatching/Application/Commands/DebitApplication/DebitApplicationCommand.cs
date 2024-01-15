@@ -1,6 +1,4 @@
-﻿using MediatR;
-
-namespace SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
+﻿namespace SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
 
 public class DebitApplicationCommand : IRequest
 {

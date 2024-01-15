@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreditPledge;
+﻿namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreditPledge;
 
 public class CreditPledgeCommandValidator : AbstractValidator<CreditPledgeCommand>
 {

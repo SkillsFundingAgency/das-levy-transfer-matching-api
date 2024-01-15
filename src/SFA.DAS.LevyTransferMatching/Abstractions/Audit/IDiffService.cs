@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SFA.DAS.LevyTransferMatching.Abstractions.Audit;
+﻿namespace SFA.DAS.LevyTransferMatching.Abstractions.Audit;
 
 public interface IDiffService
 {

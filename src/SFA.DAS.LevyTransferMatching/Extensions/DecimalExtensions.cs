@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SFA.DAS.LevyTransferMatching.Extensions;
+﻿namespace SFA.DAS.LevyTransferMatching.Extensions;
 
 public static class DecimalExtensions
 {

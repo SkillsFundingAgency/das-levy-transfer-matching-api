@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using MediatR;
-using SFA.DAS.LevyTransferMatching.Models.Enums;
+﻿using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
 

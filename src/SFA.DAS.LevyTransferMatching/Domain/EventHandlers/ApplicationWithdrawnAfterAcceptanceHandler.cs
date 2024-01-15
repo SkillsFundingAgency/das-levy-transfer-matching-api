@@ -2,8 +2,6 @@
 using SFA.DAS.LevyTransferMatching.Domain.Events;
 using SFA.DAS.LevyTransferMatching.Messages.Events;
 using SFA.DAS.NServiceBus.Services;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.LevyTransferMatching.Domain.EventHandlers;
 

@@ -1,6 +1,4 @@
-﻿using MediatR;
-
-namespace SFA.DAS.LevyTransferMatching.Application.Commands.DeclineFunding;
+﻿namespace SFA.DAS.LevyTransferMatching.Application.Commands.DeclineFunding;
 
 public class DeclineFundingCommand : IRequest<DeclineFundingCommandResult>
 {

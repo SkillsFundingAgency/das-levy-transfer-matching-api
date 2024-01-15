@@ -1,7 +1,4 @@
-﻿using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
-using System.Threading.Tasks;
-
-namespace SFA.DAS.LevyTransferMatching.Data.Repositories;
+﻿namespace SFA.DAS.LevyTransferMatching.Data.Repositories;
 
 public interface IApplicationRepository
 {

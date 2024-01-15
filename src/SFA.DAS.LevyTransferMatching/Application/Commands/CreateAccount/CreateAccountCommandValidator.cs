@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateAccount;
+﻿namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateAccount;
 
 public class CreateAccountCommandValidator : AbstractValidator<CreateAccountCommand>
 {

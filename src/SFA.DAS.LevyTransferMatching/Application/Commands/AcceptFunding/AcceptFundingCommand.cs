@@ -1,6 +1,4 @@
-﻿using MediatR;
-
-namespace SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
+﻿namespace SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
 
 public class AcceptFundingCommand : IRequest<AcceptFundingCommandResult>
 {

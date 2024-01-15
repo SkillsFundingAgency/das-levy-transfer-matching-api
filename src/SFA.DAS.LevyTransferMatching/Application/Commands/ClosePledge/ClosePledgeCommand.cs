@@ -1,6 +1,4 @@
-﻿using MediatR;
-
-namespace SFA.DAS.LevyTransferMatching.Application.Commands.ClosePledge;
+﻿namespace SFA.DAS.LevyTransferMatching.Application.Commands.ClosePledge;
 
 public class ClosePledgeCommand : IRequest
 {

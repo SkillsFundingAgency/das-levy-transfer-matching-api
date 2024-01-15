@@ -1,5 +1,4 @@
-﻿using System;
-using SFA.DAS.LevyTransferMatching.Abstractions;
+﻿using SFA.DAS.LevyTransferMatching.Abstractions;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Data.Models;

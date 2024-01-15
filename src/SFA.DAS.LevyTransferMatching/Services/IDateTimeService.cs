@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SFA.DAS.LevyTransferMatching.Services;
+﻿namespace SFA.DAS.LevyTransferMatching.Services;
 
 public interface IDateTimeService
 {
@@ -16,18 +14,5 @@ public class DateTimeService : IDateTimeService
         _utcNowOverride = utcNowOverride;
     }
 
-    public DateTime UtcNow
-    {
-        get
-        {
-            if (!string.IsNullOrWhiteSpace(_utcNowOverride))
-            {
-                return DateTime.Parse(_utcNowOverride);
-            }
-            else
-            {
-                return DateTime.UtcNow;
-            }
-        }
-    }
+    public DateTime UtcNow => !string.IsNullOrWhiteSpace(_utcNowOverride) ? DateTime.Parse(_utcNowOverride) : DateTime.UtcNow;
 }

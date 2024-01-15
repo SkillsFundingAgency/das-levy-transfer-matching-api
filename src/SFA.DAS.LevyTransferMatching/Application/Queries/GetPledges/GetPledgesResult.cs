@@ -1,7 +1,5 @@
 ﻿using SFA.DAS.LevyTransferMatching.Models;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
-using System;
-using System.Collections.Generic;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;

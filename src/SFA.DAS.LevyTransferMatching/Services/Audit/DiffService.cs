@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using SFA.DAS.LevyTransferMatching.Abstractions.Audit;
+﻿using SFA.DAS.LevyTransferMatching.Abstractions.Audit;
 
 namespace SFA.DAS.LevyTransferMatching.Services.Audit;
 
@@ -21,7 +19,7 @@ public class DiffService : IDiffService
         return GenerateDiffForUpdateOrDelete(initial, updated);
     }
 
-    private IReadOnlyList<DiffItem> GenerateDiffForInsert(Dictionary<string, object> updated)
+    private static IReadOnlyList<DiffItem> GenerateDiffForInsert(Dictionary<string, object> updated)
     {
         var result = new List<DiffItem>();
 
@@ -38,7 +36,7 @@ public class DiffService : IDiffService
         return result;
     }
 
-    private IReadOnlyList<DiffItem> GenerateDiffForUpdateOrDelete(Dictionary<string, object> initial,
+    private static IReadOnlyList<DiffItem> GenerateDiffForUpdateOrDelete(Dictionary<string, object> initial,
         Dictionary<string, object> updated)
     {
         var result = new List<DiffItem>();

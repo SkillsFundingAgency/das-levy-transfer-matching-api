@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SFA.DAS.LevyTransferMatching.Data;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetAccount;

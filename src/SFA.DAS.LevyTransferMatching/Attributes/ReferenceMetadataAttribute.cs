@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SFA.DAS.LevyTransferMatching.Attributes;
+﻿namespace SFA.DAS.LevyTransferMatching.Attributes;
 
 public class ReferenceMetadataAttribute : Attribute
 {

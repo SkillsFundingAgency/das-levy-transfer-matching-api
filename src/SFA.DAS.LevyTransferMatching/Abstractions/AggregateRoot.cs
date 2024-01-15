@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using SFA.DAS.LevyTransferMatching.Abstractions.Audit;
+﻿using SFA.DAS.LevyTransferMatching.Abstractions.Audit;
 using SFA.DAS.LevyTransferMatching.Abstractions.Events;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Domain.Events;
@@ -11,7 +9,7 @@ namespace SFA.DAS.LevyTransferMatching.Abstractions;
 public class AggregateRoot<T> : Entity<T>
 {
     protected IChangeTrackingSession ChangeTrackingSession { get; private set; }
-    private readonly List<Func<IDomainEvent>> _events = new List<Func<IDomainEvent>>();
+    private readonly List<Func<IDomainEvent>> _events = new();
 
     protected void StartTrackingSession(UserAction userAction, UserInfo userInfo)
     {
@@ -39,10 +37,12 @@ public class AggregateRoot<T> : Entity<T>
         lock (_events)
         {
             var result = new List<IDomainEvent>();
+            
             foreach (var eventFunc in _events)
             {
                 result.Add(eventFunc.Invoke());
             }
+            
             _events.Clear();
 
             if (ChangeTrackingSession != null)

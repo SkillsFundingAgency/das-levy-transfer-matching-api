@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using SFA.DAS.LevyTransferMatching.Abstractions.Audit;
+﻿using SFA.DAS.LevyTransferMatching.Abstractions.Audit;
 
 namespace SFA.DAS.LevyTransferMatching.Services.Audit;
 
@@ -17,17 +16,7 @@ public class TrackedItem
             Operation = ChangeTrackingOperation.Insert
         };
     }
-
-    public static TrackedItem CreateDeleteTrackedItem(ITrackableEntity trackedEntity, Dictionary<string, object> initialState)
-    {
-        return new TrackedItem
-        {
-            TrackedEntity = trackedEntity,
-            InitialState = initialState,
-            Operation = ChangeTrackingOperation.Delete
-        };
-    }
-
+    
     public static TrackedItem CreateUpdateTrackedItem(ITrackableEntity trackedEntity, Dictionary<string, object> initialState)
     {
         return new TrackedItem

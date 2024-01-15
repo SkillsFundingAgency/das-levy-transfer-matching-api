@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using SFA.DAS.LevyTransferMatching.Data.Models;
+﻿using SFA.DAS.LevyTransferMatching.Data.Models;
 
 namespace SFA.DAS.LevyTransferMatching.Data.Repositories;
 

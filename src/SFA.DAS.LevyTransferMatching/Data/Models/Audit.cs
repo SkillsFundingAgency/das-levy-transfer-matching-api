@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SFA.DAS.LevyTransferMatching.Data.Models;
+﻿namespace SFA.DAS.LevyTransferMatching.Data.Models;
 
 public class Audit
 {

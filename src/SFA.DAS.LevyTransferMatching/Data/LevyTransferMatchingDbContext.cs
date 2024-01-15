@@ -3,7 +3,7 @@ using SFA.DAS.LevyTransferMatching.Data.Models;
 
 namespace SFA.DAS.LevyTransferMatching.Data;
 
-public class LevyTransferMatchingDbContext : DbContext, ILevyTransferMatchingDbContext
+public class LevyTransferMatchingDbContext : DbContext
 {
     public LevyTransferMatchingDbContext(DbContextOptions<LevyTransferMatchingDbContext> options) : base(options)
     {

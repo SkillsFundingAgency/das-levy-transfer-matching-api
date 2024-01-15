@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
+﻿using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Extensions;
 
 namespace SFA.DAS.LevyTransferMatching.Services;
