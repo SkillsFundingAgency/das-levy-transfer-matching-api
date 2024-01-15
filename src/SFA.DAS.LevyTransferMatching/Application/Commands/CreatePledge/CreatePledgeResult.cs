@@ -1,7 +1,6 @@
-﻿namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge
+﻿namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
+
+public class CreatePledgeResult
 {
-    public class CreatePledgeResult
-    {
-        public int Id { get; set; }
-    }
+    public int Id { get; set; }
 }

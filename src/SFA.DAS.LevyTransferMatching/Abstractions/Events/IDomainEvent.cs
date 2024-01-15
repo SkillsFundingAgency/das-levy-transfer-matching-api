@@ -1,6 +1,5 @@
-﻿namespace SFA.DAS.LevyTransferMatching.Abstractions.Events
+﻿namespace SFA.DAS.LevyTransferMatching.Abstractions.Events;
+
+public interface IDomainEvent
 {
-    public interface IDomainEvent
-    {
-    }
 }

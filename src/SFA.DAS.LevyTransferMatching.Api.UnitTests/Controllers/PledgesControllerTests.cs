@@ -154,11 +154,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         {
             var pledgeId = _fixture.Create<int>();
             var request = _fixture.Create<CreditPledgeRequest>();
-
-            _mockMediator
-                .Setup(x => x.Send(It.IsAny<CreditPledgeCommand>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(() => Unit.Value);
-
+            
             await _pledgesController.CreditPledge(pledgeId, request);
 
             _mockMediator.Verify(x =>
@@ -172,9 +168,6 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
         {
             var pledgeId = _fixture.Create<int>();
             var request = _fixture.Create<ClosePledgeRequest>();
-            _mockMediator
-                .Setup(x => x.Send(It.IsAny<ClosePledgeCommand>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(() => Unit.Value);
 
             var actionResult = await _pledgesController.ClosePledge(pledgeId, request);
             var okResult = actionResult as OkResult;

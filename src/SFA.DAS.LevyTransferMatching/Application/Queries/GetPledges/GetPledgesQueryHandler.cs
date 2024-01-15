@@ -9,38 +9,38 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
-{
-    public class GetPledgesQueryHandler : IRequestHandler<GetPledgesQuery, GetPledgesResult>
-    {
-        private readonly LevyTransferMatchingDbContext _dbContext;
+namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
 
-        public GetPledgesQueryHandler(LevyTransferMatchingDbContext dbContext)
+public class GetPledgesQueryHandler : IRequestHandler<GetPledgesQuery, GetPledgesResult>
+{
+    private readonly LevyTransferMatchingDbContext _dbContext;
+
+    public GetPledgesQueryHandler(LevyTransferMatchingDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
+    public async Task<GetPledgesResult> Handle(GetPledgesQuery request, CancellationToken cancellationToken)
+    {
+        var pledgesQuery = _dbContext.Pledges.AsQueryable();
+
+        if (request.AccountId.HasValue)
         {
-            _dbContext = dbContext;
+            pledgesQuery = pledgesQuery.Where(x => x.EmployerAccount.Id == request.AccountId.Value);
         }
 
-        public async Task<GetPledgesResult> Handle(GetPledgesQuery request, CancellationToken cancellationToken)
+        if (request.Sectors != null && request.Sectors.Any())
         {
-            var pledgesQuery = _dbContext.Pledges.AsQueryable();
+            var sectors = (Sector)request.Sectors.Cast<int>().Sum();
+            pledgesQuery = pledgesQuery.Where(x => (x.Sectors & sectors) != 0 || x.Sectors == 0);
+        }
 
-            if (request.AccountId.HasValue)
-            {
-                pledgesQuery = pledgesQuery.Where(x => x.EmployerAccount.Id == request.AccountId.Value);
-            }
+        if (request.PledgeStatusFilter.HasValue)
+        {
+            pledgesQuery = pledgesQuery.Where(x => x.Status == request.PledgeStatusFilter);
+        }
 
-            if (request.Sectors != null && request.Sectors.Any())
-            {
-                var sectors = (Sector)request.Sectors.Cast<int>().Sum();
-                pledgesQuery = pledgesQuery.Where(x => (x.Sectors & sectors) != 0 || x.Sectors == 0);
-            }
-
-            if (request.PledgeStatusFilter.HasValue)
-            {
-                pledgesQuery = pledgesQuery.Where(x => x.Status == request.PledgeStatusFilter);
-            }
-
-            var queryResult = await pledgesQuery
+        var queryResult = await pledgesQuery
             .OrderByDescending(x => x.RemainingAmount)
             .Skip(request.Offset)
             .Take(request.Limit)
@@ -64,15 +64,14 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges
             .AsSingleQuery()
             .ToListAsync(cancellationToken);
 
-            var count = await pledgesQuery.CountAsync(cancellationToken: cancellationToken);
+        var count = await pledgesQuery.CountAsync(cancellationToken: cancellationToken);
 
-            return new GetPledgesResult()
-            {
-                Items = queryResult.ToList(),
-                TotalItems = count,
-                PageSize = request.PageSize ?? int.MaxValue,
-                Page = request.Page
-            };
-        }
+        return new GetPledgesResult()
+        {
+            Items = queryResult.ToList(),
+            TotalItems = count,
+            PageSize = request.PageSize ?? int.MaxValue,
+            Page = request.Page
+        };
     }
 }

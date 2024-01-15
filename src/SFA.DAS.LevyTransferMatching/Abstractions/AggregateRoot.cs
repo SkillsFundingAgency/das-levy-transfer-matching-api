@@ -6,52 +6,51 @@ using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Domain.Events;
 using SFA.DAS.LevyTransferMatching.Services.Audit;
 
-namespace SFA.DAS.LevyTransferMatching.Abstractions
+namespace SFA.DAS.LevyTransferMatching.Abstractions;
+
+public class AggregateRoot<T> : Entity<T>
 {
-    public class AggregateRoot<T> : Entity<T>
+    protected IChangeTrackingSession ChangeTrackingSession { get; private set; }
+    private readonly List<Func<IDomainEvent>> _events = new List<Func<IDomainEvent>>();
+
+    protected void StartTrackingSession(UserAction userAction, UserInfo userInfo)
     {
-        protected IChangeTrackingSession ChangeTrackingSession { get; private set; }
-        private readonly List<Func<IDomainEvent>> _events = new List<Func<IDomainEvent>>();
+        ChangeTrackingSession = new ChangeTrackingSession(new StateService(), userAction, userInfo);
+    }
 
-        protected void StartTrackingSession(UserAction userAction, UserInfo userInfo)
+    protected void AddEvent(Func<IDomainEvent> @event)
+    {
+        lock (_events)
         {
-            ChangeTrackingSession = new ChangeTrackingSession(new StateService(), userAction, userInfo);
+            _events.Add(@event);
         }
+    }
 
-        protected void AddEvent(Func<IDomainEvent> @event)
+    protected void AddEvent(IDomainEvent @event)
+    {
+        lock (_events)
         {
-            lock (_events)
-            {
-                _events.Add(@event);
-            }
+            _events.Add(() => @event);
         }
+    }
 
-        protected void AddEvent(IDomainEvent @event)
+    public IEnumerable<IDomainEvent> FlushEvents()
+    {
+        lock (_events)
         {
-            lock (_events)
+            var result = new List<IDomainEvent>();
+            foreach (var eventFunc in _events)
             {
-                _events.Add(() => @event);
+                result.Add(eventFunc.Invoke());
             }
-        }
+            _events.Clear();
 
-        public IEnumerable<IDomainEvent> FlushEvents()
-        {
-            lock (_events)
+            if(ChangeTrackingSession != null)
             {
-                var result = new List<IDomainEvent>();
-                foreach (var eventFunc in _events)
-                {
-                    result.Add(eventFunc.Invoke());
-                }
-                _events.Clear();
-
-                if(ChangeTrackingSession != null)
-                {
-                    result.AddRange(ChangeTrackingSession.FlushEvents());
-                }
-
-                return result;
+                result.AddRange(ChangeTrackingSession.FlushEvents());
             }
+
+            return result;
         }
     }
 }

@@ -6,26 +6,25 @@ using SFA.DAS.NServiceBus.Services;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace SFA.DAS.LevyTransferMatching.Domain.EventHandlers
+namespace SFA.DAS.LevyTransferMatching.Domain.EventHandlers;
+
+public class PledgeCreditedEventHandler : IDomainEventHandler<PledgeCredited>
 {
-    public class PledgeCreditedEventHandler : IDomainEventHandler<PledgeCredited>
+    private readonly IEventPublisher _eventPublisher;
+    private readonly IPledgeRepository _pledgeRepository;
+
+    public PledgeCreditedEventHandler(IEventPublisher eventPublisher, IPledgeRepository pledgeRepository)
     {
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IPledgeRepository _pledgeRepository;
+        _eventPublisher = eventPublisher;
+        _pledgeRepository = pledgeRepository;
+    }
 
-        public PledgeCreditedEventHandler(IEventPublisher eventPublisher, IPledgeRepository pledgeRepository)
-        {
-            _eventPublisher = eventPublisher;
-            _pledgeRepository = pledgeRepository;
-        }
+    public async Task Handle(PledgeCredited @event, CancellationToken cancellationToken = default)
+    {
+        var pledge = await _pledgeRepository.Get(@event.PledgeId);
 
-        public async Task Handle(PledgeCredited @event, CancellationToken cancellationToken = default)
-        {
-            var pledge = await _pledgeRepository.Get(@event.PledgeId);
+        var senderId = pledge.EmployerAccountId;
 
-            var senderId = pledge.EmployerAccountId;
-
-            await _eventPublisher.Publish(new PledgeCreditedEvent(@event.PledgeId, senderId));
-        }
+        await _eventPublisher.Publish(new PledgeCreditedEvent(@event.PledgeId, senderId));
     }
 }

@@ -1,8 +1,7 @@
-﻿namespace SFA.DAS.LevyTransferMatching.Models.Enums
+﻿namespace SFA.DAS.LevyTransferMatching.Models.Enums;
+
+public enum SortDirection
 {
-    public enum SortDirection
-    {
-        Ascending,
-        Descending
-    }
+    Ascending,
+    Descending
 }

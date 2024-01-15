@@ -1,9 +1,8 @@
 ﻿using MediatR;
 
-namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetAccount
+namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetAccount;
+
+public class GetAccountQuery : IRequest<GetAccountQueryResult>
 {
-    public class GetAccountQuery : IRequest<GetAccountQueryResult>
-    {
-        public long AccountId { get; set; }
-    }
+    public long AccountId { get; set; }
 }

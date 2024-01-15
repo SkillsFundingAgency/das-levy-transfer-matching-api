@@ -5,20 +5,19 @@ using SFA.DAS.NServiceBus.Services;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.LevyTransferMatching.Domain.EventHandlers
+namespace SFA.DAS.LevyTransferMatching.Domain.EventHandlers;
+
+public class ApplicationWithdrawnAfterAcceptanceHandler : IDomainEventHandler<ApplicationWithdrawnAfterAcceptance>
 {
-    public class ApplicationWithdrawnAfterAcceptanceHandler : IDomainEventHandler<ApplicationWithdrawnAfterAcceptance>
+    private readonly IEventPublisher _eventPublisher;
+
+    public ApplicationWithdrawnAfterAcceptanceHandler(IEventPublisher eventPublisher)
     {
-        private readonly IEventPublisher _eventPublisher;
+        _eventPublisher = eventPublisher;
+    }
 
-        public ApplicationWithdrawnAfterAcceptanceHandler(IEventPublisher eventPublisher)
-        {
-            _eventPublisher = eventPublisher;
-        }
-
-        public async Task Handle(ApplicationWithdrawnAfterAcceptance @event, CancellationToken cancellationToken = default)
-        {
-            await _eventPublisher.Publish(new ApplicationWithdrawnAfterAcceptanceEvent(@event.ApplicationId, @event.PledgeId, @event.Amount));
-        }
+    public async Task Handle(ApplicationWithdrawnAfterAcceptance @event, CancellationToken cancellationToken = default)
+    {
+        await _eventPublisher.Publish(new ApplicationWithdrawnAfterAcceptanceEvent(@event.ApplicationId, @event.PledgeId, @event.Amount));
     }
 }

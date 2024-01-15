@@ -1,9 +1,8 @@
 ﻿using MediatR;
 
-namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge
+namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge;
+
+public class GetPledgeQuery : IRequest<GetPledgeResult>
 {
-    public class GetPledgeQuery : IRequest<GetPledgeResult>
-    {
-        public int Id { get; set; }
-    }
+    public int Id { get; set; }
 }

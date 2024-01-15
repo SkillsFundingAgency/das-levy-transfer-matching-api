@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace SFA.DAS.LevyTransferMatching.Abstractions.Audit
+namespace SFA.DAS.LevyTransferMatching.Abstractions.Audit;
+
+public interface IStateService
 {
-    public interface IStateService
-    {
-        Dictionary<string, object> GetState(object item);
-    }
+    Dictionary<string, object> GetState(object item);
 }

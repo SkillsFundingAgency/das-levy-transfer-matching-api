@@ -6,28 +6,27 @@ using SFA.DAS.LevyTransferMatching.Domain.Events;
 using SFA.DAS.LevyTransferMatching.Messages.Events;
 using SFA.DAS.NServiceBus.Services;
 
-namespace SFA.DAS.LevyTransferMatching.Domain.EventHandlers
+namespace SFA.DAS.LevyTransferMatching.Domain.EventHandlers;
+
+public class ApplicationWithdrawnHandler : IDomainEventHandler<ApplicationWithdrawn>
 {
-    public class ApplicationWithdrawnHandler : IDomainEventHandler<ApplicationWithdrawn>
+    private readonly IEventPublisher _eventPublisher;
+    private readonly IPledgeRepository _pledgeRepository;
+
+    public ApplicationWithdrawnHandler(IEventPublisher eventPublisher, IPledgeRepository pledgeRepository)
     {
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IPledgeRepository _pledgeRepository;
+        _eventPublisher = eventPublisher;
+        _pledgeRepository = pledgeRepository;
+    }
 
-        public ApplicationWithdrawnHandler(IEventPublisher eventPublisher, IPledgeRepository pledgeRepository)
-        {
-            _eventPublisher = eventPublisher;
-            _pledgeRepository = pledgeRepository;
-        }
+    public async Task Handle(ApplicationWithdrawn @event, CancellationToken cancellationToken = default)
+    {
+        var pledge = await _pledgeRepository.Get(@event.PledgeId);
 
-        public async Task Handle(ApplicationWithdrawn @event, CancellationToken cancellationToken = default)
-        {
-            var pledge = await _pledgeRepository.Get(@event.PledgeId);
+        var senderId = pledge.EmployerAccountId;
 
-            var senderId = pledge.EmployerAccountId;
-
-            await _eventPublisher.Publish(new ApplicationWithdrawnEvent(@event.ApplicationId, @event.PledgeId,
-                @event.WithdrawnOn,
-                senderId));
-        }
+        await _eventPublisher.Publish(new ApplicationWithdrawnEvent(@event.ApplicationId, @event.PledgeId,
+            @event.WithdrawnOn,
+            senderId));
     }
 }

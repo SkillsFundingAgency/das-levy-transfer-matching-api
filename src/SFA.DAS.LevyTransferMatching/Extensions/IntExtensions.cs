@@ -1,17 +1,16 @@
-﻿namespace SFA.DAS.LevyTransferMatching.Extensions
+﻿namespace SFA.DAS.LevyTransferMatching.Extensions;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+public static class IntExtensions
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-
-    public static class IntExtensions
+    public static IEnumerable<TEnum> GetFlags<TEnum>(this int value) where TEnum : Enum
     {
-        public static IEnumerable<TEnum> GetFlags<TEnum>(this int value) where TEnum : Enum
-        {
-            var combinedEnum = (TEnum)(object)value;
+        var combinedEnum = (TEnum)(object)value;
 
-            return Enum.GetValues(typeof(TEnum)).Cast<TEnum>()
-                .Where(x => combinedEnum.HasFlag(x)); ;
-        }
+        return Enum.GetValues(typeof(TEnum)).Cast<TEnum>()
+            .Where(x => combinedEnum.HasFlag(x)); ;
     }
 }

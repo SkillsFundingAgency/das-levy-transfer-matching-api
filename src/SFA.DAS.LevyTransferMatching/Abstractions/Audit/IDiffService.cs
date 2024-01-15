@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace SFA.DAS.LevyTransferMatching.Abstractions.Audit
+namespace SFA.DAS.LevyTransferMatching.Abstractions.Audit;
+
+public interface IDiffService
 {
-    public interface IDiffService
-    {
-        IReadOnlyList<DiffItem> GenerateDiff(Dictionary<string, object> initial, Dictionary<string, object> updated);
-    }
+    IReadOnlyList<DiffItem> GenerateDiff(Dictionary<string, object> initial, Dictionary<string, object> updated);
 }

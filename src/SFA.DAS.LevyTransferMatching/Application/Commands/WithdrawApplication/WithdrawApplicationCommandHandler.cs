@@ -4,26 +4,23 @@ using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication
+namespace SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
+
+public class WithdrawApplicationCommandHandler : IRequestHandler<WithdrawApplicationCommand>
 {
-    public class WithdrawApplicationCommandHandler : IRequestHandler<WithdrawApplicationCommand>
+    private readonly IApplicationRepository _applicationRepository;
+
+    public WithdrawApplicationCommandHandler(IApplicationRepository applicationRepository)
     {
-        private readonly IApplicationRepository _applicationRepository;
+        _applicationRepository = applicationRepository;
+    }
 
-        public WithdrawApplicationCommandHandler(IApplicationRepository applicationRepository)
-        {
-            _applicationRepository = applicationRepository;
-        }
+    public async Task Handle(WithdrawApplicationCommand request, CancellationToken cancellationToken)
+    {
+        var application = await _applicationRepository.Get(request.ApplicationId, null, request.AccountId);
 
-        public async Task<Unit> Handle(WithdrawApplicationCommand request, CancellationToken cancellationToken)
-        {
-            var application = await _applicationRepository.Get(request.ApplicationId, null, request.AccountId);
+        application.Withdraw(new UserInfo(request.UserId, request.UserDisplayName));
 
-            application.Withdraw(new UserInfo(request.UserId, request.UserDisplayName));
-
-            await _applicationRepository.Update(application);
-
-            return Unit.Value;
-        }
+        await _applicationRepository.Update(application);
     }
 }
