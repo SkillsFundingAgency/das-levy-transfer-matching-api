@@ -1,11 +1,4 @@
-﻿using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using Moq;
-using NUnit.Framework;
+﻿using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.LevyTransferMatching.Api.Controllers;
 using SFA.DAS.LevyTransferMatching.Api.Models.CreateAccount;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetAccount;

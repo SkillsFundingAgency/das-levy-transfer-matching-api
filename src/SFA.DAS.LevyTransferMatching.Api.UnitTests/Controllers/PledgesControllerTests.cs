@@ -1,9 +1,5 @@
-﻿using AutoFixture;
-using FluentValidation;
-using MediatR;
+﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using Moq;
-using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Abstractions.CustomExceptions;
 using SFA.DAS.LevyTransferMatching.Api.Controllers;
 using SFA.DAS.LevyTransferMatching.Api.Models.CreatePledge;
@@ -18,11 +14,6 @@ using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers;
 
@@ -193,7 +184,7 @@ public class PledgesControllerTests
 
         var actionResult = await _pledgesController.ClosePledge(pledgeId, request);
 
-        Assert.IsInstanceOf<NotFoundResult>(actionResult);
+        Assert.That(actionResult, Is.InstanceOf<NotFoundResult>());
     }
 
     [Test]
