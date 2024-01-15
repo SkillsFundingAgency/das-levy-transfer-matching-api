@@ -22,7 +22,7 @@ public static class ServiceCollectionExtensions
     public static void AddServicesForLevyTransferMatching(this IServiceCollection services, IWebHostEnvironment hostingEnvironment, LevyTransferMatchingApi config)
     {
         services.AddMediatR(x => x.RegisterServicesFromAssemblyContaining<CreateAccountCommand>());
-            
+
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RetryBehaviour<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkBehaviour<,>));
@@ -37,7 +37,7 @@ public static class ServiceCollectionExtensions
         }
 
         services.AddTransient<IConnectionFactory, SqlServerConnectionFactory>();
-            
+
         services.AddTransient<IEmployerAccountRepository, EmployerAccountRepository>();
         services.AddTransient<IPledgeRepository, PledgeRepository>();
         services.AddTransient<IApplicationRepository, ApplicationRepository>();

@@ -14,7 +14,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.HealthChecks
     {
         // This should match the QueueNames.RunHealthCheck value in the  SFA.DAS.LevyTransferMatching.Functions project. We may want to add it to the shared SFA.DAS.LevyTransferMatching.Messages nuget
         private const string HealthCheckQueueName = "SFA.DAS.LevyTransferMatching.HealthCheck";
-        
+
         public TimeSpan Interval { get; set; } = TimeSpan.FromMilliseconds(500);
         public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(5);
 
@@ -49,7 +49,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.HealthChecks
 
                 await Task.Delay(Interval, cancellationToken);
             }
-            
+
             throw new OperationCanceledException(cancellationToken);
         }
     }

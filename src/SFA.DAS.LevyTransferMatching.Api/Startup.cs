@@ -121,12 +121,13 @@ namespace SFA.DAS.LevyTransferMatching.Api
                 .AddDasDataProtection(config, _environment)
                 .AddSwaggerGen(c =>
                 {
-                    c.SwaggerDoc("v1", new OpenApiInfo {Title = "LevyTransferMatchingApi", Version = "v1"});
+                    c.SwaggerDoc("v1", new OpenApiInfo { Title = "LevyTransferMatchingApi", Version = "v1" });
                     c.OperationFilter<SwaggerVersionHeaderFilter>();
                 })
                 .AddSwaggerGenNewtonsoftSupport();
 
-            services.AddApiVersioning(opt => {
+            services.AddApiVersioning(opt =>
+            {
                 opt.ApiVersionReader = new HeaderApiVersionReader("X-Version");
             });
         }
@@ -143,7 +144,9 @@ namespace SFA.DAS.LevyTransferMatching.Api
             app.UseAuthentication();
             app.UseDasHealthChecks();
 
-            app.UseExceptionHandler(c => { c.Run(async context =>
+            app.UseExceptionHandler(c =>
+            {
+                c.Run(async context =>
                 {
                     var exception = context.Features.Get<IExceptionHandlerPathFeature>().Error;
                     if (exception is ValidationException validationException)
@@ -164,7 +167,7 @@ namespace SFA.DAS.LevyTransferMatching.Api
                 endpoints.MapControllers();
             });
 
-            
+
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {

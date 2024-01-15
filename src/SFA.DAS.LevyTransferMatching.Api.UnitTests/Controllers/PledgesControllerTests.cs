@@ -41,6 +41,9 @@ public class PledgesControllerTests
         _pledgesController = new PledgesController(_mockMediator.Object);
     }
 
+    [TearDown]
+    public void TearDown() => _pledgesController?.Dispose();
+
     [Test]
     public async Task POST_Create_Returns_Created_With_Correct_Location()
     {
@@ -59,12 +62,12 @@ public class PledgesControllerTests
         var createPledgeResponse = createdResult.Value as CreatePledgeResponse;
 
         // Assert
-        Assert.IsNotNull(actionResult);
-        Assert.IsNotNull(createdResult);
-        Assert.IsNotNull(createPledgeResponse);
-        Assert.AreEqual(createdResult.StatusCode, (int)HttpStatusCode.Created);
-        Assert.AreEqual(createdResult.Location, $"/accounts/{accountId}/pledges/{result.Id}");
-        Assert.AreEqual(createPledgeResponse.Id, result.Id);
+        Assert.That(actionResult, Is.Not.Null);
+        Assert.That(createdResult, Is.Not.Null);
+        Assert.That(createPledgeResponse, Is.Not.Null);
+        Assert.That(createdResult.StatusCode, Is.EqualTo((int)HttpStatusCode.Created));
+        Assert.That($"/accounts/{accountId}/pledges/{result.Id}", Is.EqualTo(createdResult.Location));
+        Assert.That(result.Id, Is.EqualTo(createPledgeResponse.Id));
     }
 
     [Test]
@@ -104,11 +107,11 @@ public class PledgesControllerTests
         var getPledgeResponse = okObjectResult.Value as GetPledgeResponse;
 
         // Assert
-        Assert.IsNotNull(actionResult);
-        Assert.IsNotNull(okObjectResult);
-        Assert.IsNotNull(getPledgeResponse);
-        Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.OK);
-        Assert.AreEqual(getPledgeResponse.Id, pledgeResult.Id);
+        Assert.That(actionResult, Is.Not.Null);
+        Assert.That(okObjectResult, Is.Not.Null);
+        Assert.That(getPledgeResponse, Is.Not.Null);
+        Assert.That(okObjectResult.StatusCode, Is.EqualTo((int)HttpStatusCode.OK));
+        Assert.That(pledgeResult.Id, Is.EqualTo(getPledgeResponse.Id));
     }
 
     [Test]
@@ -126,9 +129,9 @@ public class PledgesControllerTests
         var notFoundResult = actionResult as NotFoundResult;
 
         // Assert
-        Assert.IsNotNull(actionResult);
-        Assert.IsNotNull(notFoundResult);
-        Assert.AreEqual(notFoundResult.StatusCode, (int)HttpStatusCode.NotFound);
+        Assert.That(actionResult, Is.Not.Null);
+        Assert.That(notFoundResult, Is.Not.Null);
+        Assert.That(notFoundResult.StatusCode, Is.EqualTo((int)HttpStatusCode.NotFound));
     }
 
     [Test]
@@ -154,7 +157,7 @@ public class PledgesControllerTests
     {
         var pledgeId = _fixture.Create<int>();
         var request = _fixture.Create<CreditPledgeRequest>();
-            
+
         await _pledgesController.CreditPledge(pledgeId, request);
 
         _mockMediator.Verify(x =>
@@ -172,9 +175,9 @@ public class PledgesControllerTests
         var actionResult = await _pledgesController.ClosePledge(pledgeId, request);
         var okResult = actionResult as OkResult;
 
-        Assert.IsNotNull(actionResult);
-        Assert.IsNotNull(okResult);
-        Assert.AreEqual(okResult.StatusCode, (int)HttpStatusCode.OK);
+        Assert.That(actionResult, Is.Not.Null);
+        Assert.That(okResult, Is.Not.Null);
+        Assert.That(okResult.StatusCode, Is.EqualTo((int)HttpStatusCode.OK));
     }
 
     [Test]
@@ -215,13 +218,13 @@ public class PledgesControllerTests
         var response = okObjectResult.Value as GetPledgesResponse;
 
         // Assert
-        Assert.IsNotNull(actionResult);
-        Assert.IsNotNull(okObjectResult);
-        Assert.IsNotNull(response);
-        Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.OK);
+        Assert.That(actionResult, Is.Not.Null);
+        Assert.That(okObjectResult, Is.Not.Null);
+        Assert.That(response, Is.Not.Null);
+        Assert.That(okObjectResult.StatusCode, Is.EqualTo((int)HttpStatusCode.OK));
 
-        Assert.AreEqual(expectedPledges.Count(), response.Pledges.Count());
-        Assert.AreEqual(expectedPledges.Count(), response.TotalPledges);
+        Assert.That(response.Pledges.Count(), Is.EqualTo(expectedPledges.Count()));
+        Assert.That(response.TotalPledges, Is.EqualTo(expectedPledges.Count()));
     }
 
     [Test]
@@ -248,12 +251,12 @@ public class PledgesControllerTests
         var response = okObjectResult.Value as GetPledgesResponse;
 
         // Assert
-        Assert.IsNotNull(actionResult);
-        Assert.IsNotNull(okObjectResult);
-        Assert.IsNotNull(response);
-        Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.OK);
+        Assert.That(actionResult, Is.Not.Null);
+        Assert.That(okObjectResult, Is.Not.Null);
+        Assert.That(response, Is.Not.Null);
+        Assert.That(okObjectResult.StatusCode, Is.EqualTo((int)HttpStatusCode.OK));
 
-        Assert.AreEqual(expectedPledges.Count(), response.Pledges.Count());
-        Assert.AreEqual(expectedPledges.Count(), response.TotalPledges);
+        Assert.That(response.Pledges.Count(), Is.EqualTo(expectedPledges.Count()));
+        Assert.That(response.TotalPledges, Is.EqualTo(expectedPledges.Count()));
     }
 }

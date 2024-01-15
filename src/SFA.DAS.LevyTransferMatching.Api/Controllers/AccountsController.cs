@@ -32,7 +32,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 AccountId = accountId
             });
 
-            if(queryResult == null)
+            if (queryResult == null)
             {
                 return new NotFoundResult();
             }
@@ -46,8 +46,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType((int) HttpStatusCode.Created)]
-        [ProducesResponseType((int) HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> CreateAccount([FromBody] CreateAccountRequest request)
         {
             var commandResult = await _mediator.Send(new CreateAccountCommand

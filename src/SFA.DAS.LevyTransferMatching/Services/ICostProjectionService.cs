@@ -17,7 +17,7 @@ public class CostProjectionService : ICostProjectionService
     {
         var result = new Dictionary<string, decimal>();
 
-        var total = (decimal) totalAmount;
+        var total = (decimal)totalAmount;
         var completionPayment = total / 5;
 
         var monthly = (total - completionPayment) / duration;

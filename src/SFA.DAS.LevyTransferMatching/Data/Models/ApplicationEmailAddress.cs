@@ -4,7 +4,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models;
 
 public class ApplicationEmailAddress : Entity<int>
 {
-    public ApplicationEmailAddress() {}
+    public ApplicationEmailAddress() { }
 
     public ApplicationEmailAddress(string emailAddress)
     {

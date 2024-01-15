@@ -46,7 +46,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetPledge
                 Levels = pledge.Levels,
                 Sectors = pledge.Sectors,
                 Status = pledge.Status,
-                Locations = pledge.Locations.Select(x => new Location { Id = x.Id, Name = x.Name})
+                Locations = pledge.Locations.Select(x => new Location { Id = x.Id, Name = x.Name })
             };
         }
 

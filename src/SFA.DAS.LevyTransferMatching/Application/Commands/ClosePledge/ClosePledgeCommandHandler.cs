@@ -12,7 +12,7 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.ClosePledge;
 public class ClosePledgeCommandHandler : IRequestHandler<ClosePledgeCommand>
 {
     private readonly IPledgeRepository _pledgeRepository;
-        
+
     public ClosePledgeCommandHandler(IPledgeRepository pledgeRepository)
     {
         _pledgeRepository = pledgeRepository;
@@ -22,7 +22,8 @@ public class ClosePledgeCommandHandler : IRequestHandler<ClosePledgeCommand>
     {
         var pledge = await _pledgeRepository.Get(request.PledgeId);
 
-        if (pledge == null) {
+        if (pledge == null)
+        {
             throw new AggregateNotFoundException<Pledge>(request.PledgeId);
         }
 

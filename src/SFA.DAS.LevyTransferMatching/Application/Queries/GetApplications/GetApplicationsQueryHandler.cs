@@ -58,7 +58,7 @@ public class GetApplicationsQueryHandler : IRequestHandler<GetApplicationsQuery,
                 StandardRoute = x.StandardRoute,
                 Amount = x.GetCost(),
                 TotalAmount = x.TotalAmount,
-                CurrentFinancialYearAmount = Convert.ToInt32(x.ApplicationCostProjections.Where(p=> p.FinancialYear == now.GetFinancialYear()).Sum(p => p.Amount)),
+                CurrentFinancialYearAmount = Convert.ToInt32(x.ApplicationCostProjections.Where(p => p.FinancialYear == now.GetFinancialYear()).Sum(p => p.Amount)),
                 StartDate = x.StartDate,
                 EmailAddresses = Convert.ToInt32(x.EmailAddresses.Count()) > 0
                     ? x.EmailAddresses.Select(email => email.EmailAddress)
@@ -68,14 +68,14 @@ public class GetApplicationsQueryHandler : IRequestHandler<GetApplicationsQuery,
                 IsNamePublic = x.Pledge.IsNamePublic,
                 Locations = x.ApplicationLocations.Select(location =>
                     new GetApplicationsResult.Application.ApplicationLocation
-                        { Id = location.Id, PledgeLocationId = location.PledgeLocationId }).ToList(),
+                    { Id = location.Id, PledgeLocationId = location.PledgeLocationId }).ToList(),
                 AdditionalLocations = x.AdditionalLocation,
                 SpecificLocation = x.SpecificLocation,
                 SenderEmployerAccountId = x.Pledge.EmployerAccount.Id,
                 SenderEmployerAccountName = x.Pledge.EmployerAccount.Name,
-                CostProjections = x.ApplicationCostProjections.OrderBy(p=> p.FinancialYear).Select(p =>
+                CostProjections = x.ApplicationCostProjections.OrderBy(p => p.FinancialYear).Select(p =>
                     new GetApplicationsResult.Application.CostProjection
-                        { FinancialYear = p.FinancialYear, Amount = p.Amount }).ToList(),
+                    { FinancialYear = p.FinancialYear, Amount = p.Amount }).ToList(),
                 MatchPercentage = x.MatchPercentage,
                 MatchSector = x.MatchSector,
                 MatchJobRole = x.MatchJobRole,

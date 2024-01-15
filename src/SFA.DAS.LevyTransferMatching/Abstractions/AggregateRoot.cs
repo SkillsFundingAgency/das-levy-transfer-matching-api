@@ -45,7 +45,7 @@ public class AggregateRoot<T> : Entity<T>
             }
             _events.Clear();
 
-            if(ChangeTrackingSession != null)
+            if (ChangeTrackingSession != null)
             {
                 result.AddRange(ChangeTrackingSession.FlushEvents());
             }

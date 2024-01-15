@@ -61,7 +61,7 @@ public class Application : AggregateRoot<int>
 
         StartTrackingSession(UserAction.CreateApplication, userInfo);
         ChangeTrackingSession.TrackInsert(this);
-        foreach(var emailAddress in _emailAddresses)
+        foreach (var emailAddress in _emailAddresses)
         {
             ChangeTrackingSession.TrackInsert(emailAddress);
         }
@@ -71,7 +71,7 @@ public class Application : AggregateRoot<int>
         }
 
         AddEvent(() => new ApplicationCreated(Id, Pledge.Id, EmployerAccount.Id, CreatedOn));
-            
+
         AddStatusHistory(CreatedOn);
     }
 
@@ -150,7 +150,7 @@ public class Application : AggregateRoot<int>
         UpdatedOn = DateTime.UtcNow;
 
         AddEvent(new ApplicationApproved(Id, PledgeId, UpdatedOn.Value, GetCost(), EmployerAccount.Id));
-            
+
         AddStatusHistory(UpdatedOn.Value);
     }
 

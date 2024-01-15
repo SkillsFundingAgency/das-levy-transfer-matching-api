@@ -97,7 +97,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.GetApplication
                 AmountUsed = getApplicationResult.AmountUsed,
                 NumberOfApprenticesUsed = getApplicationResult.NumberOfApprenticesUsed,
                 AutomaticApproval = getApplicationResult.AutomaticApproval,
-                CostProjections = getApplicationResult.CostProjections?.Select(p => new CostProjection{ FinancialYear = p.FinancialYear, Amount = p.Amount }),
+                CostProjections = getApplicationResult.CostProjections?.Select(p => new CostProjection { FinancialYear = p.FinancialYear, Amount = p.Amount }),
                 MatchPercentage = getApplicationResult.MatchPercentage,
                 MatchSector = getApplicationResult.MatchSector,
                 MatchJobRole = getApplicationResult.MatchJobRole,

@@ -6,7 +6,7 @@ using SFA.DAS.LevyTransferMatching.Api.Models.Base;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Models.CreatePledge
 {
-    public class CreatePledgeRequest: StateChangeRequest
+    public class CreatePledgeRequest : StateChangeRequest
     {
         [JsonProperty(Required = Required.Always)]
         public int Amount { get; set; }

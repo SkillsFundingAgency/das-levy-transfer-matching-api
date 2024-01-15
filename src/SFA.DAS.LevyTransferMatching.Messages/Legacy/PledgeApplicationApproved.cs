@@ -7,7 +7,7 @@ namespace SFA.DAS.LevyTransferMatching.Messages.Legacy
     {
         public PledgeApplicationApproved()
         {
-            
+
         }
 
         public PledgeApplicationApproved(int applicationId, int pledgeId, DateTime approvedOn, int amount, long transferSenderId)

@@ -35,7 +35,7 @@ public class AcceptFundingCommandHandler : IRequestHandler<AcceptFundingCommand,
 
         application.AcceptFunding(new UserInfo(request.UserId, request.UserDisplayName));
         await _applicationRepository.Update(application);
-            
+
         return new AcceptFundingCommandResult
         {
             Updated = true

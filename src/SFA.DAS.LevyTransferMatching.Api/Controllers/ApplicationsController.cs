@@ -41,7 +41,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 PledgeId = pledgeId,
                 ApplicationId = applicationId,
             });
-            
+
             if (queryResult != null)
             {
                 return Ok((GetApplicationResponse)queryResult);
@@ -68,9 +68,9 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 
             return NotFound();
         }
-		
-		[HttpPost]
-        [ProducesResponseType((int) HttpStatusCode.OK)]
+
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         [Route("pledges/{pledgeId}/applications/{applicationId}/approve")]
         public async Task<IActionResult> ApproveApplication(int pledgeId, int applicationId, [FromBody] ApproveApplicationRequest request)
         {

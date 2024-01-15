@@ -30,8 +30,8 @@ public class AccountsControllerTests
         _fixture = new Fixture();
         _mediator = new Mock<IMediator>();
         _controller = new AccountsController(_mediator.Object);
-            
-        _commandResult = new CreateAccountCommandResult {Created = true};
+
+        _commandResult = new CreateAccountCommandResult { Created = true };
         _apiRequest = _fixture.Create<CreateAccountRequest>();
 
         _mediator
@@ -56,10 +56,10 @@ public class AccountsControllerTests
         var actionResult = await _controller.CreateAccount(_apiRequest);
 
         var createdResult = actionResult as CreatedResult;
-        Assert.IsNotNull(actionResult);
-        Assert.IsNotNull(createdResult);
-        Assert.AreEqual(createdResult.StatusCode, (int)HttpStatusCode.Created);
-        Assert.AreEqual(createdResult.Location, $"/accounts/{_apiRequest.AccountId}");
+        Assert.That(actionResult, Is.Not.Null);
+        Assert.That(createdResult, Is.Not.Null);
+        Assert.That(createdResult.StatusCode, Is.EqualTo((int)HttpStatusCode.Created));
+        Assert.That($"/accounts/{_apiRequest.AccountId}", Is.EqualTo(createdResult.Location));
     }
 
     [Test]
@@ -70,9 +70,9 @@ public class AccountsControllerTests
         var actionResult = await _controller.CreateAccount(_apiRequest);
 
         var okResult = actionResult as OkResult;
-        Assert.IsNotNull(actionResult);
-        Assert.IsNotNull(okResult);
-        Assert.AreEqual(okResult.StatusCode, (int)HttpStatusCode.OK);
+        Assert.That(actionResult, Is.Not.Null);
+        Assert.That(okResult, Is.Not.Null);
+        Assert.That(okResult.StatusCode, Is.EqualTo((int)HttpStatusCode.OK));
     }
 
 
@@ -83,10 +83,10 @@ public class AccountsControllerTests
 
         var result = actionResult as ObjectResult;
 
-        Assert.IsNotNull(actionResult);
-        Assert.IsNotNull(result);
+        Assert.That(actionResult, Is.Not.Null);
+        Assert.That(result, Is.Not.Null);
         var resultValue = result.Value as GetAccountResponse;
-        Assert.AreEqual(_getAccountQueryResult.AccountId, resultValue.AccountId);
-        Assert.AreEqual(_getAccountQueryResult.AccountName, resultValue.AccountName);
+        Assert.That(resultValue.AccountId, Is.EqualTo(_getAccountQueryResult.AccountId));
+        Assert.That(resultValue.AccountName, Is.EqualTo(_getAccountQueryResult.AccountName));
     }
 }

@@ -27,13 +27,13 @@ public class EntityStateChangedHandler : IDomainEventHandler<EntityStateChanged>
         var initialState = @event.InitialState == null
             ? null
             : JsonConvert.DeserializeObject<Dictionary<string, object>>(@event.InitialState);
-                
+
         var updatedState = @event.UpdatedState == null
             ? null
             : JsonConvert.DeserializeObject<Dictionary<string, object>>(@event.UpdatedState);
-                
+
         var diff = _diffService.GenerateDiff(initialState, updatedState);
-                
+
         if (diff.Count == 0) return;
 
         var audit = new Audit

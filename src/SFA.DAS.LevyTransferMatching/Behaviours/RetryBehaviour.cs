@@ -24,7 +24,7 @@ public class RetryBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, T
                 retryAttempt => TimeSpan.FromMilliseconds(100),
                 (exception, span) => _logger.LogInformation(exception, "Retrying following DbUpdateConcurrencyException"));
     }
-        
+
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         return await ConcurrencyFailureRetryPolicy.ExecuteAsync(async () => await next());

@@ -24,7 +24,7 @@ public class RecalculateCostProjectionHandler : IRequestHandler<RecalculateCostP
         var costProjections = _costProjectionService.GetCostProjections(application.StandardMaxFunding * application.NumberOfApprentices, application.StartDate, application.StandardDuration);
 
         application.SetCostProjection(costProjections);
-            
+
         await _repository.Update(application);
     }
 }

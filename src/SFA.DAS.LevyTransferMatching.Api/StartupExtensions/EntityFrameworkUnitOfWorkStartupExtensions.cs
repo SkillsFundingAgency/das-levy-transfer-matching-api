@@ -37,7 +37,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
                 return dbContext;
             });
         }
-        
+
         public static readonly LoggerFactory DebugLoggingFactory =
             new LoggerFactory(new[] {
                 new Microsoft.Extensions.Logging.Debug.DebugLoggerProvider()

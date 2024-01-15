@@ -50,12 +50,12 @@ public static class QueryExtensions
             GetApplicationsSortOrder.CurrentFinancialYearAmount => sortDirection == SortDirection.Ascending
                 ? queryable.OrderBy(x => x.ApplicationCostProjections
                     .Where(p => p.FinancialYear == now.GetFinancialYear())
-                    .Sum(p=> p.Amount))
+                    .Sum(p => p.Amount))
                 : queryable.OrderByDescending(x => x.ApplicationCostProjections
                     .Where(p => p.FinancialYear == now.GetFinancialYear())
                     .Sum(p => p.Amount)),
             GetApplicationsSortOrder.Status => sortDirection == SortDirection.Ascending
-                ? queryable.OrderByStatus().ThenBy(x=> x.CreatedOn.Date)
+                ? queryable.OrderByStatus().ThenBy(x => x.CreatedOn.Date)
                 : queryable.OrderByStatusDescending().ThenBy(x => x.CreatedOn.Date),
             _ => null
         };

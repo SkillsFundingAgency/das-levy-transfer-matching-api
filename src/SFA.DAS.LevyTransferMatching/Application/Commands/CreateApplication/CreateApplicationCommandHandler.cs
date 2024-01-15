@@ -54,7 +54,7 @@ public class CreateApplicationCommandHandler : IRequestHandler<CreateApplication
             NumberOfApprentices = request.NumberOfApprentices,
             StartDate = request.StartDate,
             HasTrainingProvider = request.HasTrainingProvider,
-            Sectors = (Sector) request.Sectors.Cast<int>().Sum(),
+            Sectors = (Sector)request.Sectors.Cast<int>().Sum(),
             Locations = request.Locations,
             AdditionalLocation = request.AdditionalLocation,
             SpecificLocation = request.SpecificLocation,
@@ -72,7 +72,7 @@ public class CreateApplicationCommandHandler : IRequestHandler<CreateApplication
         var application = pledge.CreateApplication(account, settings, new UserInfo(request.UserId, request.UserDisplayName));
 
         await _applicationRepository.Add(application);
-           
+
         return new CreateApplicationCommandResult
         {
             ApplicationId = application.Id

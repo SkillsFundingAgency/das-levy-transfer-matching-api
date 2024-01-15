@@ -54,7 +54,7 @@ public class Pledge : AggregateRoot<int>
     public DateTime CreatedOn { get; private set; }
 
     public JobRole JobRoles { get; private set; }
-        
+
     public Level Levels { get; private set; }
 
     public Sector Sectors { get; private set; }
@@ -127,9 +127,9 @@ public class Pledge : AggregateRoot<int>
     {
         if (locationIds == null) return;
 
-        foreach(var locationId in locationIds)
+        foreach (var locationId in locationIds)
         {
-            if(Locations.All(x => x.Id != locationId))
+            if (Locations.All(x => x.Id != locationId))
             {
                 throw new InvalidOperationException($"Location {locationId} is not valid for pledge {Id}");
             }

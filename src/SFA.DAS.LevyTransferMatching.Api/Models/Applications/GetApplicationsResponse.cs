@@ -45,12 +45,12 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications
                     CreatedOn = application.CreatedOn,
                     Status = application.Status,
                     IsNamePublic = application.IsNamePublic,
-                    Locations = application.Locations?.Select(l => new Application.ApplicationLocation { Id = l.Id, PledgeLocationId = l.PledgeLocationId}),
+                    Locations = application.Locations?.Select(l => new Application.ApplicationLocation { Id = l.Id, PledgeLocationId = l.PledgeLocationId }),
                     SpecificLocation = application.SpecificLocation,
                     AdditionalLocations = application.AdditionalLocations,
                     SenderEmployerAccountId = application.SenderEmployerAccountId,
                     SenderEmployerAccountName = application.SenderEmployerAccountName,
-                    CostProjections = application.CostProjections?.Select(p => new Application.CostProjection{ FinancialYear = p.FinancialYear, Amount = p.Amount}),
+                    CostProjections = application.CostProjections?.Select(p => new Application.CostProjection { FinancialYear = p.FinancialYear, Amount = p.Amount }),
                     MatchPercentage = application.MatchPercentage,
                     MatchJobRole = application.MatchJobRole,
                     MatchSector = application.MatchSector,
@@ -73,7 +73,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications
         public int TotalItems { get; set; }
 
         public IEnumerable<Application> Applications { get; set; }
-        
+
         public class Application
         {
             public int Id { get; set; }
