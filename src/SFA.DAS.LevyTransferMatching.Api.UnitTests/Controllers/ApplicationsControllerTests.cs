@@ -20,318 +20,317 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
 
-namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
+namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers;
+
+[TestFixture]
+public class ApplicationsControllerTests
 {
-    [TestFixture]
-    public class ApplicationsControllerTests
+    private readonly Fixture _fixture = new Fixture();
+    private Mock<IMediator> _mediator;
+    private ApplicationsController _applicationsController;
+
+    private int _pledgeId;
+    private int _applicationId;
+    private long _accountId;
+    private CreateApplicationRequest _request;
+    private CreateApplicationCommandResult _result;
+    private DebitApplicationRequest _debitApplicationRequest;
+    private WithdrawApplicationRequest _withdrawApplicationRequest;
+
+    [SetUp]
+    public void Setup()
     {
-        private readonly Fixture _fixture = new Fixture();
-        private Mock<IMediator> _mediator;
-        private ApplicationsController _applicationsController;
+        _pledgeId = _fixture.Create<int>();
+        _applicationId = _fixture.Create<int>();
+        _accountId = _fixture.Create<long>();
+        _request = _fixture.Create<CreateApplicationRequest>();
+        _result = _fixture.Create<CreateApplicationCommandResult>();
+        _debitApplicationRequest = _fixture.Create<DebitApplicationRequest>();
+        _withdrawApplicationRequest = _fixture.Create<WithdrawApplicationRequest>();
 
-        private int _pledgeId;
-        private int _applicationId;
-        private long _accountId;
-        private CreateApplicationRequest _request;
-        private CreateApplicationCommandResult _result;
-        private DebitApplicationRequest _debitApplicationRequest;
-        private WithdrawApplicationRequest _withdrawApplicationRequest;
-
-        [SetUp]
-        public void Setup()
-        {
-            _pledgeId = _fixture.Create<int>();
-            _applicationId = _fixture.Create<int>();
-            _accountId = _fixture.Create<long>();
-            _request = _fixture.Create<CreateApplicationRequest>();
-            _result = _fixture.Create<CreateApplicationCommandResult>();
-            _debitApplicationRequest = _fixture.Create<DebitApplicationRequest>();
-            _withdrawApplicationRequest = _fixture.Create<WithdrawApplicationRequest>();
-
-            _mediator = new Mock<IMediator>();
-            _applicationsController = new ApplicationsController(_mediator.Object);
+        _mediator = new Mock<IMediator>();
+        _applicationsController = new ApplicationsController(_mediator.Object);
             
-            _mediator.Setup(x => x.Send(It.Is<CreateApplicationCommand>(command =>
+        _mediator.Setup(x => x.Send(It.Is<CreateApplicationCommand>(command =>
+                command.PledgeId == _pledgeId &&
+                command.EmployerAccountId == _request.EmployerAccountId &&
+                command.Details == _request.Details && 
+                command.StandardId == _request.StandardId &&
+                command.StandardTitle == _request.StandardTitle &&
+                command.StandardLevel == _request.StandardLevel &&
+                command.StandardDuration == _request.StandardDuration &&
+                command.StandardMaxFunding == _request.StandardMaxFunding &&
+                command.StandardRoute == _request.StandardRoute &&
+                command.NumberOfApprentices == _request.NumberOfApprentices &&
+                command.StartDate == _request.StartDate &&
+                command.HasTrainingProvider == _request.HasTrainingProvider &&
+                command.Sectors.Equals(_request.Sectors) &&
+                command.Locations == _request.Locations &&
+                command.AdditionalLocation == _request.AdditionalLocation &&
+                command.SpecificLocation == _request.SpecificLocation &&
+                command.FirstName == _request.FirstName &&
+                command.LastName == _request.LastName &&
+                command.EmailAddresses.Equals(_request.EmailAddresses) &&
+                command.BusinessWebsite == _request.BusinessWebsite &&
+                command.UserId == _request.UserId &&
+                command.UserDisplayName == _request.UserDisplayName
+            ), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(_result);
+    }
+
+    [Test]
+    public async Task Post_ApproveApplication_Approves_Application()
+    {
+        var request = _fixture.Create<ApproveApplicationRequest>();
+
+        var actionResult = await _applicationsController.ApproveApplication(_pledgeId, _applicationId, request);
+        var okResult = actionResult as OkResult;
+        Assert.IsNotNull(okResult);
+
+        _mediator.Verify(x => x.Send(It.Is<ApproveApplicationCommand>(command =>
                     command.PledgeId == _pledgeId &&
-                    command.EmployerAccountId == _request.EmployerAccountId &&
-                    command.Details == _request.Details && 
-                    command.StandardId == _request.StandardId &&
-                    command.StandardTitle == _request.StandardTitle &&
-                    command.StandardLevel == _request.StandardLevel &&
-                    command.StandardDuration == _request.StandardDuration &&
-                    command.StandardMaxFunding == _request.StandardMaxFunding &&
-                    command.StandardRoute == _request.StandardRoute &&
-                    command.NumberOfApprentices == _request.NumberOfApprentices &&
-                    command.StartDate == _request.StartDate &&
-                    command.HasTrainingProvider == _request.HasTrainingProvider &&
-                    command.Sectors.Equals(_request.Sectors) &&
-                    command.Locations == _request.Locations &&
-                    command.AdditionalLocation == _request.AdditionalLocation &&
-                    command.SpecificLocation == _request.SpecificLocation &&
-                    command.FirstName == _request.FirstName &&
-                    command.LastName == _request.LastName &&
-                    command.EmailAddresses.Equals(_request.EmailAddresses) &&
-                    command.BusinessWebsite == _request.BusinessWebsite &&
-                    command.UserId == _request.UserId &&
-                    command.UserDisplayName == _request.UserDisplayName
-                    ), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_result);
-        }
+                    command.ApplicationId == _applicationId &&
+                    command.UserId == request.UserId &&
+                    command.UserDisplayName == request.UserDisplayName),
+                It.IsAny<CancellationToken>()),
+            Times.Once);
+    }
 
-        [Test]
-        public async Task Post_ApproveApplication_Approves_Application()
+    [Test]
+    public async Task Post_UndoApplicationApproval_Undoes_Application_Approval()
+    {
+        var actionResult = await _applicationsController.UndoApplicationApproval(_pledgeId, _applicationId);
+        var okResult = actionResult as OkResult;
+        Assert.IsNotNull(okResult);
+
+        _mediator.Verify(x => x.Send(It.Is<UndoApplicationApprovalCommand>(command =>
+                    command.PledgeId == _pledgeId &&
+                    command.ApplicationId == _applicationId),
+                It.IsAny<CancellationToken>()),
+            Times.Once);
+    }
+
+    [Test]
+    public async Task Post_Returns_ApplicationId()
+    {
+        var actionResult = await _applicationsController.CreateApplication(_pledgeId, _request);
+        var createdResult = actionResult as CreatedResult;
+        Assert.IsNotNull(createdResult);
+        var response = createdResult.Value as CreateApplicationResponse;
+        Assert.IsNotNull(response);
+        Assert.AreEqual(_result.ApplicationId, response.ApplicationId);
+    }
+
+    [Test]
+    public async Task Get_Returns_Application()
+    {
+        // Arrange
+        var pledgeId = (int?)null;
+        var applicationId = _fixture.Create<int>();
+        var applicationResult = _fixture.Create<GetApplicationResult>();
+
+        _mediator
+            .Setup(x => x.Send(It.Is<GetApplicationQuery>(y => (y.PledgeId == pledgeId) && (y.ApplicationId == applicationId)), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(applicationResult);
+
+        // Act
+        var actionResult = await _applicationsController.GetApplication(applicationId);
+        var okObjectResult = actionResult as OkObjectResult;
+        var getApplicationResponse = okObjectResult.Value as GetApplicationResponse;
+
+        // Assert
+        Assert.IsNotNull(actionResult);
+        Assert.IsNotNull(okObjectResult);
+        Assert.IsNotNull(getApplicationResponse);
+        Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.OK);
+    }
+
+    [Test]
+    public async Task Get_With_PledgeId_Returns_Application()
+    {
+        // Arrange
+        var pledgeId = _fixture.Create<int>();
+        var applicationId = _fixture.Create<int>();
+        var applicationResult = _fixture.Create<GetApplicationResult>();
+
+        _mediator
+            .Setup(x => x.Send(It.Is<GetApplicationQuery>(y => (y.PledgeId == pledgeId) && (y.ApplicationId == applicationId)), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(applicationResult);
+
+        // Act
+        var actionResult = await _applicationsController.GetApplication(pledgeId, applicationId);
+        var okObjectResult = actionResult as OkObjectResult;
+        var getApplicationResponse = okObjectResult.Value as GetApplicationResponse;
+
+        // Assert
+        Assert.IsNotNull(actionResult);
+        Assert.IsNotNull(okObjectResult);
+        Assert.IsNotNull(getApplicationResponse);
+        Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.OK);
+    }
+
+    [Test]
+    public async Task Get_With_PledgeId_Returns_NotFound()
+    {
+        // Arrange
+        var pledgeId = _fixture.Create<int>();
+        var applicationId = _fixture.Create<int>();
+
+        _mediator
+            .Setup(x => x.Send(It.Is<GetApplicationQuery>(y => (y.PledgeId == pledgeId) && (y.ApplicationId == applicationId)), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((GetApplicationResult)null);
+
+        // Act
+        var actionResult = await _applicationsController.GetApplication(pledgeId, applicationId);
+        var okObjectResult = actionResult as NotFoundResult;
+
+        // Assert
+        Assert.IsNotNull(actionResult);
+        Assert.IsNotNull(okObjectResult);
+        Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.NotFound);
+    }
+
+    [Test]
+    public async Task Get_Returns_NotFound()
+    {
+        // Arrange
+        var pledgeId = (int?)null;
+        var applicationId = _fixture.Create<int>();
+
+        _mediator
+            .Setup(x => x.Send(It.Is<GetApplicationQuery>(y => (y.PledgeId == pledgeId) && (y.ApplicationId == applicationId)), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((GetApplicationResult)null);
+
+        // Act
+        var actionResult = await _applicationsController.GetApplication(applicationId);
+        var okObjectResult = actionResult as NotFoundResult;
+
+        // Assert
+        Assert.IsNotNull(actionResult);
+        Assert.IsNotNull(okObjectResult);
+        Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.NotFound);
+    }
+
+    [Test]
+    public async Task Get_Returns_Applications()
+    {
+        _mediator.Setup(x => x.Send(It.Is<GetApplicationsQuery>(query => query.PledgeId == _pledgeId), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new GetApplicationsResult{Items = new List<GetApplicationsResult.Application>{new GetApplicationsResult.Application()}});
+
+        var actionResult = await _applicationsController.GetApplications(new GetApplicationsRequest{PledgeId = _pledgeId});
+        var result = actionResult as OkObjectResult;
+        Assert.IsNotNull(result);
+        var response = result.Value as GetApplicationsResponse;
+        Assert.IsNotNull(response);
+        Assert.AreEqual(1, response.Applications.Count());
+    }
+
+    [Test]
+    public async Task Get_Returns_Applications_By_Account_Id()
+    {
+        _mediator.Setup(x => x.Send(It.Is<GetApplicationsQuery>(query => query.AccountId == _accountId), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new GetApplicationsResult { Items = new List<GetApplicationsResult.Application> { new GetApplicationsResult.Application() } });
+
+        var actionResult = await _applicationsController.GetApplications(new GetApplicationsRequest{AccountId = _accountId});
+        var result = actionResult as OkObjectResult;
+        Assert.IsNotNull(result);
+        var response = result.Value as GetApplicationsResponse;
+        Assert.IsNotNull(response);
+
+        var apps = response.Applications.ToList();
+        Assert.AreEqual(1, response.Applications.Count());
+    }
+
+    [Test]
+    public async Task Get_Returns_Not_Empty_Applications_By_Status()
+    {
+        var applicationStatusFilter = _fixture.Create<Data.Enums.ApplicationStatus>();
+        _mediator.Setup(x => x.Send(It.Is<GetApplicationsQuery>(query => query.ApplicationStatusFilter == applicationStatusFilter), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new GetApplicationsResult{Items = new List<GetApplicationsResult.Application>{new GetApplicationsResult.Application()}});
+
+        var actionResult = await _applicationsController.GetApplications(new GetApplicationsRequest { ApplicationStatusFilter = applicationStatusFilter});
+        var result = actionResult as OkObjectResult;
+        Assert.IsNotNull(result);
+        var response = result.Value as GetApplicationsResponse;
+        Assert.IsNotNull(response);
+
+        var apps = response.Applications.ToList();
+        Assert.AreEqual(1, response.Applications.Count());
+    }
+
+    [Test]
+    public async Task Post_AcceptFunding_Returns_No_Content()
+    {
+        // Arrange
+        var applicationId = _fixture.Create<int>();
+        var accountId = _fixture.Create<long>();
+        var request = _fixture.Create<AcceptFundingRequest>();
+        var result = new AcceptFundingCommandResult()
         {
-            var request = _fixture.Create<ApproveApplicationRequest>();
+            Updated = true,
+        };
 
-            var actionResult = await _applicationsController.ApproveApplication(_pledgeId, _applicationId, request);
-            var okResult = actionResult as OkResult;
-            Assert.IsNotNull(okResult);
+        _mediator
+            .Setup(x => x.Send(It.IsAny<AcceptFundingCommand>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(result);
 
-            _mediator.Verify(x => x.Send(It.Is<ApproveApplicationCommand>(command =>
-                        command.PledgeId == _pledgeId &&
-                        command.ApplicationId == _applicationId &&
-                        command.UserId == request.UserId &&
-                        command.UserDisplayName == request.UserDisplayName),
-                    It.IsAny<CancellationToken>()),
-                Times.Once);
-        }
+        // Act
+        var actionResult = await _applicationsController.AcceptFunding(applicationId, accountId, request);
+        var noContentResult = actionResult as NoContentResult;
 
-        [Test]
-        public async Task Post_UndoApplicationApproval_Undoes_Application_Approval()
+        // Assert
+        Assert.IsNotNull(actionResult);
+        Assert.IsNotNull(noContentResult);
+    }
+
+    [Test]
+    public async Task Post_AcceptFunding_Returns_BadRequest()
+    {
+        // Arrange
+        var applicationId = _fixture.Create<int>();
+        var accountId = _fixture.Create<long>();
+        var request = _fixture.Create<AcceptFundingRequest>();
+        var result = new AcceptFundingCommandResult()
         {
-            var actionResult = await _applicationsController.UndoApplicationApproval(_pledgeId, _applicationId);
-            var okResult = actionResult as OkResult;
-            Assert.IsNotNull(okResult);
+            Updated = false,
+        };
 
-            _mediator.Verify(x => x.Send(It.Is<UndoApplicationApprovalCommand>(command =>
-                        command.PledgeId == _pledgeId &&
-                        command.ApplicationId == _applicationId),
-                    It.IsAny<CancellationToken>()),
-                Times.Once);
-        }
+        _mediator
+            .Setup(x => x.Send(It.IsAny<AcceptFundingCommand>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(result);
 
-        [Test]
-        public async Task Post_Returns_ApplicationId()
-        {
-            var actionResult = await _applicationsController.CreateApplication(_pledgeId, _request);
-            var createdResult = actionResult as CreatedResult;
-            Assert.IsNotNull(createdResult);
-            var response = createdResult.Value as CreateApplicationResponse;
-            Assert.IsNotNull(response);
-            Assert.AreEqual(_result.ApplicationId, response.ApplicationId);
-        }
+        // Act
+        var actionResult = await _applicationsController.AcceptFunding(applicationId, accountId, request);
+        var badRequestResult = actionResult as BadRequestResult;
 
-        [Test]
-        public async Task Get_Returns_Application()
-        {
-            // Arrange
-            var pledgeId = (int?)null;
-            var applicationId = _fixture.Create<int>();
-            var applicationResult = _fixture.Create<GetApplicationResult>();
+        // Assert
+        Assert.IsNotNull(actionResult);
+        Assert.IsNotNull(badRequestResult);
+    }
 
-            _mediator
-                .Setup(x => x.Send(It.Is<GetApplicationQuery>(y => (y.PledgeId == pledgeId) && (y.ApplicationId == applicationId)), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(applicationResult);
+    [Test]
+    public async Task Post_DebitApplication_Debits_Application()
+    {
+        var actionResult = await _applicationsController.DebitApplication(_applicationId, _debitApplicationRequest);
+        var okResult = actionResult as OkResult;
+        Assert.IsNotNull(okResult);
 
-            // Act
-            var actionResult = await _applicationsController.GetApplication(applicationId);
-            var okObjectResult = actionResult as OkObjectResult;
-            var getApplicationResponse = okObjectResult.Value as GetApplicationResponse;
+        _mediator.Verify(x => x.Send(It.Is<DebitApplicationCommand>(command =>
+                    command.ApplicationId == _applicationId),
+                It.IsAny<CancellationToken>()),
+            Times.Once);
+    }
 
-            // Assert
-            Assert.IsNotNull(actionResult);
-            Assert.IsNotNull(okObjectResult);
-            Assert.IsNotNull(getApplicationResponse);
-            Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.OK);
-        }
+    [Test]
+    public async Task Post_WithdrawApplication_Withdraws_Application()
+    {
+        var actionResult = await _applicationsController.WithdrawApplication(_applicationId, _accountId, _withdrawApplicationRequest);
+        var okResult = actionResult as OkResult;
+        Assert.IsNotNull(okResult);
 
-        [Test]
-        public async Task Get_With_PledgeId_Returns_Application()
-        {
-            // Arrange
-            var pledgeId = _fixture.Create<int>();
-            var applicationId = _fixture.Create<int>();
-            var applicationResult = _fixture.Create<GetApplicationResult>();
-
-            _mediator
-                .Setup(x => x.Send(It.Is<GetApplicationQuery>(y => (y.PledgeId == pledgeId) && (y.ApplicationId == applicationId)), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(applicationResult);
-
-            // Act
-            var actionResult = await _applicationsController.GetApplication(pledgeId, applicationId);
-            var okObjectResult = actionResult as OkObjectResult;
-            var getApplicationResponse = okObjectResult.Value as GetApplicationResponse;
-
-            // Assert
-            Assert.IsNotNull(actionResult);
-            Assert.IsNotNull(okObjectResult);
-            Assert.IsNotNull(getApplicationResponse);
-            Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.OK);
-        }
-
-        [Test]
-        public async Task Get_With_PledgeId_Returns_NotFound()
-        {
-            // Arrange
-            var pledgeId = _fixture.Create<int>();
-            var applicationId = _fixture.Create<int>();
-
-            _mediator
-                .Setup(x => x.Send(It.Is<GetApplicationQuery>(y => (y.PledgeId == pledgeId) && (y.ApplicationId == applicationId)), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((GetApplicationResult)null);
-
-            // Act
-            var actionResult = await _applicationsController.GetApplication(pledgeId, applicationId);
-            var okObjectResult = actionResult as NotFoundResult;
-
-            // Assert
-            Assert.IsNotNull(actionResult);
-            Assert.IsNotNull(okObjectResult);
-            Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.NotFound);
-        }
-
-        [Test]
-        public async Task Get_Returns_NotFound()
-        {
-            // Arrange
-            var pledgeId = (int?)null;
-            var applicationId = _fixture.Create<int>();
-
-            _mediator
-                .Setup(x => x.Send(It.Is<GetApplicationQuery>(y => (y.PledgeId == pledgeId) && (y.ApplicationId == applicationId)), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((GetApplicationResult)null);
-
-            // Act
-            var actionResult = await _applicationsController.GetApplication(applicationId);
-            var okObjectResult = actionResult as NotFoundResult;
-
-            // Assert
-            Assert.IsNotNull(actionResult);
-            Assert.IsNotNull(okObjectResult);
-            Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.NotFound);
-        }
-
-        [Test]
-        public async Task Get_Returns_Applications()
-        {
-            _mediator.Setup(x => x.Send(It.Is<GetApplicationsQuery>(query => query.PledgeId == _pledgeId), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new GetApplicationsResult{Items = new List<GetApplicationsResult.Application>{new GetApplicationsResult.Application()}});
-
-            var actionResult = await _applicationsController.GetApplications(new GetApplicationsRequest{PledgeId = _pledgeId});
-            var result = actionResult as OkObjectResult;
-            Assert.IsNotNull(result);
-            var response = result.Value as GetApplicationsResponse;
-            Assert.IsNotNull(response);
-            Assert.AreEqual(1, response.Applications.Count());
-        }
-
-        [Test]
-        public async Task Get_Returns_Applications_By_Account_Id()
-        {
-            _mediator.Setup(x => x.Send(It.Is<GetApplicationsQuery>(query => query.AccountId == _accountId), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new GetApplicationsResult { Items = new List<GetApplicationsResult.Application> { new GetApplicationsResult.Application() } });
-
-            var actionResult = await _applicationsController.GetApplications(new GetApplicationsRequest{AccountId = _accountId});
-            var result = actionResult as OkObjectResult;
-            Assert.IsNotNull(result);
-            var response = result.Value as GetApplicationsResponse;
-            Assert.IsNotNull(response);
-
-            var apps = response.Applications.ToList();
-            Assert.AreEqual(1, response.Applications.Count());
-        }
-
-        [Test]
-        public async Task Get_Returns_Not_Empty_Applications_By_Status()
-        {
-            var applicationStatusFilter = _fixture.Create<Data.Enums.ApplicationStatus>();
-            _mediator.Setup(x => x.Send(It.Is<GetApplicationsQuery>(query => query.ApplicationStatusFilter == applicationStatusFilter), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new GetApplicationsResult{Items = new List<GetApplicationsResult.Application>{new GetApplicationsResult.Application()}});
-
-            var actionResult = await _applicationsController.GetApplications(new GetApplicationsRequest { ApplicationStatusFilter = applicationStatusFilter});
-            var result = actionResult as OkObjectResult;
-            Assert.IsNotNull(result);
-            var response = result.Value as GetApplicationsResponse;
-            Assert.IsNotNull(response);
-
-            var apps = response.Applications.ToList();
-            Assert.AreEqual(1, response.Applications.Count());
-        }
-
-        [Test]
-        public async Task Post_AcceptFunding_Returns_No_Content()
-        {
-            // Arrange
-            var applicationId = _fixture.Create<int>();
-            var accountId = _fixture.Create<long>();
-            var request = _fixture.Create<AcceptFundingRequest>();
-            var result = new AcceptFundingCommandResult()
-            {
-                Updated = true,
-            };
-
-            _mediator
-                .Setup(x => x.Send(It.IsAny<AcceptFundingCommand>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(result);
-
-            // Act
-            var actionResult = await _applicationsController.AcceptFunding(applicationId, accountId, request);
-            var noContentResult = actionResult as NoContentResult;
-
-            // Assert
-            Assert.IsNotNull(actionResult);
-            Assert.IsNotNull(noContentResult);
-        }
-
-        [Test]
-        public async Task Post_AcceptFunding_Returns_BadRequest()
-        {
-            // Arrange
-            var applicationId = _fixture.Create<int>();
-            var accountId = _fixture.Create<long>();
-            var request = _fixture.Create<AcceptFundingRequest>();
-            var result = new AcceptFundingCommandResult()
-            {
-                Updated = false,
-            };
-
-            _mediator
-                .Setup(x => x.Send(It.IsAny<AcceptFundingCommand>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(result);
-
-            // Act
-            var actionResult = await _applicationsController.AcceptFunding(applicationId, accountId, request);
-            var badRequestResult = actionResult as BadRequestResult;
-
-            // Assert
-            Assert.IsNotNull(actionResult);
-            Assert.IsNotNull(badRequestResult);
-        }
-
-        [Test]
-        public async Task Post_DebitApplication_Debits_Application()
-        {
-            var actionResult = await _applicationsController.DebitApplication(_applicationId, _debitApplicationRequest);
-            var okResult = actionResult as OkResult;
-            Assert.IsNotNull(okResult);
-
-            _mediator.Verify(x => x.Send(It.Is<DebitApplicationCommand>(command =>
-                        command.ApplicationId == _applicationId),
-                    It.IsAny<CancellationToken>()),
-                Times.Once);
-        }
-
-        [Test]
-        public async Task Post_WithdrawApplication_Withdraws_Application()
-        {
-            var actionResult = await _applicationsController.WithdrawApplication(_applicationId, _accountId, _withdrawApplicationRequest);
-            var okResult = actionResult as OkResult;
-            Assert.IsNotNull(okResult);
-
-            _mediator.Verify(x => x.Send(It.Is<WithdrawApplicationCommand>(command =>
-                        command.ApplicationId == _applicationId),
-                    It.IsAny<CancellationToken>()),
-                Times.Once);
-        }
+        _mediator.Verify(x => x.Send(It.Is<WithdrawApplicationCommand>(command =>
+                    command.ApplicationId == _applicationId),
+                It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 }
