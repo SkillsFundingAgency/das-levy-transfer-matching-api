@@ -1,8 +1,7 @@
-﻿namespace SFA.DAS.LevyTransferMatching.Api.Models.Pledges
+﻿namespace SFA.DAS.LevyTransferMatching.Api.Models.Pledges;
+
+public class DebitPledgeRequest
 {
-    public class DebitPledgeRequest
-    {
-        public int Amount { get; set; }
-        public int ApplicationId { get; set; }
-    }
+    public int Amount { get; set; }
+    public int ApplicationId { get; set; }
 }

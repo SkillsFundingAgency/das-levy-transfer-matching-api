@@ -1,9 +1,8 @@
 ﻿using SFA.DAS.LevyTransferMatching.Api.Models.Base;
 
-namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications
+namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications;
+
+public class ApproveApplicationRequest : StateChangeRequest
 {
-    public class ApproveApplicationRequest : StateChangeRequest
-    {
-        public bool AutomaticApproval { get; set; }
-    }
+    public bool AutomaticApproval { get; set; }
 }

@@ -5,25 +5,26 @@ using Microsoft.Extensions.Hosting;
 using SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
 using StackExchange.Redis;
 
-namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
+namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions;
+
+public static class DataProtectionStartupExtensions
 {
-    public static class DataProtectionStartupExtensions
+    public static IServiceCollection AddDasDataProtection(this IServiceCollection services, LevyTransferMatchingApi configuration, IHostEnvironment environment)
     {
-        public static IServiceCollection AddDasDataProtection(this IServiceCollection services, LevyTransferMatchingApi configuration, IWebHostEnvironment environment)
+        if (environment.IsDevelopment())
         {
-            if (!environment.IsDevelopment())
-            {
-                var redisConnectionString = configuration.RedisConnectionString;
-                var dataProtectionKeysDatabase = configuration.DataProtectionKeysDatabase;
-
-                var redis = ConnectionMultiplexer.Connect($"{redisConnectionString},{dataProtectionKeysDatabase}");
-
-                services.AddDataProtection()
-                    .SetApplicationName("das-levy-transfer-matching-api")
-                    .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys");
-            }
-
             return services;
         }
+        
+        var redisConnectionString = configuration.RedisConnectionString;
+        var dataProtectionKeysDatabase = configuration.DataProtectionKeysDatabase;
+
+        var redis = ConnectionMultiplexer.Connect($"{redisConnectionString},{dataProtectionKeysDatabase}");
+
+        services.AddDataProtection()
+            .SetApplicationName("das-levy-transfer-matching-api")
+            .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys");
+
+        return services;
     }
 }

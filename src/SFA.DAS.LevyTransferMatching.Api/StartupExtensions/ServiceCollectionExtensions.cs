@@ -1,5 +1,4 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SFA.DAS.LevyTransferMatching.Abstractions.Audit;
@@ -19,7 +18,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static void AddServicesForLevyTransferMatching(this IServiceCollection services, IWebHostEnvironment hostingEnvironment, LevyTransferMatchingApi config)
+    public static void AddServicesForLevyTransferMatching(this IServiceCollection services, IHostEnvironment hostingEnvironment, LevyTransferMatchingApi config)
     {
         services.AddMediatR(x => x.RegisterServicesFromAssemblyContaining<CreateAccountCommand>());
 
