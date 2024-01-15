@@ -93,10 +93,10 @@ namespace SFA.DAS.LevyTransferMatching.Api
                     {
                         o.Conventions.Add(new AuthorizeControllerModelConvention(new List<string>()));
                     }
+
                     o.Conventions.Add(new ApiExplorerGroupPerVersionConvention());
                 })
-                .AddNewtonsoftJson()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+                .AddNewtonsoftJson();
 
             services.AddControllers()
                 .AddFluentValidation(fv =>
