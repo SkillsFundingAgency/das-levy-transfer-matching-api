@@ -28,24 +28,27 @@ public class GetPledgeResponse
 
     public IEnumerable<Location> Locations { get; set; }
 
-    public static implicit operator GetPledgeResponse(GetPledgeResult pledge)
-    {
-        return new GetPledgeResponse
+        public AutomaticApprovalOption AutomaticApprovalOption { get; set; }
+
+        public static implicit operator GetPledgeResponse(GetPledgeResult pledge)
         {
-            AccountId = pledge.AccountId,
-            Amount = pledge.Amount,
-            RemainingAmount = pledge.RemainingAmount,
-            CreatedOn = pledge.CreatedOn,
-            DasAccountName = pledge.DasAccountName,
-            Id = pledge.Id,
-            IsNamePublic = pledge.IsNamePublic,
-            JobRoles = pledge.JobRoles,
-            Levels = pledge.Levels,
-            Sectors = pledge.Sectors,
-            Status = pledge.Status,
-            Locations = pledge.Locations.Select(x => new Location { Id = x.Id, Name = x.Name })
-        };
-    }
+            return new GetPledgeResponse
+            {
+                AccountId = pledge.AccountId,
+                Amount = pledge.Amount,
+                RemainingAmount = pledge.RemainingAmount,
+                CreatedOn = pledge.CreatedOn,
+                DasAccountName = pledge.DasAccountName,
+                Id = pledge.Id,
+                IsNamePublic = pledge.IsNamePublic,
+                JobRoles = pledge.JobRoles,
+                Levels = pledge.Levels,
+                Sectors = pledge.Sectors,
+                Status = pledge.Status,
+                Locations = pledge.Locations.Select(x => new Location { Id = x.Id, Name = x.Name}),
+                AutomaticApprovalOption = pledge.AutomaticApprovalOption
+            };
+        }
 
     public class Location
     {

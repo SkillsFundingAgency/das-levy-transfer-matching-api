@@ -75,15 +75,16 @@ public class Startup
             })
             .AddNewtonsoftJson();
 
-        services.AddControllers()
-            .AddFluentValidation(configuration =>
-            {
-                configuration.RegisterValidatorsFromAssemblyContaining<Startup>();
-                configuration.RegisterValidatorsFromAssemblyContaining<CreateAccountCommandValidator>();
-            })
+        services
+            .AddControllers()
             .AddNewtonsoftJson(x => { x.SerializerSettings.Converters.Add(new StringEnumConverter()); });
 
-        services.AddApplicationInsightsTelemetry(_configuration.GetValue<string>("APPINSIGHTS_INSTRUMENTATIONKEY"));
+        services.AddFluentValidationAutoValidation()
+            .AddValidatorsFromAssemblyContaining<Startup>()
+            .AddValidatorsFromAssemblyContaining<CreateAccountCommandValidator>();
+        
+
+        services.AddApplicationInsightsTelemetry();
         services.AddDasHealthChecks(config);
         services.AddServicesForLevyTransferMatching(_environment, config);
 

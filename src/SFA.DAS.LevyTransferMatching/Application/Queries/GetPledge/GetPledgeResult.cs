@@ -27,6 +27,8 @@ public class GetPledgeResult
     public PledgeStatus Status { get; set; }
     public IEnumerable<Location> Locations { get; set; }
 
+    public AutomaticApprovalOption AutomaticApprovalOption { get; set; }
+
     public class Location
     {
         public int Id { get; set; }
