@@ -2,5 +2,5 @@
 
 public static class RoleNames
 {
-    public static string Default => "Default";
+    public static string Default => nameof(Default);
 }
