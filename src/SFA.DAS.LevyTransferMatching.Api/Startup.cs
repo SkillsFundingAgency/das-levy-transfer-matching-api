@@ -22,6 +22,8 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.CreateAccount;
 using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Infrastructure;
 using SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
+using SFA.DAS.LevyTransferMatching.Services;
+using SFA.DAS.NServiceBus.Features.ClientOutbox.Data;
 using SFA.DAS.UnitOfWork.EntityFrameworkCore.DependencyResolution.Microsoft;
 using SFA.DAS.UnitOfWork.NServiceBus.Features.ClientOutbox.DependencyResolution.Microsoft;
 
@@ -148,5 +150,12 @@ public class Startup
     {
         var config = _configuration.GetSection<LevyTransferMatchingApi>();
         serviceProvider.StartNServiceBus(config);
+        
+        // Replacing ClientOutboxPersisterV2 with a local version to fix unit of work issue due to propagating Task up the chain rather than awaiting on DB Command.
+        // not clear why this fixes the issue. Attempted to make the change in SFA.DAS.Nservicebus.SqlServer however it conflicts when upgraded with SFA.DAS.UnitOfWork.Nservicebus
+        // which would require upgrading to NET6 to resolve.
+        var serviceDescriptor = serviceProvider.FirstOrDefault(serv => serv.ServiceType == typeof(IClientOutboxStorageV2));
+        serviceProvider.Remove(serviceDescriptor);
+        serviceProvider.AddScoped<IClientOutboxStorageV2, ClientOutboxPersisterV2>();
     }
 }
