@@ -52,8 +52,8 @@ public class GetPledgesQueryHandler : IRequestHandler<GetPledgesQuery, GetPledge
                 Levels = x.Levels.ToList(),
                 Sectors = x.Sectors.ToList(),
                 Status = x.Status,
-                Locations = x.Locations.Select(y => new LocationInformation { Name = y.Name, Geopoint = new double[] { y.Latitude, y.Longitude } }).ToList(),
-                ApplicationCount = Convert.ToInt32(x.Applications.Count())
+                Locations = x.Locations.Select(y => new LocationInformation { Name = y.Name, Geopoint = new[] { y.Latitude, y.Longitude } }).ToList(),
+                ApplicationCount = Convert.ToInt32(x.Applications.Count)
             })
             .AsNoTracking()
             .AsSingleQuery()
@@ -61,7 +61,7 @@ public class GetPledgesQueryHandler : IRequestHandler<GetPledgesQuery, GetPledge
 
         var count = await pledgesQuery.CountAsync(cancellationToken: cancellationToken);
 
-        return new GetPledgesResult()
+        return new GetPledgesResult
         {
             Items = queryResult.ToList(),
             TotalItems = count,

@@ -37,7 +37,7 @@ public class GetApplicationQueryHandlerTests : LevyTransferMatchingDbContextFixt
 
         await DbContext.SaveChangesAsync();
 
-        var handler = new GetApplicationQueryHandler(DbContext, _dateTimeService.Object);
+        var handler = new GetApplicationQueryHandler(DbContext);
 
         var applicationId = application.Id;
         var request = new GetApplicationQuery()
@@ -69,7 +69,7 @@ public class GetApplicationQueryHandlerTests : LevyTransferMatchingDbContextFixt
 
         await DbContext.SaveChangesAsync();
 
-        var handler = new GetApplicationQueryHandler(DbContext, _dateTimeService.Object);
+        var handler = new GetApplicationQueryHandler(DbContext);
 
         var applicationId = application.Id;
         var pledgeId = pledge.Id;
@@ -90,7 +90,7 @@ public class GetApplicationQueryHandlerTests : LevyTransferMatchingDbContextFixt
     public async Task Handle_Application_Not_Found_Returns_Null()
     {
         // Arrange
-        var handler = new GetApplicationQueryHandler(DbContext, _dateTimeService.Object);
+        var handler = new GetApplicationQueryHandler(DbContext);
 
         var applicationId = _fixture.Create<int>();
         var request = new GetApplicationQuery()
@@ -109,7 +109,7 @@ public class GetApplicationQueryHandlerTests : LevyTransferMatchingDbContextFixt
     public async Task Handle_Application_With_PledgeId_Not_Found_Returns_Null()
     {
         // Arrange
-        var handler = new GetApplicationQueryHandler(DbContext, _dateTimeService.Object);
+        var handler = new GetApplicationQueryHandler(DbContext);
 
         var applicationId = _fixture.Create<int>();
         var pledgeId = _fixture.Create<int>();
@@ -144,7 +144,7 @@ public class GetApplicationQueryHandlerTests : LevyTransferMatchingDbContextFixt
         await DbContext.AddAsync(application);
         await DbContext.SaveChangesAsync();
 
-        var handler = new GetApplicationQueryHandler(DbContext, _dateTimeService.Object);
+        var handler = new GetApplicationQueryHandler(DbContext);
 
         var applicationId = application.Id;
         var request = new GetApplicationQuery()

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SFA.DAS.LevyTransferMatching.Messages.Events
+﻿namespace SFA.DAS.LevyTransferMatching.Messages.Events
 {
     public class ApplicationWithdrawnAfterAcceptanceEvent
     {

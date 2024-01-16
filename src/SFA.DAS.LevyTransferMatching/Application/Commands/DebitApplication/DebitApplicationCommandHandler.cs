@@ -7,12 +7,10 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
 public class DebitApplicationCommandHandler : IRequestHandler<DebitApplicationCommand>
 {
     private readonly IApplicationRepository _repository;
-    private readonly ILogger<DebitApplicationCommandHandler> _logger;
 
-    public DebitApplicationCommandHandler(IApplicationRepository repository, ILogger<DebitApplicationCommandHandler> logger)
+    public DebitApplicationCommandHandler(IApplicationRepository repository)
     {
         _repository = repository;
-        _logger = logger;
     }
 
     public async Task Handle(DebitApplicationCommand request, CancellationToken cancellationToken)

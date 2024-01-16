@@ -8,8 +8,6 @@ public static class NLogExtensions
 {
     public static IServiceCollection AddNLog(this IServiceCollection serviceCollection)
     {
-        var nLogConfiguration = new NLogConfiguration();
-
         serviceCollection.AddLogging((options) =>
         {
             options.AddFilter(typeof(Startup).Namespace, LogLevel.Information);

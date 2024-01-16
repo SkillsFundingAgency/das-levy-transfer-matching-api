@@ -8,7 +8,7 @@ using SFA.DAS.NLog.Targets.Redis.DotNetCore;
 
 namespace SFA.DAS.LevyTransferMatching.Api;
 
-public class NLogConfiguration
+public static class NLogConfiguration
 {
     public static void ConfigureNLog()
     {

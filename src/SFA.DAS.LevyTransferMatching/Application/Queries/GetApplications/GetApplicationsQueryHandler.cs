@@ -54,7 +54,7 @@ public class GetApplicationsQueryHandler : IRequestHandler<GetApplicationsQuery,
                 TotalAmount = x.TotalAmount,
                 CurrentFinancialYearAmount = Convert.ToInt32(x.ApplicationCostProjections.Where(p => p.FinancialYear == now.GetFinancialYear()).Sum(p => p.Amount)),
                 StartDate = x.StartDate,
-                EmailAddresses = Convert.ToInt32(x.EmailAddresses.Count()) > 0
+                EmailAddresses = Convert.ToInt32(x.EmailAddresses.Count) > 0
                     ? x.EmailAddresses.Select(email => email.EmailAddress)
                     : null,
                 CreatedOn = x.CreatedOn,

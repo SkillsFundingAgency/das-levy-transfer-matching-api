@@ -29,7 +29,7 @@ public class DebitApplicationCommandHandlerTests
         _repository = new Mock<IApplicationRepository>();
         _repository.Setup(x => x.Get(_application.Id, null, null)).ReturnsAsync(_application);
 
-        _handler = new DebitApplicationCommandHandler(_repository.Object, Mock.Of<ILogger<DebitApplicationCommandHandler>>());
+        _handler = new DebitApplicationCommandHandler(_repository.Object);
     }
 
     [TestCase(0, 100, 100)]
