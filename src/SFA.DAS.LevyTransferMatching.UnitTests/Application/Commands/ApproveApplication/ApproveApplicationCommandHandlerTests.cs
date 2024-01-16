@@ -9,7 +9,6 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.ApproveApplication;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
 using SFA.DAS.LevyTransferMatching.Domain.Events;
-using SFA.DAS.LevyTransferMatching.Extensions;
 using SFA.DAS.LevyTransferMatching.Testing;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.ApproveApplication
@@ -19,7 +18,6 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.ApproveApp
     {
         private ApproveApplicationCommandHandler _handler;
         private Mock<IApplicationRepository> _applicationRepository;
-
         private readonly Fixture _fixture = new Fixture();
         private LevyTransferMatching.Data.Models.Application _application;
         private ApproveApplicationCommand _command;
@@ -35,7 +33,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.ApproveApp
                 UserDisplayName = _fixture.Create<string>()
             };
 
-            _application = _fixture.Build<Data.Models.Application>()
+            _application = _fixture.Build<LevyTransferMatching.Data.Models.Application>()
                 .Create();
 
             _applicationRepository = new Mock<IApplicationRepository>();
