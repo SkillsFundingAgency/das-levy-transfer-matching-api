@@ -21,7 +21,7 @@ public class DeclineFundingCommandHandler : IRequestHandler<DeclineFundingComman
 
         if (application == null)
         {
-            _logger.LogInformation($"The application for {request} could not be found.");
+            _logger.LogInformation("The application for {Request} could not be found.", request);
 
             return new DeclineFundingCommandResult
             {

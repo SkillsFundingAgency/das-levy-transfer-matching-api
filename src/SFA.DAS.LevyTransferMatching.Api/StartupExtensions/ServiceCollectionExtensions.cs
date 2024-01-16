@@ -6,7 +6,6 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.CreateAccount;
 using SFA.DAS.LevyTransferMatching.Behaviours;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
 using SFA.DAS.LevyTransferMatching.Domain.EventHandlers;
-using SFA.DAS.LevyTransferMatching.Infrastructure;
 using SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
 using SFA.DAS.LevyTransferMatching.Infrastructure.ConnectionFactory;
 using SFA.DAS.LevyTransferMatching.Services;
