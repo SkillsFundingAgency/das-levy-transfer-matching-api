@@ -8,7 +8,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledge;
 
 public class GetPledgeQueryHandlerTests : LevyTransferMatchingDbContextFixture
 {
-    private readonly Fixture _fixture = new Fixture();
+    private readonly Fixture _fixture = new();
 
     [Test]
     public async Task Handle_Individual_Pledge_Pulled_And_Stitched_Up_With_Account()
@@ -40,19 +40,16 @@ public class GetPledgeQueryHandlerTests : LevyTransferMatchingDbContextFixture
 
         var getPledgesQueryHandler = new GetPledgeQueryHandler(DbContext);
 
-        var getPledgesQuery = new GetPledgeQuery()
-        {
-            Id = -1,
-        };
-
+        var getPledgesQuery = new GetPledgeQuery { Id = -1, };
+        
         // Act
         var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
 
         // Assert
-        Assert.IsNull(result);
+        Assert.That(result, Is.Null);
     }
 
-    protected async Task PopulateDbContext()
+    private async Task PopulateDbContext()
     {
         var employerAccounts = _fixture.CreateMany<EmployerAccount>().ToArray();
 
@@ -60,18 +57,18 @@ public class GetPledgeQueryHandlerTests : LevyTransferMatchingDbContextFixture
 
         var pledges = new List<Pledge>();
 
-        for (var i = 0; i < employerAccounts.Length; i++)
+        foreach (var account in employerAccounts)
         {
-            pledges.Add(
-                employerAccounts[i].CreatePledge(
-                    _fixture.Create<CreatePledgeProperties>(),
-                    _fixture.Create<UserInfo>()
-                ));
+            var pledge = account.CreatePledge(
+                _fixture.Create<CreatePledgeProperties>(),
+                _fixture.Create<UserInfo>()
+            );
+            
+            pledges.Add(pledge);
         }
 
         await DbContext.Pledges.AddRangeAsync(pledges);
 
         await DbContext.SaveChangesAsync();
-
     }
 }

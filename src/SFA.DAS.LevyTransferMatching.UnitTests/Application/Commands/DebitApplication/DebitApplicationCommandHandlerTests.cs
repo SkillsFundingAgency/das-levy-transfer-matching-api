@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
+﻿using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
 using SFA.DAS.LevyTransferMatching.Testing;
@@ -12,7 +11,7 @@ public class DebitApplicationCommandHandlerTests
     private DebitApplicationCommandHandler _handler;
     private Mock<IApplicationRepository> _repository;
 
-    private readonly Fixture _fixture = new Fixture();
+    private readonly Fixture _fixture = new();
     private DebitApplicationCommand _command;
     private LevyTransferMatching.Data.Models.Application _application;
 

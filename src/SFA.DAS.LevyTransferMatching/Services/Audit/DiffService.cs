@@ -19,7 +19,7 @@ public class DiffService : IDiffService
         return GenerateDiffForUpdateOrDelete(initial, updated);
     }
 
-    private static IReadOnlyList<DiffItem> GenerateDiffForInsert(Dictionary<string, object> updated)
+    private static List<DiffItem> GenerateDiffForInsert(Dictionary<string, object> updated)
     {
         var result = new List<DiffItem>();
 
@@ -36,15 +36,14 @@ public class DiffService : IDiffService
         return result;
     }
 
-    private static IReadOnlyList<DiffItem> GenerateDiffForUpdateOrDelete(Dictionary<string, object> initial,
-        Dictionary<string, object> updated)
+    private static List<DiffItem> GenerateDiffForUpdateOrDelete(Dictionary<string, object> initial, Dictionary<string, object> updated)
     {
         var result = new List<DiffItem>();
 
         foreach (var item in initial)
         {
             var initialValue = item.Value;
-            var updatedValue = updated == null ? null : updated.ContainsKey(item.Key) ? updated[item.Key] : null;
+            var updatedValue = updated == null ? null : updated.TryGetValue(item.Key, out var value) ? value : null;
 
             if (initialValue == null)
             {
@@ -57,6 +56,7 @@ public class DiffService : IDiffService
                         UpdatedValue = updatedValue
                     });
                 }
+
                 continue;
             }
 

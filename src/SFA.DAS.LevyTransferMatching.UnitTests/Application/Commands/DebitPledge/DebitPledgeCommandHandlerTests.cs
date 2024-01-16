@@ -12,7 +12,7 @@ public class DebitPledgeCommandHandlerTests
     private DebitPledgeCommandHandler _handler;
     private Mock<IPledgeRepository> _repository;
 
-    private readonly Fixture _fixture = new Fixture();
+    private readonly Fixture _fixture = new();
     private DebitPledgeCommand _command;
     private Pledge _pledge;
 
@@ -52,6 +52,6 @@ public class DebitPledgeCommandHandlerTests
 
         var result = await _handler.Handle(_command, CancellationToken.None);
 
-        Assert.IsFalse(result.IsSuccess);
+        Assert.That(result.IsSuccess, Is.False);
     }
 }

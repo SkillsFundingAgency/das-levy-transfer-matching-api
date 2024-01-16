@@ -30,8 +30,7 @@ public class DeclineFundingCommandHandlerTests
 
         var userInfo = _fixture.Create<UserInfo>();
         _application = _fixture.Create<Data.Models.Application>();
-        //_application.SetValue(x => x.Amount, _fixture.Create<int>());
-
+        
         // Make it 'approved', otherwise declining will fail
         _application.Approve(userInfo);
 
@@ -39,11 +38,7 @@ public class DeclineFundingCommandHandlerTests
             .Setup(x => x.Get(It.Is<int>(y => y == _request.ApplicationId), It.Is<int?>(y => y == null), It.Is<long?>(y => y == _request.AccountId)))
             .ReturnsAsync(_application);
 
-        Action<Data.Models.Application> updateCallback =
-            (x) =>
-            {
-                _updatedApplication = x;
-            };
+        Action<Data.Models.Application> updateCallback = x => { _updatedApplication = x; };
 
         _mockApplicationRepository
             .Setup(x => x.Update(It.Is<Data.Models.Application>(y => y == _application)))
@@ -76,7 +71,7 @@ public class DeclineFundingCommandHandlerTests
         var result = await _declineFundingCommandHandler.Handle(_request, CancellationToken.None);
 
         // Assert
-        Assert.IsFalse(result.Updated);
+        Assert.That(result.Updated, Is.False);
     }
 
     [Test]

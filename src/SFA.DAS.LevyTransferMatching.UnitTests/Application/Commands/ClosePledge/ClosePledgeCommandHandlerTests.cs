@@ -66,7 +66,7 @@ public class ClosePledgeCommandHandlerTests
         var exception = Assert.ThrowsAsync<AggregateNotFoundException<Pledge>>(
             () => _handler.Handle(_command, CancellationToken.None));
 
-        Assert.IsNotEmpty(exception.Message);
+        Assert.That(exception.Message, Is.Not.Empty);
     }
 
     [Test]
@@ -80,6 +80,6 @@ public class ClosePledgeCommandHandlerTests
         var exception = Assert.ThrowsAsync<InvalidOperationException>(
             () => _handler.Handle(_command, CancellationToken.None));
 
-        Assert.IsNotEmpty(exception.Message);
+        Assert.That(exception.Message, Is.Not.Empty);
     }
 }

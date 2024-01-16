@@ -39,7 +39,7 @@ public class GetApplicationsQueryHandlerTests : LevyTransferMatchingDbContextFix
         _dateTimeService = new Mock<IDateTimeService>();
         _dateTimeService.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
 
-        for (var i = 0; i < 20; i++)
+        for (var index = 0; index < 20; index++)
         {
             var properties = _fixture.Build<CreateApplicationProperties>()
                 .With(x => x.CostProjections, () => new List<CostProjection>{ new CostProjection(DateTime.UtcNow.GetFinancialYear(), _fixture.Create<int>())})
@@ -190,7 +190,7 @@ public class GetApplicationsQueryHandlerTests : LevyTransferMatchingDbContextFix
 
     private static void AssertCorrectOrder(IReadOnlyList<int> expected, IReadOnlyList<int> actual)
     {
-        Assert.That(actual.Count, Is.EqualTo(expected.Count));
+        Assert.That(actual, Has.Count.EqualTo(expected.Count));
 
         for (var index = 0; index < expected.Count; index++)
         {

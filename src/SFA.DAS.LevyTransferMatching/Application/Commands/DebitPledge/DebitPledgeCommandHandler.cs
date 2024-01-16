@@ -23,7 +23,7 @@ public class DebitPledgeCommandHandler : IRequestHandler<DebitPledgeCommand, Deb
 
         if (!success)
         {
-            _logger.LogError($"Debit of Pledge {request.PledgeId} in respect of Application {request.ApplicationId} failed");
+            _logger.LogError("Debit of Pledge {PledgeId} in respect of Application {ApplicationId} failed", request.PledgeId, request.ApplicationId);
         }
 
         await _repository.Update(pledge);

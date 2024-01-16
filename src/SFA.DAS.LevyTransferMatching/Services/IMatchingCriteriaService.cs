@@ -15,7 +15,7 @@ public class MatchingCriteriaService : IMatchingCriteriaService
 {
     public MatchingCriteria GetMatchingCriteria(CreateApplicationCommand application, Pledge pledge)
     {
-        var location = !pledge.Locations.Any() || (application.Locations != null && application.Locations.Any());
+        var location = pledge.Locations.Count == 0 || (application.Locations != null && application.Locations.Any());
 
         var sector = !pledge.Sectors.ToList().Any() ||
                      application.Sectors.Any(x => pledge.Sectors.ToList().Contains(x));
@@ -32,7 +32,7 @@ public class MatchingCriteriaService : IMatchingCriteriaService
 
     public MatchingCriteria GetMatchingCriteria(Data.Models.Application application, Pledge pledge)
     {
-        var location = !pledge.Locations.Any() || application.ApplicationLocations.Any();
+        var location = pledge.Locations.Count == 0 || application.ApplicationLocations.Count != 0;
 
         var sector = !pledge.Sectors.ToList().Any() ||
                      application.Sectors.ToList().Any(x => pledge.Sectors.ToList().Contains(x));

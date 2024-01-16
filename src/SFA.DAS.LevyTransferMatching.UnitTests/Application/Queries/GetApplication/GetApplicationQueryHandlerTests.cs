@@ -29,8 +29,7 @@ public class GetApplicationQueryHandlerTests : LevyTransferMatchingDbContextFixt
         var createPledgeApplicationProperties = _fixture.Create<CreateApplicationProperties>();
         var userInfo = _fixture.Create<UserInfo>();
 
-        _fixture.Register(
-            () => new LevyTransferMatching.Data.Models.Application(pledge, employerAccount, createPledgeApplicationProperties, userInfo));
+        _fixture.Register(() => new LevyTransferMatching.Data.Models.Application(pledge, employerAccount, createPledgeApplicationProperties, userInfo));
 
         var application = _fixture.Create<LevyTransferMatching.Data.Models.Application>();
         await DbContext.AddAsync(application);
@@ -49,7 +48,7 @@ public class GetApplicationQueryHandlerTests : LevyTransferMatchingDbContextFixt
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.NotNull(result);
+        Assert.That(result, Is.Not.Null);
     }
 
     [Test]
@@ -61,8 +60,7 @@ public class GetApplicationQueryHandlerTests : LevyTransferMatchingDbContextFixt
         var createPledgeApplicationProperties = _fixture.Create<CreateApplicationProperties>();
         var userInfo = _fixture.Create<UserInfo>();
 
-        _fixture.Register(
-            () => new LevyTransferMatching.Data.Models.Application(pledge, employerAccount, createPledgeApplicationProperties, userInfo));
+        _fixture.Register(() => new LevyTransferMatching.Data.Models.Application(pledge, employerAccount, createPledgeApplicationProperties, userInfo));
 
         var application = _fixture.Create<LevyTransferMatching.Data.Models.Application>();
         await DbContext.AddAsync(application);
@@ -83,7 +81,7 @@ public class GetApplicationQueryHandlerTests : LevyTransferMatchingDbContextFixt
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.NotNull(result);
+        Assert.That(result, Is.Not.Null);
     }
 
     [Test]
@@ -102,7 +100,7 @@ public class GetApplicationQueryHandlerTests : LevyTransferMatchingDbContextFixt
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.IsNull(result);
+        Assert.That(result, Is.Null);
     }
 
     [Test]
@@ -123,9 +121,8 @@ public class GetApplicationQueryHandlerTests : LevyTransferMatchingDbContextFixt
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.IsNull(result);
+        Assert.That(result, Is.Null);
     }
-
 
     [Test]
     public async Task Handle_When_CostingModel_Is_OneYear_Then_Amount_Is_Correct()
@@ -136,8 +133,7 @@ public class GetApplicationQueryHandlerTests : LevyTransferMatchingDbContextFixt
         var createPledgeApplicationProperties = _fixture.Create<CreateApplicationProperties>();
         var userInfo = _fixture.Create<UserInfo>();
 
-        _fixture.Register(
-            () => new Data.Models.Application(pledge, employerAccount, createPledgeApplicationProperties, userInfo));
+        _fixture.Register(() => new Data.Models.Application(pledge, employerAccount, createPledgeApplicationProperties, userInfo));
 
         var application = _fixture.Create<Data.Models.Application>();
         application.SetValue(x => x.CostingModel, ApplicationCostingModel.OneYear);
@@ -158,5 +154,4 @@ public class GetApplicationQueryHandlerTests : LevyTransferMatchingDbContextFixt
         // Assert
         Assert.That(result.Amount, Is.EqualTo(application.GetCost()));
     }
-
 }

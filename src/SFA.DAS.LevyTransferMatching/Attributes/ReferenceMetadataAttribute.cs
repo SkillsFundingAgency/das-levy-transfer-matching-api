@@ -1,5 +1,6 @@
 ﻿namespace SFA.DAS.LevyTransferMatching.Attributes;
 
+[AttributeUsage(AttributeTargets.Field)]
 public class ReferenceMetadataAttribute : Attribute
 {
     public string Description { get; set; }

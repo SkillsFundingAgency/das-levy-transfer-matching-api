@@ -21,22 +21,18 @@ public class CostProjectionService : ICostProjectionService
 
         var workingDate = startDate.AddMonths(1);
 
-        for (var i = 0; i <= duration; i++)
+        for (var index = 0; index <= duration; index++)
         {
             var financialYear = workingDate.GetLastDayOfMonth().GetFinancialYear();
 
             decimal currentAmount = 0;
 
-            if (result.ContainsKey(financialYear))
+            if (!result.TryAdd(financialYear, 0))
             {
                 currentAmount = result[financialYear];
             }
-            else
-            {
-                result.Add(financialYear, 0);
-            }
 
-            if (i < duration)
+            if (index < duration)
             {
                 currentAmount += monthly;
             }

@@ -139,7 +139,7 @@ public class CreateApplicationCommandHandlerTests : LevyTransferMatchingDbContex
 
         var expected = command.StandardDuration <= 12
             ? fundingBandMax * command.NumberOfApprentices
-            : (((fundingBandMax * 0.8m) / command.StandardDuration) * 12 * command.NumberOfApprentices).ToNearest(1);
+            : (fundingBandMax * 0.8m / command.StandardDuration * 12 * command.NumberOfApprentices).ToNearest(1);
 
         Assert.That(_inserted.GetCost(), Is.EqualTo(expected));
     }

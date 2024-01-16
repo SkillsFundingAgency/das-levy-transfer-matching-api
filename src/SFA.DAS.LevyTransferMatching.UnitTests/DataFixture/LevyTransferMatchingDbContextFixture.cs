@@ -18,5 +18,5 @@ public class LevyTransferMatchingDbContextFixture
     [TearDown]
     public void TearDown() => DbContext?.Dispose();
 
-    public LevyTransferMatchingDbContext DbContext { get; private set; }
+    protected LevyTransferMatchingDbContext DbContext { get; private set; }
 }
