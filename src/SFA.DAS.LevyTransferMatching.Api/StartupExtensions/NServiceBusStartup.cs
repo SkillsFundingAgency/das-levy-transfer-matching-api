@@ -4,6 +4,7 @@ using NServiceBus.ObjectBuilder.MSDependencyInjection;
 using SFA.DAS.LevyTransferMatching.Extensions;
 using SFA.DAS.LevyTransferMatching.Infrastructure;
 using SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
+using SFA.DAS.LevyTransferMatching.Infrastructure.ConnectionFactory;
 using SFA.DAS.NServiceBus.Configuration;
 using SFA.DAS.NServiceBus.Configuration.AzureServiceBus;
 using SFA.DAS.NServiceBus.Configuration.MicrosoftDependencyInjection;

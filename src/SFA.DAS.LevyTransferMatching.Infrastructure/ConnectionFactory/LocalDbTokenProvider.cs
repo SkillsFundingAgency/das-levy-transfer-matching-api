@@ -1,12 +1,11 @@
 ﻿using System.Threading.Tasks;
 
-namespace SFA.DAS.LevyTransferMatching.Infrastructure.ConnectionFactory
+namespace SFA.DAS.LevyTransferMatching.Infrastructure.ConnectionFactory;
+
+public class LocalDbTokenProvider : IManagedIdentityTokenProvider
 {
-    public class LocalDbTokenProvider : IManagedIdentityTokenProvider
+    public Task<string> GetSqlAccessTokenAsync()
     {
-        public Task<string> GetSqlAccessTokenAsync()
-        {
-            return Task.FromResult(default(string));
-        }
+        return Task.FromResult(default(string));
     }
 }

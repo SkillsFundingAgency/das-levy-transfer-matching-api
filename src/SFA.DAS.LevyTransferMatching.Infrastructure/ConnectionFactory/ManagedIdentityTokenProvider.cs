@@ -1,14 +1,13 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Azure.Services.AppAuthentication;
 
-namespace SFA.DAS.LevyTransferMatching.Infrastructure.ConnectionFactory
+namespace SFA.DAS.LevyTransferMatching.Infrastructure.ConnectionFactory;
+
+public class ManagedIdentityTokenProvider : IManagedIdentityTokenProvider
 {
-    public class ManagedIdentityTokenProvider : IManagedIdentityTokenProvider
+    public Task<string> GetSqlAccessTokenAsync()
     {
-        public Task<string> GetSqlAccessTokenAsync()
-        {
-            var provider = new AzureServiceTokenProvider();
-            return provider.GetAccessTokenAsync("https://database.windows.net/");
-        }
+        var provider = new AzureServiceTokenProvider();
+        return provider.GetAccessTokenAsync("https://database.windows.net/");
     }
 }
