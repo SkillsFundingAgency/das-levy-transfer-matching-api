@@ -26,13 +26,14 @@ public class PledgeRepository : IPledgeRepository
         }
     }
 
-    public async Task<Pledge> Get(int pledgeId)
-    {
-        return await _dbContext
-            .Pledges
-            .Include(p => p.Locations)
-            .SingleOrDefaultAsync(x => x.Id == pledgeId);
-    }
+        public async Task<Pledge> Get(int pledgeId)
+        {
+            return await _dbContext
+                .Pledges
+                .Include(p => p.Locations)
+                .Include(p => p.Applications)
+                .SingleOrDefaultAsync(x => x.Id == pledgeId);
+        }
 
     public async Task Update(Pledge pledge)
     {

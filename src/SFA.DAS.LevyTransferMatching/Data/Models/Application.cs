@@ -168,7 +168,7 @@ public class Application : AggregateRoot<int>
         AddStatusHistory(UpdatedOn.Value);
     }
 
-    public void AcceptFunding(UserInfo userInfo)
+    public void AcceptFunding(UserInfo userInfo, bool shouldRejectApplications = false)
     {
         if (Status != ApplicationStatus.Approved)
         {
@@ -179,6 +179,8 @@ public class Application : AggregateRoot<int>
         ChangeTrackingSession.TrackUpdate(this);
         Status = ApplicationStatus.Accepted;
         UpdatedOn = DateTime.UtcNow;
+
+        AddEvent(new ApplicationFundingAccepted(Id, PledgeId, shouldRejectApplications));
 
         AddStatusHistory(UpdatedOn.Value);
     }
