@@ -6,38 +6,38 @@ using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
 
-    public class AcceptFundingCommandHandler : IRequestHandler<AcceptFundingCommand, AcceptFundingCommandResult>
+public class AcceptFundingCommandHandler : IRequestHandler<AcceptFundingCommand, AcceptFundingCommandResult>
+{
+    private readonly IApplicationRepository _applicationRepository;
+    private readonly IPledgeRepository _pledgeRepository;
+
+    private readonly ILogger<AcceptFundingCommandHandler> _logger;
+
+    public AcceptFundingCommandHandler(IApplicationRepository applicationRepository, IPledgeRepository pledgeRepository, ILogger<AcceptFundingCommandHandler> logger)
     {
-        private readonly IApplicationRepository _applicationRepository;
-        private readonly IPledgeRepository _pledgeRepository;
+        _applicationRepository = applicationRepository;
+        _pledgeRepository = pledgeRepository;
+        _logger = logger;
+    }
 
-        private readonly ILogger<AcceptFundingCommandHandler> _logger;
+    public async Task<AcceptFundingCommandResult> Handle(AcceptFundingCommand request, CancellationToken cancellationToken)
+    {
+        var application = await _applicationRepository.Get(request.ApplicationId, null, request.AccountId);
 
-        public AcceptFundingCommandHandler(IApplicationRepository applicationRepository, IPledgeRepository pledgeRepository, ILogger<AcceptFundingCommandHandler> logger)
+        if (application == null)
         {
-            _applicationRepository = applicationRepository;
-            _pledgeRepository = pledgeRepository;
-            _logger = logger;
+            _logger.LogInformation("The application for {ApplicationId} could not be found.", request.ApplicationId);
+
+            return new AcceptFundingCommandResult
+            {
+                Updated = false
+            };
         }
+        var pledge = await _pledgeRepository.Get(application.PledgeId);
 
-        public async Task<AcceptFundingCommandResult> Handle(AcceptFundingCommand request, CancellationToken cancellationToken)
+        if (pledge == null)
         {
-            var application = await _applicationRepository.Get(request.ApplicationId, null, request.AccountId);
-            
-            if (application == null)
-            {
-                _logger.LogInformation($"The application for {request.ApplicationId} could not be found.");
-
-                return new AcceptFundingCommandResult
-                {
-                    Updated = false
-                };
-            }
-            var pledge = await _pledgeRepository.Get(application.PledgeId);
-
-            if (pledge == null)
-            {
-                _logger.LogInformation($"The pledge for {request.ApplicationId} could not be found.");
+            _logger.LogInformation("The pledge for {ApplicationId} could not be found.", request.ApplicationId);
 
             return new AcceptFundingCommandResult
             {
@@ -45,23 +45,20 @@ namespace SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
             };
         }
 
-            var shouldRejectApplications = ShouldPendingApplicationsBeAutomaticallyClosed(pledge, request.ApplicationId);
+        var shouldRejectApplications = ShouldPendingApplicationsBeAutomaticallyClosed(pledge, request.ApplicationId);
 
-            application.AcceptFunding(new UserInfo(request.UserId, request.UserDisplayName), shouldRejectApplications);
-            await _applicationRepository.Update(application);
-            
-            return new AcceptFundingCommandResult
-            {
-                Updated = true
-            };
-        }
+        application.AcceptFunding(new UserInfo(request.UserId, request.UserDisplayName), shouldRejectApplications);
+        await _applicationRepository.Update(application);
 
-        private bool ShouldPendingApplicationsBeAutomaticallyClosed(Pledge pledge, int applicationId)
+        return new AcceptFundingCommandResult
         {
-            return pledge.Status == PledgeStatus.Closed && pledge.RemainingAmount <= 2000
-               && !pledge.Applications
-               .Where(x => x.Id != applicationId)
-               .Any(x => x.Status == ApplicationStatus.Approved);
-        }
+            Updated = true
+        };
+    }
+
+    private static bool ShouldPendingApplicationsBeAutomaticallyClosed(Pledge pledge, int applicationId)
+    {
+        return pledge.Status == PledgeStatus.Closed && pledge.RemainingAmount <= 2000
+           && pledge.Applications.Where(x => x.Id != applicationId).All(x => x.Status != ApplicationStatus.Approved);
     }
 }

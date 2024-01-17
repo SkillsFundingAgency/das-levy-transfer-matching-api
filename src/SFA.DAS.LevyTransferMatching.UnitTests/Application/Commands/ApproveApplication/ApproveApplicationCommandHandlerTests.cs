@@ -12,8 +12,8 @@ public class ApproveApplicationCommandHandlerTests
     private ApproveApplicationCommandHandler _handler;
     private Mock<IApplicationRepository> _applicationRepository;
 
-    private readonly Fixture _fixture = new Fixture();
-    private LevyTransferMatching.Data.Models.Application _application;
+    private readonly Fixture _fixture = new();
+    private Data.Models.Application _application;
     private ApproveApplicationCommand _command;
 
     [SetUp]
