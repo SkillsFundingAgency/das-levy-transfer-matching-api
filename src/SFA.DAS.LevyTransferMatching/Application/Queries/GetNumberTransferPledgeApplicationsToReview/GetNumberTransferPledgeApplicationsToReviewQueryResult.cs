@@ -1,5 +1,4 @@
-﻿using System;
-namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetNumberTransferPledgeApplicationsToReview
+﻿namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetNumberTransferPledgeApplicationsToReview
 {
     public class GetNumberTransferPledgeApplicationsToReviewQueryResult
     {
