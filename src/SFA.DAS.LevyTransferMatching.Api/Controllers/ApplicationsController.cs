@@ -5,7 +5,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.LevyTransferMatching.Api.Models.Applications;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetApplication;
-using SFA.DAS.LevyTransferMatching.Api.Models.GetNumberTransferPledgeApplicationsToReview;
 using SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.ApproveApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
@@ -17,7 +16,6 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
 using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
-using SFA.DAS.LevyTransferMatching.Application.Queries.GetNumberTransferPledgeApplicationsToReview;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
@@ -68,28 +66,6 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 return Ok((GetApplicationResponse)queryResult);
             }
 
-            return NotFound();
-        }
-
-        [HttpGet]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [Route("accounts/{accountId}/applications/pledge-applications-to-review")]
-        public async Task<IActionResult> GetNumberTransferPledgeApplicationsToReview(long accountId)
-        {
-            var queryResult = await _mediator.Send(new GetNumberTransferPledgeApplicationsToReviewQuery()
-            {
-                TransferSenderId = accountId,
-            });
-
-            if (queryResult != null)
-            {
-                var result = new GetNumberTransferPledgeApplicationsToReviewResponse
-                {
-                    NumberTransferPledgeApplicationsToReview = queryResult.NumberTransferPledgeApplicationsToReview
-                };
-                return Ok(result);
-            }
             return NotFound();
         }
 
@@ -251,6 +227,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
             {
                 PledgeId = request.PledgeId,
                 AccountId = request.AccountId,
+                SenderAccountId = request.SenderAccountId,
                 ApplicationStatusFilter = request.ApplicationStatusFilter,
                 Page = request.Page,
                 PageSize = request.PageSize,

@@ -11,6 +11,8 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications
         [FromQuery]
         public long? AccountId { get; set; }
         [FromQuery]
+        public long? SenderAccountId { get; set; }
+        [FromQuery]
         public ApplicationStatus? ApplicationStatusFilter { get; set; }
         [FromQuery]
         public int Page { get; set; }
