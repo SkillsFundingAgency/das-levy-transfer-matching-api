@@ -19,6 +19,8 @@ using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetNumberTransferPledgeApplicationsToReview;
+using SFA.DAS.LevyTransferMatching.Api.Models.GetNumberTransferPledgeApplicationsToReview;
 
 namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
 {
@@ -259,6 +261,23 @@ namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers
 
             var apps = response.Applications.ToList();
             Assert.AreEqual(1, response.Applications.Count());
+        }
+
+
+        [Test]
+        public async Task GetNumberTransferPledgeApplicationsToReview_Returns_Count()
+        {
+            var numberOfApplications = 2;
+            _mediator.Setup(x => x.Send(It.Is<GetNumberTransferPledgeApplicationsToReviewQuery>(query => query.TransferSenderId == _accountId), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new GetNumberTransferPledgeApplicationsToReviewQueryResult { NumberTransferPledgeApplicationsToReview = numberOfApplications });
+
+            var actionResult = await _applicationsController.GetNumberTransferPledgeApplicationsToReview(_accountId);
+
+            var result = actionResult as OkObjectResult;
+            Assert.IsNotNull(result);
+            var response = result.Value as GetNumberTransferPledgeApplicationsToReviewResponse;
+            Assert.IsNotNull(response);
+            Assert.AreEqual(numberOfApplications, response.NumberTransferPledgeApplicationsToReview);
         }
 
         [Test]

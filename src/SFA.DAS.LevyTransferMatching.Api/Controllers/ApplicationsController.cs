@@ -5,17 +5,19 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.LevyTransferMatching.Api.Models.Applications;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetApplication;
+using SFA.DAS.LevyTransferMatching.Api.Models.GetNumberTransferPledgeApplicationsToReview;
 using SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.ApproveApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
-using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
-using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
-using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
-using SFA.DAS.LevyTransferMatching.Application.Commands.RejectApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DeclineFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.RecalculateCostProjection;
+using SFA.DAS.LevyTransferMatching.Application.Commands.RejectApplication;
+using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
 using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetNumberTransferPledgeApplicationsToReview;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 {
@@ -41,7 +43,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
                 PledgeId = pledgeId,
                 ApplicationId = applicationId,
             });
-            
+
             if (queryResult != null)
             {
                 return Ok((GetApplicationResponse)queryResult);
@@ -68,9 +70,31 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers
 
             return NotFound();
         }
-		
-		[HttpPost]
-        [ProducesResponseType((int) HttpStatusCode.OK)]
+
+        [HttpGet]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [Route("accounts/{accountId}/applications/pledge-applications-to-review")]
+        public async Task<IActionResult> GetNumberTransferPledgeApplicationsToReview(long accountId)
+        {
+            var queryResult = await _mediator.Send(new GetNumberTransferPledgeApplicationsToReviewQuery()
+            {
+                TransferSenderId = accountId,
+            });
+
+            if (queryResult != null)
+            {
+                var result = new GetNumberTransferPledgeApplicationsToReviewResponse
+                {
+                    NumberTransferPledgeApplicationsToReview = queryResult.NumberTransferPledgeApplicationsToReview
+                };
+                return Ok(result);
+            }
+            return NotFound();
+        }
+
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         [Route("pledges/{pledgeId}/applications/{applicationId}/approve")]
         public async Task<IActionResult> ApproveApplication(int pledgeId, int applicationId, [FromBody] ApproveApplicationRequest request)
         {
