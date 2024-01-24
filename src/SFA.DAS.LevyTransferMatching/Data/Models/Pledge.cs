@@ -110,11 +110,6 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
         public void ClosePledge(UserInfo userInfo, bool insufficientFunds = false)
         {
-            if (Status != PledgeStatus.Active)
-            {
-                throw new InvalidOperationException($"Unable to close Pledge {Id} status {Status}");
-            }
-
             StartTrackingSession(UserAction.ClosePledge, userInfo);
             ChangeTrackingSession.TrackUpdate(this);
             Status = PledgeStatus.Closed;
@@ -136,10 +131,10 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
             }
         }
 
-        public bool ShouldPledgeBeAutoClosed(int debitAmount)
+        private bool ShouldPledgeBeAutoClosed(int debitAmount)
         {
             var updatedPledgeAmount = RemainingAmount - debitAmount;
-            return updatedPledgeAmount > 0 && updatedPledgeAmount < 2000;
+            return updatedPledgeAmount > 0 && updatedPledgeAmount < 2000 && Status == PledgeStatus.Active;
         }
     }
 }
