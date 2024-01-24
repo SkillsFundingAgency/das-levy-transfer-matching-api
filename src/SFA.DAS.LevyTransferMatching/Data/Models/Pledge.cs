@@ -110,6 +110,11 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
         public void ClosePledge(UserInfo userInfo, bool insufficientFunds = false)
         {
+            if (Status != PledgeStatus.Active)
+            {
+                throw new InvalidOperationException($"Unable to close Pledge {Id} status {Status}");
+            }
+            
             StartTrackingSession(UserAction.ClosePledge, userInfo);
             ChangeTrackingSession.TrackUpdate(this);
             Status = PledgeStatus.Closed;
