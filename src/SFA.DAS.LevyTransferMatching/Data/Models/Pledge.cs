@@ -90,7 +90,7 @@ namespace SFA.DAS.LevyTransferMatching.Data.Models
 
             if (ShouldPledgeBeAutoClosed(debitAmount))
             {
-                this.ClosePledge(userInfo, true);
+                ClosePledge(userInfo, true);
             }
 
             StartTrackingSession(UserAction.DebitPledge, userInfo);
