@@ -82,11 +82,4 @@ public class LevyTransferMatchingDbContext : DbContext
         modelBuilder.Entity<Audit>().ToTable("Audit");
         modelBuilder.Entity<Audit>().HasKey(x => x.Id);
     }
-    
-    public override void Dispose()
-    {
-        _connection?.Dispose();
-        
-        base.Dispose();
-    }
 }
