@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Azure.Services.AppAuthentication;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NServiceBus.Persistence;
@@ -13,17 +14,19 @@ public static class EntityFrameworkUnitOfWorkStartupExtensions
 {
     public static IServiceCollection AddEntityFrameworkForLevyTransferMatching(this IServiceCollection services, LevyTransferMatchingApi config)
     {
-        return services.AddScoped(p =>
+        return services.AddScoped(provider =>
         {
-            var unitOfWorkContext = p.GetService<IUnitOfWorkContext>();
+            var unitOfWorkContext = provider.GetService<IUnitOfWorkContext>();
+            var azureServiceTokenProvider = new AzureServiceTokenProvider();
             LevyTransferMatchingDbContext dbContext;
+            
             try
             {
                 var synchronizedStorageSession = unitOfWorkContext.Get<SynchronizedStorageSession>();
                 var sqlStorageSession = synchronizedStorageSession.GetSqlStorageSession();
                 var optionsBuilder = new DbContextOptionsBuilder<LevyTransferMatchingDbContext>().UseSqlServer(sqlStorageSession.Connection);
                 //optionsBuilder.UseLoggerFactory(DebugLoggingFactory);
-                dbContext = new LevyTransferMatchingDbContext(optionsBuilder.Options);
+                dbContext = new LevyTransferMatchingDbContext(sqlStorageSession.Connection, config, azureServiceTokenProvider, optionsBuilder.Options);
                 dbContext.Database.UseTransaction(sqlStorageSession.Transaction);
             }
             catch (KeyNotFoundException)
