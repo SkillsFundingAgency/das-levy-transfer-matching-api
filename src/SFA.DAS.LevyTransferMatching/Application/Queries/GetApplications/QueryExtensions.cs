@@ -27,6 +27,11 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                 result = result.Where(x => x.EmployerAccount.Id == request.AccountId);
             }
 
+            if (request.SenderAccountId.HasValue)
+            {
+                result = result.Where(x => x.Pledge.EmployerAccountId == request.SenderAccountId);
+            }
+
             return result;
         }
 
@@ -50,12 +55,12 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications
                 GetApplicationsSortOrder.CurrentFinancialYearAmount => sortDirection == SortDirection.Ascending
                     ? queryable.OrderBy(x => x.ApplicationCostProjections
                         .Where(p => p.FinancialYear == now.GetFinancialYear())
-                        .Sum(p=> p.Amount))
+                        .Sum(p => p.Amount))
                     : queryable.OrderByDescending(x => x.ApplicationCostProjections
                         .Where(p => p.FinancialYear == now.GetFinancialYear())
                         .Sum(p => p.Amount)),
                 GetApplicationsSortOrder.Status => sortDirection == SortDirection.Ascending
-                    ? queryable.OrderByStatus().ThenBy(x=> x.CreatedOn.Date)
+                    ? queryable.OrderByStatus().ThenBy(x => x.CreatedOn.Date)
                     : queryable.OrderByStatusDescending().ThenBy(x => x.CreatedOn.Date),
                 _ => null
             };
