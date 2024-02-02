@@ -25,38 +25,43 @@ public static class QueryExtensions
             result = result.Where(x => x.EmployerAccount.Id == request.AccountId);
         }
 
-        return result;
-    }
+            if (request.SenderAccountId.HasValue)
+            {
+                result = result.Where(x => x.Pledge.EmployerAccountId == request.SenderAccountId);
+            }
 
-    public static IQueryable<Data.Models.Application> Sort(this IQueryable<Data.Models.Application> queryable,
-        GetApplicationsSortOrder sortOrder, SortDirection sortDirection, DateTime now)
-    {
-        var result = sortOrder switch
+            return result;
+        }
+
+        public static IQueryable<Data.Models.Application> Sort(this IQueryable<Data.Models.Application> queryable,
+            GetApplicationsSortOrder sortOrder, SortDirection sortDirection, DateTime now)
         {
-            GetApplicationsSortOrder.CriteriaMatch => sortDirection == SortDirection.Ascending
-                ? queryable.OrderBy(x => x.MatchPercentage)
-                : queryable.OrderByDescending(x => x.MatchPercentage),
-            GetApplicationsSortOrder.ApplicationDate => sortDirection == SortDirection.Ascending
-                ? queryable.OrderBy(x => x.CreatedOn)
-                : queryable.OrderByDescending(x => x.CreatedOn),
-            GetApplicationsSortOrder.Applicant => sortDirection == SortDirection.Ascending
-                ? queryable.OrderBy(x => x.EmployerAccount.Name)
-                : queryable.OrderByDescending(x => x.EmployerAccount.Name),
-            GetApplicationsSortOrder.Duration => sortDirection == SortDirection.Ascending
-                ? queryable.OrderBy(x => x.StandardDuration)
-                : queryable.OrderByDescending(x => x.StandardDuration),
-            GetApplicationsSortOrder.CurrentFinancialYearAmount => sortDirection == SortDirection.Ascending
-                ? queryable.OrderBy(x => x.ApplicationCostProjections
-                    .Where(p => p.FinancialYear == now.GetFinancialYear())
-                    .Sum(p => p.Amount))
-                : queryable.OrderByDescending(x => x.ApplicationCostProjections
-                    .Where(p => p.FinancialYear == now.GetFinancialYear())
-                    .Sum(p => p.Amount)),
-            GetApplicationsSortOrder.Status => sortDirection == SortDirection.Ascending
-                ? queryable.OrderByStatus().ThenBy(x => x.CreatedOn.Date)
-                : queryable.OrderByStatusDescending().ThenBy(x => x.CreatedOn.Date),
-            _ => null
-        };
+            var result = sortOrder switch
+            {
+                GetApplicationsSortOrder.CriteriaMatch => sortDirection == SortDirection.Ascending
+                    ? queryable.OrderBy(x => x.MatchPercentage)
+                    : queryable.OrderByDescending(x => x.MatchPercentage),
+                GetApplicationsSortOrder.ApplicationDate => sortDirection == SortDirection.Ascending
+                    ? queryable.OrderBy(x => x.CreatedOn)
+                    : queryable.OrderByDescending(x => x.CreatedOn),
+                GetApplicationsSortOrder.Applicant => sortDirection == SortDirection.Ascending
+                    ? queryable.OrderBy(x => x.EmployerAccount.Name)
+                    : queryable.OrderByDescending(x => x.EmployerAccount.Name),
+                GetApplicationsSortOrder.Duration => sortDirection == SortDirection.Ascending
+                    ? queryable.OrderBy(x => x.StandardDuration)
+                    : queryable.OrderByDescending(x => x.StandardDuration),
+                GetApplicationsSortOrder.CurrentFinancialYearAmount => sortDirection == SortDirection.Ascending
+                    ? queryable.OrderBy(x => x.ApplicationCostProjections
+                        .Where(p => p.FinancialYear == now.GetFinancialYear())
+                        .Sum(p => p.Amount))
+                    : queryable.OrderByDescending(x => x.ApplicationCostProjections
+                        .Where(p => p.FinancialYear == now.GetFinancialYear())
+                        .Sum(p => p.Amount)),
+                GetApplicationsSortOrder.Status => sortDirection == SortDirection.Ascending
+                    ? queryable.OrderByStatus().ThenBy(x => x.CreatedOn.Date)
+                    : queryable.OrderByStatusDescending().ThenBy(x => x.CreatedOn.Date),
+                _ => null
+            };
 
         if (result == null)
         {

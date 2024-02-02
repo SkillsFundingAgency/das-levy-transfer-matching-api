@@ -4,14 +4,14 @@ using SFA.DAS.LevyTransferMatching.Api.Models.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.ApproveApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
-using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
-using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
-using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
-using SFA.DAS.LevyTransferMatching.Application.Commands.RejectApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DeclineFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.RecalculateCostProjection;
+using SFA.DAS.LevyTransferMatching.Application.Commands.RejectApplication;
+using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
 using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers;
 
@@ -26,22 +26,22 @@ public class ApplicationsController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet]
-    [ProducesResponseType((int)HttpStatusCode.OK)]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    [Route("pledges/{pledgeId}/applications/{applicationId}")]
-    public async Task<IActionResult> GetApplication(int pledgeId, int applicationId)
-    {
-        var queryResult = await _mediator.Send(new GetApplicationQuery()
+        [HttpGet]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [Route("pledges/{pledgeId}/applications/{applicationId}")]
+        public async Task<IActionResult> GetApplication(int pledgeId, int applicationId)
         {
-            PledgeId = pledgeId,
-            ApplicationId = applicationId,
-        });
+            var queryResult = await _mediator.Send(new GetApplicationQuery()
+            {
+                PledgeId = pledgeId,
+                ApplicationId = applicationId,
+            });
 
-        if (queryResult != null)
-        {
-            return Ok((GetApplicationResponse)queryResult);
-        }
+            if (queryResult != null)
+            {
+                return Ok((GetApplicationResponse)queryResult);
+            }
 
         return NotFound();
     }
@@ -62,22 +62,22 @@ public class ApplicationsController : ControllerBase
             return Ok((GetApplicationResponse)queryResult);
         }
 
-        return NotFound();
-    }
+            return NotFound();
+        }
 
-    [HttpPost]
-    [ProducesResponseType((int)HttpStatusCode.OK)]
-    [Route("pledges/{pledgeId}/applications/{applicationId}/approve")]
-    public async Task<IActionResult> ApproveApplication(int pledgeId, int applicationId, [FromBody] ApproveApplicationRequest request)
-    {
-        await _mediator.Send(new ApproveApplicationCommand
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [Route("pledges/{pledgeId}/applications/{applicationId}/approve")]
+        public async Task<IActionResult> ApproveApplication(int pledgeId, int applicationId, [FromBody] ApproveApplicationRequest request)
         {
-            PledgeId = pledgeId,
-            ApplicationId = applicationId,
-            UserId = request.UserId,
-            UserDisplayName = request.UserDisplayName,
-            AutomaticApproval = request.AutomaticApproval
-        });
+            await _mediator.Send(new ApproveApplicationCommand
+            {
+                PledgeId = pledgeId,
+                ApplicationId = applicationId,
+                UserId = request.UserId,
+                UserDisplayName = request.UserDisplayName,
+                AutomaticApproval = request.AutomaticApproval
+            });
 
         return Ok();
     }
@@ -213,22 +213,23 @@ public class ApplicationsController : ControllerBase
         return result;
     }
 
-    [HttpGet]
-    [ProducesResponseType((int)HttpStatusCode.OK)]
-    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    [Route("applications")]
-    public async Task<IActionResult> GetApplications([FromQuery] GetApplicationsRequest request)
-    {
-        var query = await _mediator.Send(new GetApplicationsQuery
+        [HttpGet]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [Route("applications")]
+        public async Task<IActionResult> GetApplications([FromQuery] GetApplicationsRequest request)
         {
-            PledgeId = request.PledgeId,
-            AccountId = request.AccountId,
-            ApplicationStatusFilter = request.ApplicationStatusFilter,
-            Page = request.Page,
-            PageSize = request.PageSize,
-            SortOrder = request.SortOrder,
-            SortDirection = request.SortDirection
-        });
+            var query = await _mediator.Send(new GetApplicationsQuery
+            {
+                PledgeId = request.PledgeId,
+                AccountId = request.AccountId,
+                SenderAccountId = request.SenderAccountId,
+                ApplicationStatusFilter = request.ApplicationStatusFilter,
+                Page = request.Page,
+                PageSize = request.PageSize,
+                SortOrder = request.SortOrder,
+                SortDirection = request.SortDirection
+            });
 
         return Ok((GetApplicationsResponse)query);
     }
