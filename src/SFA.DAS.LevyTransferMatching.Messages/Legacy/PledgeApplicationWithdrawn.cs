@@ -7,7 +7,7 @@ namespace SFA.DAS.LevyTransferMatching.Messages.Legacy
     {
         public PledgeApplicationWithdrawn()
         {
-            
+
         }
 
         public PledgeApplicationWithdrawn(int applicationId, int pledgeId, DateTime withdrawnOn, long transferSenderId)

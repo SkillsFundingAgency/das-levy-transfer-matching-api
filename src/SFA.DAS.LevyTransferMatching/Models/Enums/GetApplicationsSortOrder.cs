@@ -1,12 +1,11 @@
-﻿namespace SFA.DAS.LevyTransferMatching.Models.Enums
+﻿namespace SFA.DAS.LevyTransferMatching.Models.Enums;
+
+public enum GetApplicationsSortOrder
 {
-    public enum GetApplicationsSortOrder
-    {
-        ApplicationDate,
-        CurrentFinancialYearAmount,
-        Duration,
-        Applicant,
-        CriteriaMatch,
-        Status
-    }
+    ApplicationDate,
+    CurrentFinancialYearAmount,
+    Duration,
+    Applicant,
+    CriteriaMatch,
+    Status
 }

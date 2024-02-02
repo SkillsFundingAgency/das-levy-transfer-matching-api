@@ -1,7 +1,6 @@
-﻿namespace SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding
+﻿namespace SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
+
+public class AcceptFundingCommandResult
 {
-    public class AcceptFundingCommandResult
-    {
-        public bool Updated { get; set; }
-    }
+    public bool Updated { get; set; }
 }

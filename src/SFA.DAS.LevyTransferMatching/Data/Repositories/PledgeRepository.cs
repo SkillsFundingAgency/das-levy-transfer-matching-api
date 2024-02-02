@@ -1,31 +1,30 @@
-﻿using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SFA.DAS.LevyTransferMatching.Abstractions.Events;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 
-namespace SFA.DAS.LevyTransferMatching.Data.Repositories
+namespace SFA.DAS.LevyTransferMatching.Data.Repositories;
+
+public class PledgeRepository : IPledgeRepository
 {
-    public class PledgeRepository : IPledgeRepository
+    private readonly LevyTransferMatchingDbContext _dbContext;
+    private readonly IDomainEventDispatcher _domainEventDispatcher;
+
+    public PledgeRepository(LevyTransferMatchingDbContext dbContext, IDomainEventDispatcher domainEventDispatcher)
     {
-        private readonly LevyTransferMatchingDbContext _dbContext;
-        private readonly IDomainEventDispatcher _domainEventDispatcher;
+        _dbContext = dbContext;
+        _domainEventDispatcher = domainEventDispatcher;
+    }
 
-        public PledgeRepository(LevyTransferMatchingDbContext dbContext, IDomainEventDispatcher domainEventDispatcher)
+    public async Task Add(Pledge pledge)
+    {
+        await _dbContext.AddAsync(pledge);
+        await _dbContext.SaveChangesAsync();
+
+        foreach (dynamic domainEvent in pledge.FlushEvents())
         {
-            _dbContext = dbContext;
-            _domainEventDispatcher = domainEventDispatcher;
+            await _domainEventDispatcher.Send(domainEvent);
         }
-
-        public async Task Add(Pledge pledge)
-        {
-            await _dbContext.AddAsync(pledge);
-            await _dbContext.SaveChangesAsync();
-
-            foreach (dynamic domainEvent in pledge.FlushEvents())
-            {
-                await _domainEventDispatcher.Send(domainEvent);
-            }
-        }
+    }
 
         public async Task<Pledge> Get(int pledgeId)
         {
@@ -36,12 +35,11 @@ namespace SFA.DAS.LevyTransferMatching.Data.Repositories
                 .SingleOrDefaultAsync(x => x.Id == pledgeId);
         }
 
-        public async Task Update(Pledge pledge)
+    public async Task Update(Pledge pledge)
+    {
+        foreach (dynamic domainEvent in pledge.FlushEvents())
         {
-            foreach (dynamic domainEvent in pledge.FlushEvents())
-            {
-                await _domainEventDispatcher.Send(domainEvent);
-            }
+            await _domainEventDispatcher.Send(domainEvent);
         }
     }
 }

@@ -1,9 +1,8 @@
-﻿namespace SFA.DAS.LevyTransferMatching.Infrastructure
+﻿namespace SFA.DAS.LevyTransferMatching.Infrastructure;
+
+public static class QueueNames
 {
-    public static class QueueNames
-    {
-        public const string CreatedAccount = "SFA.DAS.LevyTransferMatching.CreatedAccount";
-        public const string ChangedAccountName = "SFA.DAS.LevyTransferMatching.ChangedAccountName";
-        public const string RunHealthCheck = "SFA.DAS.LevyTransferMatching.MessageHandlers";
-    }
+    public const string CreatedAccount = "SFA.DAS.LevyTransferMatching.CreatedAccount";
+    public const string ChangedAccountName = "SFA.DAS.LevyTransferMatching.ChangedAccountName";
+    public const string RunHealthCheck = "SFA.DAS.LevyTransferMatching.MessageHandlers";
 }

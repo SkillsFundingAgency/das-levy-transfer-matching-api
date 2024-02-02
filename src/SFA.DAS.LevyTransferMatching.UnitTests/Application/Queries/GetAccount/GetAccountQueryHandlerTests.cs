@@ -1,48 +1,43 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture;
-using NUnit.Framework;
-using SFA.DAS.LevyTransferMatching.Application.Queries.GetAccount;
+﻿using SFA.DAS.LevyTransferMatching.Application.Queries.GetAccount;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;
 
-namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetAccount
+namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetAccount;
+
+[TestFixture]
+public class GetAccountQueryHandlerTests : LevyTransferMatchingDbContextFixture
 {
-    [TestFixture]
-    public class GetAccountQueryHandlerTests : LevyTransferMatchingDbContextFixture
+    private Fixture _fixture;
+    private EmployerAccount _account;
+
+    [SetUp]
+    public void Setup()
     {
-        private Fixture _fixture;
-        private EmployerAccount _account;
+        _fixture = new Fixture();
+        _account = _fixture.Create<EmployerAccount>();
+        DbContext.EmployerAccounts.Add(_account);
+        DbContext.SaveChanges();
+    }
 
-        [SetUp]
-        public void Setup()
-        {
-            _fixture = new Fixture();
-            _account = _fixture.Create<EmployerAccount>();
-            DbContext.EmployerAccounts.Add(_account);
-            DbContext.SaveChanges();
-        }
+    [Test]
+    public async Task Handle_Account_Is_Returned()
+    {
+        var handler = new GetAccountQueryHandler(DbContext);
+        var query = new GetAccountQuery { AccountId = _account.Id };
 
-        [Test]
-        public async Task Handle_Account_Is_Returned()
-        {
-            var handler = new GetAccountQueryHandler(DbContext);
-            var query = new GetAccountQuery{ AccountId = _account.Id };
+        var result = await handler.Handle(query, CancellationToken.None);
 
-            var result =  await handler.Handle(query, CancellationToken.None);
+        Assert.That(result.AccountId, Is.EqualTo(_account.Id));
+        Assert.That(result.AccountName, Is.EqualTo(_account.Name));
+    }
 
-            Assert.AreEqual(_account.Id, result.AccountId);
-            Assert.AreEqual(_account.Name, result.AccountName);
-        }
+    [Test]
+    public async Task Handle_Returns_Null_If_Account_Is_Not_Found()
+    {
+        var handler = new GetAccountQueryHandler(DbContext);
+        var query = new GetAccountQuery { AccountId = _account.Id + 1 };
 
-        [Test]
-        public async Task Handle_Returns_Null_If_Account_Is_Not_Found()
-        {
-            var handler = new GetAccountQueryHandler(DbContext);
-            var query = new GetAccountQuery { AccountId = _account.Id + 1 };
-
-            var result = await handler.Handle(query, CancellationToken.None);
-            Assert.IsNull(result);
-        }
+        var result = await handler.Handle(query, CancellationToken.None);
+        Assert.That(result, Is.Null);
     }
 }

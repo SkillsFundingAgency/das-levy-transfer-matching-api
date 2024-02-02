@@ -1,24 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.ApplicationInsights;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using NServiceBus.ObjectBuilder.MSDependencyInjection;  
 using SFA.DAS.Api.Common.AppStart;
 using SFA.DAS.Api.Common.Configuration;
 using SFA.DAS.Api.Common.Infrastructure;
-using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.LevyTransferMatching.Api.HttpResponseExtensions;
 using SFA.DAS.LevyTransferMatching.Api.Models;
 using SFA.DAS.LevyTransferMatching.Api.StartupExtensions;
@@ -26,157 +22,139 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.CreateAccount;
 using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Infrastructure;
 using SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
+using SFA.DAS.NServiceBus.Features.ClientOutbox.Data;
 using SFA.DAS.UnitOfWork.EntityFrameworkCore.DependencyResolution.Microsoft;
 using SFA.DAS.UnitOfWork.NServiceBus.Features.ClientOutbox.DependencyResolution.Microsoft;
 
-namespace SFA.DAS.LevyTransferMatching.Api
+namespace SFA.DAS.LevyTransferMatching.Api;
+
+public class Startup
 {
-    public class Startup
+    private readonly IHostEnvironment _environment;
+    private readonly IConfiguration _configuration;
+
+    public Startup(IConfiguration configuration, IWebHostEnvironment environment)
     {
-        private readonly IWebHostEnvironment _environment;
-        private IConfiguration Configuration { get; }
+        _environment = environment;
+        _configuration = configuration.BuildDasConfiguration();
+    }
 
-        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddNLog();
+        services.AddLogging(builder =>
         {
-            _environment = environment;
-            Configuration = configuration;
+            builder.AddFilter<ApplicationInsightsLoggerProvider>(string.Empty, LogLevel.Information);
+            builder.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft", LogLevel.Information);
+        });
+        
+        services.AddConfigurationOptions(_configuration);
+        var config = _configuration.GetSection<LevyTransferMatchingApi>();
 
-            var config = new ConfigurationBuilder()
-                .AddConfiguration(configuration)
-                .SetBasePath(Directory.GetCurrentDirectory())
-#if DEBUG
-                .AddJsonFile("appsettings.json", true)
-                .AddJsonFile("appsettings.Development.json", true)
-#endif
-                .AddEnvironmentVariables();
+        if (!_environment.IsDevelopment())
+        {
+            var azureAdConfiguration = _configuration
+                .GetSection("AzureAd")
+                .Get<AzureActiveDirectoryConfiguration>();
 
-            if (!configuration["Environment"].Equals("DEV", StringComparison.CurrentCultureIgnoreCase))
+            var policies = new Dictionary<string, string>
             {
-                config.AddAzureTableStorage(options =>
+                { PolicyNames.Default, RoleNames.Default }
+            };
+
+            services.AddAuthentication(azureAdConfiguration, policies);
+        }
+
+        services.AddMvc(mvcOptions =>
+            {
+                if (!_environment.IsDevelopment())
+                {
+                    mvcOptions.Conventions.Add(new AuthorizeControllerModelConvention(new List<string>()));
+                }
+
+                mvcOptions.Conventions.Add(new ApiExplorerGroupPerVersionConvention());
+            })
+            .AddNewtonsoftJson();
+
+        services
+            .AddControllers()
+            .AddNewtonsoftJson(x => { x.SerializerSettings.Converters.Add(new StringEnumConverter()); });
+
+        services.AddFluentValidationAutoValidation()
+            .AddValidatorsFromAssemblyContaining<Startup>()
+            .AddValidatorsFromAssemblyContaining<CreateAccountCommandValidator>();
+        
+
+        services.AddApplicationInsightsTelemetry();
+        services.AddDasHealthChecks(config);
+        services.AddServicesForLevyTransferMatching(_environment, config);
+
+        services.AddEntityFrameworkForLevyTransferMatching(config)
+            .AddEntityFrameworkUnitOfWork<LevyTransferMatchingDbContext>()
+            .AddNServiceBusClientUnitOfWork();
+
+        services.AddCache(config, _environment)
+            .AddDasDataProtection(config, _environment)
+            .AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "LevyTransferMatchingApi", Version = "v1" });
+                options.OperationFilter<SwaggerVersionHeaderFilter>();
+            })
+            .AddSwaggerGenNewtonsoftSupport();
+
+        services.AddApiVersioning(opt => { opt.ApiVersionReader = new HeaderApiVersionReader("X-Version"); });
+    }
+
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+        }
+
+        app.UseHttpsRedirection();
+        app.UseRouting();
+        app.UseAuthentication();
+        app.UseDasHealthChecks();
+
+        app.UseExceptionHandler(builder =>
+        {
+            builder.Run(async context =>
+            {
+                var exception = context.Features.Get<IExceptionHandlerPathFeature>().Error;
+                if (exception is ValidationException validationException)
+                {
+                    var errorResponse = new FluentValidationErrorResponse
                     {
-                        options.ConfigurationKeys = configuration["ConfigNames"].Split(",");
-                        options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
-                        options.EnvironmentName = configuration["Environment"];
-                        options.PreFixConfigurationKeys = false;
-                    }
-                );
-            }
+                        Errors = validationException.Errors
+                    };
 
-            Configuration = config.Build();
-        }
+                    context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    await context.Response.WriteJsonAsync(errorResponse);
+                }
+            });
+        });
 
-        public void ConfigureServices(IServiceCollection services)
+        app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+
+        app.UseSwagger();
+        app.UseSwaggerUI(options =>
         {
-            services.AddNLog().AddLogging();
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "LevyTransferMatching v1");
+            options.RoutePrefix = string.Empty;
+        });
+    }
 
-            services.AddConfigurationOptions(Configuration);
-            var config = Configuration.GetSection<LevyTransferMatchingApi>();
-
-            if (!_environment.IsDevelopment())
-            {
-                var azureAdConfiguration = Configuration
-                    .GetSection("AzureAd")
-                    .Get<AzureActiveDirectoryConfiguration>();
-
-                var policies = new Dictionary<string, string>
-                {
-                    {PolicyNames.Default, RoleNames.Default}
-                };
-
-                services.AddAuthentication(azureAdConfiguration, policies);
-            }
-
-            services
-                .AddMvc(o =>
-                {
-                    if (!_environment.IsDevelopment())
-                    {
-                        o.Conventions.Add(new AuthorizeControllerModelConvention(new List<string>()));
-                    }
-                    o.Conventions.Add(new ApiExplorerGroupPerVersionConvention());
-                })
-                .AddNewtonsoftJson()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-
-            services.AddControllers()
-                .AddFluentValidation(fv =>
-                {
-                    fv.RegisterValidatorsFromAssemblyContaining<Startup>();
-                    fv.RegisterValidatorsFromAssemblyContaining<CreateAccountCommandValidator>();
-                })
-                .AddNewtonsoftJson(x =>
-                {
-                    x.SerializerSettings.Converters.Add(new StringEnumConverter());
-                });
-
-            services.AddApplicationInsightsTelemetry(Configuration.GetValue<string>("APPINSIGHTS_INSTRUMENTATIONKEY"));
-            services.AddDasHealthChecks(config);
-            services.AddServicesForLevyTransferMatching(_environment, config);
-
-            services.AddEntityFrameworkForLevyTransferMatching(config)
-                .AddEntityFrameworkUnitOfWork<LevyTransferMatchingDbContext>()
-                .AddNServiceBusClientUnitOfWork();
-
-            services.AddCache(config, _environment)
-                .AddDasDataProtection(config, _environment)
-                .AddSwaggerGen(c =>
-                {
-                    c.SwaggerDoc("v1", new OpenApiInfo {Title = "LevyTransferMatchingApi", Version = "v1"});
-                    c.OperationFilter<SwaggerVersionHeaderFilter>();
-                })
-                .AddSwaggerGenNewtonsoftSupport();
-
-            services.AddApiVersioning(opt => {
-                opt.ApiVersionReader = new HeaderApiVersionReader("X-Version");
-            });
-        }
-
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.UseHttpsRedirection();
-            app.UseRouting();
-            app.UseAuthentication();
-            app.UseDasHealthChecks();
-
-            app.UseExceptionHandler(c => { c.Run(async context =>
-                {
-                    var exception = context.Features.Get<IExceptionHandlerPathFeature>().Error;
-                    if (exception is ValidationException validationException)
-                    {
-                        var errorResponse = new FluentValidationErrorResponse
-                        {
-                            Errors = validationException.Errors
-                        };
-
-                        context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                        await context.Response.WriteJsonAsync(errorResponse);
-                    }
-                });
-            });
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-
-            
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "LevyTransferMatching v1");
-                c.RoutePrefix = string.Empty;
-            });
-        }
-
-        public void ConfigureContainer(UpdateableServiceProvider serviceProvider)
-        {
-            var config = Configuration.GetSection<LevyTransferMatchingApi>();
-            serviceProvider.StartNServiceBus(config, _environment);
-        }
+    public void ConfigureContainer(UpdateableServiceProvider serviceProvider)
+    {
+        var config = _configuration.GetSection<LevyTransferMatchingApi>();
+        serviceProvider.StartNServiceBus(config);
+        
+        // Replacing ClientOutboxPersisterV2 with a local version to fix unit of work issue due to propagating Task up the chain rather than awaiting on DB Command.
+        // not clear why this fixes the issue. Attempted to make the change in SFA.DAS.Nservicebus.SqlServer however it conflicts when upgraded with SFA.DAS.UnitOfWork.Nservicebus
+        // which would require upgrading to NET6 to resolve.
+        var serviceDescriptor = serviceProvider.FirstOrDefault(serv => serv.ServiceType == typeof(IClientOutboxStorageV2));
+        serviceProvider.Remove(serviceDescriptor);
+        serviceProvider.AddScoped<IClientOutboxStorageV2, ClientOutboxPersisterV2>();
     }
 }

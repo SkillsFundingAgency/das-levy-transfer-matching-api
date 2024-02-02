@@ -2,29 +2,26 @@
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 
-namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions
+namespace SFA.DAS.LevyTransferMatching.Api.StartupExtensions;
+
+public static class NLogExtensions
 {
-    public static class NLogExtensions
+    public static IServiceCollection AddNLog(this IServiceCollection serviceCollection)
     {
-        public static IServiceCollection AddNLog(this IServiceCollection serviceCollection)
+        serviceCollection.AddLogging((options) =>
         {
-            var nLogConfiguration = new NLogConfiguration();
-
-            serviceCollection.AddLogging((options) =>
+            options.AddFilter(typeof(Startup).Namespace, LogLevel.Information);
+            options.SetMinimumLevel(LogLevel.Trace);
+            options.AddNLog(new NLogProviderOptions
             {
-                options.AddFilter(typeof(Startup).Namespace, LogLevel.Information);
-                options.SetMinimumLevel(LogLevel.Trace);
-                options.AddNLog(new NLogProviderOptions
-                {
-                    CaptureMessageTemplates = true,
-                    CaptureMessageProperties = true
-                });
-                options.AddConsole();
-
-                nLogConfiguration.ConfigureNLog();
+                CaptureMessageTemplates = true,
+                CaptureMessageProperties = true
             });
+            options.AddConsole();
 
-            return serviceCollection;
-        }
+            NLogConfiguration.ConfigureNLog();
+        });
+
+        return serviceCollection;
     }
 }

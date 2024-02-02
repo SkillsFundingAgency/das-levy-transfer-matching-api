@@ -1,7 +1,6 @@
-﻿namespace SFA.DAS.LevyTransferMatching.Application.Commands.DeclineFunding
+﻿namespace SFA.DAS.LevyTransferMatching.Application.Commands.DeclineFunding;
+
+public class DeclineFundingCommandResult
 {
-    public class DeclineFundingCommandResult
-    {
-        public bool Updated { get; set; }
-    }
+    public bool Updated { get; set; }
 }

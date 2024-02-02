@@ -1,9 +1,8 @@
-﻿namespace SFA.DAS.LevyTransferMatching.Models.Enums
+﻿namespace SFA.DAS.LevyTransferMatching.Models.Enums;
+
+public enum AutomaticApprovalOption : byte
 {
-    public enum AutomaticApprovalOption : byte
-    {
-        NotApplicable = 0,
-        ImmediateAutoApproval = 1,
-        DelayedAutoApproval = 2
-    }
+    NotApplicable = 0,
+    ImmediateAutoApproval = 1,
+    DelayedAutoApproval = 2
 }

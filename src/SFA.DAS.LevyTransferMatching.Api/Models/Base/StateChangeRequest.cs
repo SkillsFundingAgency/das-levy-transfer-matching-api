@@ -1,9 +1,8 @@
-﻿namespace SFA.DAS.LevyTransferMatching.Api.Models.Base
-{
-    public abstract class StateChangeRequest
-    {
-        public string UserId { get; set; }
+﻿namespace SFA.DAS.LevyTransferMatching.Api.Models.Base;
 
-        public string UserDisplayName { get; set; }
-    }
+public abstract class StateChangeRequest
+{
+    public string UserId { get; set; }
+
+    public string UserDisplayName { get; set; }
 }
