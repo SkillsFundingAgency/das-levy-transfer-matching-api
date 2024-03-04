@@ -1,10 +1,5 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.Extensions.Logging;
-using Moq;
-using NUnit.Framework;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitPledge;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.Models;
@@ -87,7 +82,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.DebitPledg
 
             var result = await _handler.Handle(_command, CancellationToken.None);
 
-            Assert.IsFalse(result.IsSuccess);
+            Assert.That(result.IsSuccess, Is.False);
         }
     }
 }
