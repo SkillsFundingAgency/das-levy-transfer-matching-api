@@ -1,22 +1,23 @@
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using NLog.Web;
 using SFA.DAS.NServiceBus.Configuration.MicrosoftDependencyInjection;
 
-namespace SFA.DAS.LevyTransferMatching.Api
+namespace SFA.DAS.LevyTransferMatching.Api;
+
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-            CreateWebHostBuilder(args).Build().Run();
-        }
-
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseNServiceBusContainer()
-                .UseStartup<Startup>()
-                .UseNLog();
-
+        CreateHostBuilder(args).Build().Run();
     }
+
+    private static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .UseNServiceBusContainer()
+            .UseNLog()
+            .ConfigureWebHostDefaults(builder =>
+            {
+                builder.UseStartup<Startup>();
+            });
 }

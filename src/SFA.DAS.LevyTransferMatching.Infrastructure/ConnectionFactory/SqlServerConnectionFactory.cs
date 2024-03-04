@@ -1,43 +1,41 @@
 ﻿using System.Data.Common;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using SFA.DAS.LevyTransferMatching.Infrastructure.ConnectionFactory;
 
-namespace SFA.DAS.LevyTransferMatching.Infrastructure
+namespace SFA.DAS.LevyTransferMatching.Infrastructure.ConnectionFactory;
+
+public class SqlServerConnectionFactory : IConnectionFactory
 {
-    public class SqlServerConnectionFactory : IConnectionFactory
+    private readonly IManagedIdentityTokenProvider _managedIdentityTokenProvider;
+
+    public SqlServerConnectionFactory(IManagedIdentityTokenProvider managedIdentityTokenProvider)
     {
-        private readonly IManagedIdentityTokenProvider _managedIdentityTokenProvider;
+        _managedIdentityTokenProvider = managedIdentityTokenProvider;
+    }
 
-        public SqlServerConnectionFactory(IManagedIdentityTokenProvider managedIdentityTokenProvider)
+    public DbContextOptionsBuilder<TContext> AddConnection<TContext>(DbContextOptionsBuilder<TContext> builder, string connection) where TContext : DbContext
+    {
+        return builder.UseSqlServer(CreateConnection(connection));
+    }
+
+    public DbContextOptionsBuilder<TContext> AddConnection<TContext>(DbContextOptionsBuilder<TContext> builder, DbConnection connection) where TContext : DbContext
+    {
+        return builder.UseSqlServer(connection);
+    }
+
+    public DbConnection CreateConnection(string connection)
+    {
+        var sqlConnection = new SqlConnection(connection)
         {
-            _managedIdentityTokenProvider = managedIdentityTokenProvider;
-        }
+            AccessToken = GetAccessToken(),
+        };
 
-        public DbContextOptionsBuilder<TContext> AddConnection<TContext>(DbContextOptionsBuilder<TContext> builder, string connection) where TContext : DbContext
-        {
-            return builder.UseSqlServer(CreateConnection(connection));
-        }
+        return sqlConnection;
+    }
 
-        public DbContextOptionsBuilder<TContext> AddConnection<TContext>(DbContextOptionsBuilder<TContext> builder, DbConnection connection) where TContext : DbContext
-        {
-            return builder.UseSqlServer(connection);
-        }
-
-        public DbConnection CreateConnection(string connection)
-        {
-            var sqlConnection = new SqlConnection(connection)
-            {
-                AccessToken = GetAccessToken(),
-            };
-
-            return sqlConnection;
-        }
-
-        private string GetAccessToken()
-        {
-            return _managedIdentityTokenProvider.GetSqlAccessTokenAsync()
-                .GetAwaiter().GetResult();
-        }
+    private string GetAccessToken()
+    {
+        return _managedIdentityTokenProvider.GetSqlAccessTokenAsync()
+            .GetAwaiter().GetResult();
     }
 }

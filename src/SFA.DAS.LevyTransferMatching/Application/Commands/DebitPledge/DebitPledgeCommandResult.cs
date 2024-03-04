@@ -1,7 +1,6 @@
-﻿namespace SFA.DAS.LevyTransferMatching.Application.Commands.DebitPledge
+﻿namespace SFA.DAS.LevyTransferMatching.Application.Commands.DebitPledge;
+
+public class DebitPledgeCommandResult
 {
-    public class DebitPledgeCommandResult
-    {
-        public bool IsSuccess { get; set; }
-    }
+    public bool IsSuccess { get; set; }
 }

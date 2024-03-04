@@ -1,84 +1,74 @@
-﻿using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using NUnit.Framework;
+﻿using Microsoft.EntityFrameworkCore;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;
 
-namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledge
+namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Queries.GetPledge;
+
+public class GetPledgeQueryHandlerTests : LevyTransferMatchingDbContextFixture
 {
-    public class GetPledgeQueryHandlerTests : LevyTransferMatchingDbContextFixture
+    private readonly Fixture _fixture = new();
+
+    [Test]
+    public async Task Handle_Individual_Pledge_Pulled_And_Stitched_Up_With_Account()
     {
-        private readonly Fixture _fixture = new Fixture();
+        await PopulateDbContext();
 
-        [Test]
-        public async Task Handle_Individual_Pledge_Pulled_And_Stitched_Up_With_Account()
+        var expectedPledge = await DbContext.Pledges.OrderByDescending(x => x.Amount).FirstAsync();
+
+        var getPledgesQueryHandler = new GetPledgeQueryHandler(DbContext);
+
+        var getPledgesQuery = new GetPledgeQuery()
         {
-            await PopulateDbContext();
+            Id = expectedPledge.Id,
+        };
 
-            var expectedPledge = await DbContext.Pledges.OrderByDescending(x => x.Amount).FirstAsync();
+        // Act
+        var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
 
-            var getPledgesQueryHandler = new GetPledgeQueryHandler(DbContext);
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.DasAccountName, Is.Not.Null);
+        Assert.That(result.Id, Is.EqualTo(expectedPledge.Id));
+    }
 
-            var getPledgesQuery = new GetPledgeQuery()
-            {
-                Id = expectedPledge.Id,
-            };
+    [Test]
+    public async Task Handle_Individual_Pledge_Not_Found_Null_Returned()
+    {
+        await PopulateDbContext();
 
-            // Act
-            var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
+        var getPledgesQueryHandler = new GetPledgeQueryHandler(DbContext);
 
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.IsNotNull(result.DasAccountName);
-            Assert.AreEqual(expectedPledge.Id, result.Id);
+        var getPledgesQuery = new GetPledgeQuery { Id = -1, };
+        
+        // Act
+        var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
+
+        // Assert
+        Assert.That(result, Is.Null);
+    }
+
+    private async Task PopulateDbContext()
+    {
+        var employerAccounts = _fixture.CreateMany<EmployerAccount>().ToArray();
+
+        await DbContext.EmployerAccounts.AddRangeAsync(employerAccounts);
+
+        var pledges = new List<Pledge>();
+
+        foreach (var account in employerAccounts)
+        {
+            var pledge = account.CreatePledge(
+                _fixture.Create<CreatePledgeProperties>(),
+                _fixture.Create<UserInfo>()
+            );
+            
+            pledges.Add(pledge);
         }
 
-        [Test]
-        public async Task Handle_Individual_Pledge_Not_Found_Null_Returned()
-        {
-            await PopulateDbContext();
+        await DbContext.Pledges.AddRangeAsync(pledges);
 
-            var getPledgesQueryHandler = new GetPledgeQueryHandler(DbContext);
-
-            var getPledgesQuery = new GetPledgeQuery()
-            {
-                Id = -1,
-            };
-
-            // Act
-            var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
-
-            // Assert
-            Assert.IsNull(result);
-        }
-
-        protected async Task PopulateDbContext()
-        {
-            var employerAccounts = _fixture.CreateMany<EmployerAccount>().ToArray();
-
-            await DbContext.EmployerAccounts.AddRangeAsync(employerAccounts);
-
-            var pledges = new List<Pledge>();
-
-            for (var i = 0; i < employerAccounts.Count(); i++)
-            {
-                pledges.Add(
-                    employerAccounts[i].CreatePledge(
-                        _fixture.Create<CreatePledgeProperties>(),
-                        _fixture.Create<UserInfo>()
-                    ));
-            }
-
-            await DbContext.Pledges.AddRangeAsync(pledges);
-
-            await DbContext.SaveChangesAsync();
-
-        }
+        await DbContext.SaveChangesAsync();
     }
 }

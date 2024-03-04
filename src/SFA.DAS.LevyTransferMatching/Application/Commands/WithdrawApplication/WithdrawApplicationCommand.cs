@@ -1,15 +1,9 @@
-﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
 
-namespace SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication
+public class WithdrawApplicationCommand : IRequest
 {
-    public class WithdrawApplicationCommand : IRequest
-    {
-        public long AccountId { get; set; }
-        public int ApplicationId { get; set; }
-        public string UserId { get; set; }
-        public string UserDisplayName { get; set; }
-    }
+    public long AccountId { get; set; }
+    public int ApplicationId { get; set; }
+    public string UserId { get; set; }
+    public string UserDisplayName { get; set; }
 }

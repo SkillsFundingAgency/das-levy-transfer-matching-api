@@ -1,8 +1,7 @@
 ﻿using SFA.DAS.LevyTransferMatching.Api.Models.Base;
 
-namespace SFA.DAS.LevyTransferMatching.Api.Models.Pledges
+namespace SFA.DAS.LevyTransferMatching.Api.Models.Pledges;
+
+public class ClosePledgeRequest : StateChangeRequest
 {
-    public class ClosePledgeRequest : StateChangeRequest
-    {
-    }
 }

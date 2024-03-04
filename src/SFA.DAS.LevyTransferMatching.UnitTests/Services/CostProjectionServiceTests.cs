@@ -1,86 +1,81 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using NUnit.Framework;
-using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
+﻿using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Services;
 
-namespace SFA.DAS.LevyTransferMatching.UnitTests.Services
+namespace SFA.DAS.LevyTransferMatching.UnitTests.Services;
+
+[TestFixture]
+public class CostProjectionServiceTests
 {
-    [TestFixture]
-    public class CostProjectionServiceTests
+    private CostProjectionServiceTestsFixture _fixture;
+
+    [SetUp]
+    public void Setup()
     {
-        private CostProjectionServiceTestsFixture _fixture;
+        _fixture = new CostProjectionServiceTestsFixture();
+    }
 
-        [SetUp]
-        public void Setup()
+    [Test]
+    public void GetCostProjections_Produces_Expected_Output()
+    {
+        _fixture
+            .WithTotalAmount(17000)
+            .WithStartDate(new DateTime(2023, 3, 1))
+            .WithDuration(24)
+            .Calculate();
+
+        _fixture.Verify("2022/23", null);
+        _fixture.Verify("2023/24", 6800);
+        _fixture.Verify("2024/25", 6800);
+        _fixture.Verify("2025/26", 3400);
+        _fixture.Verify("2026/27", null);
+    }
+
+    private class CostProjectionServiceTestsFixture
+    {
+        private readonly CostProjectionService _costProjectionService;
+        private int _amount;
+        private DateTime _startDate;
+        private int _duration;
+        private List<CostProjection> _result;
+
+        public CostProjectionServiceTestsFixture()
         {
-            _fixture = new CostProjectionServiceTestsFixture();
+            _costProjectionService = new CostProjectionService();
         }
 
-        [Test]
-        public void GetCostProjections_Produces_Expected_Output()
+        public CostProjectionServiceTestsFixture WithTotalAmount(int amount)
         {
-            _fixture
-                .WithTotalAmount(17000)
-                .WithStartDate(new DateTime(2023, 3, 1))
-                .WithDuration(24)
-                .Calculate();
-
-            _fixture.Verify("2022/23", null);
-            _fixture.Verify("2023/24", 6800);
-            _fixture.Verify("2024/25", 6800);
-            _fixture.Verify("2025/26", 3400);
-            _fixture.Verify("2026/27", null);
+            _amount = amount;
+            return this;
         }
 
-        private class CostProjectionServiceTestsFixture
+        public CostProjectionServiceTestsFixture WithStartDate(DateTime startDate)
         {
-            private readonly CostProjectionService _costProjectionService;
-            private int _amount;
-            private DateTime _startDate;
-            private int _duration;
-            private List<CostProjection> _result;
+            _startDate = startDate;
+            return this;
+        }
 
-            public CostProjectionServiceTestsFixture()
+        public CostProjectionServiceTestsFixture WithDuration(int duration)
+        {
+            _duration = duration;
+            return this;
+        }
+
+        public void Calculate()
+        {
+            _result = _costProjectionService.GetCostProjections(_amount, _startDate, _duration);
+        }
+
+        public void Verify(string financialYear, decimal? amount)
+        {
+            if (amount.HasValue)
             {
-                _costProjectionService = new CostProjectionService();
+                var yearValue = _result.Single(x => x.FinancialYear == financialYear);
+                Assert.That(yearValue.Amount, Is.EqualTo(amount));
             }
-
-            public CostProjectionServiceTestsFixture WithTotalAmount(int amount)
+            else
             {
-                _amount = amount;
-                return this;
-            }
-
-            public CostProjectionServiceTestsFixture WithStartDate(DateTime startDate)
-            {
-                _startDate = startDate;
-                return this;
-            }
-
-            public CostProjectionServiceTestsFixture WithDuration(int duration)
-            {
-                _duration = duration;
-                return this;
-            }
-
-            public void Calculate()
-            {
-                _result = _costProjectionService.GetCostProjections(_amount, _startDate, _duration);
-            }
-
-            public void Verify(string financialYear, decimal? amount)
-            {
-                if (amount.HasValue)
-                {
-                    var yearValue = _result.Single(x => x.FinancialYear == financialYear);
-                    Assert.AreEqual(amount, yearValue.Amount);
-                }
-                else
-                {
-                    Assert.IsFalse(_result.Exists(x => x.FinancialYear == financialYear));
-                }
+                Assert.That(_result.Exists(x => x.FinancialYear == financialYear), Is.False);
             }
         }
     }

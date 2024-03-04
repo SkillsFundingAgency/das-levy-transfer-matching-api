@@ -1,10 +1,7 @@
-﻿using MediatR;
+﻿namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateAccount;
 
-namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateAccount
+public class CreateAccountCommand : IRequest<CreateAccountCommandResult>
 {
-    public class CreateAccountCommand : IRequest<CreateAccountCommandResult>
-    {
-        public long AccountId { get; set; }
-        public string AccountName { get; set; }
-    }
+    public long AccountId { get; set; }
+    public string AccountName { get; set; }
 }

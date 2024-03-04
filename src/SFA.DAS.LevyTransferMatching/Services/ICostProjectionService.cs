@@ -1,59 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
+﻿using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Extensions;
 
-namespace SFA.DAS.LevyTransferMatching.Services
+namespace SFA.DAS.LevyTransferMatching.Services;
+
+public interface ICostProjectionService
 {
-    public interface ICostProjectionService
-    {
-        List<CostProjection> GetCostProjections(int totalAmount, DateTime startDate, int duration);
-    }
+    List<CostProjection> GetCostProjections(int totalAmount, DateTime startDate, int duration);
+}
 
-    public class CostProjectionService : ICostProjectionService
+public class CostProjectionService : ICostProjectionService
+{
+    public List<CostProjection> GetCostProjections(int totalAmount, DateTime startDate, int duration)
     {
-        public List<CostProjection> GetCostProjections(int totalAmount, DateTime startDate, int duration)
+        var result = new Dictionary<string, decimal>();
+
+        var total = (decimal)totalAmount;
+        var completionPayment = total / 5;
+
+        var monthly = (total - completionPayment) / duration;
+
+        var workingDate = startDate.AddMonths(1);
+
+        for (var index = 0; index <= duration; index++)
         {
-            var result = new Dictionary<string, decimal>();
+            var financialYear = workingDate.GetLastDayOfMonth().GetFinancialYear();
 
-            var total = (decimal) totalAmount;
-            var completionPayment = total / 5;
+            decimal currentAmount = 0;
 
-            var monthly = (total - completionPayment) / duration;
-
-            var workingDate = startDate.AddMonths(1);
-
-            for (var i = 0; i <= duration; i++)
+            if (!result.TryAdd(financialYear, 0))
             {
-                var financialYear = workingDate.GetLastDayOfMonth().GetFinancialYear();
-
-                decimal currentAmount = 0;
-
-                if (result.ContainsKey(financialYear))
-                {
-                    currentAmount = result[financialYear];
-                }
-                else
-                {
-                    result.Add(financialYear, 0);
-                }
-
-                if (i < duration)
-                {
-                    currentAmount += monthly;
-                }
-                else
-                {
-                    currentAmount += completionPayment;
-                }
-
-                result[financialYear] = currentAmount;
-
-                workingDate = workingDate.AddMonths(1);
+                currentAmount = result[financialYear];
             }
 
-            return result.Select(x => new CostProjection(x.Key, x.Value.ToNearest(100))).ToList();
+            if (index < duration)
+            {
+                currentAmount += monthly;
+            }
+            else
+            {
+                currentAmount += completionPayment;
+            }
+
+            result[financialYear] = currentAmount;
+
+            workingDate = workingDate.AddMonths(1);
         }
+
+        return result.Select(x => new CostProjection(x.Key, x.Value.ToNearest(100))).ToList();
     }
 }

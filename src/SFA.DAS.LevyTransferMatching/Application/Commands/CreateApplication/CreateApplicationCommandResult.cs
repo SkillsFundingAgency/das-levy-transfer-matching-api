@@ -1,7 +1,6 @@
-﻿namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication
+﻿namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
+
+public class CreateApplicationCommandResult
 {
-    public class CreateApplicationCommandResult
-    {
-        public int ApplicationId { get; set; }
-    }
+    public int ApplicationId { get; set; }
 }

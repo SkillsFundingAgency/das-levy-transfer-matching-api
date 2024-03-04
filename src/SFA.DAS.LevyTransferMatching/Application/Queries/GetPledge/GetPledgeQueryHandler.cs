@@ -1,30 +1,25 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Extensions;
-using SFA.DAS.LevyTransferMatching.Models.Enums;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge
+namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge;
+
+public class GetPledgeQueryHandler : IRequestHandler<GetPledgeQuery, GetPledgeResult>
 {
-    public class GetPledgeQueryHandler : IRequestHandler<GetPledgeQuery, GetPledgeResult>
+    private readonly LevyTransferMatchingDbContext _dbContext;
+
+    public GetPledgeQueryHandler(LevyTransferMatchingDbContext dbContext)
     {
-        private readonly LevyTransferMatchingDbContext _dbContext;
+        _dbContext = dbContext;
+    }
 
-        public GetPledgeQueryHandler(LevyTransferMatchingDbContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
-
-        public async Task<GetPledgeResult> Handle(GetPledgeQuery request, CancellationToken cancellationToken)
-        {
-            var pledge = await _dbContext.Pledges
-                .Where(x => x.Id == request.Id)
-                .Include(x => x.EmployerAccount)
-                .Include(x => x.Locations)
-                .SingleOrDefaultAsync(cancellationToken);
+    public async Task<GetPledgeResult> Handle(GetPledgeQuery request, CancellationToken cancellationToken)
+    {
+        var pledge = await _dbContext.Pledges
+            .Where(x => x.Id == request.Id)
+            .Include(x => x.EmployerAccount)
+            .Include(x => x.Locations)
+            .SingleOrDefaultAsync(cancellationToken);
 
             if (pledge != null)
             {
@@ -46,7 +41,6 @@ namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge
                 };
             }
 
-            return null;
-        }
+        return null;
     }
 }

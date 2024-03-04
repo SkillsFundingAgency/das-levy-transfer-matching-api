@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace SFA.DAS.LevyTransferMatching.Infrastructure.ConnectionFactory
+namespace SFA.DAS.LevyTransferMatching.Infrastructure.ConnectionFactory;
+
+public interface IManagedIdentityTokenProvider
 {
-    public interface IManagedIdentityTokenProvider
-    {
-        Task<string> GetSqlAccessTokenAsync();
-    }
+    Task<string> GetSqlAccessTokenAsync();
 }

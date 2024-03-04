@@ -1,15 +1,12 @@
-﻿using FluentValidation;
+﻿namespace SFA.DAS.LevyTransferMatching.Application.Commands.RejectApplication;
 
-namespace SFA.DAS.LevyTransferMatching.Application.Commands.RejectApplication
+public class RejectApplicationCommandValidator : AbstractValidator<RejectApplicationCommand>
 {
-    public class RejectApplicationCommandValidator : AbstractValidator<RejectApplicationCommand>
+    public RejectApplicationCommandValidator()
     {
-        public RejectApplicationCommandValidator()
-        {
-            RuleFor(x => x.ApplicationId).NotEmpty();
-            RuleFor(x => x.PledgeId).NotEmpty();
-            RuleFor(x => x.UserId).NotNull();
-            RuleFor(x => x.UserDisplayName).NotNull();
-        }
+        RuleFor(x => x.ApplicationId).NotEmpty();
+        RuleFor(x => x.PledgeId).NotEmpty();
+        RuleFor(x => x.UserId).NotNull();
+        RuleFor(x => x.UserDisplayName).NotNull();
     }
 }

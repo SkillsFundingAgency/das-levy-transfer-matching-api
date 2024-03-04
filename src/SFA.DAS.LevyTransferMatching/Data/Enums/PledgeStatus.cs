@@ -1,8 +1,7 @@
-﻿namespace SFA.DAS.LevyTransferMatching.Data.Enums
+﻿namespace SFA.DAS.LevyTransferMatching.Data.Enums;
+
+public enum PledgeStatus : byte
 {
-    public enum PledgeStatus : byte
-    {
-        Active = 0,
-        Closed = 1
-    }
+    Active = 0,
+    Closed = 1
 }
