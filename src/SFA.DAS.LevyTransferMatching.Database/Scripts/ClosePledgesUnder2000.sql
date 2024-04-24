@@ -1,4 +1,4 @@
-?SET NOCOUNT ON;
+SET NOCOUNT ON;
 
 PRINT 'Close Active LTM Pledges with <= £2000 remaining';
 
