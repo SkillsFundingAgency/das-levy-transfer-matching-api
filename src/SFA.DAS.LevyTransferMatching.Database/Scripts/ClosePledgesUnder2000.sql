@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS #PledgeID;
 SELECT ID
 INTO #PledgeID
 FROM [dbo].[Pledge]
-WHERE RemainingAmount <= 2000
+WHERE RemainingAmount < 2000
 	AND Status = 0;
 
 --2. PRE-RUN AUDIT  -- TAKE BACKUP OF DATA
