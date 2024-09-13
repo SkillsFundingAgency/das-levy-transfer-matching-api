@@ -1,8 +1,9 @@
 ﻿using System;
+using NServiceBus;
 
 namespace SFA.DAS.LevyTransferMatching.Messages.Events
 {
-    public class ApplicationWithdrawnEvent
+    public class ApplicationWithdrawnEvent : IMessage
     {
         public ApplicationWithdrawnEvent(int applicationId, int pledgeId, DateTime withdrawnOn, long transferSenderId)
         {

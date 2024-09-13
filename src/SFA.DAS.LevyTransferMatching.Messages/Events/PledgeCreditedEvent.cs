@@ -1,6 +1,8 @@
-﻿namespace SFA.DAS.LevyTransferMatching.Messages.Events
+﻿using NServiceBus;
+
+namespace SFA.DAS.LevyTransferMatching.Messages.Events
 {
-    public class PledgeCreditedEvent
+    public class PledgeCreditedEvent : IMessage
     {
         public PledgeCreditedEvent(int pledgeId, long transferSenderId)
         {

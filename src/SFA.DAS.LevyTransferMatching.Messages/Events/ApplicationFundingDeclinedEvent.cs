@@ -1,8 +1,9 @@
 ﻿using System;
+using NServiceBus;
 
 namespace SFA.DAS.LevyTransferMatching.Messages.Events
 {
-    public class ApplicationFundingDeclinedEvent
+    public class ApplicationFundingDeclinedEvent : IMessage
     {
         public ApplicationFundingDeclinedEvent(int applicationId, int pledgeId, DateTime declinedOn, int amount)
         {

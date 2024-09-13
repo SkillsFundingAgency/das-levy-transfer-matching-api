@@ -1,7 +1,9 @@
 ﻿
+using NServiceBus;
+
 namespace SFA.DAS.LevyTransferMatching.Messages.Events
 {
-    public class PledgeClosedEvent
+    public class PledgeClosedEvent : IMessage
     {
         public PledgeClosedEvent(int pledgeId, bool insufficientFunds)
         {

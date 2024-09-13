@@ -1,6 +1,8 @@
-﻿namespace SFA.DAS.LevyTransferMatching.Messages.Events
+﻿using NServiceBus;
+
+namespace SFA.DAS.LevyTransferMatching.Messages.Events
 {
-    public class ApplicationWithdrawnAfterAcceptanceEvent
+    public class ApplicationWithdrawnAfterAcceptanceEvent : IMessage
     {
         public ApplicationWithdrawnAfterAcceptanceEvent(int applicationId, int pledgeId, int amount)
         {

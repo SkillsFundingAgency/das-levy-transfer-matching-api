@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using static System.Net.Mime.MediaTypeNames;
+﻿using NServiceBus;
 
 namespace SFA.DAS.LevyTransferMatching.Messages.Events
 {
-    public class ApplicationFundingAcceptedEvent
+    public class ApplicationFundingAcceptedEvent : IMessage
     {
         public ApplicationFundingAcceptedEvent(int applicationId, int pledgeId, bool rejectApplications)
         {

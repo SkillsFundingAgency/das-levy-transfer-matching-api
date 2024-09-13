@@ -1,6 +1,8 @@
-﻿namespace SFA.DAS.LevyTransferMatching.Messages.Events
+﻿using NServiceBus;
+
+namespace SFA.DAS.LevyTransferMatching.Messages.Events
 {
-    public class PledgeDebitFailedEvent
+    public class PledgeDebitFailedEvent : IMessage
     {
         public PledgeDebitFailedEvent(int pledgeId, int applicationId, int amount)
         {
