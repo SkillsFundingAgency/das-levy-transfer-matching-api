@@ -4,38 +4,26 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SFA.DAS.LevyTransferMatching.Infrastructure.ConnectionFactory;
 
-public class SqlServerConnectionFactory : IConnectionFactory
+public interface IConnectionFactory
 {
-    private readonly IManagedIdentityTokenProvider _managedIdentityTokenProvider;
+    DbConnection CreateConnection(string connection);
+}
 
-    public SqlServerConnectionFactory(IManagedIdentityTokenProvider managedIdentityTokenProvider)
-    {
-        _managedIdentityTokenProvider = managedIdentityTokenProvider;
-    }
-
-    public DbContextOptionsBuilder<TContext> AddConnection<TContext>(DbContextOptionsBuilder<TContext> builder, string connection) where TContext : DbContext
-    {
-        return builder.UseSqlServer(CreateConnection(connection));
-    }
-
-    public DbContextOptionsBuilder<TContext> AddConnection<TContext>(DbContextOptionsBuilder<TContext> builder, DbConnection connection) where TContext : DbContext
-    {
-        return builder.UseSqlServer(connection);
-    }
-
+public class SqlServerConnectionFactory(IManagedIdentityTokenProvider managedIdentityTokenProvider) : IConnectionFactory
+{
     public DbConnection CreateConnection(string connection)
     {
-        var sqlConnection = new SqlConnection(connection)
+        return new SqlConnection(connection)
         {
             AccessToken = GetAccessToken(),
         };
-
-        return sqlConnection;
     }
 
     private string GetAccessToken()
     {
-        return _managedIdentityTokenProvider.GetSqlAccessTokenAsync()
-            .GetAwaiter().GetResult();
+        return managedIdentityTokenProvider
+            .GetSqlAccessTokenAsync()
+            .GetAwaiter()
+            .GetResult();
     }
 }
