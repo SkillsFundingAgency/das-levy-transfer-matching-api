@@ -65,10 +65,10 @@ public class GetPledgesQueryHandlerTests : LevyTransferMatchingDbContextFixture
         // Assert
         var dbPledges = await DbContext.Pledges.OrderByDescending(x => x.Amount).ToArrayAsync();
 
-        for (int i = 0; i < actualPledges.Length; i++)
+        for (var index = 0; index < actualPledges.Length; index++)
         {
-            Assert.That(dbPledges[i].Id, Is.EqualTo(actualPledges[i].Id));
-            Assert.That(dbPledges[i].EmployerAccount.Id, Is.EqualTo(actualPledges[i].AccountId));
+            dbPledges[index].Id.Should().Be(actualPledges[index].Id);
+            dbPledges[index].EmployerAccount.Id.Should().Be(actualPledges[index].AccountId);
         }
     }
 
@@ -88,9 +88,9 @@ public class GetPledgesQueryHandlerTests : LevyTransferMatchingDbContextFixture
 
         var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
 
-        Assert.That(result.TotalItems, Is.EqualTo(10));
-        Assert.That(result.TotalPages, Is.EqualTo(expectedPages));
-        Assert.That(result.Items, Has.Count.LessThanOrEqualTo(pageSize ?? int.MaxValue));
+        result.TotalItems.Should().Be(10);
+        result.TotalPages.Should().Be(expectedPages);
+        result.Items.Count.Should().Be(pageSize ?? int.MaxValue);
     }
 
     [Test]

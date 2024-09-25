@@ -112,7 +112,7 @@ public class ApplicationsControllerTests
         createdResult.Should().NotBeNull();
         var response = createdResult.Value as CreateApplicationResponse;
         response.Should().NotBeNull();
-        Assert.That(response.ApplicationId, Is.EqualTo(_result.ApplicationId));
+        response.ApplicationId.Should().Be(_result.ApplicationId);
     }
 
     [Test]
@@ -138,7 +138,7 @@ public class ApplicationsControllerTests
         actionResult.Should().NotBeNull();
         okObjectResult.Should().NotBeNull();
         getApplicationResponse.Should().NotBeNull();
-        Assert.That(okObjectResult.StatusCode, Is.EqualTo((int)HttpStatusCode.OK));
+        okObjectResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
     }
 
     [Test]
@@ -164,7 +164,7 @@ public class ApplicationsControllerTests
         actionResult.Should().NotBeNull();
         okObjectResult.Should().NotBeNull();
         getApplicationResponse.Should().NotBeNull();
-        Assert.That(okObjectResult.StatusCode, Is.EqualTo((int)HttpStatusCode.OK));
+        okObjectResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
     }
 
     [Test]
@@ -187,7 +187,7 @@ public class ApplicationsControllerTests
         // Assert
         actionResult.Should().NotBeNull();
         okObjectResult.Should().NotBeNull();
-        Assert.That(okObjectResult.StatusCode, Is.EqualTo((int)HttpStatusCode.NotFound));
+        okObjectResult.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
     }
 
     [Test]
@@ -210,7 +210,7 @@ public class ApplicationsControllerTests
         // Assert
         actionResult.Should().NotBeNull();
         okObjectResult.Should().NotBeNull();
-        Assert.That(okObjectResult.StatusCode, Is.EqualTo((int)HttpStatusCode.NotFound));
+        okObjectResult.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
     }
 
     [Test]
@@ -219,7 +219,7 @@ public class ApplicationsControllerTests
         _mediator.Setup(x => x.Send(It.Is<GetApplicationsQuery>(query => query.PledgeId == _pledgeId),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetApplicationsResult
-                { Items = new List<GetApplicationsResult.Application> { new GetApplicationsResult.Application() } });
+                { Items = [new GetApplicationsResult.Application()] });
 
         var actionResult =
             await _applicationsController.GetApplications(new GetApplicationsRequest { PledgeId = _pledgeId });
@@ -227,7 +227,7 @@ public class ApplicationsControllerTests
         result.Should().NotBeNull();
         var response = result.Value as GetApplicationsResponse;
         response.Should().NotBeNull();
-        Assert.That(response.Applications.Count(), Is.EqualTo(1));
+        response.Applications.Count().Should().Be(1);
     }
 
     [Test]
@@ -236,7 +236,7 @@ public class ApplicationsControllerTests
         _mediator.Setup(x => x.Send(It.Is<GetApplicationsQuery>(query => query.AccountId == _accountId),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetApplicationsResult
-                { Items = new List<GetApplicationsResult.Application> { new GetApplicationsResult.Application() } });
+                { Items = [new GetApplicationsResult.Application()] });
 
         var actionResult =
             await _applicationsController.GetApplications(new GetApplicationsRequest { AccountId = _accountId });
@@ -245,8 +245,7 @@ public class ApplicationsControllerTests
         var response = result.Value as GetApplicationsResponse;
         response.Should().NotBeNull();
 
-        var apps = response.Applications.ToList();
-        Assert.That(response.Applications.Count(), Is.EqualTo(1));
+        response.Applications.Count().Should().Be(1);
     }
 
     [Test]
@@ -255,7 +254,7 @@ public class ApplicationsControllerTests
         _mediator.Setup(x => x.Send(It.Is<GetApplicationsQuery>(query => query.SenderAccountId == _senderAccountId),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetApplicationsResult
-                { Items = new List<GetApplicationsResult.Application> { new GetApplicationsResult.Application() } });
+                { Items = [new GetApplicationsResult.Application()] });
 
         var actionResult = await _applicationsController.GetApplications(new GetApplicationsRequest
             { SenderAccountId = _senderAccountId });
@@ -264,8 +263,7 @@ public class ApplicationsControllerTests
         var response = result.Value as GetApplicationsResponse;
         response.Should().NotBeNull();
 
-        var apps = response.Applications.ToList();
-        Assert.AreEqual(1, response.Applications.Count());
+        response.Applications.Count().Should().Be(1);
     }
 
 
@@ -277,7 +275,7 @@ public class ApplicationsControllerTests
                 x.Send(It.Is<GetApplicationsQuery>(query => query.ApplicationStatusFilter == applicationStatusFilter),
                     It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetApplicationsResult
-                { Items = new List<GetApplicationsResult.Application> { new GetApplicationsResult.Application() } });
+                { Items = [new GetApplicationsResult.Application()] });
 
         var actionResult = await _applicationsController.GetApplications(new GetApplicationsRequest
             { ApplicationStatusFilter = applicationStatusFilter });
@@ -286,7 +284,7 @@ public class ApplicationsControllerTests
         var response = result.Value as GetApplicationsResponse;
         response.Should().NotBeNull();
 
-        Assert.AreEqual(1, response.Applications.Count());
+        response.Applications.Count().Should().Be(1);
     }
 
     [Test]

@@ -57,9 +57,9 @@ public class PledgesControllerTests
         actionResult.Should().NotBeNull();
         createdResult.Should().NotBeNull();
         createPledgeResponse.Should().NotBeNull();
-        Assert.That(createdResult.StatusCode, Is.EqualTo((int)HttpStatusCode.Created));
-        Assert.That($"/accounts/{accountId}/pledges/{result.Id}", Is.EqualTo(createdResult.Location));
-        Assert.That(result.Id, Is.EqualTo(createPledgeResponse.Id));
+        createdResult.StatusCode.Should().Be((int)HttpStatusCode.Created);
+        $"/accounts/{accountId}/pledges/{result.Id}".Should().Be(createdResult.Location);
+        result.Id.Should().Be(createPledgeResponse.Id);
     }
 
     [Test]
@@ -102,8 +102,8 @@ public class PledgesControllerTests
         actionResult.Should().NotBeNull();
         okObjectResult.Should().NotBeNull();
         getPledgeResponse.Should().NotBeNull();
-        Assert.That(okObjectResult.StatusCode, Is.EqualTo((int)HttpStatusCode.OK));
-        Assert.That(pledgeResult.Id, Is.EqualTo(getPledgeResponse.Id));
+        okObjectResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
+        pledgeResult.Id.Should().Be(getPledgeResponse.Id);
     }
 
     [Test]
@@ -123,7 +123,7 @@ public class PledgesControllerTests
         // Assert
         actionResult.Should().NotBeNull();
         notFoundResult.Should().NotBeNull();
-        Assert.That(notFoundResult.StatusCode, Is.EqualTo((int)HttpStatusCode.NotFound));
+        notFoundResult.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
     }
 
     [Test]
@@ -169,7 +169,7 @@ public class PledgesControllerTests
 
         actionResult.Should().NotBeNull();
         okResult.Should().NotBeNull();
-        Assert.That(okResult.StatusCode, Is.EqualTo((int)HttpStatusCode.OK));
+        okResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
     }
 
     [Test]
@@ -185,7 +185,7 @@ public class PledgesControllerTests
 
         var actionResult = await _pledgesController.ClosePledge(pledgeId, request);
 
-        Assert.That(actionResult, Is.InstanceOf<NotFoundResult>());
+        actionResult.Should().BeOfType<NotFoundResult>();
     }
 
     [Test]
@@ -213,10 +213,10 @@ public class PledgesControllerTests
         actionResult.Should().NotBeNull();
         okObjectResult.Should().NotBeNull();
         response.Should().NotBeNull();
-        Assert.That(okObjectResult.StatusCode, Is.EqualTo((int)HttpStatusCode.OK));
+        okObjectResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
 
-        Assert.That(response.Pledges.Count(), Is.EqualTo(expectedPledges.Count()));
-        Assert.That(response.TotalPledges, Is.EqualTo(expectedPledges.Count()));
+        response.Pledges.Count().Should().Be(expectedPledges.Count());
+        response.TotalPledges.Should().Be(expectedPledges.Count());
     }
 
     [Test]
@@ -246,9 +246,9 @@ public class PledgesControllerTests
         actionResult.Should().NotBeNull();
         okObjectResult.Should().NotBeNull();
         response.Should().NotBeNull();
-        Assert.That(okObjectResult.StatusCode, Is.EqualTo((int)HttpStatusCode.OK));
+        okObjectResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
 
-        Assert.That(response.Pledges.Count(), Is.EqualTo(expectedPledges.Count()));
-        Assert.That(response.TotalPledges, Is.EqualTo(expectedPledges.Count()));
+        response.Pledges.Count().Should().Be(expectedPledges.Count());
+        response.TotalPledges.Should().Be(expectedPledges.Count());
     }
 }

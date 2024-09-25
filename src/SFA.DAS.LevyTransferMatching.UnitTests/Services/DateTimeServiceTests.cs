@@ -15,7 +15,7 @@ public class DateTimeServiceTests
 
         var actual = _dateTimeService.UtcNow;
 
-        Assert.That(actual, Is.EqualTo(expected));
+        actual.Should().Be(expected);
     }
 
     [Test]
@@ -26,6 +26,6 @@ public class DateTimeServiceTests
 
         var actual = _dateTimeService.UtcNow;
 
-        Assert.That(actual.Date, Is.EqualTo(expected.Date));
+        actual.Date.Should().Be(expected.Date);
     }
 }

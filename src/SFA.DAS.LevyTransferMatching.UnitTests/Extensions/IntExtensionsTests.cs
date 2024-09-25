@@ -21,6 +21,6 @@ public class IntExtensionsTests
 
         var actualSectors = summed.GetFlags<Sector>();
 
-        Assert.That(actualSectors, Is.EqualTo(expectedSectors).AsCollection);
+        actualSectors.Should().BeEquivalentTo(expectedSectors);
     }
 }

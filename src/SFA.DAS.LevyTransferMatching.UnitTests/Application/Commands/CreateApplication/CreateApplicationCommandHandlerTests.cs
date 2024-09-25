@@ -78,34 +78,34 @@ public class CreateApplicationCommandHandlerTests : LevyTransferMatchingDbContex
         await _handler.Handle(command, CancellationToken.None);
 
         _inserted.Should().NotBeNull();
-        Assert.That(_inserted.Pledge.Id, Is.EqualTo(command.PledgeId));
-        Assert.That(_inserted.EmployerAccount.Id, Is.EqualTo(command.EmployerAccountId));
-        Assert.That(_inserted.Details, Is.EqualTo(command.Details));
-        Assert.That(_inserted.StandardId, Is.EqualTo(command.StandardId));
-        Assert.That(_inserted.StandardTitle, Is.EqualTo(command.StandardTitle));
-        Assert.That(_inserted.StandardLevel, Is.EqualTo(command.StandardLevel));
-        Assert.That(_inserted.StandardDuration, Is.EqualTo(command.StandardDuration));
-        Assert.That(_inserted.StandardMaxFunding, Is.EqualTo(command.StandardMaxFunding));
-        Assert.That(_inserted.StandardRoute, Is.EqualTo(command.StandardRoute));
-        Assert.That(_inserted.NumberOfApprentices, Is.EqualTo(command.NumberOfApprentices));
-        Assert.That(_inserted.StartDate, Is.EqualTo(command.StartDate));
-        Assert.That(_inserted.HasTrainingProvider, Is.EqualTo(command.HasTrainingProvider));
-        Assert.That(_inserted.Sectors, Is.EqualTo((Sector)command.Sectors.Cast<int>().Sum()));
-        Assert.That(_inserted.ApplicationLocations.Select(x => x.PledgeLocationId).ToList(), Is.EqualTo(command.Locations).AsCollection);
-        Assert.That(_inserted.AdditionalLocation, Is.EqualTo(command.AdditionalLocation));
-        Assert.That(_inserted.SpecificLocation, Is.EqualTo(command.SpecificLocation));
-        Assert.That(_inserted.FirstName, Is.EqualTo(command.FirstName));
-        Assert.That(_inserted.LastName, Is.EqualTo(command.LastName));
-        Assert.That(_inserted.BusinessWebsite, Is.EqualTo(command.BusinessWebsite));
-        Assert.That(_inserted.TotalAmount, Is.EqualTo(command.NumberOfApprentices * command.StandardMaxFunding));
-        Assert.That(_inserted.EmailAddresses.Select(x => x.EmailAddress), Is.EqualTo(command.EmailAddresses).AsCollection);
+        _inserted.Pledge.Id.Should().Be(command.PledgeId);
+        _inserted.EmployerAccount.Id.Should().Be(command.EmployerAccountId);
+        _inserted.Details.Should().Be(command.Details);
+        _inserted.StandardId.Should().Be(command.StandardId);
+        _inserted.StandardTitle.Should().Be(command.StandardTitle);
+        _inserted.StandardLevel.Should().Be(command.StandardLevel);
+        _inserted.StandardDuration.Should().Be(command.StandardDuration);
+        _inserted.StandardMaxFunding.Should().Be(command.StandardMaxFunding);
+        _inserted.StandardRoute.Should().Be(command.StandardRoute);
+        _inserted.NumberOfApprentices.Should().Be(command.NumberOfApprentices);
+        _inserted.StartDate.Should().Be(command.StartDate);
+        _inserted.HasTrainingProvider.Should().Be(command.HasTrainingProvider);
+        _inserted.Sectors.Should().Be((Sector)command.Sectors.Cast<int>().Sum());
+        _inserted.ApplicationLocations.Select(x => x.PledgeLocationId).ToList().Should().BeEquivalentTo(command.Locations);
+        _inserted.AdditionalLocation.Should().Be(command.AdditionalLocation);
+        _inserted.SpecificLocation.Should().Be(command.SpecificLocation);
+        _inserted.FirstName.Should().Be(command.FirstName);
+        _inserted.LastName.Should().Be(command.LastName);
+        _inserted.BusinessWebsite.Should().Be(command.BusinessWebsite);
+        _inserted.TotalAmount.Should().Be(command.NumberOfApprentices * command.StandardMaxFunding);
+        _inserted.EmailAddresses.Select(x => x.EmailAddress).Should().BeEquivalentTo(command.EmailAddresses);
         CompareHelper.AreEqualIgnoringTypes(_costProjections, _inserted.ApplicationCostProjections);
-        Assert.That(_inserted.MatchJobRole, Is.EqualTo(_matchingCriteria.MatchJobRole));
-        Assert.That(_inserted.MatchLevel, Is.EqualTo(_matchingCriteria.MatchLevel));
-        Assert.That(_inserted.MatchLocation, Is.EqualTo(_matchingCriteria.MatchLocation));
-        Assert.That(_inserted.MatchSector, Is.EqualTo(_matchingCriteria.MatchSector));
-        Assert.That(_inserted.MatchPercentage, Is.EqualTo(_matchingCriteria.MatchPercentage));
-        Assert.That(_inserted.CostingModel, Is.EqualTo(ApplicationCostingModel.Original));
+        _inserted.MatchJobRole.Should().Be(_matchingCriteria.MatchJobRole);
+        _inserted.MatchLevel.Should().Be(_matchingCriteria.MatchLevel);
+        _inserted.MatchLocation.Should().Be(_matchingCriteria.MatchLocation);
+        _inserted.MatchSector.Should().Be(_matchingCriteria.MatchSector);
+        _inserted.MatchPercentage.Should().Be(_matchingCriteria.MatchPercentage);
+        _inserted.CostingModel.Should().Be(ApplicationCostingModel.Original);
     }
 
     [Test]
@@ -120,7 +120,7 @@ public class CreateApplicationCommandHandlerTests : LevyTransferMatchingDbContex
 
         await _handler.Handle(command, CancellationToken.None);
 
-        Assert.That(_inserted.CostingModel, Is.EqualTo(ApplicationCostingModel.OneYear));
+        _inserted.CostingModel.Should().Be(ApplicationCostingModel.OneYear);
     }
 
     [Test]
@@ -141,6 +141,6 @@ public class CreateApplicationCommandHandlerTests : LevyTransferMatchingDbContex
             ? fundingBandMax * command.NumberOfApprentices
             : (fundingBandMax * 0.8m / command.StandardDuration * 12 * command.NumberOfApprentices).ToNearest(1);
 
-        Assert.That(_inserted.GetCost(), Is.EqualTo(expected));
+        _inserted.GetCost().Should().Be((int)expected);
     }
 }

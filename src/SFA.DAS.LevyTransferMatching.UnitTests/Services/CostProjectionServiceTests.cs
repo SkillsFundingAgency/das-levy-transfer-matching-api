@@ -71,7 +71,7 @@ public class CostProjectionServiceTests
             if (amount.HasValue)
             {
                 var yearValue = _result.Single(x => x.FinancialYear == financialYear);
-                Assert.That(yearValue.Amount, Is.EqualTo(amount));
+                yearValue.Amount.Should().Be((int)amount);
             }
             else
             {

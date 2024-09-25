@@ -56,7 +56,7 @@ public class DeclineFundingCommandHandlerTests
         // Assert
         result.Updated.Should().BeTrue();
         _updatedApplication.Should().NotBeNull();
-        Assert.That(_updatedApplication.Status, Is.EqualTo(ApplicationStatus.Declined));
+        _updatedApplication.Status.Should().Be(ApplicationStatus.Declined);
     }
 
     [Test]

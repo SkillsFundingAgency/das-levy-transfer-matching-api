@@ -29,8 +29,8 @@ public class DiffServiceTests
         foreach (var item in _fixture.InitialItem)
         {
             var resultItem = _fixture.Result.Single(x => x.PropertyName == item.Key);
-            Assert.That(resultItem.InitialValue, Is.EqualTo(item.Value));
-            Assert.That(resultItem.UpdatedValue, Is.EqualTo(_fixture.UpdatedItem[item.Key]));
+            resultItem.InitialValue.Should().Be(item.Value);
+            resultItem.UpdatedValue.Should().Be(_fixture.UpdatedItem[item.Key]);
         }
     }
 
@@ -39,12 +39,13 @@ public class DiffServiceTests
     {
         _fixture.WithNullInitialItem().WithRandomUpdatedItem().GenerateDiff();
 
-        Assert.That(_fixture.Result, Has.Count.EqualTo(_fixture.UpdatedItem.Count));
+        _fixture.Result.Count.Should().Be(_fixture.UpdatedItem.Count);
+        
         foreach (var item in _fixture.UpdatedItem)
         {
             var resultItem = _fixture.Result.Single(x => x.PropertyName == item.Key);
             resultItem.InitialValue.Should().BeNull();
-            Assert.That(resultItem.UpdatedValue, Is.EqualTo(item.Value));
+            resultItem.UpdatedValue.Should().Be(item.Value);
         }
     }
 
@@ -53,12 +54,13 @@ public class DiffServiceTests
     {
         _fixture.WithInitialItemsWithNullValues().WithDifferentUpdatedValues().GenerateDiff();
 
-        Assert.That(_fixture.Result, Has.Count.EqualTo(_fixture.UpdatedItem.Count));
+        _fixture.Result.Count.Should().Be(_fixture.UpdatedItem.Count);
+        
         foreach (var item in _fixture.UpdatedItem)
         {
             var resultItem = _fixture.Result.Single(x => x.PropertyName == item.Key);
             resultItem.InitialValue.Should().BeNull();
-            Assert.That(resultItem.UpdatedValue, Is.EqualTo(item.Value));
+            resultItem.UpdatedValue.Should().Be(item.Value);
         }
     }
 
@@ -67,12 +69,13 @@ public class DiffServiceTests
     {
         _fixture.WithRandomInitialItem().WithNullUpdatedItem().GenerateDiff();
 
-        Assert.That(_fixture.Result, Has.Count.EqualTo(_fixture.InitialItem.Count));
+        _fixture.Result.Count.Should().Be(_fixture.InitialItem.Count);
+        
         foreach (var item in _fixture.InitialItem)
         {
             var resultItem = _fixture.Result.Single(x => x.PropertyName == item.Key);
             resultItem.UpdatedValue.Should().BeNull();
-            Assert.That(resultItem.InitialValue, Is.EqualTo(item.Value));
+            resultItem.InitialValue.Should().Be(item.Value);
         }
     }
 

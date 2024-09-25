@@ -51,7 +51,7 @@ public class MatchingCriteriaServiceTests
         _application.Sectors = applicationSector.ToList();
 
         var result = _service.GetMatchingCriteria(_application, _pledge);
-        Assert.That(result.MatchSector, Is.EqualTo(expectMatch));
+        result.MatchSector.Should().Be(expectMatch);
     }
 
     [Test]
@@ -89,7 +89,7 @@ public class MatchingCriteriaServiceTests
         _pledge.SetValue(x => x.JobRoles, pledgeJobRole);
         _application.StandardRoute = applicationRoute;
         var result = _service.GetMatchingCriteria(_application, _pledge);
-        Assert.That(result.MatchJobRole, Is.EqualTo(expectMatch));
+        result.MatchJobRole.Should().Be(expectMatch);
     }
 
     [TestCase(AllLevels, 1, true)]
@@ -103,6 +103,6 @@ public class MatchingCriteriaServiceTests
         _application.StandardLevel = applicationLevel;
 
         var result = _service.GetMatchingCriteria(_application, _pledge);
-        Assert.That(result.MatchLevel, Is.EqualTo(expectMatch));
+        result.MatchLevel.Should().Be(expectMatch);
     }
 }

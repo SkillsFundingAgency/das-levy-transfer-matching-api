@@ -52,8 +52,8 @@ public class AccountsControllerTests
         var createdResult = actionResult as CreatedResult;
         actionResult.Should().NotBeNull();
         createdResult.Should().NotBeNull();
-        Assert.That(createdResult.StatusCode, Is.EqualTo((int)HttpStatusCode.Created));
-        Assert.That($"/accounts/{_apiRequest.AccountId}", Is.EqualTo(createdResult.Location));
+        createdResult.StatusCode.Should().Be((int)HttpStatusCode.Created);
+        $"/accounts/{_apiRequest.AccountId}".Should().Be(createdResult.Location);
     }
 
     [Test]
@@ -66,7 +66,7 @@ public class AccountsControllerTests
         var okResult = actionResult as OkResult;
         actionResult.Should().NotBeNull();
         okResult.Should().NotBeNull();
-        Assert.That(okResult.StatusCode, Is.EqualTo((int)HttpStatusCode.OK));
+        okResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
     }
 
 
@@ -80,7 +80,7 @@ public class AccountsControllerTests
         actionResult.Should().NotBeNull();
         result.Should().NotBeNull();
         var resultValue = result.Value as GetAccountResponse;
-        Assert.That(resultValue.AccountId, Is.EqualTo(_getAccountQueryResult.AccountId));
-        Assert.That(resultValue.AccountName, Is.EqualTo(_getAccountQueryResult.AccountName));
+        resultValue.AccountId.Should().Be(_getAccountQueryResult.AccountId);
+        resultValue.AccountName.Should().Be(_getAccountQueryResult.AccountName);
     }
 }

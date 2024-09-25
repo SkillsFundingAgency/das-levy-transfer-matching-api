@@ -152,6 +152,6 @@ public class GetApplicationQueryHandlerTests : LevyTransferMatchingDbContextFixt
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.That(result.Amount, Is.EqualTo(application.GetCost()));
+        result.Amount.Should().Be(application.GetCost());
     }
 }

@@ -48,14 +48,14 @@ public class CreatePledgeCommandHandlerTests : LevyTransferMatchingDbContextFixt
         await _handler.Handle(command, CancellationToken.None);
 
         inserted.Should().NotBeNull();
-        Assert.That(inserted.EmployerAccount.Id, Is.EqualTo(command.AccountId));
-        Assert.That(inserted.Amount, Is.EqualTo(command.Amount));
-        Assert.That(inserted.RemainingAmount, Is.EqualTo(command.Amount));
-        Assert.That(inserted.IsNamePublic, Is.EqualTo(command.IsNamePublic));
-        Assert.That(inserted.AutomaticApprovalOption, Is.EqualTo(command.AutomaticApprovalOption));
-        Assert.That(inserted.Levels, Is.EqualTo((Level)command.Levels.Cast<int>().Sum()));
-        Assert.That(inserted.Sectors, Is.EqualTo((Sector)command.Sectors.Cast<int>().Sum()));
-        Assert.That(inserted.JobRoles, Is.EqualTo((JobRole)command.JobRoles.Cast<int>().Sum()));
+        inserted.EmployerAccount.Id.Should().Be(command.AccountId);
+        inserted.Amount.Should().Be(command.Amount);
+        inserted.RemainingAmount.Should().Be(command.Amount);
+        inserted.IsNamePublic.Should().Be(command.IsNamePublic);
+        inserted.AutomaticApprovalOption.Should().Be(command.AutomaticApprovalOption);
+        inserted.Levels.Should().Be((Level)command.Levels.Cast<int>().Sum());
+        inserted.Sectors.Should().Be((Sector)command.Sectors.Cast<int>().Sum());
+        inserted.JobRoles.Should().Be((JobRole)command.JobRoles.Cast<int>().Sum());
 
         var compareLogic = new CompareLogic(new ComparisonConfig { IgnoreCollectionOrder = true, IgnoreObjectTypes = true, IgnoreUnknownObjectTypes = true });
         var expectedLocations = command.Locations.Select(l => new PledgeLocation { Name = l.Name, Latitude = l.Geopoint[0], Longitude = l.Geopoint[1] }).ToList();

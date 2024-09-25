@@ -30,7 +30,7 @@ public class GetPledgeQueryHandlerTests : LevyTransferMatchingDbContextFixture
         // Assert
         result.Should().NotBeNull();
         result.DasAccountName.Should().NotBeNull();
-        Assert.That(result.Id, Is.EqualTo(expectedPledge.Id));
+        result.Id.Should().Be(expectedPledge.Id);
     }
 
     [Test]
