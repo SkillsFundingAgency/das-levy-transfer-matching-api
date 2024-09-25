@@ -11,8 +11,9 @@ public class WhenSendIsCalled
 
     private Fixture _fixture;
 
-    public class TestEvent : IDomainEvent { }
-    public class TestEvent2 : IDomainEvent { }
+    private record TestEvent : IDomainEvent { }
+
+    private record TestEvent2 : IDomainEvent { }
 
     [SetUp]
     public void Arrange()
@@ -32,7 +33,7 @@ public class WhenSendIsCalled
             .Returns(eventHandlers);
 
         _mockServiceProvider.Setup(m => m.GetService(typeof(IEnumerable<IDomainEventHandler<TestEvent2>>)))
-            .Returns(null);
+            .Returns(null!);
 
         _domainEventDispatcher = new LevyTransferMatching.Services.Events.DomainEventDispatcher(_mockServiceProvider.Object);
     }

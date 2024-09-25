@@ -14,7 +14,7 @@ public class ApplicationApprovedHandlerTests
     private ApplicationApprovedHandler _handler;
     private ApplicationApproved _event;
     private Mock<IEventPublisher> _eventPublisher;
-    private readonly Fixture _fixture = new Fixture();
+    private readonly Fixture _fixture = new();
     private Mock<IPledgeRepository> _pledgeRepository;
     private long _transferSenderId;
 

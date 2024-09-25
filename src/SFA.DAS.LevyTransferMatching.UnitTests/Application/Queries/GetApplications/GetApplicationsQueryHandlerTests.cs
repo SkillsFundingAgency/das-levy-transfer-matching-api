@@ -42,7 +42,7 @@ public class GetApplicationsQueryHandlerTests : LevyTransferMatchingDbContextFix
         for (var index = 0; index < 20; index++)
         {
             var properties = _fixture.Build<CreateApplicationProperties>()
-                .With(x => x.CostProjections, () => new List<CostProjection>{ new CostProjection(DateTime.UtcNow.GetFinancialYear(), _fixture.Create<int>())})
+                .With(x => x.CostProjections, () => new List<CostProjection>{ new(DateTime.UtcNow.GetFinancialYear(), _fixture.Create<int>())})
                 .With(x => x.Locations, () => new List<int>())
                 .With(x => x.EmailAddresses, () => new List<string>{"test@test.com"})
                 .Create();

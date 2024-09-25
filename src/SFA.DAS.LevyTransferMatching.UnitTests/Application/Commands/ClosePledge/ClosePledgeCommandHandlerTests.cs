@@ -13,7 +13,7 @@ public class ClosePledgeCommandHandlerTests
     private ClosePledgeCommandHandler _handler;
     private Mock<IPledgeRepository> _repository;
 
-    private readonly Fixture _fixture = new Fixture();
+    private readonly Fixture _fixture = new();
     private ClosePledgeCommand _command;
     private Pledge _pledge;
 

@@ -14,7 +14,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.DebitPledg
         private DebitPledgeCommandHandler _handler;
         private Mock<IPledgeRepository> _repository;
 
-        private readonly Fixture _fixture = new Fixture();
+        private readonly Fixture _fixture = new();
         private DebitPledgeCommand _command;
         private Pledge _pledge;
 

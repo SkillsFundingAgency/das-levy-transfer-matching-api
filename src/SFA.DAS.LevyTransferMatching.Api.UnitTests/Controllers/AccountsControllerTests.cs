@@ -52,8 +52,8 @@ public class AccountsControllerTests
         var createdResult = actionResult as CreatedResult;
         actionResult.Should().NotBeNull();
         createdResult.Should().NotBeNull();
-        createdResult.StatusCode.Should().Be((int)HttpStatusCode.Created);
-        $"/accounts/{_apiRequest.AccountId}".Should().Be(createdResult.Location);
+        createdResult?.StatusCode.Should().Be((int)HttpStatusCode.Created);
+        $"/accounts/{_apiRequest.AccountId}".Should().Be(createdResult?.Location);
     }
 
     [Test]
@@ -66,7 +66,7 @@ public class AccountsControllerTests
         var okResult = actionResult as OkResult;
         actionResult.Should().NotBeNull();
         okResult.Should().NotBeNull();
-        okResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
+        okResult?.StatusCode.Should().Be((int)HttpStatusCode.OK);
     }
 
 
@@ -79,8 +79,8 @@ public class AccountsControllerTests
 
         actionResult.Should().NotBeNull();
         result.Should().NotBeNull();
-        var resultValue = result.Value as GetAccountResponse;
-        resultValue.AccountId.Should().Be(_getAccountQueryResult.AccountId);
-        resultValue.AccountName.Should().Be(_getAccountQueryResult.AccountName);
+        var resultValue = result?.Value as GetAccountResponse;
+        resultValue?.AccountId.Should().Be(_getAccountQueryResult.AccountId);
+        resultValue?.AccountName.Should().Be(_getAccountQueryResult.AccountName);
     }
 }

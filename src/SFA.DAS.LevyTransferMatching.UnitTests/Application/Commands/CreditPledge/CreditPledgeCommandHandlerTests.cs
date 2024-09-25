@@ -11,7 +11,7 @@ public class CreditPledgeCommandHandlerTests
     private CreditPledgeCommandHandler _handler;
     private Mock<IPledgeRepository> _repository;
 
-    private readonly Fixture _fixture = new Fixture();
+    private readonly Fixture _fixture = new();
     private CreditPledgeCommand _command;
     private Pledge _pledge;
 

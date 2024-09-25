@@ -110,9 +110,9 @@ public class ApplicationsControllerTests
         var actionResult = await _applicationsController.CreateApplication(_pledgeId, _request);
         var createdResult = actionResult as CreatedResult;
         createdResult.Should().NotBeNull();
-        var response = createdResult.Value as CreateApplicationResponse;
+        var response = createdResult?.Value as CreateApplicationResponse;
         response.Should().NotBeNull();
-        response.ApplicationId.Should().Be(_result.ApplicationId);
+        response?.ApplicationId.Should().Be(_result.ApplicationId);
     }
 
     [Test]
@@ -125,20 +125,20 @@ public class ApplicationsControllerTests
 
         _mediator
             .Setup(x => x.Send(
-                It.Is<GetApplicationQuery>(y => (y.PledgeId == pledgeId) && (y.ApplicationId == applicationId)),
+                It.Is<GetApplicationQuery>(y => y.PledgeId == pledgeId && y.ApplicationId == applicationId),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(applicationResult);
 
         // Act
         var actionResult = await _applicationsController.GetApplication(applicationId);
         var okObjectResult = actionResult as OkObjectResult;
-        var getApplicationResponse = okObjectResult.Value as GetApplicationResponse;
+        var getApplicationResponse = okObjectResult?.Value as GetApplicationResponse;
 
         // Assert
         actionResult.Should().NotBeNull();
         okObjectResult.Should().NotBeNull();
         getApplicationResponse.Should().NotBeNull();
-        okObjectResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
+        okObjectResult?.StatusCode.Should().Be((int)HttpStatusCode.OK);
     }
 
     [Test]
@@ -151,20 +151,20 @@ public class ApplicationsControllerTests
 
         _mediator
             .Setup(x => x.Send(
-                It.Is<GetApplicationQuery>(y => (y.PledgeId == pledgeId) && (y.ApplicationId == applicationId)),
+                It.Is<GetApplicationQuery>(y => y.PledgeId == pledgeId && y.ApplicationId == applicationId),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(applicationResult);
 
         // Act
         var actionResult = await _applicationsController.GetApplication(pledgeId, applicationId);
         var okObjectResult = actionResult as OkObjectResult;
-        var getApplicationResponse = okObjectResult.Value as GetApplicationResponse;
+        var getApplicationResponse = okObjectResult?.Value as GetApplicationResponse;
 
         // Assert
         actionResult.Should().NotBeNull();
         okObjectResult.Should().NotBeNull();
         getApplicationResponse.Should().NotBeNull();
-        okObjectResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
+        okObjectResult?.StatusCode.Should().Be((int)HttpStatusCode.OK);
     }
 
     [Test]
@@ -176,7 +176,7 @@ public class ApplicationsControllerTests
 
         _mediator
             .Setup(x => x.Send(
-                It.Is<GetApplicationQuery>(y => (y.PledgeId == pledgeId) && (y.ApplicationId == applicationId)),
+                It.Is<GetApplicationQuery>(y => y.PledgeId == pledgeId && y.ApplicationId == applicationId),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync((GetApplicationResult)null);
 
@@ -187,7 +187,7 @@ public class ApplicationsControllerTests
         // Assert
         actionResult.Should().NotBeNull();
         okObjectResult.Should().NotBeNull();
-        okObjectResult.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
+        okObjectResult?.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
     }
 
     [Test]
@@ -199,7 +199,7 @@ public class ApplicationsControllerTests
 
         _mediator
             .Setup(x => x.Send(
-                It.Is<GetApplicationQuery>(y => (y.PledgeId == pledgeId) && (y.ApplicationId == applicationId)),
+                It.Is<GetApplicationQuery>(y => y.PledgeId == pledgeId && y.ApplicationId == applicationId),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync((GetApplicationResult)null);
 
@@ -210,7 +210,7 @@ public class ApplicationsControllerTests
         // Assert
         actionResult.Should().NotBeNull();
         okObjectResult.Should().NotBeNull();
-        okObjectResult.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
+        okObjectResult?.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
     }
 
     [Test]
@@ -225,9 +225,9 @@ public class ApplicationsControllerTests
             await _applicationsController.GetApplications(new GetApplicationsRequest { PledgeId = _pledgeId });
         var result = actionResult as OkObjectResult;
         result.Should().NotBeNull();
-        var response = result.Value as GetApplicationsResponse;
+        var response = result?.Value as GetApplicationsResponse;
         response.Should().NotBeNull();
-        response.Applications.Count().Should().Be(1);
+        response?.Applications.Count().Should().Be(1);
     }
 
     [Test]
@@ -238,14 +238,13 @@ public class ApplicationsControllerTests
             .ReturnsAsync(new GetApplicationsResult
                 { Items = [new GetApplicationsResult.Application()] });
 
-        var actionResult =
-            await _applicationsController.GetApplications(new GetApplicationsRequest { AccountId = _accountId });
+        var actionResult = await _applicationsController.GetApplications(new GetApplicationsRequest { AccountId = _accountId });
         var result = actionResult as OkObjectResult;
         result.Should().NotBeNull();
-        var response = result.Value as GetApplicationsResponse;
+        var response = result?.Value as GetApplicationsResponse;
         response.Should().NotBeNull();
 
-        response.Applications.Count().Should().Be(1);
+        response?.Applications.Count().Should().Be(1);
     }
 
     [Test]
@@ -260,10 +259,10 @@ public class ApplicationsControllerTests
             { SenderAccountId = _senderAccountId });
         var result = actionResult as OkObjectResult;
         result.Should().NotBeNull();
-        var response = result.Value as GetApplicationsResponse;
+        var response = result?.Value as GetApplicationsResponse;
         response.Should().NotBeNull();
 
-        response.Applications.Count().Should().Be(1);
+        response?.Applications.Count().Should().Be(1);
     }
 
 
@@ -281,10 +280,10 @@ public class ApplicationsControllerTests
             { ApplicationStatusFilter = applicationStatusFilter });
         var result = actionResult as OkObjectResult;
         result.Should().NotBeNull();
-        var response = result.Value as GetApplicationsResponse;
+        var response = result?.Value as GetApplicationsResponse;
         response.Should().NotBeNull();
 
-        response.Applications.Count().Should().Be(1);
+        response?.Applications.Count().Should().Be(1);
     }
 
     [Test]
