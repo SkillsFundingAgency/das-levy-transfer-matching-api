@@ -11,9 +11,9 @@ public class WhenSendIsCalled
 
     private Fixture _fixture;
 
-    private record TestEvent : IDomainEvent { }
+    public class TestEvent : IDomainEvent;
 
-    private record TestEvent2 : IDomainEvent { }
+    public class TestEvent2 : IDomainEvent;
 
     [SetUp]
     public void Arrange()
