@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.ApplicationInsights;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
-using NServiceBus.ObjectBuilder.MSDependencyInjection;  
+using NServiceBus.ObjectBuilder.MSDependencyInjection;
 using SFA.DAS.Api.Common.AppStart;
 using SFA.DAS.Api.Common.Configuration;
 using SFA.DAS.Api.Common.Infrastructure;
@@ -47,7 +47,7 @@ public class Startup
             builder.AddFilter<ApplicationInsightsLoggerProvider>(string.Empty, LogLevel.Information);
             builder.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft", LogLevel.Information);
         });
-        
+
         services.AddConfigurationOptions(_configuration);
         var config = _configuration.GetSection<LevyTransferMatchingApi>();
 
@@ -83,9 +83,7 @@ public class Startup
         services.AddFluentValidationAutoValidation()
             .AddValidatorsFromAssemblyContaining<Startup>()
             .AddValidatorsFromAssemblyContaining<CreateAccountCommandValidator>();
-        
 
-        services.AddApplicationInsightsTelemetry();
         services.AddDasHealthChecks(config);
         services.AddServicesForLevyTransferMatching(_environment, config);
 
@@ -103,6 +101,8 @@ public class Startup
             .AddSwaggerGenNewtonsoftSupport();
 
         services.AddApiVersioning(opt => { opt.ApiVersionReader = new HeaderApiVersionReader("X-Version"); });
+        
+        services.AddApplicationInsightsTelemetry();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -149,7 +149,7 @@ public class Startup
     {
         var config = _configuration.GetSection<LevyTransferMatchingApi>();
         serviceProvider.StartNServiceBus(config);
-        
+
         // Replacing ClientOutboxPersisterV2 with a local version to fix unit of work issue due to propagating Task up the chain rather than awaiting on DB Command.
         // not clear why this fixes the issue. Attempted to make the change in SFA.DAS.Nservicebus.SqlServer however it conflicts when upgraded with SFA.DAS.UnitOfWork.Nservicebus
         // which would require upgrading to NET6 to resolve.

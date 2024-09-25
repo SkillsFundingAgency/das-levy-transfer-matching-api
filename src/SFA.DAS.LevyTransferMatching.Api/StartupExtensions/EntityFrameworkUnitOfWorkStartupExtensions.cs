@@ -25,7 +25,6 @@ public static class EntityFrameworkUnitOfWorkStartupExtensions
                 var synchronizedStorageSession = unitOfWorkContext.Get<SynchronizedStorageSession>();
                 var sqlStorageSession = synchronizedStorageSession.GetSqlStorageSession();
                 var optionsBuilder = new DbContextOptionsBuilder<LevyTransferMatchingDbContext>().UseSqlServer(sqlStorageSession.Connection);
-                //optionsBuilder.UseLoggerFactory(DebugLoggingFactory);
                 dbContext = new LevyTransferMatchingDbContext(sqlStorageSession.Connection, config, azureServiceTokenProvider, optionsBuilder.Options);
                 dbContext.Database.UseTransaction(sqlStorageSession.Transaction);
             }
