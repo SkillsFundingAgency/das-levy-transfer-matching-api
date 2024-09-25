@@ -58,7 +58,7 @@ public class MatchingCriteriaServiceTests
     public void GetMatchingCriteria_Location_Matches_If_Pledge_Location_Is_All_Of_England()
     {
         var result = _service.GetMatchingCriteria(_application, _pledge);
-        Assert.That(result.MatchLocation, Is.True);
+        result.MatchLocation.Should().BeTrue();
     }
 
     [Test]
@@ -66,7 +66,7 @@ public class MatchingCriteriaServiceTests
     {
         _application.Locations.Add(1);
         var result = _service.GetMatchingCriteria(_application, _pledge);
-        Assert.That(result.MatchLocation, Is.True);
+        result.MatchLocation.Should().BeTrue();
     }
 
     [Test]
@@ -76,7 +76,7 @@ public class MatchingCriteriaServiceTests
         _pledge = new Pledge(EmployerAccount.New(1, "Test"), new CreatePledgeProperties { Locations = pledgeLocations }, UserInfo.System);
 
         var result = _service.GetMatchingCriteria(_application, _pledge);
-        Assert.That(result.MatchLocation, Is.False);
+        result.MatchLocation.Should().BeFalse();
     }
 
     [TestCase(AllJobRoles, "Agriculture, environmental and animal care", true)]

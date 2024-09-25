@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
+﻿using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
 using KellermanSoftware.CompareNetObjects;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
@@ -61,6 +60,6 @@ public class CreatePledgeCommandHandlerTests : LevyTransferMatchingDbContextFixt
         var compareLogic = new CompareLogic(new ComparisonConfig { IgnoreCollectionOrder = true, IgnoreObjectTypes = true, IgnoreUnknownObjectTypes = true });
         var expectedLocations = command.Locations.Select(l => new PledgeLocation { Name = l.Name, Latitude = l.Geopoint[0], Longitude = l.Geopoint[1] }).ToList();
         var result = compareLogic.Compare(expectedLocations, inserted.Locations);
-        Assert.That(result.AreEqual, Is.True, result.DifferencesString);
+        result.AreEqual.Should().BeTrue(result.DifferencesString);
     }
 }

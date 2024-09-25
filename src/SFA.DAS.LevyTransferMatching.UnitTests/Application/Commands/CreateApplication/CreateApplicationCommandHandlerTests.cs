@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
+﻿using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;

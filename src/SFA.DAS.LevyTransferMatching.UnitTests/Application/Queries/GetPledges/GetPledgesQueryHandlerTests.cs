@@ -134,7 +134,7 @@ public class GetPledgesQueryHandlerTests : LevyTransferMatchingDbContextFixture
         // Assert
         for (int i = 0; i < actualPledges.Length; i++)
         {
-            Assert.That(actualPledges[i].Sectors.Any(sector.Contains), Is.True);
+            actualPledges[i].Sectors.Any(sector.Contains).Should().BeTrue();
         }
     }
 
@@ -154,6 +154,6 @@ public class GetPledgesQueryHandlerTests : LevyTransferMatchingDbContextFixture
         var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
 
         // Assert
-        Assert.That(result.Items.All(x => x.Status == pledgeStatusFilter), Is.True);
+        result.Items.All(x => x.Status == pledgeStatusFilter).Should().BeTrue();
     }
 }

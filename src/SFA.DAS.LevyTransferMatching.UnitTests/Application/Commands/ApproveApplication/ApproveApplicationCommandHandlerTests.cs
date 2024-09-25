@@ -58,6 +58,6 @@ public class ApproveApplicationCommandHandlerTests
         await _handler.Handle(_command, CancellationToken.None);
 
         var events = _application.FlushEvents();
-        Assert.That(events.Any(x => x is ApplicationApproved approvalEvent && approvalEvent.Amount == _application.GetCost()), Is.True);
+        events.Any(x => x is ApplicationApproved approvalEvent && approvalEvent.Amount == _application.GetCost()).Should().BeTrue();
     }
 }

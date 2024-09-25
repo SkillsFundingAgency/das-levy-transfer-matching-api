@@ -75,7 +75,7 @@ public class CostProjectionServiceTests
             }
             else
             {
-                Assert.That(_result.Exists(x => x.FinancialYear == financialYear), Is.False);
+                _result.Exists(x => x.FinancialYear == financialYear).Should().BeFalse();
             }
         }
     }

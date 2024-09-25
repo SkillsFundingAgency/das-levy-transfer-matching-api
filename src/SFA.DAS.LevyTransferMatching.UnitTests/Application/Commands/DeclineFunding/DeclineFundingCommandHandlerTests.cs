@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DeclineFunding;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
@@ -55,7 +54,7 @@ public class DeclineFundingCommandHandlerTests
         var result = await _declineFundingCommandHandler.Handle(_request, CancellationToken.None);
 
         // Assert
-        Assert.That(result.Updated, Is.True);
+        result.Updated.Should().BeTrue();
         _updatedApplication.Should().NotBeNull();
         Assert.That(_updatedApplication.Status, Is.EqualTo(ApplicationStatus.Declined));
     }
@@ -72,7 +71,7 @@ public class DeclineFundingCommandHandlerTests
         var result = await _declineFundingCommandHandler.Handle(_request, CancellationToken.None);
 
         // Assert
-        Assert.That(result.Updated, Is.False);
+        result.Updated.Should().BeFalse();
     }
 
     [Test]
@@ -83,6 +82,6 @@ public class DeclineFundingCommandHandlerTests
         await _declineFundingCommandHandler.Handle(_request, CancellationToken.None);
 
         var events = _application.FlushEvents();
-        Assert.That(events.Any(x => x is ApplicationFundingDeclined approvalEvent && approvalEvent.Amount == _application.GetCost()), Is.True);
+        events.Any(x => x is ApplicationFundingDeclined approvalEvent && approvalEvent.Amount == _application.GetCost()).Should().BeTrue();
     }
 }

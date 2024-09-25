@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using SFA.DAS.LevyTransferMatching.Abstractions.Events;
+﻿using SFA.DAS.LevyTransferMatching.Abstractions.Events;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Services.Events;
 

@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using SFA.DAS.LevyTransferMatching.Application.Queries.GetAccount;
+﻿using SFA.DAS.LevyTransferMatching.Application.Queries.GetAccount;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;
 
