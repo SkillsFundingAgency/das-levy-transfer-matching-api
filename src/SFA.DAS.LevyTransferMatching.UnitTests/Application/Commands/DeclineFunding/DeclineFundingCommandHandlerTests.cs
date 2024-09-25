@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DeclineFunding;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
@@ -55,7 +56,7 @@ public class DeclineFundingCommandHandlerTests
 
         // Assert
         Assert.That(result.Updated, Is.True);
-        Assert.That(_updatedApplication, Is.Not.Null);
+        _updatedApplication.Should().NotBeNull();
         Assert.That(_updatedApplication.Status, Is.EqualTo(ApplicationStatus.Declined));
     }
 

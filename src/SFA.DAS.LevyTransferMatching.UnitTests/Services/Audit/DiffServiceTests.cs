@@ -1,4 +1,5 @@
-﻿using SFA.DAS.LevyTransferMatching.Abstractions.Audit;
+﻿using FluentAssertions;
+using SFA.DAS.LevyTransferMatching.Abstractions.Audit;
 using SFA.DAS.LevyTransferMatching.Services.Audit;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Services.Audit;
@@ -43,7 +44,7 @@ public class DiffServiceTests
         foreach (var item in _fixture.UpdatedItem)
         {
             var resultItem = _fixture.Result.Single(x => x.PropertyName == item.Key);
-            Assert.That(resultItem.InitialValue, Is.Null);
+            resultItem.InitialValue.Should().BeNull();
             Assert.That(resultItem.UpdatedValue, Is.EqualTo(item.Value));
         }
     }
@@ -57,7 +58,7 @@ public class DiffServiceTests
         foreach (var item in _fixture.UpdatedItem)
         {
             var resultItem = _fixture.Result.Single(x => x.PropertyName == item.Key);
-            Assert.That(resultItem.InitialValue, Is.Null);
+            resultItem.InitialValue.Should().BeNull();
             Assert.That(resultItem.UpdatedValue, Is.EqualTo(item.Value));
         }
     }
@@ -71,7 +72,7 @@ public class DiffServiceTests
         foreach (var item in _fixture.InitialItem)
         {
             var resultItem = _fixture.Result.Single(x => x.PropertyName == item.Key);
-            Assert.That(resultItem.UpdatedValue, Is.Null);
+            resultItem.UpdatedValue.Should().BeNull();
             Assert.That(resultItem.InitialValue, Is.EqualTo(item.Value));
         }
     }

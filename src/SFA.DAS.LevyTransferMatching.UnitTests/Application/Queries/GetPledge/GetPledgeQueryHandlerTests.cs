@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
@@ -28,8 +29,8 @@ public class GetPledgeQueryHandlerTests : LevyTransferMatchingDbContextFixture
         var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
 
         // Assert
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result.DasAccountName, Is.Not.Null);
+        result.Should().NotBeNull();
+        result.DasAccountName.Should().NotBeNull();
         Assert.That(result.Id, Is.EqualTo(expectedPledge.Id));
     }
 
@@ -46,7 +47,7 @@ public class GetPledgeQueryHandlerTests : LevyTransferMatchingDbContextFixture
         var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
 
         // Assert
-        Assert.That(result, Is.Null);
+        result.Should().BeNull();
     }
 
     private async Task PopulateDbContext()

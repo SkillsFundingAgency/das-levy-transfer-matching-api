@@ -1,4 +1,5 @@
-﻿using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
+﻿using FluentAssertions;
+using SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
 using KellermanSoftware.CompareNetObjects;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
@@ -47,7 +48,7 @@ public class CreatePledgeCommandHandlerTests : LevyTransferMatchingDbContextFixt
 
         await _handler.Handle(command, CancellationToken.None);
 
-        Assert.That(inserted, Is.Not.Null);
+        inserted.Should().NotBeNull();
         Assert.That(inserted.EmployerAccount.Id, Is.EqualTo(command.AccountId));
         Assert.That(inserted.Amount, Is.EqualTo(command.Amount));
         Assert.That(inserted.RemainingAmount, Is.EqualTo(command.Amount));

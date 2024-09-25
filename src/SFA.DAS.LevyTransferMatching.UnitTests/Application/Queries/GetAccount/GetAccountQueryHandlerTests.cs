@@ -1,4 +1,5 @@
-﻿using SFA.DAS.LevyTransferMatching.Application.Queries.GetAccount;
+﻿using FluentAssertions;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetAccount;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;
 
@@ -38,6 +39,6 @@ public class GetAccountQueryHandlerTests : LevyTransferMatchingDbContextFixture
         var query = new GetAccountQuery { AccountId = _account.Id + 1 };
 
         var result = await handler.Handle(query, CancellationToken.None);
-        Assert.That(result, Is.Null);
+        result.Should().BeNull();
     }
 }

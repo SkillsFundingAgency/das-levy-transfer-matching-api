@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using FluentAssertions;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.LevyTransferMatching.Abstractions.CustomExceptions;
 using SFA.DAS.LevyTransferMatching.Api.Controllers;
@@ -53,9 +54,9 @@ public class PledgesControllerTests
         var createPledgeResponse = createdResult.Value as CreatePledgeResponse;
 
         // Assert
-        Assert.That(actionResult, Is.Not.Null);
-        Assert.That(createdResult, Is.Not.Null);
-        Assert.That(createPledgeResponse, Is.Not.Null);
+        actionResult.Should().NotBeNull();
+        createdResult.Should().NotBeNull();
+        createPledgeResponse.Should().NotBeNull();
         Assert.That(createdResult.StatusCode, Is.EqualTo((int)HttpStatusCode.Created));
         Assert.That($"/accounts/{accountId}/pledges/{result.Id}", Is.EqualTo(createdResult.Location));
         Assert.That(result.Id, Is.EqualTo(createPledgeResponse.Id));
@@ -98,9 +99,9 @@ public class PledgesControllerTests
         var getPledgeResponse = okObjectResult.Value as GetPledgeResponse;
 
         // Assert
-        Assert.That(actionResult, Is.Not.Null);
-        Assert.That(okObjectResult, Is.Not.Null);
-        Assert.That(getPledgeResponse, Is.Not.Null);
+        actionResult.Should().NotBeNull();
+        okObjectResult.Should().NotBeNull();
+        getPledgeResponse.Should().NotBeNull();
         Assert.That(okObjectResult.StatusCode, Is.EqualTo((int)HttpStatusCode.OK));
         Assert.That(pledgeResult.Id, Is.EqualTo(getPledgeResponse.Id));
     }
@@ -120,8 +121,8 @@ public class PledgesControllerTests
         var notFoundResult = actionResult as NotFoundResult;
 
         // Assert
-        Assert.That(actionResult, Is.Not.Null);
-        Assert.That(notFoundResult, Is.Not.Null);
+        actionResult.Should().NotBeNull();
+        notFoundResult.Should().NotBeNull();
         Assert.That(notFoundResult.StatusCode, Is.EqualTo((int)HttpStatusCode.NotFound));
     }
 
@@ -166,8 +167,8 @@ public class PledgesControllerTests
         var actionResult = await _pledgesController.ClosePledge(pledgeId, request);
         var okResult = actionResult as OkResult;
 
-        Assert.That(actionResult, Is.Not.Null);
-        Assert.That(okResult, Is.Not.Null);
+        actionResult.Should().NotBeNull();
+        okResult.Should().NotBeNull();
         Assert.That(okResult.StatusCode, Is.EqualTo((int)HttpStatusCode.OK));
     }
 
@@ -209,9 +210,9 @@ public class PledgesControllerTests
         var response = okObjectResult.Value as GetPledgesResponse;
 
         // Assert
-        Assert.That(actionResult, Is.Not.Null);
-        Assert.That(okObjectResult, Is.Not.Null);
-        Assert.That(response, Is.Not.Null);
+        actionResult.Should().NotBeNull();
+        okObjectResult.Should().NotBeNull();
+        response.Should().NotBeNull();
         Assert.That(okObjectResult.StatusCode, Is.EqualTo((int)HttpStatusCode.OK));
 
         Assert.That(response.Pledges.Count(), Is.EqualTo(expectedPledges.Count()));
@@ -242,9 +243,9 @@ public class PledgesControllerTests
         var response = okObjectResult.Value as GetPledgesResponse;
 
         // Assert
-        Assert.That(actionResult, Is.Not.Null);
-        Assert.That(okObjectResult, Is.Not.Null);
-        Assert.That(response, Is.Not.Null);
+        actionResult.Should().NotBeNull();
+        okObjectResult.Should().NotBeNull();
+        response.Should().NotBeNull();
         Assert.That(okObjectResult.StatusCode, Is.EqualTo((int)HttpStatusCode.OK));
 
         Assert.That(response.Pledges.Count(), Is.EqualTo(expectedPledges.Count()));

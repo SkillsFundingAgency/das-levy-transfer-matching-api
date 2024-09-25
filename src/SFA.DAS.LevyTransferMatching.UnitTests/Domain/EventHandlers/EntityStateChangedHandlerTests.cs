@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using SFA.DAS.LevyTransferMatching.Abstractions.Audit;
 using SFA.DAS.LevyTransferMatching.Domain.EventHandlers;
@@ -63,6 +64,6 @@ public class EntityStateChangedHandlerTests : LevyTransferMatchingDbContextFixtu
 
         await DbContext.SaveChangesAsync();
         var audit = await DbContext.Audits.FirstOrDefaultAsync();
-        Assert.That(audit, Is.Null);
+        audit.Should().BeNull();
     }
 }

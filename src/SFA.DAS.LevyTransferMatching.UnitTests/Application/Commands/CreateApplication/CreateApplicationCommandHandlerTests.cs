@@ -1,4 +1,5 @@
-﻿using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
+﻿using FluentAssertions;
+using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.Repositories;
@@ -77,7 +78,7 @@ public class CreateApplicationCommandHandlerTests : LevyTransferMatchingDbContex
 
         await _handler.Handle(command, CancellationToken.None);
 
-        Assert.That(_inserted, Is.Not.Null);
+        _inserted.Should().NotBeNull();
         Assert.That(_inserted.Pledge.Id, Is.EqualTo(command.PledgeId));
         Assert.That(_inserted.EmployerAccount.Id, Is.EqualTo(command.EmployerAccountId));
         Assert.That(_inserted.Details, Is.EqualTo(command.Details));

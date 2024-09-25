@@ -1,4 +1,5 @@
-﻿using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
+﻿using FluentAssertions;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 using SFA.DAS.LevyTransferMatching.Services;
@@ -48,7 +49,7 @@ public class GetApplicationQueryHandlerTests : LevyTransferMatchingDbContextFixt
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.That(result, Is.Not.Null);
+        result.Should().NotBeNull();
     }
 
     [Test]
@@ -81,7 +82,7 @@ public class GetApplicationQueryHandlerTests : LevyTransferMatchingDbContextFixt
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.That(result, Is.Not.Null);
+        result.Should().NotBeNull();
     }
 
     [Test]
@@ -100,7 +101,7 @@ public class GetApplicationQueryHandlerTests : LevyTransferMatchingDbContextFixt
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.That(result, Is.Null);
+        result.Should().BeNull();
     }
 
     [Test]
@@ -121,7 +122,7 @@ public class GetApplicationQueryHandlerTests : LevyTransferMatchingDbContextFixt
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.That(result, Is.Null);
+        result.Should().BeNull();
     }
 
     [Test]
