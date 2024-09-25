@@ -6,23 +6,15 @@ using SFA.DAS.NServiceBus.Services;
 
 namespace SFA.DAS.LevyTransferMatching.Domain.EventHandlers;
 
-public class PledgeCreditedEventHandler : IDomainEventHandler<PledgeCredited>
+public class PledgeCreditedEventHandler(IEventPublisher eventPublisher, IPledgeRepository pledgeRepository)
+    : IDomainEventHandler<PledgeCredited>
 {
-    private readonly IEventPublisher _eventPublisher;
-    private readonly IPledgeRepository _pledgeRepository;
-
-    public PledgeCreditedEventHandler(IEventPublisher eventPublisher, IPledgeRepository pledgeRepository)
-    {
-        _eventPublisher = eventPublisher;
-        _pledgeRepository = pledgeRepository;
-    }
-
     public async Task Handle(PledgeCredited @event, CancellationToken cancellationToken = default)
     {
-        var pledge = await _pledgeRepository.Get(@event.PledgeId);
+        var pledge = await pledgeRepository.Get(@event.PledgeId);
 
         var senderId = pledge.EmployerAccountId;
 
-        await _eventPublisher.Publish(new PledgeCreditedEvent(@event.PledgeId, senderId));
+        await eventPublisher.Publish(new PledgeCreditedEvent(@event.PledgeId, senderId));
     }
 }

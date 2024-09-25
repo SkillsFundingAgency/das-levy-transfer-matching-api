@@ -2,16 +2,9 @@
 
 namespace SFA.DAS.LevyTransferMatching.Domain.Events;
 
-public class ApplicationWithdrawnAfterAcceptance : IDomainEvent
+public class ApplicationWithdrawnAfterAcceptance(int applicationId, int pledgeId, int amount) : IDomainEvent
 {
-    public ApplicationWithdrawnAfterAcceptance(int applicationId, int pledgeId, int amount)
-    {
-        ApplicationId = applicationId;
-        PledgeId = pledgeId;
-        Amount = amount;
-    }
-
-    public int ApplicationId { get; }
-    public int PledgeId { get; }
-    public int Amount { get; }
+    public int ApplicationId { get; } = applicationId;
+    public int PledgeId { get; } = pledgeId;
+    public int Amount { get; } = amount;
 }

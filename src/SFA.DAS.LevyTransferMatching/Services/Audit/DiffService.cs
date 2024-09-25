@@ -40,10 +40,9 @@ public class DiffService : IDiffService
     {
         var result = new List<DiffItem>();
 
-        foreach (var item in initial)
+        foreach (var (key, initialValue) in initial)
         {
-            var initialValue = item.Value;
-            var updatedValue = updated == null ? null : updated.TryGetValue(item.Key, out var value) ? value : null;
+            var updatedValue = updated?.GetValueOrDefault(key);
 
             if (initialValue == null)
             {
@@ -51,7 +50,7 @@ public class DiffService : IDiffService
                 {
                     result.Add(new DiffItem
                     {
-                        PropertyName = item.Key,
+                        PropertyName = key,
                         InitialValue = null,
                         UpdatedValue = updatedValue
                     });
@@ -64,7 +63,7 @@ public class DiffService : IDiffService
             {
                 result.Add(new DiffItem
                 {
-                    PropertyName = item.Key,
+                    PropertyName = key,
                     InitialValue = initialValue,
                     UpdatedValue = null
                 });
@@ -75,7 +74,7 @@ public class DiffService : IDiffService
             {
                 result.Add(new DiffItem
                 {
-                    PropertyName = item.Key,
+                    PropertyName = key,
                     InitialValue = initialValue,
                     UpdatedValue = updatedValue
                 });
