@@ -52,7 +52,7 @@ public class GetPledgesQueryHandlerTests : LevyTransferMatchingDbContextFixture
     {
         var getPledgesQueryHandler = new GetPledgesQueryHandler(DbContext);
 
-        var getPledgesQuery = new GetPledgesQuery()
+        var getPledgesQuery = new GetPledgesQuery
         {
             AccountId = null,
         };
@@ -80,7 +80,7 @@ public class GetPledgesQueryHandlerTests : LevyTransferMatchingDbContextFixture
     {
         var getPledgesQueryHandler = new GetPledgesQueryHandler(DbContext);
 
-        var getPledgesQuery = new GetPledgesQuery()
+        var getPledgesQuery = new GetPledgesQuery
         {
             AccountId = null,
             PageSize = pageSize
@@ -90,7 +90,7 @@ public class GetPledgesQueryHandlerTests : LevyTransferMatchingDbContextFixture
 
         result.TotalItems.Should().Be(10);
         result.TotalPages.Should().Be(expectedPages);
-        result.Items.Count.Should().Be(pageSize ?? int.MaxValue);
+        result.Items.Count.Should().Be(pageSize ?? 10);
     }
 
     [Test]
@@ -100,7 +100,7 @@ public class GetPledgesQueryHandlerTests : LevyTransferMatchingDbContextFixture
 
         var getPledgesQueryHandler = new GetPledgesQueryHandler(DbContext);
 
-        var getPledgesQuery = new GetPledgesQuery()
+        var getPledgesQuery = new GetPledgesQuery
         {
             AccountId = firstAccount.Id,
         };
@@ -113,7 +113,7 @@ public class GetPledgesQueryHandlerTests : LevyTransferMatchingDbContextFixture
         // Assert
         var expectedPledgeRecords = await DbContext.Pledges.Where(x => x.EmployerAccount.Id == firstAccount.Id).ToListAsync();
 
-        Assert.That(actualPledges, Has.Length.EqualTo(expectedPledgeRecords.Count));
+        actualPledges.Length.Should().Be(expectedPledgeRecords.Count);
     }
 
     [TestCaseSource(nameof(SectorLists))]
@@ -121,7 +121,7 @@ public class GetPledgesQueryHandlerTests : LevyTransferMatchingDbContextFixture
     {
         // Arrange
         var getPledgesQueryHandler = new GetPledgesQueryHandler(DbContext);
-        var getPledgesQuery = new GetPledgesQuery()
+        var getPledgesQuery = new GetPledgesQuery
         {
             AccountId = null,
             Sectors = sector
@@ -132,9 +132,9 @@ public class GetPledgesQueryHandlerTests : LevyTransferMatchingDbContextFixture
         var actualPledges = result.Items.ToArray();
 
         // Assert
-        for (int i = 0; i < actualPledges.Length; i++)
+        for (var index = 0; index < actualPledges.Length; index++)
         {
-            actualPledges[i].Sectors.Any(sector.Contains).Should().BeTrue();
+            actualPledges[index].Sectors.Any(sector.Contains).Should().BeTrue();
         }
     }
 
@@ -144,7 +144,7 @@ public class GetPledgesQueryHandlerTests : LevyTransferMatchingDbContextFixture
     {
         // Arrange
         var getPledgesQueryHandler = new GetPledgesQueryHandler(DbContext);
-        var getPledgesQuery = new GetPledgesQuery()
+        var getPledgesQuery = new GetPledgesQuery
         {
             AccountId = null,
             PledgeStatusFilter = pledgeStatusFilter

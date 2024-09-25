@@ -19,7 +19,7 @@ public class GetPledgeQueryHandlerTests : LevyTransferMatchingDbContextFixture
 
         var getPledgesQueryHandler = new GetPledgeQueryHandler(DbContext);
 
-        var getPledgesQuery = new GetPledgeQuery()
+        var getPledgesQuery = new GetPledgeQuery
         {
             Id = expectedPledge.Id,
         };

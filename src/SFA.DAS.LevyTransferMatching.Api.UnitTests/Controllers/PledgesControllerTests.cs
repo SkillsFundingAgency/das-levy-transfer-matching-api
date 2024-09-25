@@ -75,11 +75,8 @@ public class PledgesControllerTests
             .Throws(validationException);
 
         // Assert
-        Assert.ThrowsAsync<ValidationException>(async () =>
-        {
-            // Act
-            await _pledgesController.CreatePledge(accountId, request);
-        });
+        var action = () => _pledgesController.CreatePledge(accountId, request);
+        action.Should().ThrowAsync<ValidationException>();
     }
 
     [Test]

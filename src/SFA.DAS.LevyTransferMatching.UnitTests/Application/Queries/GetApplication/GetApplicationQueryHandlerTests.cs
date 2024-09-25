@@ -39,7 +39,7 @@ public class GetApplicationQueryHandlerTests : LevyTransferMatchingDbContextFixt
         var handler = new GetApplicationQueryHandler(DbContext);
 
         var applicationId = application.Id;
-        var request = new GetApplicationQuery()
+        var request = new GetApplicationQuery
         {
             ApplicationId = applicationId,
         };
@@ -71,7 +71,7 @@ public class GetApplicationQueryHandlerTests : LevyTransferMatchingDbContextFixt
 
         var applicationId = application.Id;
         var pledgeId = pledge.Id;
-        var request = new GetApplicationQuery()
+        var request = new GetApplicationQuery
         {
             ApplicationId = applicationId,
             PledgeId = pledgeId,
@@ -91,7 +91,7 @@ public class GetApplicationQueryHandlerTests : LevyTransferMatchingDbContextFixt
         var handler = new GetApplicationQueryHandler(DbContext);
 
         var applicationId = _fixture.Create<int>();
-        var request = new GetApplicationQuery()
+        var request = new GetApplicationQuery
         {
             ApplicationId = applicationId,
         };
@@ -111,7 +111,7 @@ public class GetApplicationQueryHandlerTests : LevyTransferMatchingDbContextFixt
 
         var applicationId = _fixture.Create<int>();
         var pledgeId = _fixture.Create<int>();
-        var request = new GetApplicationQuery()
+        var request = new GetApplicationQuery
         {
             ApplicationId = applicationId,
             PledgeId = pledgeId,
@@ -143,7 +143,7 @@ public class GetApplicationQueryHandlerTests : LevyTransferMatchingDbContextFixt
         var handler = new GetApplicationQueryHandler(DbContext);
 
         var applicationId = application.Id;
-        var request = new GetApplicationQuery()
+        var request = new GetApplicationQuery
         {
             ApplicationId = applicationId,
         };

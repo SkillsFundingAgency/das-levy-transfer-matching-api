@@ -18,7 +18,7 @@ public class DiffServiceTests
     public void IdenticalItemsProducesEmptyDiff()
     {
         _fixture.WithIdenticalItems().GenerateDiff();
-        Assert.That(_fixture.Result, Is.Empty);
+        _fixture.Result.Should().BeEmpty();
     }
 
     [Test]

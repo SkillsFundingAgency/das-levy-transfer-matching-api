@@ -88,9 +88,9 @@ public class WhenSendIsCalled
             .Returns(new List<IDomainEventHandler<TestEvent2>>());
 
         // Act
-        await _domainEventDispatcher.Send(domainEvent);
+        var action = () => _domainEventDispatcher.Send(domainEvent);
 
         // Assert
-        Assert.Pass();
+        await action.Should().NotThrowAsync();
     }
 }
