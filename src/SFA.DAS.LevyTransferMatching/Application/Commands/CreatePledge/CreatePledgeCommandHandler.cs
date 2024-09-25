@@ -5,21 +5,14 @@ using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreatePledge;
 
-public class CreatePledgeCommandHandler : IRequestHandler<CreatePledgeCommand, CreatePledgeResult>
+public class CreatePledgeCommandHandler(
+    IEmployerAccountRepository employerAccountRepository,
+    IPledgeRepository pledgeRepository)
+    : IRequestHandler<CreatePledgeCommand, CreatePledgeResult>
 {
-    private readonly IEmployerAccountRepository _employerAccountRepository;
-    private readonly IPledgeRepository _pledgeRepository;
-
-    public CreatePledgeCommandHandler(IEmployerAccountRepository employerAccountRepository,
-        IPledgeRepository pledgeRepository)
-    {
-        _employerAccountRepository = employerAccountRepository;
-        _pledgeRepository = pledgeRepository;
-    }
-
     public async Task<CreatePledgeResult> Handle(CreatePledgeCommand request, CancellationToken cancellationToken)
     {
-        var employerAccount = await _employerAccountRepository.Get(request.AccountId);
+        var employerAccount = await employerAccountRepository.Get(request.AccountId);
 
         var properties = new CreatePledgeProperties
         {
@@ -42,7 +35,7 @@ public class CreatePledgeCommandHandler : IRequestHandler<CreatePledgeCommand, C
 
         var pledge = employerAccount.CreatePledge(properties, userInfo);
 
-        await _pledgeRepository.Add(pledge);
+        await pledgeRepository.Add(pledge);
 
         return new CreatePledgeResult
         {

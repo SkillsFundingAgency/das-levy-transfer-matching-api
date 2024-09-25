@@ -2,12 +2,7 @@
 
 namespace SFA.DAS.LevyTransferMatching.Data.Models;
 
-public class ApplicationLocation : Entity<int>
+public class ApplicationLocation(int pledgeLocationId) : Entity<int>
 {
-    public ApplicationLocation(int pledgeLocationId)
-    {
-        PledgeLocationId = pledgeLocationId;
-    }
-
-    public int PledgeLocationId { get; set; }
+    public int PledgeLocationId { get; set; } = pledgeLocationId;
 }

@@ -5,22 +5,14 @@ using SFA.DAS.LevyTransferMatching.Services;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
 
-public class GetApplicationsQueryHandler : IRequestHandler<GetApplicationsQuery, GetApplicationsResult>
+public class GetApplicationsQueryHandler(LevyTransferMatchingDbContext dbContext, IDateTimeService dateTimeService)
+    : IRequestHandler<GetApplicationsQuery, GetApplicationsResult>
 {
-    private readonly LevyTransferMatchingDbContext _dbContext;
-    private readonly IDateTimeService _dateTimeService;
-
-    public GetApplicationsQueryHandler(LevyTransferMatchingDbContext dbContext, IDateTimeService dateTimeService)
-    {
-        _dbContext = dbContext;
-        _dateTimeService = dateTimeService;
-    }
-
     public async Task<GetApplicationsResult> Handle(GetApplicationsQuery request, CancellationToken cancellationToken)
     {
-        var now = _dateTimeService.UtcNow;
+        var now = dateTimeService.UtcNow;
 
-        var applicationsQuery = _dbContext.Applications
+        var applicationsQuery = dbContext.Applications
             .Include(x => x.ApplicationCostProjections)
             .Include(x => x.StatusHistory)
             .AsQueryable()
@@ -60,16 +52,26 @@ public class GetApplicationsQueryHandler : IRequestHandler<GetApplicationsQuery,
                 CreatedOn = x.CreatedOn,
                 Status = x.Status,
                 IsNamePublic = x.Pledge.IsNamePublic,
+
                 Locations = x.ApplicationLocations.Select(location =>
                     new GetApplicationsResult.Application.ApplicationLocation
-                    { Id = location.Id, PledgeLocationId = location.PledgeLocationId }).ToList(),
+                    {
+                        Id = location.Id,
+                        PledgeLocationId = location.PledgeLocationId
+                    }).ToList(),
+
                 AdditionalLocations = x.AdditionalLocation,
                 SpecificLocation = x.SpecificLocation,
                 SenderEmployerAccountId = x.Pledge.EmployerAccount.Id,
                 SenderEmployerAccountName = x.Pledge.EmployerAccount.Name,
+
                 CostProjections = x.ApplicationCostProjections.OrderBy(p => p.FinancialYear).Select(p =>
                     new GetApplicationsResult.Application.CostProjection
-                    { FinancialYear = p.FinancialYear, Amount = p.Amount }).ToList(),
+                    {
+                        FinancialYear = p.FinancialYear,
+                        Amount = p.Amount
+                    }).ToList(),
+
                 MatchPercentage = x.MatchPercentage,
                 MatchSector = x.MatchSector,
                 MatchJobRole = x.MatchJobRole,

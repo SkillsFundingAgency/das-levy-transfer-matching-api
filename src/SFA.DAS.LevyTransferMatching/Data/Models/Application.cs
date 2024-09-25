@@ -11,9 +11,9 @@ public class Application : AggregateRoot<int>
 {
     protected Application()
     {
-        _statusHistory = new List<ApplicationStatusHistory>();
-        _applicationLocations = new List<ApplicationLocation>();
-        _applicationCostProjections = new List<ApplicationCostProjection>();
+        _statusHistory = [];
+        _applicationLocations = [];
+        _applicationCostProjections = [];
     }
 
     public Application(Pledge pledge, EmployerAccount account, CreateApplicationProperties properties, UserInfo userInfo) : this()

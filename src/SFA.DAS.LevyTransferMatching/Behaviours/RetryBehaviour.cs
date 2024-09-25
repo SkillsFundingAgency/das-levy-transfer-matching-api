@@ -7,22 +7,19 @@ namespace SFA.DAS.LevyTransferMatching.Behaviours;
 
 public class RetryBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
 {
-    private readonly ILogger<UnitOfWorkBehaviour<TRequest, TResponse>> _logger;
-    public readonly AsyncRetryPolicy ConcurrencyFailureRetryPolicy;
+    private readonly AsyncRetryPolicy _concurrencyFailureRetryPolicy;
 
     public RetryBehaviour(ILogger<UnitOfWorkBehaviour<TRequest, TResponse>> logger)
     {
-        _logger = logger;
-
-        ConcurrencyFailureRetryPolicy = Policy
+        _concurrencyFailureRetryPolicy = Policy
             .Handle<DbUpdateConcurrencyException>()
             .WaitAndRetryAsync(3,
-                retryAttempt => TimeSpan.FromMilliseconds(100),
-                (exception, span) => _logger.LogInformation(exception, "Retrying following DbUpdateConcurrencyException"));
+                _ => TimeSpan.FromMilliseconds(100),
+                (exception, _) => logger.LogInformation(exception, "Retrying following DbUpdateConcurrencyException"));
     }
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        return await ConcurrencyFailureRetryPolicy.ExecuteAsync(async () => await next());
+        return await _concurrencyFailureRetryPolicy.ExecuteAsync(async () => await next());
     }
 }

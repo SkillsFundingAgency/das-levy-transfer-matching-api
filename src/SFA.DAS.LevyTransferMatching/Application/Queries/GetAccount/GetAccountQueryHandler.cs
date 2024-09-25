@@ -3,22 +3,18 @@ using SFA.DAS.LevyTransferMatching.Data;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetAccount;
 
-public class GetAccountQueryHandler : IRequestHandler<GetAccountQuery, GetAccountQueryResult>
+public class GetAccountQueryHandler(LevyTransferMatchingDbContext dbContext) : IRequestHandler<GetAccountQuery, GetAccountQueryResult>
 {
-    private readonly LevyTransferMatchingDbContext _dbContext;
-
-    public GetAccountQueryHandler(LevyTransferMatchingDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
     public async Task<GetAccountQueryResult> Handle(GetAccountQuery request, CancellationToken cancellationToken)
     {
-        var account = await _dbContext.EmployerAccounts
+        var account = await dbContext.EmployerAccounts
             .SingleOrDefaultAsync(x => x.Id == request.AccountId,
                 cancellationToken: cancellationToken);
 
-        if (account == null) return null;
+        if (account == null)
+        {
+            return null;
+        }
 
         return new GetAccountQueryResult
         {

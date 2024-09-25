@@ -2,22 +2,21 @@
 
 namespace SFA.DAS.LevyTransferMatching.Data.Repositories;
 
-public class EmployerAccountRepository : IEmployerAccountRepository
+public interface IEmployerAccountRepository
 {
-    private readonly LevyTransferMatchingDbContext _dbContext;
+    Task Add(EmployerAccount account);
+    Task<EmployerAccount> Get(long accountId);
+}
 
-    public EmployerAccountRepository(LevyTransferMatchingDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
+public class EmployerAccountRepository(LevyTransferMatchingDbContext dbContext) : IEmployerAccountRepository
+{
     public async Task Add(EmployerAccount account)
     {
-        await _dbContext.AddAsync(account);
+        await dbContext.AddAsync(account);
     }
 
     public async Task<EmployerAccount> Get(long accountId)
     {
-        return await _dbContext.EmployerAccounts.FindAsync(accountId);
+        return await dbContext.EmployerAccounts.FindAsync(accountId);
     }
 }

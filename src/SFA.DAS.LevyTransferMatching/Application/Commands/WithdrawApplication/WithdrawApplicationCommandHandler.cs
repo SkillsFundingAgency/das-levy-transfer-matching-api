@@ -3,21 +3,14 @@ using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
 
-public class WithdrawApplicationCommandHandler : IRequestHandler<WithdrawApplicationCommand>
+public class WithdrawApplicationCommandHandler(IApplicationRepository applicationRepository) : IRequestHandler<WithdrawApplicationCommand>
 {
-    private readonly IApplicationRepository _applicationRepository;
-
-    public WithdrawApplicationCommandHandler(IApplicationRepository applicationRepository)
-    {
-        _applicationRepository = applicationRepository;
-    }
-
     public async Task Handle(WithdrawApplicationCommand request, CancellationToken cancellationToken)
     {
-        var application = await _applicationRepository.Get(request.ApplicationId, null, request.AccountId);
+        var application = await applicationRepository.Get(request.ApplicationId, null, request.AccountId);
 
         application.Withdraw(new UserInfo(request.UserId, request.UserDisplayName));
 
-        await _applicationRepository.Update(application);
+        await applicationRepository.Update(application);
     }
 }

@@ -1,13 +1,7 @@
 ﻿namespace SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 
-public class CostProjection
+public class CostProjection(string financialYear, int amount)
 {
-    public CostProjection(string financialYear, int amount)
-    {
-        FinancialYear = financialYear;
-        Amount = amount;
-    }
-
-    public string FinancialYear { get; }
-    public int Amount { get; }
+    public string FinancialYear { get; } = financialYear;
+    public int Amount { get; } = amount;
 }
