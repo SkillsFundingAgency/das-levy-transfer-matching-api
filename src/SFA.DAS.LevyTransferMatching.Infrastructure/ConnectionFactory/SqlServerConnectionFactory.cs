@@ -1,6 +1,5 @@
 ﻿using System.Data.Common;
 using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 
 namespace SFA.DAS.LevyTransferMatching.Infrastructure.ConnectionFactory;
 
