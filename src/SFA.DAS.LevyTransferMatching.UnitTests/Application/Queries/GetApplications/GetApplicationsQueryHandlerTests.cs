@@ -42,7 +42,7 @@ public class GetApplicationsQueryHandlerTests : LevyTransferMatchingDbContextFix
         for (var index = 0; index < 20; index++)
         {
             var properties = _fixture.Build<CreateApplicationProperties>()
-                .With(x => x.CostProjections, () => new List<CostProjection>{ new CostProjection(DateTime.UtcNow.GetFinancialYear(), _fixture.Create<int>())})
+                .With(x => x.CostProjections, () => new List<CostProjection>{ new(DateTime.UtcNow.GetFinancialYear(), _fixture.Create<int>())})
                 .With(x => x.Locations, () => new List<int>())
                 .With(x => x.EmailAddresses, () => new List<string>{"test@test.com"})
                 .Create();
@@ -65,7 +65,7 @@ public class GetApplicationsQueryHandlerTests : LevyTransferMatchingDbContextFix
         var request = new GetApplicationsQuery();
         var result = await _handler.Handle(request, CancellationToken.None);
 
-        Assert.That(result.TotalItems, Is.EqualTo(20));
+        result.TotalItems.Should().Be(20);
     }
 
     [Test]
@@ -85,7 +85,7 @@ public class GetApplicationsQueryHandlerTests : LevyTransferMatchingDbContextFix
         {
             var actual = result.Items.Single(x => x.Id == expected.Id);
 
-            Assert.That(actual.Amount, Is.EqualTo(expected.GetCost()));
+            actual.Amount.Should().Be(expected.GetCost());
         }
     }
 
@@ -100,9 +100,9 @@ public class GetApplicationsQueryHandlerTests : LevyTransferMatchingDbContextFix
         };
         var result = await _handler.Handle(request, CancellationToken.None);
 
-        Assert.That(result.TotalItems, Is.EqualTo(20));
-        Assert.That(result.TotalPages, Is.EqualTo(expectedPages));
-        Assert.That(result.Items, Has.Count.LessThanOrEqualTo(pageSize ?? int.MaxValue));
+        result.TotalItems.Should().Be(20);
+        result.TotalPages.Should().Be(expectedPages);
+        result.Items.Count.Should().BeLessThanOrEqualTo(pageSize ?? int.MaxValue);
     }
 
     [Test]
@@ -190,11 +190,11 @@ public class GetApplicationsQueryHandlerTests : LevyTransferMatchingDbContextFix
 
     private static void AssertCorrectOrder(IReadOnlyList<int> expected, IReadOnlyList<int> actual)
     {
-        Assert.That(actual, Has.Count.EqualTo(expected.Count));
+        actual.Count.Should().Be(expected.Count);
 
         for (var index = 0; index < expected.Count; index++)
         {
-            Assert.That(actual[index], Is.EqualTo(expected[index]));
+            actual[index].Should().Be(expected[index]);
         }
     }
 }

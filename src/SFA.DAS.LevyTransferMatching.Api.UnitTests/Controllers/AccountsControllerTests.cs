@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.LevyTransferMatching.Api.Controllers;
 using SFA.DAS.LevyTransferMatching.Api.Models.CreateAccount;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetAccount;
@@ -49,10 +50,10 @@ public class AccountsControllerTests
         var actionResult = await _controller.CreateAccount(_apiRequest);
 
         var createdResult = actionResult as CreatedResult;
-        Assert.That(actionResult, Is.Not.Null);
-        Assert.That(createdResult, Is.Not.Null);
-        Assert.That(createdResult.StatusCode, Is.EqualTo((int)HttpStatusCode.Created));
-        Assert.That($"/accounts/{_apiRequest.AccountId}", Is.EqualTo(createdResult.Location));
+        actionResult.Should().NotBeNull();
+        createdResult.Should().NotBeNull();
+        createdResult?.StatusCode.Should().Be((int)HttpStatusCode.Created);
+        $"/accounts/{_apiRequest.AccountId}".Should().Be(createdResult?.Location);
     }
 
     [Test]
@@ -63,9 +64,9 @@ public class AccountsControllerTests
         var actionResult = await _controller.CreateAccount(_apiRequest);
 
         var okResult = actionResult as OkResult;
-        Assert.That(actionResult, Is.Not.Null);
-        Assert.That(okResult, Is.Not.Null);
-        Assert.That(okResult.StatusCode, Is.EqualTo((int)HttpStatusCode.OK));
+        actionResult.Should().NotBeNull();
+        okResult.Should().NotBeNull();
+        okResult?.StatusCode.Should().Be((int)HttpStatusCode.OK);
     }
 
 
@@ -76,10 +77,10 @@ public class AccountsControllerTests
 
         var result = actionResult as ObjectResult;
 
-        Assert.That(actionResult, Is.Not.Null);
-        Assert.That(result, Is.Not.Null);
-        var resultValue = result.Value as GetAccountResponse;
-        Assert.That(resultValue.AccountId, Is.EqualTo(_getAccountQueryResult.AccountId));
-        Assert.That(resultValue.AccountName, Is.EqualTo(_getAccountQueryResult.AccountName));
+        actionResult.Should().NotBeNull();
+        result.Should().NotBeNull();
+        var resultValue = result?.Value as GetAccountResponse;
+        resultValue?.AccountId.Should().Be(_getAccountQueryResult.AccountId);
+        resultValue?.AccountName.Should().Be(_getAccountQueryResult.AccountName);
     }
 }

@@ -3,18 +3,11 @@ using SFA.DAS.LevyTransferMatching.Abstractions.Events;
 
 namespace SFA.DAS.LevyTransferMatching.Services.Events;
 
-public class DomainEventDispatcher : IDomainEventDispatcher
+public class DomainEventDispatcher(IServiceProvider serviceProvider) : IDomainEventDispatcher
 {
-    private readonly IServiceProvider _serviceProvider;
-
-    public DomainEventDispatcher(IServiceProvider serviceProvider)
-    {
-        _serviceProvider = serviceProvider;
-    }
-
     public async Task Send<TDomainEvent>(TDomainEvent @event, CancellationToken cancellationToken = default) where TDomainEvent : IDomainEvent
     {
-        var handlers = _serviceProvider.GetServices<IDomainEventHandler<TDomainEvent>>();
+        var handlers = serviceProvider.GetServices<IDomainEventHandler<TDomainEvent>>();
 
         foreach (var handler in handlers)
         {

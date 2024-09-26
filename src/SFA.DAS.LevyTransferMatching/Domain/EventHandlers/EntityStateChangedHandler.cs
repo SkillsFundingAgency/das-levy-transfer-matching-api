@@ -7,17 +7,9 @@ using SFA.DAS.LevyTransferMatching.Domain.Events;
 
 namespace SFA.DAS.LevyTransferMatching.Domain.EventHandlers;
 
-public class EntityStateChangedHandler : IDomainEventHandler<EntityStateChanged>
+public class EntityStateChangedHandler(LevyTransferMatchingDbContext dbContext, IDiffService diffService)
+    : IDomainEventHandler<EntityStateChanged>
 {
-    private readonly LevyTransferMatchingDbContext _dbContext;
-    private readonly IDiffService _diffService;
-
-    public EntityStateChangedHandler(LevyTransferMatchingDbContext dbContext, IDiffService diffService)
-    {
-        _dbContext = dbContext;
-        _diffService = diffService;
-    }
-
     public async Task Handle(EntityStateChanged @event, CancellationToken cancellationToken = default)
     {
         var initialState = @event.InitialState == null
@@ -28,7 +20,7 @@ public class EntityStateChangedHandler : IDomainEventHandler<EntityStateChanged>
             ? null
             : JsonConvert.DeserializeObject<Dictionary<string, object>>(@event.UpdatedState);
 
-        var diff = _diffService.GenerateDiff(initialState, updatedState);
+        var diff = diffService.GenerateDiff(initialState, updatedState);
 
         if (diff.Count == 0) return;
 
@@ -46,6 +38,6 @@ public class EntityStateChangedHandler : IDomainEventHandler<EntityStateChanged>
             CorrelationId = @event.CorrelationId
         };
 
-        await _dbContext.Audits.AddAsync(audit, cancellationToken);
+        await dbContext.Audits.AddAsync(audit, cancellationToken);
     }
 }

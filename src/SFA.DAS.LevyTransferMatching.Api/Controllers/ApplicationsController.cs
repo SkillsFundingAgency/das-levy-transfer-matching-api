@@ -17,31 +17,24 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers;
 
 [ApiVersion("1.0")]
 [ApiController]
-public class ApplicationsController : ControllerBase
+public class ApplicationsController(IMediator mediator) : ControllerBase
 {
-    private readonly IMediator _mediator;
-
-    public ApplicationsController(IMediator mediator)
+    [HttpGet]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [Route("pledges/{pledgeId:int}/applications/{applicationId:int}")]
+    public async Task<IActionResult> GetApplication(int pledgeId, int applicationId)
     {
-        _mediator = mediator;
-    }
-
-        [HttpGet]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [Route("pledges/{pledgeId}/applications/{applicationId}")]
-        public async Task<IActionResult> GetApplication(int pledgeId, int applicationId)
+        var queryResult = await mediator.Send(new GetApplicationQuery()
         {
-            var queryResult = await _mediator.Send(new GetApplicationQuery()
-            {
-                PledgeId = pledgeId,
-                ApplicationId = applicationId,
-            });
+            PledgeId = pledgeId,
+            ApplicationId = applicationId,
+        });
 
-            if (queryResult != null)
-            {
-                return Ok((GetApplicationResponse)queryResult);
-            }
+        if (queryResult != null)
+        {
+            return Ok((GetApplicationResponse)queryResult);
+        }
 
         return NotFound();
     }
@@ -49,10 +42,10 @@ public class ApplicationsController : ControllerBase
     [HttpGet]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    [Route("applications/{applicationId}")]
+    [Route("applications/{applicationId:int}")]
     public async Task<IActionResult> GetApplication(int applicationId)
     {
-        var queryResult = await _mediator.Send(new GetApplicationQuery()
+        var queryResult = await mediator.Send(new GetApplicationQuery()
         {
             ApplicationId = applicationId,
         });
@@ -62,32 +55,32 @@ public class ApplicationsController : ControllerBase
             return Ok((GetApplicationResponse)queryResult);
         }
 
-            return NotFound();
-        }
+        return NotFound();
+    }
 
-        [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        [Route("pledges/{pledgeId}/applications/{applicationId}/approve")]
-        public async Task<IActionResult> ApproveApplication(int pledgeId, int applicationId, [FromBody] ApproveApplicationRequest request)
+    [HttpPost]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [Route("pledges/{pledgeId:int}/applications/{applicationId:int}/approve")]
+    public async Task<IActionResult> ApproveApplication(int pledgeId, int applicationId, [FromBody] ApproveApplicationRequest request)
+    {
+        await mediator.Send(new ApproveApplicationCommand
         {
-            await _mediator.Send(new ApproveApplicationCommand
-            {
-                PledgeId = pledgeId,
-                ApplicationId = applicationId,
-                UserId = request.UserId,
-                UserDisplayName = request.UserDisplayName,
-                AutomaticApproval = request.AutomaticApproval
-            });
+            PledgeId = pledgeId,
+            ApplicationId = applicationId,
+            UserId = request.UserId,
+            UserDisplayName = request.UserDisplayName,
+            AutomaticApproval = request.AutomaticApproval
+        });
 
         return Ok();
     }
 
     [HttpPost]
     [ProducesResponseType((int)HttpStatusCode.OK)]
-    [Route("pledges/{pledgeId}/applications/{applicationId}/reject")]
+    [Route("pledges/{pledgeId:int}/applications/{applicationId:int}/reject")]
     public async Task<IActionResult> RejectApplication(int pledgeId, int applicationId, [FromBody] RejectApplicationRequest request)
     {
-        await _mediator.Send(new RejectApplicationCommand
+        await mediator.Send(new RejectApplicationCommand
         {
             PledgeId = pledgeId,
             ApplicationId = applicationId,
@@ -101,10 +94,10 @@ public class ApplicationsController : ControllerBase
     [HttpPost]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    [Route("accounts/{accountId}/applications/{applicationId}/accept-funding")]
+    [Route("accounts/{accountId:long}/applications/{applicationId:int}/accept-funding")]
     public async Task<IActionResult> AcceptFunding(int applicationId, long accountId, [FromBody] AcceptFundingRequest request, CancellationToken cancellationToken = default)
     {
-        var result = await _mediator.Send(new AcceptFundingCommand
+        var result = await mediator.Send(new AcceptFundingCommand
         {
             ApplicationId = applicationId,
             AccountId = accountId,
@@ -123,10 +116,10 @@ public class ApplicationsController : ControllerBase
     [HttpPost]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    [Route("accounts/{accountId}/applications/{applicationId}/decline-funding")]
+    [Route("accounts/{accountId:long}/applications/{applicationId:int}/decline-funding")]
     public async Task<IActionResult> DeclineFunding(int applicationId, long accountId, [FromBody] DeclineFundingRequest request)
     {
-        var result = await _mediator.Send(new DeclineFundingCommand
+        var result = await mediator.Send(new DeclineFundingCommand
         {
             ApplicationId = applicationId,
             AccountId = accountId,
@@ -145,10 +138,10 @@ public class ApplicationsController : ControllerBase
     [HttpPost]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    [Route("accounts/{accountId}/applications/{applicationId}/withdraw")]
+    [Route("accounts/{accountId:long}/applications/{applicationId:int}/withdraw")]
     public async Task<IActionResult> WithdrawApplication(int applicationId, long accountId, [FromBody] WithdrawApplicationRequest request, CancellationToken cancellationToken = default)
     {
-        await _mediator.Send(new WithdrawApplicationCommand
+        await mediator.Send(new WithdrawApplicationCommand
         {
             ApplicationId = applicationId,
             AccountId = accountId,
@@ -162,10 +155,10 @@ public class ApplicationsController : ControllerBase
     [HttpPost]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    [Route("pledges/{pledgeId}/applications/{applicationId}/undo-approval")]
+    [Route("pledges/{pledgeId:int}/applications/{applicationId:int}/undo-approval")]
     public async Task<IActionResult> UndoApplicationApproval(int pledgeId, int applicationId)
     {
-        await _mediator.Send(new UndoApplicationApprovalCommand
+        await mediator.Send(new UndoApplicationApprovalCommand
         {
             PledgeId = pledgeId,
             ApplicationId = applicationId
@@ -177,10 +170,10 @@ public class ApplicationsController : ControllerBase
     [HttpPost]
     [ProducesResponseType((int)HttpStatusCode.Created)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    [Route("pledges/{pledgeId}/applications")]
+    [Route("pledges/{pledgeId:int}/applications")]
     public async Task<IActionResult> CreateApplication(int pledgeId, [FromBody] CreateApplicationRequest request)
     {
-        var commandResult = await _mediator.Send(new CreateApplicationCommand
+        var commandResult = await mediator.Send(new CreateApplicationCommand
         {
             PledgeId = pledgeId,
             EmployerAccountId = request.EmployerAccountId,
@@ -213,23 +206,23 @@ public class ApplicationsController : ControllerBase
         return result;
     }
 
-        [HttpGet]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [Route("applications")]
-        public async Task<IActionResult> GetApplications([FromQuery] GetApplicationsRequest request)
+    [HttpGet]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [Route("applications")]
+    public async Task<IActionResult> GetApplications([FromQuery] GetApplicationsRequest request)
+    {
+        var query = await mediator.Send(new GetApplicationsQuery
         {
-            var query = await _mediator.Send(new GetApplicationsQuery
-            {
-                PledgeId = request.PledgeId,
-                AccountId = request.AccountId,
-                SenderAccountId = request.SenderAccountId,
-                ApplicationStatusFilter = request.ApplicationStatusFilter,
-                Page = request.Page,
-                PageSize = request.PageSize,
-                SortOrder = request.SortOrder,
-                SortDirection = request.SortDirection
-            });
+            PledgeId = request.PledgeId,
+            AccountId = request.AccountId,
+            SenderAccountId = request.SenderAccountId,
+            ApplicationStatusFilter = request.ApplicationStatusFilter,
+            Page = request.Page,
+            PageSize = request.PageSize,
+            SortOrder = request.SortOrder,
+            SortDirection = request.SortDirection
+        });
 
         return Ok((GetApplicationsResponse)query);
     }
@@ -237,10 +230,10 @@ public class ApplicationsController : ControllerBase
     [HttpPost]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    [Route("applications/{applicationId}/debit")]
+    [Route("applications/{applicationId:int}/debit")]
     public async Task<IActionResult> DebitApplication(int applicationId, [FromBody] DebitApplicationRequest request)
     {
-        await _mediator.Send(new DebitApplicationCommand
+        await mediator.Send(new DebitApplicationCommand
         {
             ApplicationId = applicationId,
             NumberOfApprentices = request.NumberOfApprentices,
@@ -255,10 +248,10 @@ public class ApplicationsController : ControllerBase
     [HttpPost]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    [Route("applications/{applicationId}/recalculate-cost-projection")]
+    [Route("applications/{applicationId:int}/recalculate-cost-projection")]
     public async Task<IActionResult> RecalculateCostProjection(int applicationId)
     {
-        await _mediator.Send(new RecalculateCostProjectionCommand
+        await mediator.Send(new RecalculateCostProjectionCommand
         {
             ApplicationId = applicationId,
         });

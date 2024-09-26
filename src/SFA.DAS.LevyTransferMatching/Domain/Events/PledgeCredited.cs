@@ -2,12 +2,7 @@
 
 namespace SFA.DAS.LevyTransferMatching.Domain.Events;
 
-public class PledgeCredited : IDomainEvent
+public class PledgeCredited(int pledgeId) : IDomainEvent
 {
-    public PledgeCredited(int pledgeId)
-    {
-        PledgeId = pledgeId;
-    }
-
-    public int PledgeId { get; set; }
+    public int PledgeId { get; set; } = pledgeId;
 }

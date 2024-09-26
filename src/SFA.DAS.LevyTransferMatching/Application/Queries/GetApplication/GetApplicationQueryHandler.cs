@@ -4,18 +4,12 @@ using SFA.DAS.LevyTransferMatching.Extensions;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 
-public class GetApplicationQueryHandler : IRequestHandler<GetApplicationQuery, GetApplicationResult>
+public class GetApplicationQueryHandler(LevyTransferMatchingDbContext levyTransferMatchingDbContext)
+    : IRequestHandler<GetApplicationQuery, GetApplicationResult>
 {
-    private readonly LevyTransferMatchingDbContext _levyTransferMatchingDbContext;
-
-    public GetApplicationQueryHandler(LevyTransferMatchingDbContext levyTransferMatchingDbContext)
-    {
-        _levyTransferMatchingDbContext = levyTransferMatchingDbContext;
-    }
-
     public async Task<GetApplicationResult> Handle(GetApplicationQuery request, CancellationToken cancellationToken)
     {
-        var applicationQuery = _levyTransferMatchingDbContext.Applications
+        var applicationQuery = levyTransferMatchingDbContext.Applications
             .Include(x => x.ApplicationLocations)
             .Include(x => x.EmailAddresses)
             .Include(x => x.EmployerAccount)

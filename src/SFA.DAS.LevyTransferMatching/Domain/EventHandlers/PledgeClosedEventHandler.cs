@@ -5,17 +5,10 @@ using SFA.DAS.NServiceBus.Services;
 
 namespace SFA.DAS.LevyTransferMatching.Domain.EventHandlers;
 
-public class PledgeClosedEventHandler : IDomainEventHandler<PledgeClosed>
+public class PledgeClosedEventHandler(IEventPublisher eventPublisher) : IDomainEventHandler<PledgeClosed>
 {
-    private readonly IEventPublisher _eventPublisher;
-
-    public PledgeClosedEventHandler(IEventPublisher eventPublisher)
-    {
-        _eventPublisher = eventPublisher;
-    }
-
     public async Task Handle(PledgeClosed @event, CancellationToken cancellationToken = default)
     {
-        await _eventPublisher.Publish(new PledgeClosedEvent(@event.PledgeId, @event.InsufficientFunds));
+        await eventPublisher.Publish(new PledgeClosedEvent(@event.PledgeId, @event.InsufficientFunds));
     }
 }

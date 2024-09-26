@@ -6,23 +6,11 @@ using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 
 namespace SFA.DAS.LevyTransferMatching.Services.Audit;
 
-public class ChangeTrackingSession : IChangeTrackingSession
+public class ChangeTrackingSession(IStateService stateService, UserAction userAction, UserInfo userInfo)
+    : IChangeTrackingSession
 {
-    private readonly IStateService _stateService;
-    private readonly List<TrackedItem> _trackedItems;
-    private readonly Guid _correlationId;
-    private readonly UserAction _userAction;
-    private readonly UserInfo _userInfo;
-
-
-    public ChangeTrackingSession(IStateService stateService, UserAction userAction, UserInfo userInfo)
-    {
-        _stateService = stateService;
-        _userAction = userAction;
-        _userInfo = userInfo;
-        _correlationId = Guid.NewGuid();
-        _trackedItems = [];
-    }
+    private readonly List<TrackedItem> _trackedItems = [];
+    private readonly Guid _correlationId = Guid.NewGuid();
 
     public void TrackInsert(ITrackableEntity trackedObject)
     {
@@ -31,7 +19,7 @@ public class ChangeTrackingSession : IChangeTrackingSession
 
     public void TrackUpdate(ITrackableEntity trackedObject)
     {
-        var initialState = _stateService.GetState(trackedObject);
+        var initialState = stateService.GetState(trackedObject);
         _trackedItems.Add(TrackedItem.CreateUpdateTrackedItem(trackedObject, initialState));
     }
     
@@ -41,19 +29,19 @@ public class ChangeTrackingSession : IChangeTrackingSession
 
         foreach (var item in _trackedItems)
         {
-            var updated = item.Operation == ChangeTrackingOperation.Delete ? null : _stateService.GetState(item.TrackedEntity);
+            var updated = item.Operation == ChangeTrackingOperation.Delete ? null : stateService.GetState(item.TrackedEntity);
 
             result.Add(new EntityStateChanged
             {
                 CorrelationId = _correlationId,
-                UserAction = _userAction,
+                UserAction = userAction,
                 EntityType = item.TrackedEntity.GetType().Name,
                 EntityId = item.TrackedEntity.GetTrackedEntityId(),
                 InitialState = item.InitialState == null ? null : JsonConvert.SerializeObject(item.InitialState),
                 UpdatedState = updated == null ? null : JsonConvert.SerializeObject(updated),
                 UpdatedOn = DateTime.UtcNow,
-                UserId = _userInfo?.UserId ?? "Unknown",
-                UserDisplayName = _userInfo?.UserDisplayName ?? "Unknown"
+                UserId = userInfo?.UserId ?? "Unknown",
+                UserDisplayName = userInfo?.UserDisplayName ?? "Unknown"
             });
         }
 

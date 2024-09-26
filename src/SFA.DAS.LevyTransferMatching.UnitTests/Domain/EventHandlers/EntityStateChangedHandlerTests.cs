@@ -42,16 +42,16 @@ public class EntityStateChangedHandlerTests : LevyTransferMatchingDbContextFixtu
 
         var audit = await DbContext.Audits.FirstAsync();
 
-        Assert.That(_event.EntityId, Is.EqualTo(audit.EntityId));
-        Assert.That(_event.EntityType, Is.EqualTo(audit.EntityType));
-        Assert.That(_event.UserId, Is.EqualTo(audit.UserId));
-        Assert.That(_event.UserDisplayName, Is.EqualTo(audit.UserDisplayName));
-        Assert.That(_event.UserAction.ToString(), Is.EqualTo(audit.UserAction));
-        Assert.That(DateTime.UtcNow.Date, Is.EqualTo(audit.AuditDate.Date));
-        Assert.That(_event.InitialState, Is.EqualTo(audit.InitialState));
-        Assert.That(_event.UpdatedState, Is.EqualTo(audit.UpdatedState));
-        Assert.That(JsonConvert.SerializeObject(_diffResult), Is.EqualTo(audit.Diff).AsCollection);
-        Assert.That(_event.CorrelationId, Is.EqualTo(audit.CorrelationId));
+        _event.EntityId.Should().Be(audit.EntityId);
+        _event.EntityType.Should().Be(audit.EntityType);
+        _event.UserId.Should().Be(audit.UserId);
+        _event.UserDisplayName.Should().Be(audit.UserDisplayName);
+        _event.UserAction.ToString().Should().Be(audit.UserAction);
+        DateTime.UtcNow.Date.Should().Be(audit.AuditDate.Date);
+        _event.InitialState.Should().Be(audit.InitialState);
+        _event.UpdatedState.Should().Be(audit.UpdatedState);
+        JsonConvert.SerializeObject(_diffResult).Should().Be(audit.Diff);
+        _event.CorrelationId.Should().Be(audit.CorrelationId);
     }
 
     [Test]
@@ -63,6 +63,6 @@ public class EntityStateChangedHandlerTests : LevyTransferMatchingDbContextFixtu
 
         await DbContext.SaveChangesAsync();
         var audit = await DbContext.Audits.FirstOrDefaultAsync();
-        Assert.That(audit, Is.Null);
+        audit.Should().BeNull();
     }
 }

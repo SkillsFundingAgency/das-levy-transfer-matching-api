@@ -1,9 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.LevyTransferMatching.Domain.EventHandlers;
+﻿using SFA.DAS.LevyTransferMatching.Domain.EventHandlers;
 using SFA.DAS.LevyTransferMatching.Domain.Events;
 using SFA.DAS.LevyTransferMatching.Messages.Events;
 using SFA.DAS.NServiceBus.Services;
@@ -16,7 +11,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Domain.EventHandlers
         private ApplicationFundingAcceptedHandler _handler;
         private ApplicationFundingAccepted _event;
         private Mock<IEventPublisher> _eventPublisher;
-        private readonly Fixture _fixture = new Fixture();
+        private readonly Fixture _fixture = new();
 
         [SetUp]
         public void Setup()

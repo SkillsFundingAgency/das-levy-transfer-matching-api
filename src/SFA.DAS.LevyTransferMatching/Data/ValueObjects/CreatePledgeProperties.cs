@@ -11,10 +11,5 @@ public class CreatePledgeProperties
     public Level Levels { get; set; }
     public JobRole JobRoles { get; set; }
     public Sector Sectors { get; set; }
-    public List<PledgeLocation> Locations { get; set; }
-
-    public CreatePledgeProperties()
-    {
-        Locations = new List<PledgeLocation>();
-    }
+    public List<PledgeLocation> Locations { get; set; } = [];
 }

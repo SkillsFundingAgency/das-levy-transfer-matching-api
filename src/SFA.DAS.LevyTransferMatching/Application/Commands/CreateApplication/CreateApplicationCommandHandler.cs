@@ -7,36 +7,23 @@ using SFA.DAS.LevyTransferMatching.Services;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
 
-public class CreateApplicationCommandHandler : IRequestHandler<CreateApplicationCommand, CreateApplicationCommandResult>
+public class CreateApplicationCommandHandler(
+    IPledgeRepository pledgeRepository,
+    IApplicationRepository applicationRepository,
+    IEmployerAccountRepository employerAccountRepository,
+    ICostProjectionService costProjectionService,
+    IMatchingCriteriaService matchingCriteriaService,
+    FeatureToggles featureToggles)
+    : IRequestHandler<CreateApplicationCommand, CreateApplicationCommandResult>
 {
-    private readonly IPledgeRepository _pledgeRepository;
-    private readonly IEmployerAccountRepository _employerAccountRepository;
-    private readonly IApplicationRepository _applicationRepository;
-    private readonly ICostProjectionService _costProjectionService;
-    private readonly IMatchingCriteriaService _matchingCriteriaService;
-    private readonly FeatureToggles _featureToggles;
-
-    public CreateApplicationCommandHandler(IPledgeRepository pledgeRepository,
-        IApplicationRepository applicationRepository,
-        IEmployerAccountRepository employerAccountRepository,
-        ICostProjectionService costProjectionService, IMatchingCriteriaService matchingCriteriaService, FeatureToggles featureToggles)
-    {
-        _pledgeRepository = pledgeRepository;
-        _applicationRepository = applicationRepository;
-        _employerAccountRepository = employerAccountRepository;
-        _costProjectionService = costProjectionService;
-        _matchingCriteriaService = matchingCriteriaService;
-        _featureToggles = featureToggles;
-    }
-
     public async Task<CreateApplicationCommandResult> Handle(CreateApplicationCommand request, CancellationToken cancellationToken)
     {
-        var account = await _employerAccountRepository.Get(request.EmployerAccountId);
-        var pledge = await _pledgeRepository.Get(request.PledgeId);
+        var account = await employerAccountRepository.Get(request.EmployerAccountId);
+        var pledge = await pledgeRepository.Get(request.PledgeId);
 
-        var costProjections = _costProjectionService.GetCostProjections(request.StandardMaxFunding * request.NumberOfApprentices, request.StartDate, request.StandardDuration);
+        var costProjections = costProjectionService.GetCostProjections(request.StandardMaxFunding * request.NumberOfApprentices, request.StartDate, request.StandardDuration);
 
-        var matchingCriteria = _matchingCriteriaService.GetMatchingCriteria(request, pledge);
+        var matchingCriteria = matchingCriteriaService.GetMatchingCriteria(request, pledge);
 
         var settings = new CreateApplicationProperties
         {
@@ -60,14 +47,14 @@ public class CreateApplicationCommandHandler : IRequestHandler<CreateApplication
             EmailAddresses = request.EmailAddresses,
             CostProjections = costProjections,
             MatchingCriteria = matchingCriteria,
-            CostingModel = _featureToggles.ToggleNewCostingModel
+            CostingModel = featureToggles.ToggleNewCostingModel
                 ? ApplicationCostingModel.OneYear
                 : ApplicationCostingModel.Original
         };
 
         var application = pledge.CreateApplication(account, settings, new UserInfo(request.UserId, request.UserDisplayName));
 
-        await _applicationRepository.Add(application);
+        await applicationRepository.Add(application);
 
         return new CreateApplicationCommandResult
         {

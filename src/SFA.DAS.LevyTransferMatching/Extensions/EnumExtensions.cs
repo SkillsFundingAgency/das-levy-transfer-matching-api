@@ -17,7 +17,7 @@ public static class EnumExtensions
         return displayAttribute == null ? "" : displayAttribute.ShortDescription;
     }
 
-    public static string GetHint(this Enum value)
+    private static string GetHint(this Enum value)
     {
         var displayAttribute = GetMetadataAttribute(value);
         return displayAttribute == null ? "" : displayAttribute.Hint;

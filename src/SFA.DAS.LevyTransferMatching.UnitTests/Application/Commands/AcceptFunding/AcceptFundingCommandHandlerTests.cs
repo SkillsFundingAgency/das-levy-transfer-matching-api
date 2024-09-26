@@ -61,6 +61,6 @@ public class AcceptFundingCommandHandlerTests
         await _handler.Handle(_command, CancellationToken.None);
 
         var events = _application.FlushEvents();
-        Assert.That(events.Any(x => x is ApplicationFundingAccepted), Is.True);
+        events.Any(x => x is ApplicationFundingAccepted).Should().BeTrue();
     }
 }

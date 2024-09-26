@@ -27,8 +27,8 @@ public class GetAccountQueryHandlerTests : LevyTransferMatchingDbContextFixture
 
         var result = await handler.Handle(query, CancellationToken.None);
 
-        Assert.That(result.AccountId, Is.EqualTo(_account.Id));
-        Assert.That(result.AccountName, Is.EqualTo(_account.Name));
+        result.AccountId.Should().Be(_account.Id);
+        result.AccountName.Should().Be(_account.Name);
     }
 
     [Test]
@@ -38,6 +38,6 @@ public class GetAccountQueryHandlerTests : LevyTransferMatchingDbContextFixture
         var query = new GetAccountQuery { AccountId = _account.Id + 1 };
 
         var result = await handler.Handle(query, CancellationToken.None);
-        Assert.That(result, Is.Null);
+        result.Should().BeNull();
     }
 }

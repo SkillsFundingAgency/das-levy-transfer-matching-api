@@ -6,18 +6,11 @@ using SFA.DAS.LevyTransferMatching.Models.Enums;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
 
-public class GetPledgesQueryHandler : IRequestHandler<GetPledgesQuery, GetPledgesResult>
+public class GetPledgesQueryHandler(LevyTransferMatchingDbContext dbContext) : IRequestHandler<GetPledgesQuery, GetPledgesResult>
 {
-    private readonly LevyTransferMatchingDbContext _dbContext;
-
-    public GetPledgesQueryHandler(LevyTransferMatchingDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
     public async Task<GetPledgesResult> Handle(GetPledgesQuery request, CancellationToken cancellationToken)
     {
-        var pledgesQuery = _dbContext.Pledges.AsQueryable();
+        var pledgesQuery = dbContext.Pledges.AsQueryable();
 
         if (request.AccountId.HasValue)
         {

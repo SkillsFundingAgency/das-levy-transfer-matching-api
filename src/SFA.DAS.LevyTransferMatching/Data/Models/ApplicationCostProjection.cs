@@ -2,14 +2,8 @@
 
 namespace SFA.DAS.LevyTransferMatching.Data.Models;
 
-public class ApplicationCostProjection : Entity<int>
+public class ApplicationCostProjection(string financialYear, int amount) : Entity<int>
 {
-    public ApplicationCostProjection(string financialYear, int amount)
-    {
-        FinancialYear = financialYear;
-        Amount = amount;
-    }
-
-    public string FinancialYear { get; set; }
-    public int Amount { get; set; }
+    public string FinancialYear { get; set; } = financialYear;
+    public int Amount { get; set; } = amount;
 }

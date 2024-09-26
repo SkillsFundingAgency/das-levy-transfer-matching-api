@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using FluentAssertions;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.LevyTransferMatching.Abstractions.CustomExceptions;
 using SFA.DAS.LevyTransferMatching.Api.Controllers;
@@ -50,15 +51,15 @@ public class PledgesControllerTests
         // Act
         var actionResult = await _pledgesController.CreatePledge(accountId, request);
         var createdResult = actionResult as CreatedResult;
-        var createPledgeResponse = createdResult.Value as CreatePledgeResponse;
+        var createPledgeResponse = createdResult?.Value as CreatePledgeResponse;
 
         // Assert
-        Assert.That(actionResult, Is.Not.Null);
-        Assert.That(createdResult, Is.Not.Null);
-        Assert.That(createPledgeResponse, Is.Not.Null);
-        Assert.That(createdResult.StatusCode, Is.EqualTo((int)HttpStatusCode.Created));
-        Assert.That($"/accounts/{accountId}/pledges/{result.Id}", Is.EqualTo(createdResult.Location));
-        Assert.That(result.Id, Is.EqualTo(createPledgeResponse.Id));
+        actionResult.Should().NotBeNull();
+        createdResult.Should().NotBeNull();
+        createPledgeResponse.Should().NotBeNull();
+        createdResult?.StatusCode.Should().Be((int)HttpStatusCode.Created);
+        $"/accounts/{accountId}/pledges/{result.Id}".Should().Be(createdResult?.Location);
+        result.Id.Should().Be(createPledgeResponse!.Id);
     }
 
     [Test]
@@ -74,11 +75,8 @@ public class PledgesControllerTests
             .Throws(validationException);
 
         // Assert
-        Assert.ThrowsAsync<ValidationException>(async () =>
-        {
-            // Act
-            await _pledgesController.CreatePledge(accountId, request);
-        });
+        var action = () => _pledgesController.CreatePledge(accountId, request);
+        action.Should().ThrowAsync<ValidationException>();
     }
 
     [Test]
@@ -89,20 +87,20 @@ public class PledgesControllerTests
         var pledgeResult = _fixture.Create<GetPledgeResult>();
 
         _mockMediator
-            .Setup(x => x.Send(It.Is<GetPledgeQuery>(x => x.Id == id), It.IsAny<CancellationToken>()))
+            .Setup(x => x.Send(It.Is<GetPledgeQuery>(query => query.Id == id), It.IsAny<CancellationToken>()))
             .ReturnsAsync(pledgeResult);
 
         // Act
         var actionResult = await _pledgesController.GetPledge(id);
         var okObjectResult = actionResult as OkObjectResult;
-        var getPledgeResponse = okObjectResult.Value as GetPledgeResponse;
+        var getPledgeResponse = okObjectResult?.Value as GetPledgeResponse;
 
         // Assert
-        Assert.That(actionResult, Is.Not.Null);
-        Assert.That(okObjectResult, Is.Not.Null);
-        Assert.That(getPledgeResponse, Is.Not.Null);
-        Assert.That(okObjectResult.StatusCode, Is.EqualTo((int)HttpStatusCode.OK));
-        Assert.That(pledgeResult.Id, Is.EqualTo(getPledgeResponse.Id));
+        actionResult.Should().NotBeNull();
+        okObjectResult.Should().NotBeNull();
+        getPledgeResponse.Should().NotBeNull();
+        okObjectResult?.StatusCode.Should().Be((int)HttpStatusCode.OK);
+        pledgeResult.Id.Should().Be(getPledgeResponse!.Id);
     }
 
     [Test]
@@ -112,7 +110,7 @@ public class PledgesControllerTests
         var id = _fixture.Create<int>();
 
         _mockMediator
-            .Setup(x => x.Send(It.Is<GetPledgeQuery>(x => x.Id == id), It.IsAny<CancellationToken>()))
+            .Setup(x => x.Send(It.Is<GetPledgeQuery>(query => query.Id == id), It.IsAny<CancellationToken>()))
             .ReturnsAsync((GetPledgeResult)null);
 
         // Act
@@ -120,9 +118,9 @@ public class PledgesControllerTests
         var notFoundResult = actionResult as NotFoundResult;
 
         // Assert
-        Assert.That(actionResult, Is.Not.Null);
-        Assert.That(notFoundResult, Is.Not.Null);
-        Assert.That(notFoundResult.StatusCode, Is.EqualTo((int)HttpStatusCode.NotFound));
+        actionResult.Should().NotBeNull();
+        notFoundResult.Should().NotBeNull();
+        notFoundResult?.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
     }
 
     [Test]
@@ -166,9 +164,9 @@ public class PledgesControllerTests
         var actionResult = await _pledgesController.ClosePledge(pledgeId, request);
         var okResult = actionResult as OkResult;
 
-        Assert.That(actionResult, Is.Not.Null);
-        Assert.That(okResult, Is.Not.Null);
-        Assert.That(okResult.StatusCode, Is.EqualTo((int)HttpStatusCode.OK));
+        actionResult.Should().NotBeNull();
+        okResult.Should().NotBeNull();
+        okResult?.StatusCode.Should().Be((int)HttpStatusCode.OK);
     }
 
     [Test]
@@ -184,19 +182,19 @@ public class PledgesControllerTests
 
         var actionResult = await _pledgesController.ClosePledge(pledgeId, request);
 
-        Assert.That(actionResult, Is.InstanceOf<NotFoundResult>());
+        actionResult.Should().BeOfType<NotFoundResult>();
     }
 
     [Test]
     public async Task GET_All_Pledges_Returned()
     {
         // Arrange
-        var expectedPledges = _fixture.CreateMany<GetPledgesResult.Pledge>();
+        var expectedPledges = _fixture.CreateMany<GetPledgesResult.Pledge>().ToList();
 
         var result = new GetPledgesResult()
         {
             Items = expectedPledges.ToList(),
-            TotalItems = expectedPledges.Count(),
+            TotalItems = expectedPledges.Count,
         };
 
         _mockMediator
@@ -206,16 +204,16 @@ public class PledgesControllerTests
         // Act
         var actionResult = await _pledgesController.GetPledges();
         var okObjectResult = actionResult as OkObjectResult;
-        var response = okObjectResult.Value as GetPledgesResponse;
+        var response = okObjectResult?.Value as GetPledgesResponse;
 
         // Assert
-        Assert.That(actionResult, Is.Not.Null);
-        Assert.That(okObjectResult, Is.Not.Null);
-        Assert.That(response, Is.Not.Null);
-        Assert.That(okObjectResult.StatusCode, Is.EqualTo((int)HttpStatusCode.OK));
+        actionResult.Should().NotBeNull();
+        okObjectResult.Should().NotBeNull();
+        response.Should().NotBeNull();
+        okObjectResult?.StatusCode.Should().Be((int)HttpStatusCode.OK);
 
-        Assert.That(response.Pledges.Count(), Is.EqualTo(expectedPledges.Count()));
-        Assert.That(response.TotalPledges, Is.EqualTo(expectedPledges.Count()));
+        response?.Pledges.Count().Should().Be(expectedPledges.Count);
+        response?.TotalPledges.Should().Be(expectedPledges.Count);
     }
 
     [Test]
@@ -223,13 +221,13 @@ public class PledgesControllerTests
     {
         // Arrange
         var accountId = _fixture.Create<long>();
-        var expectedPledges = _fixture.CreateMany<GetPledgesResult.Pledge>();
+        var expectedPledges = _fixture.CreateMany<GetPledgesResult.Pledge>().ToArray();
         var sectors = _fixture.Create<IEnumerable<Sector>>();
 
-        var result = new GetPledgesResult()
+        var result = new GetPledgesResult
         {
             Items = expectedPledges.ToList(),
-            TotalItems = expectedPledges.Count(),
+            TotalItems = expectedPledges.Length,
         };
 
         _mockMediator
@@ -239,15 +237,15 @@ public class PledgesControllerTests
         // Act
         var actionResult = await _pledgesController.GetPledges(sectors, accountId: accountId);
         var okObjectResult = actionResult as OkObjectResult;
-        var response = okObjectResult.Value as GetPledgesResponse;
+        var response = okObjectResult?.Value as GetPledgesResponse;
 
         // Assert
-        Assert.That(actionResult, Is.Not.Null);
-        Assert.That(okObjectResult, Is.Not.Null);
-        Assert.That(response, Is.Not.Null);
-        Assert.That(okObjectResult.StatusCode, Is.EqualTo((int)HttpStatusCode.OK));
+        actionResult.Should().NotBeNull();
+        okObjectResult.Should().NotBeNull();
+        response.Should().NotBeNull();
+        okObjectResult?.StatusCode.Should().Be((int)HttpStatusCode.OK);
 
-        Assert.That(response.Pledges.Count(), Is.EqualTo(expectedPledges.Count()));
-        Assert.That(response.TotalPledges, Is.EqualTo(expectedPledges.Count()));
+        response?.Pledges.Count().Should().Be(expectedPledges.Length);
+        response?.TotalPledges.Should().Be(expectedPledges.Length);
     }
 }

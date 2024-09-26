@@ -6,38 +6,27 @@ using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
 
-public class AcceptFundingCommandHandler : IRequestHandler<AcceptFundingCommand, AcceptFundingCommandResult>
+public class AcceptFundingCommandHandler(IApplicationRepository applicationRepository, IPledgeRepository pledgeRepository, ILogger<AcceptFundingCommandHandler> logger)
+    : IRequestHandler<AcceptFundingCommand, AcceptFundingCommandResult>
 {
-    private readonly IApplicationRepository _applicationRepository;
-    private readonly IPledgeRepository _pledgeRepository;
-
-    private readonly ILogger<AcceptFundingCommandHandler> _logger;
-
-    public AcceptFundingCommandHandler(IApplicationRepository applicationRepository, IPledgeRepository pledgeRepository, ILogger<AcceptFundingCommandHandler> logger)
-    {
-        _applicationRepository = applicationRepository;
-        _pledgeRepository = pledgeRepository;
-        _logger = logger;
-    }
-
     public async Task<AcceptFundingCommandResult> Handle(AcceptFundingCommand request, CancellationToken cancellationToken)
     {
-        var application = await _applicationRepository.Get(request.ApplicationId, null, request.AccountId);
+        var application = await applicationRepository.Get(request.ApplicationId, null, request.AccountId);
 
         if (application == null)
         {
-            _logger.LogInformation("The application for {ApplicationId} could not be found.", request.ApplicationId);
+            logger.LogInformation("The application for {ApplicationId} could not be found.", request.ApplicationId);
 
             return new AcceptFundingCommandResult
             {
                 Updated = false
             };
         }
-        var pledge = await _pledgeRepository.Get(application.PledgeId);
+        var pledge = await pledgeRepository.Get(application.PledgeId);
 
         if (pledge == null)
         {
-            _logger.LogInformation("The pledge for {ApplicationId} could not be found.", request.ApplicationId);
+            logger.LogInformation("The pledge for {ApplicationId} could not be found.", request.ApplicationId);
 
             return new AcceptFundingCommandResult
             {
@@ -48,7 +37,7 @@ public class AcceptFundingCommandHandler : IRequestHandler<AcceptFundingCommand,
         var shouldRejectApplications = ShouldPendingApplicationsBeAutomaticallyClosed(pledge, request.ApplicationId);
 
         application.AcceptFunding(new UserInfo(request.UserId, request.UserDisplayName), shouldRejectApplications);
-        await _applicationRepository.Update(application);
+        await applicationRepository.Update(application);
 
         return new AcceptFundingCommandResult
         {

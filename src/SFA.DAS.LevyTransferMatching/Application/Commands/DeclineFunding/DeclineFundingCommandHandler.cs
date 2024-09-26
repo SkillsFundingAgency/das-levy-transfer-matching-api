@@ -4,24 +4,16 @@ using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Commands.DeclineFunding;
 
-public class DeclineFundingCommandHandler : IRequestHandler<DeclineFundingCommand, DeclineFundingCommandResult>
+public class DeclineFundingCommandHandler(IApplicationRepository applicationRepository, ILogger<DeclineFundingCommandHandler> logger)
+    : IRequestHandler<DeclineFundingCommand, DeclineFundingCommandResult>
 {
-    private readonly IApplicationRepository _applicationRepository;
-    private readonly ILogger<DeclineFundingCommandHandler> _logger;
-
-    public DeclineFundingCommandHandler(IApplicationRepository applicationRepository, ILogger<DeclineFundingCommandHandler> logger)
-    {
-        _applicationRepository = applicationRepository;
-        _logger = logger;
-    }
-
     public async Task<DeclineFundingCommandResult> Handle(DeclineFundingCommand request, CancellationToken cancellationToken)
     {
-        var application = await _applicationRepository.Get(request.ApplicationId, accountId: request.AccountId);
+        var application = await applicationRepository.Get(request.ApplicationId, accountId: request.AccountId);
 
         if (application == null)
         {
-            _logger.LogInformation("The application for {Request} could not be found.", request);
+            logger.LogInformation("The application for {Request} could not be found.", request);
 
             return new DeclineFundingCommandResult
             {
@@ -30,7 +22,7 @@ public class DeclineFundingCommandHandler : IRequestHandler<DeclineFundingComman
         }
 
         application.DeclineFunding(new UserInfo(request.UserId, request.UserDisplayName));
-        await _applicationRepository.Update(application);
+        await applicationRepository.Update(application);
 
         return new DeclineFundingCommandResult
         {
