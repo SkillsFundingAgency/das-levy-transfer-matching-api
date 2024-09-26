@@ -41,7 +41,6 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddNLog();
         services.AddLogging(builder =>
         {
             builder.AddFilter<ApplicationInsightsLoggerProvider>(string.Empty, LogLevel.Information);
