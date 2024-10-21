@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using SFA.DAS.LevyTransferMatching.Abstractions.Events;
+﻿using SFA.DAS.LevyTransferMatching.Abstractions.Events;
 
 namespace SFA.DAS.LevyTransferMatching.UnitTests.Services.Events;
 
@@ -12,8 +11,9 @@ public class WhenSendIsCalled
 
     private Fixture _fixture;
 
-    public class TestEvent : IDomainEvent { }
-    public class TestEvent2 : IDomainEvent { }
+    public class TestEvent : IDomainEvent;
+
+    public class TestEvent2 : IDomainEvent;
 
     [SetUp]
     public void Arrange()
@@ -33,7 +33,7 @@ public class WhenSendIsCalled
             .Returns(eventHandlers);
 
         _mockServiceProvider.Setup(m => m.GetService(typeof(IEnumerable<IDomainEventHandler<TestEvent2>>)))
-            .Returns(null);
+            .Returns(null!);
 
         _domainEventDispatcher = new LevyTransferMatching.Services.Events.DomainEventDispatcher(_mockServiceProvider.Object);
     }
@@ -89,9 +89,9 @@ public class WhenSendIsCalled
             .Returns(new List<IDomainEventHandler<TestEvent2>>());
 
         // Act
-        await _domainEventDispatcher.Send(domainEvent);
+        var action = () => _domainEventDispatcher.Send(domainEvent);
 
         // Assert
-        Assert.Pass();
+        await action.Should().NotThrowAsync();
     }
 }

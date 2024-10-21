@@ -4,31 +4,30 @@ using SFA.DAS.LevyTransferMatching.Data.Models;
 
 namespace SFA.DAS.LevyTransferMatching.Data.Repositories;
 
-public class PledgeRepository : IPledgeRepository
+public interface IPledgeRepository
 {
-    private readonly LevyTransferMatchingDbContext _dbContext;
-    private readonly IDomainEventDispatcher _domainEventDispatcher;
+    Task Add(Pledge pledge);
+    Task<Pledge> Get(int pledgeId);
+    Task Update(Pledge pledge);
+}
 
-    public PledgeRepository(LevyTransferMatchingDbContext dbContext, IDomainEventDispatcher domainEventDispatcher)
-    {
-        _dbContext = dbContext;
-        _domainEventDispatcher = domainEventDispatcher;
-    }
-
+public class PledgeRepository(LevyTransferMatchingDbContext dbContext, IDomainEventDispatcher domainEventDispatcher)
+    : IPledgeRepository
+{
     public async Task Add(Pledge pledge)
     {
-        await _dbContext.AddAsync(pledge);
-        await _dbContext.SaveChangesAsync();
+        await dbContext.AddAsync(pledge);
+        await dbContext.SaveChangesAsync();
 
         foreach (dynamic domainEvent in pledge.FlushEvents())
         {
-            await _domainEventDispatcher.Send(domainEvent);
+            await domainEventDispatcher.Send(domainEvent);
         }
     }
 
         public async Task<Pledge> Get(int pledgeId)
         {
-            return await _dbContext
+            return await dbContext
                 .Pledges
                 .Include(p => p.Locations)
                 .Include(p => p.Applications)
@@ -39,7 +38,7 @@ public class PledgeRepository : IPledgeRepository
     {
         foreach (dynamic domainEvent in pledge.FlushEvents())
         {
-            await _domainEventDispatcher.Send(domainEvent);
+            await domainEventDispatcher.Send(domainEvent);
         }
     }
 }

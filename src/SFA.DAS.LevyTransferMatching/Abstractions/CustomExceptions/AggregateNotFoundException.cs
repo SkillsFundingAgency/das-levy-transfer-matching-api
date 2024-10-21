@@ -1,7 +1,4 @@
 ﻿namespace SFA.DAS.LevyTransferMatching.Abstractions.CustomExceptions;
 
 [Serializable]
-public class AggregateNotFoundException<T> : Exception
-{
-    public AggregateNotFoundException(long id) : base($"{nameof(T)} {id} not found") { }
-}
+public class AggregateNotFoundException<T>(long id) : Exception($"{nameof(T)} {id} not found");

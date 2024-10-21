@@ -13,7 +13,7 @@ public class ClosePledgeCommandHandlerTests
     private ClosePledgeCommandHandler _handler;
     private Mock<IPledgeRepository> _repository;
 
-    private readonly Fixture _fixture = new Fixture();
+    private readonly Fixture _fixture = new();
     private ClosePledgeCommand _command;
     private Pledge _pledge;
 
@@ -63,10 +63,9 @@ public class ClosePledgeCommandHandlerTests
     {
         _command.PledgeId = 2;
 
-        var exception = Assert.ThrowsAsync<AggregateNotFoundException<Pledge>>(
-            () => _handler.Handle(_command, CancellationToken.None));
-
-        Assert.That(exception.Message, Is.Not.Empty);
+        var action = () => _handler.Handle(_command, CancellationToken.None);
+        action.Should().ThrowAsync<AggregateNotFoundException<Pledge>>()
+            .WithMessage("*");
     }
 
     [Test]
@@ -77,9 +76,9 @@ public class ClosePledgeCommandHandlerTests
 
         _command.PledgeId = 1;
 
-        var exception = Assert.ThrowsAsync<InvalidOperationException>(
-            () => _handler.Handle(_command, CancellationToken.None));
+        var action = () => _handler.Handle(_command, CancellationToken.None);
 
-        Assert.That(exception.Message, Is.Not.Empty);
+        action.Should().ThrowAsync<InvalidOperationException>()
+            .WithMessage("*");
     }
 }

@@ -16,7 +16,7 @@ public class LevyTransferMatchingDbContext : DbContext
     public DbSet<EmployerAccount> EmployerAccounts { get; set; }
     public DbSet<Models.Application> Applications { get; set; }
     public DbSet<Audit> Audits { get; set; }
-    
+
     public LevyTransferMatchingDbContext(DbContextOptions<LevyTransferMatchingDbContext> options) : base(options)
     {
     }
@@ -34,10 +34,10 @@ public class LevyTransferMatchingDbContext : DbContext
         {
             return;
         }
-        
+
         optionsBuilder.UseSqlServer(_connection as SqlConnection);
     }
-    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Pledge>().ToTable("Pledge");

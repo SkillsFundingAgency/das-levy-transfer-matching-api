@@ -22,7 +22,7 @@ public class EnumExtensionsTests
 
         var compareLogic = new CompareLogic(new ComparisonConfig { IgnoreObjectTypes = true });
         var comparisonResult = compareLogic.Compare(expected, result);
-        Assert.That(comparisonResult.AreEqual, Is.True);
+        comparisonResult.AreEqual.Should().BeTrue();
     }
 
 

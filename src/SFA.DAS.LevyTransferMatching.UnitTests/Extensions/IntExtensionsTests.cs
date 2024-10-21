@@ -6,21 +6,16 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Extensions;
 [TestFixture]
 public class IntExtensionsTests
 {
-    private readonly Fixture _fixture;
-
-    public IntExtensionsTests()
-    {
-        _fixture = new Fixture();
-    }
+    private readonly Fixture _fixture = new();
 
     [Test]
     public void Summed_Sector_Flag_Values_Convert_Back_Correctly()
     {
-        var expectedSectors = _fixture.CreateMany<Sector>(5);
+        var expectedSectors = _fixture.CreateMany<Sector>(5).ToArray();
         var summed = expectedSectors.Cast<int>().Sum();
 
         var actualSectors = summed.GetFlags<Sector>();
 
-        Assert.That(actualSectors, Is.EqualTo(expectedSectors).AsCollection);
+        actualSectors.Should().BeEquivalentTo(expectedSectors);
     }
 }

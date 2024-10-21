@@ -3,41 +3,40 @@ using SFA.DAS.LevyTransferMatching.Abstractions.Events;
 
 namespace SFA.DAS.LevyTransferMatching.Data.Repositories;
 
-public class ApplicationRepository : IApplicationRepository
+public interface IApplicationRepository
 {
-    private readonly LevyTransferMatchingDbContext _dbContext;
-    private readonly IDomainEventDispatcher _domainEventDispatcher;
+    Task Add(Models.Application application);
+    Task Update(Models.Application application);
+    Task<Models.Application> Get(int applicationId, int? pledgeId = null, long? accountId = null);
+}
 
-    public ApplicationRepository(LevyTransferMatchingDbContext dbContext, IDomainEventDispatcher domainEventDispatcher)
-    {
-        _dbContext = dbContext;
-        _domainEventDispatcher = domainEventDispatcher;
-    }
-
+public class ApplicationRepository(LevyTransferMatchingDbContext dbContext, IDomainEventDispatcher domainEventDispatcher)
+    : IApplicationRepository
+{
     public async Task Add(Models.Application application)
     {
-        await _dbContext.AddAsync(application);
-        await _dbContext.SaveChangesAsync();
+        await dbContext.AddAsync(application);
+        await dbContext.SaveChangesAsync();
 
         foreach (dynamic domainEvent in application.FlushEvents())
         {
-            await _domainEventDispatcher.Send(domainEvent);
+            await domainEventDispatcher.Send(domainEvent);
         }
     }
 
     public async Task Update(Models.Application application)
     {
-        await _dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync();
 
         foreach (dynamic domainEvent in application.FlushEvents())
         {
-            await _domainEventDispatcher.Send(domainEvent);
+            await domainEventDispatcher.Send(domainEvent);
         }
     }
 
     public async Task<Models.Application> Get(int applicationId, int? pledgeId = null, long? accountId = null)
     {
-        var application = await _dbContext.Applications
+        var application = await dbContext.Applications
             .Include(o => o.EmployerAccount)
             .Include(o => o.ApplicationLocations)
             .Include(o => o.EmailAddresses)

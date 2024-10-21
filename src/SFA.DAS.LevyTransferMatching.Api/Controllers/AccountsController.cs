@@ -9,22 +9,15 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers;
 [Route("accounts")]
 [ApiVersion("1.0")]
 [ApiController]
-public class AccountsController : ControllerBase
+public class AccountsController(IMediator mediator) : ControllerBase
 {
-    private readonly IMediator _mediator;
-
-    public AccountsController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
     [HttpGet]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    [Route("{accountId}")]
+    [Route("{accountId:long}")]
     public async Task<IActionResult> GetAccount(long accountId)
     {
-        var queryResult = await _mediator.Send(new GetAccountQuery
+        var queryResult = await mediator.Send(new GetAccountQuery
         {
             AccountId = accountId
         });
@@ -47,7 +40,7 @@ public class AccountsController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> CreateAccount([FromBody] CreateAccountRequest request)
     {
-        var commandResult = await _mediator.Send(new CreateAccountCommand
+        var commandResult = await mediator.Send(new CreateAccountCommand
         {
             AccountId = request.AccountId,
             AccountName = request.AccountName

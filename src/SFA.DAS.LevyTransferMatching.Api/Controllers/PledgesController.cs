@@ -18,21 +18,14 @@ namespace SFA.DAS.LevyTransferMatching.Api.Controllers;
 
 [ApiController]
 [ApiVersion("1.0")]
-public class PledgesController : Controller
+public class PledgesController(IMediator mediator) : Controller
 {
-    private readonly IMediator _mediator;
-
-    public PledgesController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
     [HttpGet]
     [Route("pledges")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     public async Task<IActionResult> GetPledges([FromQuery] IEnumerable<Sector> sectors = null, long? accountId = null, int page = 1, int? pageSize = null, PledgeStatus? pledgeStatusFilter = null)
     {
-        var result = await _mediator.Send(new GetPledgesQuery
+        var result = await mediator.Send(new GetPledgesQuery
         {
             Sectors = sectors,
             AccountId = accountId,
@@ -54,12 +47,12 @@ public class PledgesController : Controller
     }
 
     [HttpGet]
-    [Route("pledges/{pledgeId}")]
+    [Route("pledges/{pledgeId:int}")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetPledge(int pledgeId)
     {
-        var result = await _mediator.Send(new GetPledgeQuery()
+        var result = await mediator.Send(new GetPledgeQuery()
         {
             Id = pledgeId,
         });
@@ -75,12 +68,12 @@ public class PledgesController : Controller
     }
 
     [HttpPost]
-    [Route("pledges/{pledgeId}/debit")]
+    [Route("pledges/{pledgeId:int}/debit")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> DebitPledge(int pledgeId, [FromBody] DebitPledgeRequest request)
     {
-        var result = await _mediator.Send(new DebitPledgeCommand
+        var result = await mediator.Send(new DebitPledgeCommand
         {
             PledgeId = pledgeId,
             ApplicationId = request.ApplicationId,
@@ -96,12 +89,12 @@ public class PledgesController : Controller
     }
 
     [HttpPost]
-    [Route("accounts/{accountId}/pledges")]
+    [Route("accounts/{accountId:long}/pledges")]
     [ProducesResponseType((int)HttpStatusCode.Created)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> CreatePledge(long accountId, [FromBody] CreatePledgeRequest request)
     {
-        var commandResult = await _mediator.Send(new CreatePledgeCommand
+        var commandResult = await mediator.Send(new CreatePledgeCommand
         {
             AccountId = accountId,
             Amount = request.Amount,
@@ -124,14 +117,14 @@ public class PledgesController : Controller
     }
 
     [HttpPost]
-    [Route("pledges/{pledgeId}/close")]
+    [Route("pledges/{pledgeId:int}/close")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> ClosePledge(int pledgeId, [FromBody] ClosePledgeRequest request)
     {
         try
         {
-            await _mediator.Send(new ClosePledgeCommand
+            await mediator.Send(new ClosePledgeCommand
             {
                 PledgeId = pledgeId,
                 UserId = request.UserId,
@@ -148,11 +141,11 @@ public class PledgesController : Controller
     }
 
     [HttpPost]
-    [Route("pledges/{pledgeId}/credit")]
+    [Route("pledges/{pledgeId:int}/credit")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     public async Task<IActionResult> CreditPledge(int pledgeId, [FromBody] CreditPledgeRequest request)
     {
-        await _mediator.Send(new CreditPledgeCommand
+        await mediator.Send(new CreditPledgeCommand
         {
             PledgeId = pledgeId,
             ApplicationId = request.ApplicationId,

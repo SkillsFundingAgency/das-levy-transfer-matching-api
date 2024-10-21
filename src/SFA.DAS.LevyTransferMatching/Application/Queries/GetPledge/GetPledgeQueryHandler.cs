@@ -4,18 +4,11 @@ using SFA.DAS.LevyTransferMatching.Extensions;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetPledge;
 
-public class GetPledgeQueryHandler : IRequestHandler<GetPledgeQuery, GetPledgeResult>
+public class GetPledgeQueryHandler(LevyTransferMatchingDbContext dbContext) : IRequestHandler<GetPledgeQuery, GetPledgeResult>
 {
-    private readonly LevyTransferMatchingDbContext _dbContext;
-
-    public GetPledgeQueryHandler(LevyTransferMatchingDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
     public async Task<GetPledgeResult> Handle(GetPledgeQuery request, CancellationToken cancellationToken)
     {
-        var pledge = await _dbContext.Pledges
+        var pledge = await dbContext.Pledges
             .Where(x => x.Id == request.Id)
             .Include(x => x.EmployerAccount)
             .Include(x => x.Locations)

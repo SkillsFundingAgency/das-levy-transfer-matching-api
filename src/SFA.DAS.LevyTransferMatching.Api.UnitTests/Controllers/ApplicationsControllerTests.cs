@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.LevyTransferMatching.Api.Controllers;
 using SFA.DAS.LevyTransferMatching.Api.Models.Applications;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetApplication;
@@ -78,7 +79,7 @@ public class ApplicationsControllerTests
 
         var actionResult = await _applicationsController.ApproveApplication(_pledgeId, _applicationId, request);
         var okResult = actionResult as OkResult;
-        Assert.That(okResult, Is.Not.Null);
+        okResult.Should().NotBeNull();
 
         _mediator.Verify(x => x.Send(It.Is<ApproveApplicationCommand>(command =>
                     command.PledgeId == _pledgeId &&
@@ -94,7 +95,7 @@ public class ApplicationsControllerTests
     {
         var actionResult = await _applicationsController.UndoApplicationApproval(_pledgeId, _applicationId);
         var okResult = actionResult as OkResult;
-        Assert.That(okResult, Is.Not.Null);
+        okResult.Should().NotBeNull();
 
         _mediator.Verify(x => x.Send(It.Is<UndoApplicationApprovalCommand>(command =>
                     command.PledgeId == _pledgeId &&
@@ -108,10 +109,10 @@ public class ApplicationsControllerTests
     {
         var actionResult = await _applicationsController.CreateApplication(_pledgeId, _request);
         var createdResult = actionResult as CreatedResult;
-        Assert.That(createdResult, Is.Not.Null);
-        var response = createdResult.Value as CreateApplicationResponse;
-        Assert.That(response, Is.Not.Null);
-        Assert.That(response.ApplicationId, Is.EqualTo(_result.ApplicationId));
+        createdResult.Should().NotBeNull();
+        var response = createdResult?.Value as CreateApplicationResponse;
+        response.Should().NotBeNull();
+        response?.ApplicationId.Should().Be(_result.ApplicationId);
     }
 
     [Test]
@@ -124,20 +125,20 @@ public class ApplicationsControllerTests
 
         _mediator
             .Setup(x => x.Send(
-                It.Is<GetApplicationQuery>(y => (y.PledgeId == pledgeId) && (y.ApplicationId == applicationId)),
+                It.Is<GetApplicationQuery>(y => y.PledgeId == pledgeId && y.ApplicationId == applicationId),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(applicationResult);
 
         // Act
         var actionResult = await _applicationsController.GetApplication(applicationId);
         var okObjectResult = actionResult as OkObjectResult;
-        var getApplicationResponse = okObjectResult.Value as GetApplicationResponse;
+        var getApplicationResponse = okObjectResult?.Value as GetApplicationResponse;
 
         // Assert
-        Assert.That(actionResult, Is.Not.Null);
-        Assert.That(okObjectResult, Is.Not.Null);
-        Assert.That(getApplicationResponse, Is.Not.Null);
-        Assert.That(okObjectResult.StatusCode, Is.EqualTo((int)HttpStatusCode.OK));
+        actionResult.Should().NotBeNull();
+        okObjectResult.Should().NotBeNull();
+        getApplicationResponse.Should().NotBeNull();
+        okObjectResult?.StatusCode.Should().Be((int)HttpStatusCode.OK);
     }
 
     [Test]
@@ -150,20 +151,20 @@ public class ApplicationsControllerTests
 
         _mediator
             .Setup(x => x.Send(
-                It.Is<GetApplicationQuery>(y => (y.PledgeId == pledgeId) && (y.ApplicationId == applicationId)),
+                It.Is<GetApplicationQuery>(y => y.PledgeId == pledgeId && y.ApplicationId == applicationId),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(applicationResult);
 
         // Act
         var actionResult = await _applicationsController.GetApplication(pledgeId, applicationId);
         var okObjectResult = actionResult as OkObjectResult;
-        var getApplicationResponse = okObjectResult.Value as GetApplicationResponse;
+        var getApplicationResponse = okObjectResult?.Value as GetApplicationResponse;
 
         // Assert
-        Assert.That(actionResult, Is.Not.Null);
-        Assert.That(okObjectResult, Is.Not.Null);
-        Assert.That(getApplicationResponse, Is.Not.Null);
-        Assert.That(okObjectResult.StatusCode, Is.EqualTo((int)HttpStatusCode.OK));
+        actionResult.Should().NotBeNull();
+        okObjectResult.Should().NotBeNull();
+        getApplicationResponse.Should().NotBeNull();
+        okObjectResult?.StatusCode.Should().Be((int)HttpStatusCode.OK);
     }
 
     [Test]
@@ -175,7 +176,7 @@ public class ApplicationsControllerTests
 
         _mediator
             .Setup(x => x.Send(
-                It.Is<GetApplicationQuery>(y => (y.PledgeId == pledgeId) && (y.ApplicationId == applicationId)),
+                It.Is<GetApplicationQuery>(y => y.PledgeId == pledgeId && y.ApplicationId == applicationId),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync((GetApplicationResult)null);
 
@@ -184,9 +185,9 @@ public class ApplicationsControllerTests
         var okObjectResult = actionResult as NotFoundResult;
 
         // Assert
-        Assert.That(actionResult, Is.Not.Null);
-        Assert.That(okObjectResult, Is.Not.Null);
-        Assert.That(okObjectResult.StatusCode, Is.EqualTo((int)HttpStatusCode.NotFound));
+        actionResult.Should().NotBeNull();
+        okObjectResult.Should().NotBeNull();
+        okObjectResult?.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
     }
 
     [Test]
@@ -198,7 +199,7 @@ public class ApplicationsControllerTests
 
         _mediator
             .Setup(x => x.Send(
-                It.Is<GetApplicationQuery>(y => (y.PledgeId == pledgeId) && (y.ApplicationId == applicationId)),
+                It.Is<GetApplicationQuery>(y => y.PledgeId == pledgeId && y.ApplicationId == applicationId),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync((GetApplicationResult)null);
 
@@ -207,9 +208,9 @@ public class ApplicationsControllerTests
         var okObjectResult = actionResult as NotFoundResult;
 
         // Assert
-        Assert.That(actionResult, Is.Not.Null);
-        Assert.That(okObjectResult, Is.Not.Null);
-        Assert.That(okObjectResult.StatusCode, Is.EqualTo((int)HttpStatusCode.NotFound));
+        actionResult.Should().NotBeNull();
+        okObjectResult.Should().NotBeNull();
+        okObjectResult?.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
     }
 
     [Test]
@@ -218,15 +219,15 @@ public class ApplicationsControllerTests
         _mediator.Setup(x => x.Send(It.Is<GetApplicationsQuery>(query => query.PledgeId == _pledgeId),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetApplicationsResult
-                { Items = new List<GetApplicationsResult.Application> { new GetApplicationsResult.Application() } });
+                { Items = [new GetApplicationsResult.Application()] });
 
         var actionResult =
             await _applicationsController.GetApplications(new GetApplicationsRequest { PledgeId = _pledgeId });
         var result = actionResult as OkObjectResult;
-        Assert.That(result, Is.Not.Null);
-        var response = result.Value as GetApplicationsResponse;
-        Assert.That(response, Is.Not.Null);
-        Assert.That(response.Applications.Count(), Is.EqualTo(1));
+        result.Should().NotBeNull();
+        var response = result?.Value as GetApplicationsResponse;
+        response.Should().NotBeNull();
+        response?.Applications.Count().Should().Be(1);
     }
 
     [Test]
@@ -235,17 +236,15 @@ public class ApplicationsControllerTests
         _mediator.Setup(x => x.Send(It.Is<GetApplicationsQuery>(query => query.AccountId == _accountId),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetApplicationsResult
-                { Items = new List<GetApplicationsResult.Application> { new GetApplicationsResult.Application() } });
+                { Items = [new GetApplicationsResult.Application()] });
 
-        var actionResult =
-            await _applicationsController.GetApplications(new GetApplicationsRequest { AccountId = _accountId });
+        var actionResult = await _applicationsController.GetApplications(new GetApplicationsRequest { AccountId = _accountId });
         var result = actionResult as OkObjectResult;
-        Assert.That(result, Is.Not.Null);
-        var response = result.Value as GetApplicationsResponse;
-        Assert.That(response, Is.Not.Null);
+        result.Should().NotBeNull();
+        var response = result?.Value as GetApplicationsResponse;
+        response.Should().NotBeNull();
 
-        var apps = response.Applications.ToList();
-        Assert.That(response.Applications.Count(), Is.EqualTo(1));
+        response?.Applications.Count().Should().Be(1);
     }
 
     [Test]
@@ -254,17 +253,16 @@ public class ApplicationsControllerTests
         _mediator.Setup(x => x.Send(It.Is<GetApplicationsQuery>(query => query.SenderAccountId == _senderAccountId),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetApplicationsResult
-                { Items = new List<GetApplicationsResult.Application> { new GetApplicationsResult.Application() } });
+                { Items = [new GetApplicationsResult.Application()] });
 
         var actionResult = await _applicationsController.GetApplications(new GetApplicationsRequest
             { SenderAccountId = _senderAccountId });
         var result = actionResult as OkObjectResult;
-        Assert.That(result, Is.Not.Null);
-        var response = result.Value as GetApplicationsResponse;
-        Assert.That(response, Is.Not.Null);
+        result.Should().NotBeNull();
+        var response = result?.Value as GetApplicationsResponse;
+        response.Should().NotBeNull();
 
-        var apps = response.Applications.ToList();
-        Assert.AreEqual(1, response.Applications.Count());
+        response?.Applications.Count().Should().Be(1);
     }
 
 
@@ -276,17 +274,16 @@ public class ApplicationsControllerTests
                 x.Send(It.Is<GetApplicationsQuery>(query => query.ApplicationStatusFilter == applicationStatusFilter),
                     It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetApplicationsResult
-                { Items = new List<GetApplicationsResult.Application> { new GetApplicationsResult.Application() } });
+                { Items = [new GetApplicationsResult.Application()] });
 
         var actionResult = await _applicationsController.GetApplications(new GetApplicationsRequest
             { ApplicationStatusFilter = applicationStatusFilter });
         var result = actionResult as OkObjectResult;
-        Assert.That(result, Is.Not.Null);
-        var response = result.Value as GetApplicationsResponse;
-        Assert.That(response, Is.Not.Null);
+        result.Should().NotBeNull();
+        var response = result?.Value as GetApplicationsResponse;
+        response.Should().NotBeNull();
 
-        var apps = response.Applications.ToList();
-        Assert.AreEqual(1, response.Applications.Count());
+        response?.Applications.Count().Should().Be(1);
     }
 
     [Test]
@@ -310,8 +307,8 @@ public class ApplicationsControllerTests
         var noContentResult = actionResult as NoContentResult;
 
         // Assert
-        Assert.That(actionResult, Is.Not.Null);
-        Assert.That(noContentResult, Is.Not.Null);
+        actionResult.Should().NotBeNull();
+        noContentResult.Should().NotBeNull();
     }
 
     [Test]
@@ -335,8 +332,8 @@ public class ApplicationsControllerTests
         var badRequestResult = actionResult as BadRequestResult;
 
         // Assert
-        Assert.That(actionResult, Is.Not.Null);
-        Assert.That(badRequestResult, Is.Not.Null);
+        actionResult.Should().NotBeNull();
+        badRequestResult.Should().NotBeNull();
     }
 
     [Test]
@@ -344,7 +341,7 @@ public class ApplicationsControllerTests
     {
         var actionResult = await _applicationsController.DebitApplication(_applicationId, _debitApplicationRequest);
         var okResult = actionResult as OkResult;
-        Assert.That(okResult, Is.Not.Null);
+        okResult.Should().NotBeNull();
 
         _mediator.Verify(x => x.Send(It.Is<DebitApplicationCommand>(command =>
                     command.ApplicationId == _applicationId),
@@ -358,7 +355,7 @@ public class ApplicationsControllerTests
         var actionResult =
             await _applicationsController.WithdrawApplication(_applicationId, _accountId, _withdrawApplicationRequest);
         var okResult = actionResult as OkResult;
-        Assert.That(okResult, Is.Not.Null);
+        okResult.Should().NotBeNull();
 
         _mediator.Verify(x => x.Send(It.Is<WithdrawApplicationCommand>(command =>
                     command.ApplicationId == _applicationId),

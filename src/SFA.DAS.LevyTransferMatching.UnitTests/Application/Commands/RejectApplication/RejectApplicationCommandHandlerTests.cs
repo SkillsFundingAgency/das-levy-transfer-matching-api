@@ -9,7 +9,7 @@ public class RejectApplicationCommandHandlerTests
     private RejectApplicationCommandHandler _handler;
     private Mock<IApplicationRepository> _applicationRepository;
 
-    private readonly Fixture _fixture = new Fixture();
+    private readonly Fixture _fixture = new();
     private LevyTransferMatching.Data.Models.Application _application;
     private RejectApplicationCommand _command;
 

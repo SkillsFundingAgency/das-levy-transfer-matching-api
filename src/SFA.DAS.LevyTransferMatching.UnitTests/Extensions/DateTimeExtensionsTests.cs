@@ -14,6 +14,6 @@ public class DateTimeExtensionsTests
     public void GetFinancialYear_Produces_Expected_Output(DateTime input, string expectedOutput)
     {
         var result = input.GetFinancialYear();
-        Assert.That(result, Is.EqualTo(expectedOutput));
+        result.Should().Be(expectedOutput);
     }
 }

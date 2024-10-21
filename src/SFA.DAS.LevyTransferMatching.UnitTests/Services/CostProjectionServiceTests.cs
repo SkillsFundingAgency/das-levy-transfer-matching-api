@@ -32,16 +32,11 @@ public class CostProjectionServiceTests
 
     private class CostProjectionServiceTestsFixture
     {
-        private readonly CostProjectionService _costProjectionService;
+        private readonly CostProjectionService _costProjectionService = new();
         private int _amount;
         private DateTime _startDate;
         private int _duration;
         private List<CostProjection> _result;
-
-        public CostProjectionServiceTestsFixture()
-        {
-            _costProjectionService = new CostProjectionService();
-        }
 
         public CostProjectionServiceTestsFixture WithTotalAmount(int amount)
         {
@@ -71,11 +66,11 @@ public class CostProjectionServiceTests
             if (amount.HasValue)
             {
                 var yearValue = _result.Single(x => x.FinancialYear == financialYear);
-                Assert.That(yearValue.Amount, Is.EqualTo(amount));
+                yearValue.Amount.Should().Be((int)amount);
             }
             else
             {
-                Assert.That(_result.Exists(x => x.FinancialYear == financialYear), Is.False);
+                _result.Exists(x => x.FinancialYear == financialYear).Should().BeFalse();
             }
         }
     }

@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitPledge;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.Models;
@@ -15,7 +14,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.DebitPledg
         private DebitPledgeCommandHandler _handler;
         private Mock<IPledgeRepository> _repository;
 
-        private readonly Fixture _fixture = new Fixture();
+        private readonly Fixture _fixture = new();
         private DebitPledgeCommand _command;
         private Pledge _pledge;
 
@@ -82,7 +81,7 @@ namespace SFA.DAS.LevyTransferMatching.UnitTests.Application.Commands.DebitPledg
 
             var result = await _handler.Handle(_command, CancellationToken.None);
 
-            Assert.That(result.IsSuccess, Is.False);
+            result.IsSuccess.Should().BeFalse();
         }
     }
 }

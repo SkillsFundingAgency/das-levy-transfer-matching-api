@@ -1,19 +1,11 @@
 ﻿namespace SFA.DAS.LevyTransferMatching.Data.ValueObjects;
 
-public class MatchingCriteria
+public class MatchingCriteria(bool sector, bool level, bool location, bool jobRole)
 {
-    public MatchingCriteria(bool sector, bool level, bool location, bool jobRole)
-    {
-        MatchSector = sector;
-        MatchLevel = level;
-        MatchLocation = location;
-        MatchJobRole = jobRole;
-    }
-
-    public bool MatchSector { get; }
-    public bool MatchLevel { get; }
-    public bool MatchLocation { get; }
-    public bool MatchJobRole { get; }
+    public bool MatchSector { get; } = sector;
+    public bool MatchLevel { get; } = level;
+    public bool MatchLocation { get; } = location;
+    public bool MatchJobRole { get; } = jobRole;
 
     public byte MatchPercentage
     {

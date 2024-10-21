@@ -19,7 +19,7 @@ public class GetPledgeQueryHandlerTests : LevyTransferMatchingDbContextFixture
 
         var getPledgesQueryHandler = new GetPledgeQueryHandler(DbContext);
 
-        var getPledgesQuery = new GetPledgeQuery()
+        var getPledgesQuery = new GetPledgeQuery
         {
             Id = expectedPledge.Id,
         };
@@ -28,9 +28,9 @@ public class GetPledgeQueryHandlerTests : LevyTransferMatchingDbContextFixture
         var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
 
         // Assert
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result.DasAccountName, Is.Not.Null);
-        Assert.That(result.Id, Is.EqualTo(expectedPledge.Id));
+        result.Should().NotBeNull();
+        result.DasAccountName.Should().NotBeNull();
+        result.Id.Should().Be(expectedPledge.Id);
     }
 
     [Test]
@@ -46,7 +46,7 @@ public class GetPledgeQueryHandlerTests : LevyTransferMatchingDbContextFixture
         var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
 
         // Assert
-        Assert.That(result, Is.Null);
+        result.Should().BeNull();
     }
 
     private async Task PopulateDbContext()

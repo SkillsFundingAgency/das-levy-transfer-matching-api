@@ -5,18 +5,11 @@ using SFA.DAS.NServiceBus.Services;
 
 namespace SFA.DAS.LevyTransferMatching.Domain.EventHandlers;
 
-public class ApplicationFundingDeclinedHandler : IDomainEventHandler<ApplicationFundingDeclined>
+public class ApplicationFundingDeclinedHandler(IEventPublisher eventPublisher) : IDomainEventHandler<ApplicationFundingDeclined>
 {
-    private readonly IEventPublisher _eventPublisher;
-
-    public ApplicationFundingDeclinedHandler(IEventPublisher eventPublisher)
-    {
-        _eventPublisher = eventPublisher;
-    }
-
     public async Task Handle(ApplicationFundingDeclined @event, CancellationToken cancellationToken = default)
     {
-        await _eventPublisher.Publish(
+        await eventPublisher.Publish(
             new ApplicationFundingDeclinedEvent(
                 @event.ApplicationId,
                 @event.PledgeId,

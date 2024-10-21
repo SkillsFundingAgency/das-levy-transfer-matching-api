@@ -2,21 +2,12 @@
 
 namespace SFA.DAS.LevyTransferMatching.Domain.Events;
 
-public class ApplicationApproved : IDomainEvent
+public class ApplicationApproved(int applicationId, int pledgeId, DateTime approvedOn, int amount, long receiverAccountId)
+    : IDomainEvent
 {
-    public ApplicationApproved(int applicationId, int pledgeId, DateTime approvedOn, int amount, long receiverAccountId)
-    {
-        Amount = amount;
-        ApplicationId = applicationId;
-        ApprovedOn = approvedOn;
-        PledgeId = pledgeId;
-        ReceiverAccountId = receiverAccountId;
-    }
-
-    public int ApplicationId { get; }
-    public int PledgeId { get; }
-    public DateTime ApprovedOn { get; }
-    public int Amount { get; }
-    public long ReceiverAccountId { get; set; }
-
+    public int ApplicationId { get; } = applicationId;
+    public int PledgeId { get; } = pledgeId;
+    public DateTime ApprovedOn { get; } = approvedOn;
+    public int Amount { get; } = amount;
+    public long ReceiverAccountId { get; set; } = receiverAccountId;
 }
