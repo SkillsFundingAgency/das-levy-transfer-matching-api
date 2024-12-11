@@ -25,15 +25,15 @@ public static class QueryExtensions
             result = result.Where(x => x.EmployerAccount.Id == request.AccountId);
         }
 
-            if (request.SenderAccountId.HasValue)
-            {
-                result = result.Where(x => x.Pledge.EmployerAccountId == request.SenderAccountId);
-            }
-
-            return result;
+        if (request.SenderAccountId.HasValue)
+        {
+            result = result.Where(x => x.Pledge.EmployerAccountId == request.SenderAccountId);
         }
 
-        public static IQueryable<Data.Models.Application> Sort(this IQueryable<Data.Models.Application> queryable,
+        return result;
+    }
+
+    public static IQueryable<Data.Models.Application> Sort(this IQueryable<Data.Models.Application> queryable,
             GetApplicationsSortOrder sortOrder, SortDirection sortDirection, DateTime now)
         {
             var result = sortOrder switch
