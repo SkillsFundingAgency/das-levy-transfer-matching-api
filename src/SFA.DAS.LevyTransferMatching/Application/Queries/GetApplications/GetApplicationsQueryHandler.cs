@@ -13,13 +13,12 @@ public class GetApplicationsQueryHandler(LevyTransferMatchingDbContext dbContext
         var now = dateTimeService.UtcNow;
 
         var applicationsQuery = dbContext.Applications
-            .Include(x => x.ApplicationCostProjections)
-            .Include(x => x.StatusHistory)
+            .AsNoTracking()
             .AsQueryable()
             .Filter(request)
             .Sort(request.SortOrder, request.SortDirection, now);
 
-        var queryResult = await applicationsQuery
+        var query = applicationsQuery
             .Skip(request.Offset)
             .Take(request.Limit)
             .Select(x => new GetApplicationsResult.Application
@@ -44,34 +43,28 @@ public class GetApplicationsQueryHandler(LevyTransferMatchingDbContext dbContext
                 StandardRoute = x.StandardRoute,
                 Amount = x.GetCost(),
                 TotalAmount = x.TotalAmount,
-                CurrentFinancialYearAmount = Convert.ToInt32(x.ApplicationCostProjections.Where(p => p.FinancialYear == now.GetFinancialYear()).Sum(p => p.Amount)),
+                CurrentFinancialYearAmount = x.ApplicationCostProjections.Where(p => p.FinancialYear == now.GetFinancialYear()).Sum(p => p.Amount),
                 StartDate = x.StartDate,
-                EmailAddresses = Convert.ToInt32(x.EmailAddresses.Count) > 0
+                EmailAddresses = x.EmailAddresses.Any()
                     ? x.EmailAddresses.Select(email => email.EmailAddress)
                     : null,
                 CreatedOn = x.CreatedOn,
                 Status = x.Status,
                 IsNamePublic = x.Pledge.IsNamePublic,
-
-                Locations = x.ApplicationLocations.Select(location =>
-                    new GetApplicationsResult.Application.ApplicationLocation
-                    {
-                        Id = location.Id,
-                        PledgeLocationId = location.PledgeLocationId
-                    }).ToList(),
-
+                Locations = x.ApplicationLocations.Select(location => new GetApplicationsResult.Application.ApplicationLocation
+                {
+                    Id = location.Id,
+                    PledgeLocationId = location.PledgeLocationId
+                }),
                 AdditionalLocations = x.AdditionalLocation,
                 SpecificLocation = x.SpecificLocation,
                 SenderEmployerAccountId = x.Pledge.EmployerAccount.Id,
                 SenderEmployerAccountName = x.Pledge.EmployerAccount.Name,
-
-                CostProjections = x.ApplicationCostProjections.OrderBy(p => p.FinancialYear).Select(p =>
-                    new GetApplicationsResult.Application.CostProjection
-                    {
-                        FinancialYear = p.FinancialYear,
-                        Amount = p.Amount
-                    }).ToList(),
-
+                CostProjections = x.ApplicationCostProjections.OrderBy(p => p.FinancialYear).Select(p => new GetApplicationsResult.Application.CostProjection
+                {
+                    FinancialYear = p.FinancialYear,
+                    Amount = p.Amount
+                }),
                 MatchPercentage = x.MatchPercentage,
                 MatchSector = x.MatchSector,
                 MatchJobRole = x.MatchJobRole,
@@ -80,12 +73,10 @@ public class GetApplicationsQueryHandler(LevyTransferMatchingDbContext dbContext
                 CostingModel = x.CostingModel,
                 PledgeRemainingAmount = x.Pledge.RemainingAmount,
                 PledgeAutomaticApprovalOption = x.Pledge.AutomaticApprovalOption
-            })
-            .AsNoTracking()
-            .AsSingleQuery()
-            .ToListAsync(cancellationToken);
+            });
 
-        var count = await applicationsQuery.CountAsync(cancellationToken: cancellationToken);
+        var queryResult = await query.ToListAsync(cancellationToken);
+        var count = await applicationsQuery.CountAsync(cancellationToken);
 
         return new GetApplicationsResult
         {
