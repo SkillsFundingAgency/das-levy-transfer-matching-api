@@ -11,6 +11,8 @@ using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
+using Microsoft.Extensions.Logging;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplicationsToAutoDecline;
 
 namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers;
 
@@ -19,6 +21,7 @@ public class ApplicationsControllerTests
 {
     private readonly Fixture _fixture = new Fixture();
     private Mock<IMediator> _mediator;
+    private Mock<ILogger<ApplicationsController>> _logger;
     private ApplicationsController _applicationsController;
 
     private int _pledgeId;
@@ -43,7 +46,8 @@ public class ApplicationsControllerTests
         _withdrawApplicationRequest = _fixture.Create<WithdrawApplicationRequest>();
 
         _mediator = new Mock<IMediator>();
-        _applicationsController = new ApplicationsController(_mediator.Object);
+        _logger = new Mock<ILogger<ApplicationsController>>();
+        _applicationsController = new ApplicationsController(_mediator.Object, _logger.Object);
 
         _mediator.Setup(x => x.Send(It.Is<CreateApplicationCommand>(command =>
                 command.PledgeId == _pledgeId &&
@@ -133,6 +137,27 @@ public class ApplicationsControllerTests
         var actionResult = await _applicationsController.GetApplication(applicationId);
         var okObjectResult = actionResult as OkObjectResult;
         var getApplicationResponse = okObjectResult?.Value as GetApplicationResponse;
+
+        // Assert
+        actionResult.Should().NotBeNull();
+        okObjectResult.Should().NotBeNull();
+        getApplicationResponse.Should().NotBeNull();
+        okObjectResult?.StatusCode.Should().Be((int)HttpStatusCode.OK);
+    }
+
+    [Test]
+    public async Task GetApplicationsToAutoDecline_Returns_Applications()
+    {
+        // Arrange
+        var applicationResult = _fixture.Create<GetApplicationsToAutoDeclineResult>();
+
+       _mediator.Setup(x => x.Send(It.IsAny<GetApplicationsToAutoDeclineQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(applicationResult);   
+
+        // Act
+        var actionResult = await _applicationsController.GetApplicationsToAutoDecline();
+        var okObjectResult = actionResult as OkObjectResult;
+        var getApplicationResponse = okObjectResult?.Value as GetApplicationsToAutoDeclineResponse;
 
         // Assert
         actionResult.Should().NotBeNull();
