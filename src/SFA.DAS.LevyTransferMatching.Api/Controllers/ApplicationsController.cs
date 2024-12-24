@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.LevyTransferMatching.Api.Models.Applications;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetApplication;
