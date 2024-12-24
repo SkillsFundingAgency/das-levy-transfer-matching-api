@@ -1,19 +1,19 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.LevyTransferMatching.Api.Controllers;
 using SFA.DAS.LevyTransferMatching.Api.Models.Applications;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetApplication;
+using SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.ApproveApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
-using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
-using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
-using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
-using SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
-using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
-using Microsoft.Extensions.Logging;
-using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplicationsToAutoDecline;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DeclineFunding;
+using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
+using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplicationsToAutoDecline;
 
 namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers;
 
@@ -154,8 +154,8 @@ public class ApplicationsControllerTests
         // Arrange
         var applicationResult = _fixture.Create<GetApplicationsToAutoDeclineResult>();
 
-       _mediator.Setup(x => x.Send(It.IsAny<GetApplicationsToAutoDeclineQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(applicationResult);   
+        _mediator.Setup(x => x.Send(It.IsAny<GetApplicationsToAutoDeclineQuery>(), It.IsAny<CancellationToken>()))
+             .ReturnsAsync(applicationResult);
 
         // Act
         var actionResult = await _applicationsController.GetApplicationsToAutoDecline();
@@ -247,7 +247,7 @@ public class ApplicationsControllerTests
         _mediator.Setup(x => x.Send(It.Is<GetApplicationsQuery>(query => query.PledgeId == _pledgeId),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetApplicationsResult
-                { Items = [new GetApplicationsResult.Application()] });
+            { Items = [new GetApplicationsResult.Application()] });
 
         var actionResult =
             await _applicationsController.GetApplications(new GetApplicationsRequest { PledgeId = _pledgeId });
@@ -264,7 +264,7 @@ public class ApplicationsControllerTests
         _mediator.Setup(x => x.Send(It.Is<GetApplicationsQuery>(query => query.AccountId == _accountId),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetApplicationsResult
-                { Items = [new GetApplicationsResult.Application()] });
+            { Items = [new GetApplicationsResult.Application()] });
 
         var actionResult = await _applicationsController.GetApplications(new GetApplicationsRequest { AccountId = _accountId });
         var result = actionResult as OkObjectResult;
@@ -281,10 +281,10 @@ public class ApplicationsControllerTests
         _mediator.Setup(x => x.Send(It.Is<GetApplicationsQuery>(query => query.SenderAccountId == _senderAccountId),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetApplicationsResult
-                { Items = [new GetApplicationsResult.Application()] });
+            { Items = [new GetApplicationsResult.Application()] });
 
         var actionResult = await _applicationsController.GetApplications(new GetApplicationsRequest
-            { SenderAccountId = _senderAccountId });
+        { SenderAccountId = _senderAccountId });
         var result = actionResult as OkObjectResult;
         result.Should().NotBeNull();
         var response = result?.Value as GetApplicationsResponse;
@@ -302,10 +302,10 @@ public class ApplicationsControllerTests
                 x.Send(It.Is<GetApplicationsQuery>(query => query.ApplicationStatusFilter == applicationStatusFilter),
                     It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetApplicationsResult
-                { Items = [new GetApplicationsResult.Application()] });
+            { Items = [new GetApplicationsResult.Application()] });
 
         var actionResult = await _applicationsController.GetApplications(new GetApplicationsRequest
-            { ApplicationStatusFilter = applicationStatusFilter });
+        { ApplicationStatusFilter = applicationStatusFilter });
         var result = actionResult as OkObjectResult;
         result.Should().NotBeNull();
         var response = result?.Value as GetApplicationsResponse;
@@ -394,6 +394,15 @@ public class ApplicationsControllerTests
     [Test]
     public async Task Post_DeclineAcceptedFunding_Declines_Application()
     {
+        var result = new DeclineFundingCommandResult()
+        {
+            Updated = true,
+        };
+
+        _mediator
+            .Setup(x => x.Send(It.IsAny<DeclineFundingCommand>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(result);
+
         var actionResult =
             await _applicationsController.DeclineAcceptedFunding(_applicationId, _declineFundingRequest);
         var okResult = actionResult as OkResult;
