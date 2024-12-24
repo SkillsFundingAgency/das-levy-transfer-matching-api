@@ -13,6 +13,7 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplicationsToAutoDecline;
+using SFA.DAS.LevyTransferMatching.Application.Commands.DeclineFunding;
 
 namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers;
 
@@ -32,6 +33,7 @@ public class ApplicationsControllerTests
     private CreateApplicationCommandResult _result;
     private DebitApplicationRequest _debitApplicationRequest;
     private WithdrawApplicationRequest _withdrawApplicationRequest;
+    private DeclineFundingRequest _declineFundingRequest;
 
     [SetUp]
     public void Setup()
@@ -44,6 +46,7 @@ public class ApplicationsControllerTests
         _result = _fixture.Create<CreateApplicationCommandResult>();
         _debitApplicationRequest = _fixture.Create<DebitApplicationRequest>();
         _withdrawApplicationRequest = _fixture.Create<WithdrawApplicationRequest>();
+        _declineFundingRequest = _fixture.Create<DeclineFundingRequest>();
 
         _mediator = new Mock<IMediator>();
         _logger = new Mock<ILogger<ApplicationsController>>();
@@ -383,6 +386,20 @@ public class ApplicationsControllerTests
         okResult.Should().NotBeNull();
 
         _mediator.Verify(x => x.Send(It.Is<WithdrawApplicationCommand>(command =>
+                    command.ApplicationId == _applicationId),
+                It.IsAny<CancellationToken>()),
+            Times.Once);
+    }
+
+    [Test]
+    public async Task Post_DeclineAcceptedFunding_Declines_Application()
+    {
+        var actionResult =
+            await _applicationsController.DeclineAcceptedFunding(_applicationId, _declineFundingRequest);
+        var okResult = actionResult as OkResult;
+        okResult.Should().NotBeNull();
+
+        _mediator.Verify(x => x.Send(It.Is<DeclineFundingCommand>(command =>
                     command.ApplicationId == _applicationId),
                 It.IsAny<CancellationToken>()),
             Times.Once);

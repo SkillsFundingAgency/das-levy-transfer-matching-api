@@ -137,6 +137,27 @@ public class ApplicationsController(IMediator mediator, ILogger<ApplicationsCont
 
         return BadRequest();
     }
+    
+    [HttpPost]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [Route("applications/{applicationId:int}/decline-accepted-funding")]
+    public async Task<IActionResult> DeclineAcceptedFunding(int applicationId, [FromBody] DeclineFundingRequest request)
+    {
+        var result = await mediator.Send(new DeclineFundingCommand
+        {
+            ApplicationId = applicationId,
+            UserDisplayName = request.UserDisplayName,
+            UserId = request.UserId,
+        });
+
+        if (result.Updated)
+        {
+            return Ok();
+        }
+
+        return BadRequest();
+    }
 
     [HttpPost]
     [ProducesResponseType((int)HttpStatusCode.OK)]
