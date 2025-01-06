@@ -11,6 +11,7 @@ using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
+using Microsoft.Extensions.Logging;
 
 namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers;
 
@@ -19,6 +20,7 @@ public class ApplicationsControllerTests
 {
     private readonly Fixture _fixture = new Fixture();
     private Mock<IMediator> _mediator;
+    private Mock<ILogger<ApplicationsController>> _logger;
     private ApplicationsController _applicationsController;
 
     private int _pledgeId;
@@ -43,7 +45,8 @@ public class ApplicationsControllerTests
         _withdrawApplicationRequest = _fixture.Create<WithdrawApplicationRequest>();
 
         _mediator = new Mock<IMediator>();
-        _applicationsController = new ApplicationsController(_mediator.Object);
+        _logger = new Mock<ILogger<ApplicationsController>>();
+        _applicationsController = new ApplicationsController(_mediator.Object, _logger.Object);
 
         _mediator.Setup(x => x.Send(It.Is<CreateApplicationCommand>(command =>
                 command.PledgeId == _pledgeId &&

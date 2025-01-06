@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.LevyTransferMatching.Api.Models.Applications;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetApplication;
+using SFA.DAS.LevyTransferMatching.Api.Models.GetApplicationsToAutoExpire;
 using SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.ApproveApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
@@ -12,12 +14,13 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
 using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplicationsToAutoExpire;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers;
 
 [ApiVersion("1.0")]
 [ApiController]
-public class ApplicationsController(IMediator mediator) : ControllerBase
+public class ApplicationsController(IMediator mediator, ILogger<ApplicationsController> logger) : ControllerBase
 {
     [HttpGet]
     [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -257,5 +260,25 @@ public class ApplicationsController(IMediator mediator) : ControllerBase
         });
 
         return Ok();
+    }
+
+    [HttpGet]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [Route("applications-auto-expire")]
+    public async Task<IActionResult> GetApplicationsToAutoExpire()
+    {
+        try
+        {
+            var query = await mediator.Send(new GetApplicationsToAutoExpireQuery());
+
+            return Ok((GetApplicationsToAutoExpireResponse)query);
+        }
+        catch (Exception e)
+        {
+
+            logger.LogError(e, "Exception thrown in {MethodName}.", nameof(GetApplicationsToAutoExpire));
+            throw;
+        }
     }
 }
