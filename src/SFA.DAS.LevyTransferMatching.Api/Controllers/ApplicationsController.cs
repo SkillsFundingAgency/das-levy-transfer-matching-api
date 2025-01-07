@@ -8,6 +8,7 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.ApproveApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DeclineFunding;
+using SFA.DAS.LevyTransferMatching.Application.Commands.ExpireAcceptedFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.RecalculateCostProjection;
 using SFA.DAS.LevyTransferMatching.Application.Commands.RejectApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
@@ -280,5 +281,26 @@ public class ApplicationsController(IMediator mediator, ILogger<ApplicationsCont
             logger.LogError(e, "Exception thrown in {MethodName}.", nameof(GetApplicationsToAutoExpire));
             throw;
         }
+    }
+
+    [HttpPost]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [Route("applications/{applicationId:int}/expire-accepted-funding")]
+    public async Task<IActionResult> ExpireAcceptedFunding(int applicationId, [FromBody] ExpireAcceptedFundingRequest request)
+    {
+        var result = await mediator.Send(new ExpireAcceptedFundingCommand
+        {
+            ApplicationId = applicationId,
+            UserDisplayName = request.UserDisplayName,
+            UserId = request.UserId,
+        });
+
+        if (result.Updated)
+        {
+            return Ok();
+        }
+
+        return BadRequest();
     }
 }
