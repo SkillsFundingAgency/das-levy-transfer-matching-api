@@ -2,5 +2,5 @@
 
 public class GetApplicationsToAutoExpireResult
 {
-    public IEnumerable<int> ApplicationsToExpire { get; set; }
+    public IEnumerable<int> ApplicationIdsToExpire { get; set; }
 }

@@ -15,7 +15,7 @@ public class GetApplicationsToAutoExpireQueryHandler(LevyTransferMatchingDbConte
 
         return await Task.FromResult(new GetApplicationsToAutoExpireResult
         {
-            ApplicationsToExpire = applications.Select(app => app.Id)
+            ApplicationIdsToExpire = applications.Select(app => app.Id)
         });
     }
 }
