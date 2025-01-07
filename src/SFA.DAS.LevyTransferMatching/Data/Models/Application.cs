@@ -202,6 +202,23 @@ public class Application : AggregateRoot<int>
         AddStatusHistory(UpdatedOn.Value);
     }
 
+    public void ExpireAcceptedFunding(UserInfo userInfo)
+    {
+        if (Status != ApplicationStatus.Accepted)
+        {
+            throw new InvalidOperationException($"Unable to expire funding for Application {Id} status {Status}");
+        }
+
+        StartTrackingSession(UserAction.ExpireAcceptedFunding, userInfo);
+
+        ChangeTrackingSession.TrackUpdate(this);
+        Status = ApplicationStatus.FundsExpired;
+
+        UpdatedOn = DateTime.UtcNow;
+        AddEvent(new ApplicationFundingExpired(Id));
+        AddStatusHistory(UpdatedOn.Value);
+    }
+
     public void Withdraw(UserInfo userInfo)
     {
         if (Status == ApplicationStatus.Pending)

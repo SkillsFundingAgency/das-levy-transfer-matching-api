@@ -14,7 +14,7 @@ public class GetApplicationsToAutoExpireQueryHandler(LevyTransferMatchingDbConte
         var implementationDate = configuration.AutoExpireApplicationsImplementationDate;
 
         var threeMonthsAgo = DateTime.Now.AddMonths(-3);
-
+            
         var result = await levyTransferMatchingDbContext.Applications
             .Include(x => x.StatusHistory)
             .Where(x => 
