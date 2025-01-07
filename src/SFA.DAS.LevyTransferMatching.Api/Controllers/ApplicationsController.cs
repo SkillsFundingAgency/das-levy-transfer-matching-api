@@ -140,7 +140,7 @@ public class ApplicationsController(IMediator mediator, ILogger<ApplicationsCont
     [HttpPost]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    [Route("applications/{applicationId:int}/decline-accepted-funding")]
+    [Route("applications/{applicationId:int}/decline-approved-funding")]
     public async Task<IActionResult> DeclineApprovedFunding(int applicationId, [FromBody] DeclineFundingRequest request)
     {
         var result = await mediator.Send(new DeclineFundingCommand
