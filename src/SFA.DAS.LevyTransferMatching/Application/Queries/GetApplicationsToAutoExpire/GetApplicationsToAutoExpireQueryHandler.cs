@@ -1,21 +1,35 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SFA.DAS.LevyTransferMatching.Data;
+using SFA.DAS.LevyTransferMatching.Data.Enums;
+using SFA.DAS.LevyTransferMatching.Data.Models;
+using SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
 
 namespace SFA.DAS.LevyTransferMatching.Application.Queries.GetApplicationsToAutoExpire;
 
-public class GetApplicationsToAutoExpireQueryHandler(LevyTransferMatchingDbContext levyTransferMatchingDbContext)
+public class GetApplicationsToAutoExpireQueryHandler(LevyTransferMatchingDbContext levyTransferMatchingDbContext, LevyTransferMatchingApi configuration)
     : IRequestHandler<GetApplicationsToAutoExpireQuery, GetApplicationsToAutoExpireResult>
 {
     public async Task<GetApplicationsToAutoExpireResult> Handle(GetApplicationsToAutoExpireQuery request, CancellationToken cancellationToken)
     {
-        var applicationsToExpireQuery = levyTransferMatchingDbContext.Applications
-             .FromSql($"EXEC [dbo].[GetApplicationsToAutoExpire]");
+        var implementationDate = configuration.AutoExpireApplicationsImplementationDate;
 
-        var applications = await applicationsToExpireQuery.ToListAsync(cancellationToken);
+        var threeMonthsAgo = DateTime.Now.AddMonths(-3);
 
-        return await Task.FromResult(new GetApplicationsToAutoExpireResult
+        var result = await levyTransferMatchingDbContext.Applications
+            .Include(x => x.StatusHistory)
+            .Where(x => 
+                x.Status == ApplicationStatus.Accepted                
+                && x.CreatedOn > implementationDate
+                && x.StatusHistory.Any(hist => hist.Status == ApplicationStatus.Accepted
+                && hist.CreatedOn < threeMonthsAgo))
+            .AsNoTracking()
+            .Select(x => x.Id)
+            .Distinct()
+            .ToListAsync(cancellationToken);
+      
+        return new GetApplicationsToAutoExpireResult
         {
-            ApplicationIdsToExpire = applications.Select(app => app.Id)
-        });
+            ApplicationIdsToExpire = result
+        };
     }
 }
