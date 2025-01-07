@@ -15,7 +15,7 @@ public class GetApplicationsToAutoDeclineQueryHandler(LevyTransferMatchingDbCont
 
         return await Task.FromResult(new GetApplicationsToAutoDeclineResult
         {
-            ApplicationsToDecline = applications.Select(app => app.Id)
+            ApplicationIdsToDecline = applications.Select(app => app.Id)
         });
     }
 }

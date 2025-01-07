@@ -4,13 +4,13 @@ namespace SFA.DAS.LevyTransferMatching.Api.Models.Applications;
 
 public class GetApplicationsToAutoDeclineResponse
 {
-    public IEnumerable<int> ApplicationsToDecline { get; set; }
+    public IEnumerable<int> ApplicationIdsToDecline { get; set; }
 
     public static implicit operator GetApplicationsToAutoDeclineResponse(GetApplicationsToAutoDeclineResult source)
     {
         return new GetApplicationsToAutoDeclineResponse
         {
-            ApplicationsToDecline = source.ApplicationsToDecline
+            ApplicationIdsToDecline = source.ApplicationIdsToDecline
         };
     }
 }
