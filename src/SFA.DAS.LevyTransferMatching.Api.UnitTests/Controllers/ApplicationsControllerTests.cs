@@ -392,7 +392,7 @@ public class ApplicationsControllerTests
     }
 
     [Test]
-    public async Task Post_DeclineAcceptedFunding_Declines_Application()
+    public async Task Post_DeclineApprovedFunding_Declines_Application()
     {
         var result = new DeclineFundingCommandResult()
         {
@@ -404,7 +404,7 @@ public class ApplicationsControllerTests
             .ReturnsAsync(result);
 
         var actionResult =
-            await _applicationsController.DeclineAcceptedFunding(_applicationId, _declineFundingRequest);
+            await _applicationsController.DeclineApprovedFunding(_applicationId, _declineFundingRequest);
         var okResult = actionResult as OkResult;
         okResult.Should().NotBeNull();
 
