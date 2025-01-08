@@ -29,6 +29,8 @@ public class ApplicationFundingExpiredHandlerTests
 
         _eventPublisher.Verify(x => x.Publish(It.Is<ApplicationFundingExpiredEvent>(e =>
                 e.ApplicationId == _event.ApplicationId
+                && e.PledgeId == _event.PledgeId
+                && e.Amount == _event.Amount
                )));
     }
 }

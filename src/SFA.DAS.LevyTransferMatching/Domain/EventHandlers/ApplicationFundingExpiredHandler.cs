@@ -11,6 +11,8 @@ public class ApplicationFundingExpiredHandler(IEventPublisher eventPublisher) : 
     {
         await eventPublisher.Publish(
             new ApplicationFundingExpiredEvent(
-                @event.ApplicationId));
+                @event.ApplicationId,
+                @event.PledgeId,
+                @event.Amount));
     }
 }

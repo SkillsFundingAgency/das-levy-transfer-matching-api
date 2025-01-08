@@ -215,7 +215,7 @@ public class Application : AggregateRoot<int>
         Status = ApplicationStatus.FundsExpired;
 
         UpdatedOn = DateTime.UtcNow;
-        AddEvent(new ApplicationFundingExpired(Id));
+        AddEvent(new ApplicationFundingExpired(Id, PledgeId, GetCost()));
         AddStatusHistory(UpdatedOn.Value);
     }
 
