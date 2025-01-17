@@ -31,7 +31,7 @@ public class GetPledgesQueryHandler(LevyTransferMatchingDbContext dbContext) : I
         
         if (!string.IsNullOrEmpty(request.SortBy))
         {
-            pledgesQuery = ApplySorting(pledgesQuery, request.SortBy);
+            pledgesQuery = OpportunitiesSortBy.ApplySorting(pledgesQuery, request.SortBy);
         }
 
         var queryResult = await pledgesQuery
@@ -65,19 +65,6 @@ public class GetPledgesQueryHandler(LevyTransferMatchingDbContext dbContext) : I
             TotalItems = count,
             PageSize = request.PageSize ?? int.MaxValue,
             Page = request.Page
-        };
-    }
-
-    private static IOrderedQueryable<Pledge> ApplySorting(IQueryable<Pledge> query, string sortBy)
-    {
-        return sortBy switch
-        {
-            OpportunitiesSortBy.ValueLowToHigh => query.OrderBy(x => x.RemainingAmount),
-            OpportunitiesSortBy.ValueHighToLow => query.OrderByDescending(x => x.RemainingAmount),
-            OpportunitiesSortBy.MostRecent => query.OrderByDescending(x => x.CreatedOn),
-            OpportunitiesSortBy.AtoZ => query.OrderBy(x => x.EmployerAccount.Name),
-            OpportunitiesSortBy.ZtoA => query.OrderByDescending(x => x.EmployerAccount.Name),
-            _ => query.OrderByDescending(x => x.RemainingAmount),
         };
     }
 }
