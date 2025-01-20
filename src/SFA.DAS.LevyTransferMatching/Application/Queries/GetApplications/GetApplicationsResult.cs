@@ -34,7 +34,7 @@ public class GetApplicationsResult : PagedQueryResult<GetApplicationsResult.Appl
         public DateTime CreatedOn { get; set; }
         public ApplicationStatus Status { get; set; }
         public bool IsNamePublic { get; set; }
-        public List<ApplicationLocation> Locations { get; set; }
+        public IEnumerable<ApplicationLocation> Locations { get; set; }
         public string SpecificLocation { get; set; }
         public string AdditionalLocations { get; set; }
         public long SenderEmployerAccountId { get; set; }
