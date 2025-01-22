@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
+﻿using System;
+
+namespace SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
 
 public class LevyTransferMatchingApi
 {
@@ -8,6 +10,7 @@ public class LevyTransferMatchingApi
     public string RedisConnectionString { get; set; }
     public string DataProtectionKeysDatabase { get; set; }
     public string UtcNowOverride { get; set; }
+    public DateTime AutoExpireApplicationsImplementationDate { get; set; }
     public FeatureToggles FeatureToggles { get; set; }
 }
 

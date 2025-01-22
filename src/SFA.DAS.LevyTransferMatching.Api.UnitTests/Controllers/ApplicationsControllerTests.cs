@@ -1,16 +1,20 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.LevyTransferMatching.Api.Controllers;
 using SFA.DAS.LevyTransferMatching.Api.Models.Applications;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetApplication;
+using SFA.DAS.LevyTransferMatching.Api.Models.GetApplicationsToAutoExpire;
+using SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.ApproveApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
-using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
-using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
-using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
-using SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
+using SFA.DAS.LevyTransferMatching.Application.Commands.ExpireAcceptedFunding;
+using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
 using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplicationsToAutoExpire;
 
 namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers;
 
@@ -19,6 +23,7 @@ public class ApplicationsControllerTests
 {
     private readonly Fixture _fixture = new Fixture();
     private Mock<IMediator> _mediator;
+    private Mock<ILogger<ApplicationsController>> _logger;
     private ApplicationsController _applicationsController;
 
     private int _pledgeId;
@@ -29,6 +34,7 @@ public class ApplicationsControllerTests
     private CreateApplicationCommandResult _result;
     private DebitApplicationRequest _debitApplicationRequest;
     private WithdrawApplicationRequest _withdrawApplicationRequest;
+    private ExpireAcceptedFundingRequest _expireAcceptedFundingRequest;
 
     [SetUp]
     public void Setup()
@@ -41,9 +47,11 @@ public class ApplicationsControllerTests
         _result = _fixture.Create<CreateApplicationCommandResult>();
         _debitApplicationRequest = _fixture.Create<DebitApplicationRequest>();
         _withdrawApplicationRequest = _fixture.Create<WithdrawApplicationRequest>();
+        _expireAcceptedFundingRequest = _fixture.Create<ExpireAcceptedFundingRequest>();
 
         _mediator = new Mock<IMediator>();
-        _applicationsController = new ApplicationsController(_mediator.Object);
+        _logger = new Mock<ILogger<ApplicationsController>>();
+        _applicationsController = new ApplicationsController(_mediator.Object, _logger.Object);
 
         _mediator.Setup(x => x.Send(It.Is<CreateApplicationCommand>(command =>
                 command.PledgeId == _pledgeId &&
@@ -219,7 +227,7 @@ public class ApplicationsControllerTests
         _mediator.Setup(x => x.Send(It.Is<GetApplicationsQuery>(query => query.PledgeId == _pledgeId),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetApplicationsResult
-                { Items = [new GetApplicationsResult.Application()] });
+            { Items = [new GetApplicationsResult.Application()] });
 
         var actionResult =
             await _applicationsController.GetApplications(new GetApplicationsRequest { PledgeId = _pledgeId });
@@ -236,7 +244,7 @@ public class ApplicationsControllerTests
         _mediator.Setup(x => x.Send(It.Is<GetApplicationsQuery>(query => query.AccountId == _accountId),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetApplicationsResult
-                { Items = [new GetApplicationsResult.Application()] });
+            { Items = [new GetApplicationsResult.Application()] });
 
         var actionResult = await _applicationsController.GetApplications(new GetApplicationsRequest { AccountId = _accountId });
         var result = actionResult as OkObjectResult;
@@ -253,10 +261,10 @@ public class ApplicationsControllerTests
         _mediator.Setup(x => x.Send(It.Is<GetApplicationsQuery>(query => query.SenderAccountId == _senderAccountId),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetApplicationsResult
-                { Items = [new GetApplicationsResult.Application()] });
+            { Items = [new GetApplicationsResult.Application()] });
 
         var actionResult = await _applicationsController.GetApplications(new GetApplicationsRequest
-            { SenderAccountId = _senderAccountId });
+        { SenderAccountId = _senderAccountId });
         var result = actionResult as OkObjectResult;
         result.Should().NotBeNull();
         var response = result?.Value as GetApplicationsResponse;
@@ -274,10 +282,10 @@ public class ApplicationsControllerTests
                 x.Send(It.Is<GetApplicationsQuery>(query => query.ApplicationStatusFilter == applicationStatusFilter),
                     It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetApplicationsResult
-                { Items = [new GetApplicationsResult.Application()] });
+            { Items = [new GetApplicationsResult.Application()] });
 
         var actionResult = await _applicationsController.GetApplications(new GetApplicationsRequest
-            { ApplicationStatusFilter = applicationStatusFilter });
+        { ApplicationStatusFilter = applicationStatusFilter });
         var result = actionResult as OkObjectResult;
         result.Should().NotBeNull();
         var response = result?.Value as GetApplicationsResponse;
@@ -358,6 +366,50 @@ public class ApplicationsControllerTests
         okResult.Should().NotBeNull();
 
         _mediator.Verify(x => x.Send(It.Is<WithdrawApplicationCommand>(command =>
+                    command.ApplicationId == _applicationId),
+                It.IsAny<CancellationToken>()),
+            Times.Once);
+    }
+
+    [Test]
+    public async Task GetApplicationsToAutoExpire_Returns_Applications()
+    {
+        // Arrange
+        var applicationResult = _fixture.Create<GetApplicationsToAutoExpireResult>();
+
+        _mediator.Setup(x => x.Send(It.IsAny<GetApplicationsToAutoExpireQuery>(), It.IsAny<CancellationToken>()))
+             .ReturnsAsync(applicationResult);
+
+        // Act
+        var actionResult = await _applicationsController.GetApplicationsToAutoExpire();
+        var okObjectResult = actionResult as OkObjectResult;
+        var getApplicationResponse = okObjectResult?.Value as GetApplicationsToAutoExpireResponse;
+
+        // Assert
+        actionResult.Should().NotBeNull();
+        okObjectResult.Should().NotBeNull();
+        getApplicationResponse.Should().NotBeNull();
+        okObjectResult?.StatusCode.Should().Be((int)HttpStatusCode.OK);
+    }
+
+    [Test]
+    public async Task Post_ExpireApprovedFunding_Expires_Application()
+    {
+        var result = new ExpireAcceptedFundingCommandResult()
+        {
+            Updated = true,
+        };
+
+        _mediator
+            .Setup(x => x.Send(It.IsAny<ExpireAcceptedFundingCommand>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(result);
+
+        var actionResult =
+            await _applicationsController.ExpireAcceptedFunding(_applicationId, _expireAcceptedFundingRequest);
+        var okResult = actionResult as OkResult;
+        okResult.Should().NotBeNull();
+
+        _mediator.Verify(x => x.Send(It.Is<ExpireAcceptedFundingCommand>(command =>
                     command.ApplicationId == _applicationId),
                 It.IsAny<CancellationToken>()),
             Times.Once);
