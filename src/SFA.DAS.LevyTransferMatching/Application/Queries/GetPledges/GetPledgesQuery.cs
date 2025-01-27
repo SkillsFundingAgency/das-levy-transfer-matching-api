@@ -9,4 +9,5 @@ public class GetPledgesQuery : PagedQuery, IRequest<GetPledgesResult>
     public long? AccountId { get; set; }
     public IEnumerable<Sector> Sectors { get; set; }
     public PledgeStatus? PledgeStatusFilter { get; set; }
+    public string SortBy { get; set; }
 }
