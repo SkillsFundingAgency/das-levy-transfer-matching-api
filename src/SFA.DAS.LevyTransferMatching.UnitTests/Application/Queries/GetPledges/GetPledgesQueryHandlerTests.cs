@@ -247,7 +247,7 @@ public class GetPledgesQueryHandlerTests : LevyTransferMatchingDbContextFixture
         var actualPledges = result.Items.ToArray();
 
         // Assert
-        var sortedExpectedPledges = DbContext.Pledges.OrderBy(x => x.EmployerAccount.Name).ToList();
+        var sortedExpectedPledges = DbContext.Pledges.OrderBy(x => x.IsNamePublic ? x.EmployerAccount.Name : "Opportunity").ToList();
 
         for (var index = 0; index < actualPledges.Length; index++)
         {
@@ -271,7 +271,7 @@ public class GetPledgesQueryHandlerTests : LevyTransferMatchingDbContextFixture
         var actualPledges = result.Items.ToArray();
 
         // Assert
-        var sortedExpectedPledges = DbContext.Pledges.OrderByDescending(x => x.EmployerAccount.Name).ToList();
+        var sortedExpectedPledges = DbContext.Pledges.OrderByDescending(x => x.IsNamePublic ? x.EmployerAccount.Name : "Opportunity").ToList();
 
         for (var index = 0; index < actualPledges.Length; index++)
         {

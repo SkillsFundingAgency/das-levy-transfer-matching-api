@@ -72,8 +72,8 @@ public class GetPledgesQueryHandler(LevyTransferMatchingDbContext dbContext) : I
             OpportunitiesSortBy.ValueLowToHigh => query.OrderBy(x => x.RemainingAmount),
             OpportunitiesSortBy.ValueHighToLow => query.OrderByDescending(x => x.RemainingAmount),
             OpportunitiesSortBy.MostRecent => query.OrderByDescending(x => x.CreatedOn),
-            OpportunitiesSortBy.AtoZ => query.OrderBy(x => x.EmployerAccount.Name),
-            OpportunitiesSortBy.ZtoA => query.OrderByDescending(x => x.EmployerAccount.Name),
+            OpportunitiesSortBy.AtoZ => query.OrderBy(x => x.IsNamePublic ? x.EmployerAccount.Name : "Opportunity"),
+            OpportunitiesSortBy.ZtoA => query.OrderByDescending(x => x.IsNamePublic ? x.EmployerAccount.Name : "Opportunity"),
             _ => query.OrderByDescending(x => x.RemainingAmount),
         };
     }
