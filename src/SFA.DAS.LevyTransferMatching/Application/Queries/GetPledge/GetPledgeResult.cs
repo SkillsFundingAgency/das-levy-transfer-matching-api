@@ -28,6 +28,8 @@ public class GetPledgeResult
     public IEnumerable<Location> Locations { get; set; }
 
     public AutomaticApprovalOption AutomaticApprovalOption { get; set; }
+    public int TotalPendingApplications { get; set; }
+
 
     public class Location
     {
