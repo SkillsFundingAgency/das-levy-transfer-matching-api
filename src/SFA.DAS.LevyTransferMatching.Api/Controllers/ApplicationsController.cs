@@ -2,17 +2,20 @@
 using Microsoft.Extensions.Logging;
 using SFA.DAS.LevyTransferMatching.Api.Models.Applications;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetApplication;
+using SFA.DAS.LevyTransferMatching.Api.Models.GetApplicationsToAutoExpire;
 using SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.ApproveApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DeclineFunding;
+using SFA.DAS.LevyTransferMatching.Application.Commands.ExpireAcceptedFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.RecalculateCostProjection;
 using SFA.DAS.LevyTransferMatching.Application.Commands.RejectApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
 using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplicationsToAutoExpire;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplicationsToAutoDecline;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers;
@@ -300,5 +303,46 @@ public class ApplicationsController(IMediator mediator, ILogger<ApplicationsCont
         });
 
         return Ok();
+    }
+
+    [HttpGet]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [Route("applications-auto-expire")]
+    public async Task<IActionResult> GetApplicationsToAutoExpire()
+    {
+        try
+        {
+            var query = await mediator.Send(new GetApplicationsToAutoExpireQuery());
+
+            return Ok((GetApplicationsToAutoExpireResponse)query);
+        }
+        catch (Exception e)
+        {
+
+            logger.LogError(e, "Exception thrown in {MethodName}.", nameof(GetApplicationsToAutoExpire));
+            throw;
+        }
+    }
+
+    [HttpPost]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [Route("applications/{applicationId:int}/expire-accepted-funding")]
+    public async Task<IActionResult> ExpireAcceptedFunding(int applicationId, [FromBody] ExpireAcceptedFundingRequest request)
+    {
+        var result = await mediator.Send(new ExpireAcceptedFundingCommand
+        {
+            ApplicationId = applicationId,
+            UserDisplayName = request.UserDisplayName,
+            UserId = request.UserId,
+        });
+
+        if (result.Updated)
+        {
+            return Ok();
+        }
+
+        return BadRequest();
     }
 }

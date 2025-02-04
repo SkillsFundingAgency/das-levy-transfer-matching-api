@@ -14,5 +14,6 @@ public enum UserAction
     CreditPledge,
     WithdrawApplication,
     ClosePledge,
-    WithdrawApplicationAfterAcceptance
+    WithdrawApplicationAfterAcceptance,
+    ExpireAcceptedFunding
 }

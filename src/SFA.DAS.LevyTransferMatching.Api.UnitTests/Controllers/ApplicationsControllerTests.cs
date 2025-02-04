@@ -4,16 +4,19 @@ using Microsoft.Extensions.Logging;
 using SFA.DAS.LevyTransferMatching.Api.Controllers;
 using SFA.DAS.LevyTransferMatching.Api.Models.Applications;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetApplication;
+using SFA.DAS.LevyTransferMatching.Api.Models.GetApplicationsToAutoExpire;
 using SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.ApproveApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DeclineFunding;
+using SFA.DAS.LevyTransferMatching.Application.Commands.ExpireAcceptedFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
 using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplicationsToAutoDecline;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplicationsToAutoExpire;
 
 namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers;
 
@@ -34,6 +37,7 @@ public class ApplicationsControllerTests
     private DebitApplicationRequest _debitApplicationRequest;
     private WithdrawApplicationRequest _withdrawApplicationRequest;
     private DeclineFundingRequest _declineFundingRequest;
+    private ExpireAcceptedFundingRequest _expireAcceptedFundingRequest;
 
     [SetUp]
     public void Setup()
@@ -46,6 +50,7 @@ public class ApplicationsControllerTests
         _result = _fixture.Create<CreateApplicationCommandResult>();
         _debitApplicationRequest = _fixture.Create<DebitApplicationRequest>();
         _withdrawApplicationRequest = _fixture.Create<WithdrawApplicationRequest>();
+        _expireAcceptedFundingRequest = _fixture.Create<ExpireAcceptedFundingRequest>();
         _declineFundingRequest = _fixture.Create<DeclineFundingRequest>();
 
         _mediator = new Mock<IMediator>();
@@ -409,6 +414,50 @@ public class ApplicationsControllerTests
         okResult.Should().NotBeNull();
 
         _mediator.Verify(x => x.Send(It.Is<DeclineFundingCommand>(command =>
+                    command.ApplicationId == _applicationId),
+                It.IsAny<CancellationToken>()),
+            Times.Once);
+    }
+
+    [Test]
+    public async Task GetApplicationsToAutoExpire_Returns_Applications()
+    {
+        // Arrange
+        var applicationResult = _fixture.Create<GetApplicationsToAutoExpireResult>();
+
+        _mediator.Setup(x => x.Send(It.IsAny<GetApplicationsToAutoExpireQuery>(), It.IsAny<CancellationToken>()))
+             .ReturnsAsync(applicationResult);
+
+        // Act
+        var actionResult = await _applicationsController.GetApplicationsToAutoExpire();
+        var okObjectResult = actionResult as OkObjectResult;
+        var getApplicationResponse = okObjectResult?.Value as GetApplicationsToAutoExpireResponse;
+
+        // Assert
+        actionResult.Should().NotBeNull();
+        okObjectResult.Should().NotBeNull();
+        getApplicationResponse.Should().NotBeNull();
+        okObjectResult?.StatusCode.Should().Be((int)HttpStatusCode.OK);
+    }
+
+    [Test]
+    public async Task Post_ExpireApprovedFunding_Expires_Application()
+    {
+        var result = new ExpireAcceptedFundingCommandResult()
+        {
+            Updated = true,
+        };
+
+        _mediator
+            .Setup(x => x.Send(It.IsAny<ExpireAcceptedFundingCommand>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(result);
+
+        var actionResult =
+            await _applicationsController.ExpireAcceptedFunding(_applicationId, _expireAcceptedFundingRequest);
+        var okResult = actionResult as OkResult;
+        okResult.Should().NotBeNull();
+
+        _mediator.Verify(x => x.Send(It.Is<ExpireAcceptedFundingCommand>(command =>
                     command.ApplicationId == _applicationId),
                 It.IsAny<CancellationToken>()),
             Times.Once);

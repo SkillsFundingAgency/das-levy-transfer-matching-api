@@ -11,6 +11,7 @@ public class LevyTransferMatchingApi
     public string DataProtectionKeysDatabase { get; set; }
     public string UtcNowOverride { get; set; }
     public DateTime AutoDeclineImplementationDate { get; set; }
+    public DateTime AutoExpireApplicationsImplementationDate { get; set; }
     public FeatureToggles FeatureToggles { get; set; }
 }
 
