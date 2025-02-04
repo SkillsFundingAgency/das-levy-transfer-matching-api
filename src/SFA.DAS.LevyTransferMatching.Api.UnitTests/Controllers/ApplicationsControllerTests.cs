@@ -6,21 +6,17 @@ using SFA.DAS.LevyTransferMatching.Api.Models.Applications;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetApplication;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetApplicationsToAutoExpire;
 using SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
-using SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.ApproveApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
-using SFA.DAS.LevyTransferMatching.Application.Commands.ExpireAcceptedFunding;
-using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DeclineFunding;
+using SFA.DAS.LevyTransferMatching.Application.Commands.ExpireAcceptedFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
 using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
-using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplicationsToAutoExpire;
-using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
-using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplicationsToAutoDecline;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplicationsToAutoExpire;
 
 namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers;
 
