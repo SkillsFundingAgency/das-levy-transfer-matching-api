@@ -6,15 +6,21 @@ using SFA.DAS.LevyTransferMatching.Api.Models.Applications;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetApplication;
 using SFA.DAS.LevyTransferMatching.Api.Models.GetApplicationsToAutoExpire;
 using SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
+using SFA.DAS.LevyTransferMatching.Application.Commands.AcceptFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.ApproveApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.DebitApplication;
 using SFA.DAS.LevyTransferMatching.Application.Commands.ExpireAcceptedFunding;
 using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
+using SFA.DAS.LevyTransferMatching.Application.Commands.DeclineFunding;
+using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
 using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplicationsToAutoExpire;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplicationsToAutoDecline;
 
 namespace SFA.DAS.LevyTransferMatching.Api.UnitTests.Controllers;
 
@@ -34,6 +40,7 @@ public class ApplicationsControllerTests
     private CreateApplicationCommandResult _result;
     private DebitApplicationRequest _debitApplicationRequest;
     private WithdrawApplicationRequest _withdrawApplicationRequest;
+    private DeclineFundingRequest _declineFundingRequest;
     private ExpireAcceptedFundingRequest _expireAcceptedFundingRequest;
 
     [SetUp]
@@ -48,6 +55,7 @@ public class ApplicationsControllerTests
         _debitApplicationRequest = _fixture.Create<DebitApplicationRequest>();
         _withdrawApplicationRequest = _fixture.Create<WithdrawApplicationRequest>();
         _expireAcceptedFundingRequest = _fixture.Create<ExpireAcceptedFundingRequest>();
+        _declineFundingRequest = _fixture.Create<DeclineFundingRequest>();
 
         _mediator = new Mock<IMediator>();
         _logger = new Mock<ILogger<ApplicationsController>>();
@@ -141,6 +149,27 @@ public class ApplicationsControllerTests
         var actionResult = await _applicationsController.GetApplication(applicationId);
         var okObjectResult = actionResult as OkObjectResult;
         var getApplicationResponse = okObjectResult?.Value as GetApplicationResponse;
+
+        // Assert
+        actionResult.Should().NotBeNull();
+        okObjectResult.Should().NotBeNull();
+        getApplicationResponse.Should().NotBeNull();
+        okObjectResult?.StatusCode.Should().Be((int)HttpStatusCode.OK);
+    }
+
+    [Test]
+    public async Task GetApplicationsToAutoDecline_Returns_Applications()
+    {
+        // Arrange
+        var applicationResult = _fixture.Create<GetApplicationsToAutoDeclineResult>();
+
+        _mediator.Setup(x => x.Send(It.IsAny<GetApplicationsToAutoDeclineQuery>(), It.IsAny<CancellationToken>()))
+             .ReturnsAsync(applicationResult);
+
+        // Act
+        var actionResult = await _applicationsController.GetApplicationsToAutoDecline();
+        var okObjectResult = actionResult as OkObjectResult;
+        var getApplicationResponse = okObjectResult?.Value as GetApplicationsToAutoDeclineResponse;
 
         // Assert
         actionResult.Should().NotBeNull();
@@ -366,6 +395,29 @@ public class ApplicationsControllerTests
         okResult.Should().NotBeNull();
 
         _mediator.Verify(x => x.Send(It.Is<WithdrawApplicationCommand>(command =>
+                    command.ApplicationId == _applicationId),
+                It.IsAny<CancellationToken>()),
+            Times.Once);
+    }
+
+    [Test]
+    public async Task Post_DeclineApprovedFunding_Declines_Application()
+    {
+        var result = new DeclineFundingCommandResult()
+        {
+            Updated = true,
+        };
+
+        _mediator
+            .Setup(x => x.Send(It.IsAny<DeclineFundingCommand>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(result);
+
+        var actionResult =
+            await _applicationsController.DeclineApprovedFunding(_applicationId, _declineFundingRequest);
+        var okResult = actionResult as OkResult;
+        okResult.Should().NotBeNull();
+
+        _mediator.Verify(x => x.Send(It.Is<DeclineFundingCommand>(command =>
                     command.ApplicationId == _applicationId),
                 It.IsAny<CancellationToken>()),
             Times.Once);

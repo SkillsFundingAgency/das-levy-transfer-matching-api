@@ -16,6 +16,7 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplicationsToAutoExpire;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplicationsToAutoDecline;
 
 namespace SFA.DAS.LevyTransferMatching.Api.Controllers;
 
@@ -138,6 +139,27 @@ public class ApplicationsController(IMediator mediator, ILogger<ApplicationsCont
 
         return BadRequest();
     }
+    
+    [HttpPost]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [Route("applications/{applicationId:int}/decline-approved-funding")]
+    public async Task<IActionResult> DeclineApprovedFunding(int applicationId, [FromBody] DeclineFundingRequest request)
+    {
+        var result = await mediator.Send(new DeclineFundingCommand
+        {
+            ApplicationId = applicationId,
+            UserDisplayName = request.UserDisplayName,
+            UserId = request.UserId,
+        });
+
+        if (result.Updated)
+        {
+            return Ok();
+        }
+
+        return BadRequest();
+    }
 
     [HttpPost]
     [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -229,6 +251,26 @@ public class ApplicationsController(IMediator mediator, ILogger<ApplicationsCont
         });
 
         return Ok((GetApplicationsResponse)query);
+    }
+
+    [HttpGet]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [Route("applications-auto-decline")]
+    public async Task<IActionResult> GetApplicationsToAutoDecline()
+    {
+        try
+        {
+            var query = await mediator.Send(new GetApplicationsToAutoDeclineQuery());
+
+            return Ok((GetApplicationsToAutoDeclineResponse)query);
+        }
+        catch (Exception e)
+        {
+
+            logger.LogError(e, "Exception thrown in {MethodName}.", nameof(GetApplicationsToAutoDecline));
+            throw;
+        }       
     }
 
     [HttpPost]
