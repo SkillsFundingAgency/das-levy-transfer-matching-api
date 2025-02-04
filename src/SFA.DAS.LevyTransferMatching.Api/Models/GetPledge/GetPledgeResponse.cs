@@ -27,8 +27,9 @@ public class GetPledgeResponse
     public PledgeStatus Status { get; set; }
 
     public IEnumerable<Location> Locations { get; set; }
+    public int TotalPendingApplications { get; set; }
 
-        public AutomaticApprovalOption AutomaticApprovalOption { get; set; }
+    public AutomaticApprovalOption AutomaticApprovalOption { get; set; }
 
         public static implicit operator GetPledgeResponse(GetPledgeResult pledge)
         {
@@ -46,7 +47,8 @@ public class GetPledgeResponse
                 Sectors = pledge.Sectors,
                 Status = pledge.Status,
                 Locations = pledge.Locations.Select(x => new Location { Id = x.Id, Name = x.Name}),
-                AutomaticApprovalOption = pledge.AutomaticApprovalOption
+                AutomaticApprovalOption = pledge.AutomaticApprovalOption,
+                TotalPendingApplications = pledge.TotalPendingApplications
             };
         }
 
