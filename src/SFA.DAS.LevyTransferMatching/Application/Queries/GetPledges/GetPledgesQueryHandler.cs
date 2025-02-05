@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SFA.DAS.LevyTransferMatching.Data;
+using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Extensions;
 using SFA.DAS.LevyTransferMatching.Models;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
@@ -28,8 +29,9 @@ public class GetPledgesQueryHandler(LevyTransferMatchingDbContext dbContext) : I
             pledgesQuery = pledgesQuery.Where(x => x.Status == request.PledgeStatusFilter);
         }
 
+        pledgesQuery = ApplySorting(pledgesQuery, request.SortBy);
+
         var queryResult = await pledgesQuery
-            .OrderByDescending(x => x.RemainingAmount)
             .Skip(request.Offset)
             .Take(request.Limit)
             .Select(x => new GetPledgesResult.Pledge
@@ -60,6 +62,19 @@ public class GetPledgesQueryHandler(LevyTransferMatchingDbContext dbContext) : I
             TotalItems = count,
             PageSize = request.PageSize ?? int.MaxValue,
             Page = request.Page
+        };
+    }
+
+    private static IOrderedQueryable<Pledge> ApplySorting(IQueryable<Pledge> query, string sortBy)
+    {
+        return sortBy switch
+        {
+            OpportunitiesSortBy.ValueLowToHigh => query.OrderBy(x => x.RemainingAmount),
+            OpportunitiesSortBy.ValueHighToLow => query.OrderByDescending(x => x.RemainingAmount),
+            OpportunitiesSortBy.MostRecent => query.OrderByDescending(x => x.CreatedOn),
+            OpportunitiesSortBy.AtoZ => query.OrderBy(x => x.IsNamePublic ? x.EmployerAccount.Name : "Opportunity"),
+            OpportunitiesSortBy.ZtoA => query.OrderByDescending(x => x.IsNamePublic ? x.EmployerAccount.Name : "Opportunity"),
+            _ => query.OrderByDescending(x => x.RemainingAmount),
         };
     }
 }

@@ -23,7 +23,7 @@ public class PledgesController(IMediator mediator) : Controller
     [HttpGet]
     [Route("pledges")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
-    public async Task<IActionResult> GetPledges([FromQuery] IEnumerable<Sector> sectors = null, long? accountId = null, int page = 1, int? pageSize = null, PledgeStatus? pledgeStatusFilter = null)
+    public async Task<IActionResult> GetPledges([FromQuery] IEnumerable<Sector> sectors = null, string sortBy = null, long? accountId = null, int page = 1, int? pageSize = null, PledgeStatus? pledgeStatusFilter = null)
     {
         var result = await mediator.Send(new GetPledgesQuery
         {
@@ -31,7 +31,8 @@ public class PledgesController(IMediator mediator) : Controller
             AccountId = accountId,
             Page = page,
             PageSize = pageSize,
-            PledgeStatusFilter = pledgeStatusFilter
+            PledgeStatusFilter = pledgeStatusFilter,
+            SortBy = sortBy
         });
 
         var response = new GetPledgesResponse

@@ -3,6 +3,7 @@ using SFA.DAS.LevyTransferMatching.Application.Queries.GetPledges;
 using SFA.DAS.LevyTransferMatching.Data.Enums;
 using SFA.DAS.LevyTransferMatching.Data.Models;
 using SFA.DAS.LevyTransferMatching.Data.ValueObjects;
+using SFA.DAS.LevyTransferMatching.Models;
 using SFA.DAS.LevyTransferMatching.Models.Enums;
 using SFA.DAS.LevyTransferMatching.UnitTests.DataFixture;
 
@@ -55,6 +56,7 @@ public class GetPledgesQueryHandlerTests : LevyTransferMatchingDbContextFixture
         var getPledgesQuery = new GetPledgesQuery
         {
             AccountId = null,
+            SortBy = OpportunitiesSortBy.ValueHighToLow
         };
 
         // Act
@@ -63,7 +65,7 @@ public class GetPledgesQueryHandlerTests : LevyTransferMatchingDbContextFixture
         var actualPledges = result.Items.ToArray();
 
         // Assert
-        var dbPledges = await DbContext.Pledges.OrderByDescending(x => x.Amount).ToArrayAsync();
+        var dbPledges = await DbContext.Pledges.OrderByDescending(x => x.RemainingAmount).ToArrayAsync();
 
         for (var index = 0; index < actualPledges.Length; index++)
         {
@@ -155,5 +157,125 @@ public class GetPledgesQueryHandlerTests : LevyTransferMatchingDbContextFixture
 
         // Assert
         result.Items.All(x => x.Status == pledgeStatusFilter).Should().BeTrue();
+    }
+
+    [Test]
+    public async Task Handle_Pledges_Are_Sorted_By_ValueLowToHigh()
+    {
+        // Arrange
+        var getPledgesQueryHandler = new GetPledgesQueryHandler(DbContext);
+        var getPledgesQuery = new GetPledgesQuery
+        {
+            AccountId = null,
+            SortBy = OpportunitiesSortBy.ValueLowToHigh
+        };
+
+        // Act
+        var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
+        var actualPledges = result.Items.ToArray();
+
+        // Assert
+        var sortedExpectedPledges = DbContext.Pledges.OrderBy(x => x.RemainingAmount).ToList();
+
+        for (var index = 0; index < actualPledges.Length; index++)
+        {
+            actualPledges[index].Id.Should().Be(sortedExpectedPledges[index].Id);
+        }
+    }
+
+    [Test]
+    public async Task Handle_Pledges_Are_Sorted_By_ValueHighToLow()
+    {
+        // Arrange
+        var getPledgesQueryHandler = new GetPledgesQueryHandler(DbContext);
+        var getPledgesQuery = new GetPledgesQuery
+        {
+            AccountId = null,
+            SortBy = OpportunitiesSortBy.ValueHighToLow
+        };
+
+        // Act
+        var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
+        var actualPledges = result.Items.ToArray();
+
+        // Assert
+        var sortedExpectedPledges = DbContext.Pledges.OrderByDescending(x => x.RemainingAmount).ToList();
+
+        for (var index = 0; index < actualPledges.Length; index++)
+        {
+            actualPledges[index].Id.Should().Be(sortedExpectedPledges[index].Id);
+        }
+    }
+
+    [Test]
+    public async Task Handle_Pledges_Are_Sorted_By_MostRecent()
+    {
+        // Arrange
+        var getPledgesQueryHandler = new GetPledgesQueryHandler(DbContext);
+        var getPledgesQuery = new GetPledgesQuery
+        {
+            AccountId = null,
+            SortBy = OpportunitiesSortBy.MostRecent
+        };
+
+        // Act
+        var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
+        var actualPledges = result.Items.ToArray();
+
+        // Assert
+        var sortedExpectedPledges = DbContext.Pledges.OrderByDescending(x => x.CreatedOn).ToList();
+
+        for (var index = 0; index < actualPledges.Length; index++)
+        {
+            actualPledges[index].Id.Should().Be(sortedExpectedPledges[index].Id);
+        }
+    }
+
+    [Test]
+    public async Task Handle_Pledges_Are_Sorted_By_AtoZ()
+    {
+        // Arrange
+        var getPledgesQueryHandler = new GetPledgesQueryHandler(DbContext);
+        var getPledgesQuery = new GetPledgesQuery
+        {
+            AccountId = null,
+            SortBy = OpportunitiesSortBy.AtoZ
+        };
+
+        // Act
+        var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
+        var actualPledges = result.Items.ToArray();
+
+        // Assert
+        var sortedExpectedPledges = DbContext.Pledges.OrderBy(x => x.IsNamePublic ? x.EmployerAccount.Name : "Opportunity").ToList();
+
+        for (var index = 0; index < actualPledges.Length; index++)
+        {
+            actualPledges[index].Id.Should().Be(sortedExpectedPledges[index].Id);
+        }
+    }
+
+    [Test]
+    public async Task Handle_Pledges_Are_Sorted_By_ZtoA()
+    {
+        // Arrange
+        var getPledgesQueryHandler = new GetPledgesQueryHandler(DbContext);
+        var getPledgesQuery = new GetPledgesQuery
+        {
+            AccountId = null,
+            SortBy = OpportunitiesSortBy.ZtoA
+        };
+
+        // Act
+        var result = await getPledgesQueryHandler.Handle(getPledgesQuery, CancellationToken.None);
+        var actualPledges = result.Items.ToArray();
+
+        // Assert
+        var sortedExpectedPledges = DbContext.Pledges.OrderByDescending(x => x.IsNamePublic ? x.EmployerAccount.Name : "Opportunity").ToList();
+
+        for (var index = 0; index < actualPledges.Length; index++)
+        {
+            actualPledges[index].Id.Should().Be(sortedExpectedPledges[index].Id);
+        }
     }
 }
