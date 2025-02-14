@@ -16,6 +16,7 @@ using SFA.DAS.Api.Common.AppStart;
 using SFA.DAS.Api.Common.Configuration;
 using SFA.DAS.Api.Common.Infrastructure;
 using SFA.DAS.LevyTransferMatching.Api.HttpResponseExtensions;
+using SFA.DAS.LevyTransferMatching.Api.Middleware;
 using SFA.DAS.LevyTransferMatching.Api.Models;
 using SFA.DAS.LevyTransferMatching.Api.StartupExtensions;
 using SFA.DAS.LevyTransferMatching.Application.Commands.CreateAccount;
@@ -110,6 +111,8 @@ public class Startup
         {
             app.UseDeveloperExceptionPage();
         }
+
+        app.UseMiddleware<SecurityHeadersMiddleware>();
 
         app.UseHttpsRedirection();
         app.UseRouting();
