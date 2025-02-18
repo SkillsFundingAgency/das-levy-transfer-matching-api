@@ -261,9 +261,10 @@ public class ApplicationsController(IMediator mediator, ILogger<ApplicationsCont
     {
         try
         {
-            var query = await mediator.Send(new GetApplicationsToAutoDeclineQuery());
+            var result = await mediator.Send(new GetApplicationsToAutoDeclineQuery());
+            logger.LogInformation("GetApplicationsToAutoDecline - controller count: {count}", result.ApplicationIdsToDecline.Count());
 
-            return Ok((GetApplicationsToAutoDeclineResponse)query);
+            return Ok((GetApplicationsToAutoDeclineResponse)result);
         }
         catch (Exception e)
         {
