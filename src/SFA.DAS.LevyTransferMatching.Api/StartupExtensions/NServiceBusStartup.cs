@@ -29,7 +29,8 @@ public static class NServiceBusStartup
             .UseOutbox(true)
             .UseServicesBuilder(serviceProvider)
             .UseSqlServerPersistence(() => connectionFactory.CreateConnection(configuration.DatabaseConnectionString))
-            .UseUnitOfWork();
+            .UseUnitOfWork()
+            .UseSendOnly();
 
         if (configuration.NServiceBusConnectionString.Equals("UseDevelopmentStorage=true", StringComparison.CurrentCultureIgnoreCase))
         {
