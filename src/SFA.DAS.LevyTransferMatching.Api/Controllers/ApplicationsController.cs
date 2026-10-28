@@ -15,6 +15,7 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
 using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplicationsForAutomaticApproval;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplicationsToAutoExpire;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplicationsToAutoDecline;
 
@@ -251,6 +252,19 @@ public class ApplicationsController(IMediator mediator, ILogger<ApplicationsCont
         });
 
         return Ok((GetApplicationsResponse)query);
+    }
+
+    [HttpGet]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [Route("applications/for-automatic-approval")]
+    public async Task<IActionResult> GetApplicationsForAutomaticApproval(int? pledgeId = null)
+    {
+        var result = await mediator.Send(new GetApplicationsForAutomaticApprovalQuery
+        {
+            PledgeId = pledgeId
+        });
+
+        return Ok((GetApplicationsForAutomaticApprovalResponse)result);
     }
 
     [HttpGet]
