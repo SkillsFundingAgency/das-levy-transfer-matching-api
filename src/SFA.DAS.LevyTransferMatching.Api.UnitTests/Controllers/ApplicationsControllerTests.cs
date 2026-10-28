@@ -15,6 +15,7 @@ using SFA.DAS.LevyTransferMatching.Application.Commands.UndoApplicationApproval;
 using SFA.DAS.LevyTransferMatching.Application.Commands.WithdrawApplication;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplication;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplications;
+using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplicationsForAutomaticApproval;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplicationsToAutoDecline;
 using SFA.DAS.LevyTransferMatching.Application.Queries.GetApplicationsToAutoExpire;
 
@@ -172,6 +173,23 @@ public class ApplicationsControllerTests
         okObjectResult.Should().NotBeNull();
         getApplicationResponse.Should().NotBeNull();
         okObjectResult?.StatusCode.Should().Be((int)HttpStatusCode.OK);
+    }
+
+    [Test]
+    public async Task GetApplicationsForAutomaticApproval_Passes_The_Pledge_Id()
+    {
+        _mediator.Setup(x => x.Send(It.IsAny<GetApplicationsForAutomaticApprovalQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new GetApplicationsForAutomaticApprovalResult
+            {
+                Applications = new List<GetApplicationsForAutomaticApprovalResult.Application>()
+            });
+
+        var actionResult = await _applicationsController.GetApplicationsForAutomaticApproval(_pledgeId);
+
+        actionResult.Should().BeOfType<OkObjectResult>();
+        _mediator.Verify(x => x.Send(
+            It.Is<GetApplicationsForAutomaticApprovalQuery>(query => query.PledgeId == _pledgeId),
+            It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Test]
