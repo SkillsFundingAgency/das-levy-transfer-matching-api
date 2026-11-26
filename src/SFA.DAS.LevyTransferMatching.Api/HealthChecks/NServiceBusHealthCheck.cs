@@ -9,7 +9,7 @@ namespace SFA.DAS.LevyTransferMatching.Api.HealthChecks;
 public class NServiceBusHealthCheck : IHealthCheck
 {
     // This should match the QueueNames.RunHealthCheck value in the  SFA.DAS.LevyTransferMatching.Functions project. We may want to add it to the shared SFA.DAS.LevyTransferMatching.Messages nuget
-    private const string HealthCheckQueueName = "SFA.DAS.LevyTransferMatching.HealthCheck";
+    private const string HealthCheckQueueName = "SFA.DAS.LevyTransferMatching.Functions";
 
     public TimeSpan Interval { get; set; } = TimeSpan.FromMilliseconds(500);
     public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(5);
@@ -29,7 +29,9 @@ public class NServiceBusHealthCheck : IHealthCheck
         var data = new Dictionary<string, object> { ["MessageId"] = messageId };
         var stopwatch = Stopwatch.StartNew();
 
-        await _messageSession.Send(HealthCheckQueueName, (RunHealthCheckCommand c) => c.MessageId = messageId.ToString());
+        var sendOptions = new SendOptions();
+        sendOptions.SetDestination(HealthCheckQueueName);
+        await _messageSession.Send(new RunHealthCheckCommand { MessageId = messageId.ToString() }, sendOptions);
 
         while (!cancellationToken.IsCancellationRequested)
         {
