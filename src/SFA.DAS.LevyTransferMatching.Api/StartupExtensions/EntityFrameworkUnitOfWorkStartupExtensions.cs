@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using NServiceBus.Persistence;
 using SFA.DAS.LevyTransferMatching.Data;
 using SFA.DAS.LevyTransferMatching.Infrastructure.Configuration;
+using SFA.DAS.LevyTransferMatching.Infrastructure.ConnectionFactory;
 using SFA.DAS.NServiceBus.SqlServer.Data;
 using SFA.DAS.UnitOfWork.Context;
 
@@ -30,9 +31,12 @@ public static class EntityFrameworkUnitOfWorkStartupExtensions
             }
             catch (KeyNotFoundException)
             {
-                var optionsBuilder = new DbContextOptionsBuilder<LevyTransferMatchingDbContext>().UseSqlServer(config.DatabaseConnectionString);
+                var connection = provider
+                    .GetRequiredService<IConnectionFactory>()
+                    .CreateConnection(config.DatabaseConnectionString);
+                var optionsBuilder = new DbContextOptionsBuilder<LevyTransferMatchingDbContext>().UseSqlServer(connection);
                 optionsBuilder.UseLoggerFactory(DebugLoggingFactory);
-                dbContext = new LevyTransferMatchingDbContext(optionsBuilder.Options);
+                dbContext = new LevyTransferMatchingDbContext(connection, config, azureServiceTokenProvider, optionsBuilder.Options);
             }
 
             return dbContext;
